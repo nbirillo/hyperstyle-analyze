@@ -21,9 +21,6 @@ jobs:
       - name: Setup venv
         run: |
           python -m venv ./venv
-          ls
-          cd ./venv
-          ls
 
       - name: Install hyperstyle
         run: |
@@ -32,6 +29,8 @@ jobs:
 
       - name: Add hyperstyle into PYTHONPATH
         run: |
+          cd ./venv
+          ls
           export PYTHONPATH=$PYTHONPATH:$pwd/main/venv/src/hyperstyle
           echo $PYTHONPATH
           which pip
