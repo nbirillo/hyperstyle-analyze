@@ -24,6 +24,9 @@ jobs:
 
       - name: Install hyperstyle
         run: |
+          git clone https://github.com/hyperskill/hyperstyle.git ./main/venv/src
+          git fetch
+          git delete-evaluation
           ./main/venv/bin/pip install git+https://github.com/hyperskill/hyperstyle.git@delete-evaluation#egg=hyperstyle
           ./main/venv/bin/pip install --no-cache-dir -r requirements-test.txt -r requirements.txt -r requirements-roberta.txt
 
