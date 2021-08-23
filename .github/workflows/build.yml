@@ -27,7 +27,7 @@ jobs:
           cd ./main/venv
           mkdir src
           cd src
-          git clone https://github.com/hyperskill/hyperstyle.git ./main/venv/src
+          git clone https://github.com/hyperskill/hyperstyle.git
           cd hyperstyle
           git fetch
           git checkout delete-evaluation origin/delete-evaluation
