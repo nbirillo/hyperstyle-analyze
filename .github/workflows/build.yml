@@ -44,6 +44,7 @@ jobs:
       - name: Add hyperstyle into PYTHONPATH
         run: |
           export PYTHONPATH=$PYTHONPATH:$pwd/main/venv/src/hyperstyle
+          export PYTHONPATH=$PYTHONPATH:$pwd/main/venv/src
           echo $PYTHONPATH
 
       - name: Lint with flake8
