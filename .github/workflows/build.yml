@@ -21,7 +21,8 @@ jobs:
       - name: Setup venv
         run: |
           python -m venv ./venv
-          cd $pwd/venv
+          ls
+          cd ./venv
           ls
 
       - name: Install hyperstyle
