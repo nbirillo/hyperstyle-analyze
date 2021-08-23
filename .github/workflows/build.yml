@@ -30,10 +30,16 @@ jobs:
           git clone https://github.com/hyperskill/hyperstyle.git
           cd hyperstyle
           git fetch
-          git checkout delete-evaluation origin/delete-evaluation
+          git checkout origin/delete-evaluation
+          cd ../../../../
+
           ./main/venv/bin/pip install git+https://github.com/hyperskill/hyperstyle.git@delete-evaluation#egg=hyperstyle
           ./main/venv/bin/pip install --no-cache-dir -r requirements-test.txt -r requirements.txt -r requirements-roberta.txt
-          cd ../../../../
+
+      - name: Install requirements
+        run: |
+          ./main/venv/bin/pip install git+https://github.com/hyperskill/hyperstyle.git@delete-evaluation#egg=hyperstyle
+          ./main/venv/bin/pip install --no-cache-dir -r requirements-test.txt -r requirements.txt -r requirements-roberta.txt
 
       - name: Add hyperstyle into PYTHONPATH
         run: |
