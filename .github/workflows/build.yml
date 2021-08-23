@@ -21,7 +21,6 @@ jobs:
       - name: Setup venv
         run: |
           python -m venv ./venv
-          tree venv
           cd $pwd/venv
           ls
 
