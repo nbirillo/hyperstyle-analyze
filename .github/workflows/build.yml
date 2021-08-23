@@ -20,18 +20,18 @@ jobs:
 
       - name: Setup venv
         run: |
-          python -m venv ./venv
+          python -m venv ./main/venv
 
       - name: Install hyperstyle
         run: |
-          pip install git+https://github.com/hyperskill/hyperstyle.git@delete-evaluation#egg=hyperstyle
-          pip install --no-cache-dir -r requirements-test.txt -r requirements.txt -r requirements-roberta.txt
+          ./main/venv/bin/pip install git+https://github.com/hyperskill/hyperstyle.git@delete-evaluation#egg=hyperstyle
+          ./main/venv/bin/pip install --no-cache-dir -r requirements-test.txt -r requirements.txt -r requirements-roberta.txt
 
       - name: Add hyperstyle into PYTHONPATH
         run: |
-          cd ./venv
+          cd ./main/venv
           ls
-          export PYTHONPATH=$PYTHONPATH:$pwd/main/venv/src/hyperstyle
+          export PYTHONPATH=$PYTHONPATH:./main/venv/src/hyperstyle
           echo $PYTHONPATH
           which pip
           ls
