@@ -27,6 +27,8 @@ jobs:
         run: |
           export PYTHONPATH=$PYTHONPATH:$pwd/main/venv/src/hyperstyle
           echo $PYTHONPATH
+          ls
+          cd main/venv
           cd $pwd/main/venv/src/hyperstyle
 
       - name: Lint with flake8
