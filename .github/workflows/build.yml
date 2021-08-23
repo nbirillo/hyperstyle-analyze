@@ -38,8 +38,8 @@ jobs:
 
       - name: Install requirements
         run: |
-          ./main/venv/bin/pip install git+https://github.com/hyperskill/hyperstyle.git@delete-evaluation#egg=hyperstyle
-          ./main/venv/bin/pip install --no-cache-dir -r requirements-test.txt -r requirements.txt -r requirements-roberta.txt
+          pip install git+https://github.com/hyperskill/hyperstyle.git@delete-evaluation#egg=hyperstyle
+          pip install --no-cache-dir -r requirements-test.txt -r requirements.txt -r requirements-roberta.txt
 
       - name: Add hyperstyle into PYTHONPATH
         run: |
