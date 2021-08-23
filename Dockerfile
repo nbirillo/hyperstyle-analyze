@@ -4,9 +4,11 @@ RUN npm install eslint@7.5.0 -g \
     && eslint --init
 
 COPY . review
+RUN pip install -e git+https://github.com/hyperskill/hyperstyle.git@develop#egg=review
 RUN pip install --no-cache-dir \
     -r review/requirements-test.txt \
     -r review/requirements.txt \
+    -r review/requirements-roberta.txt \
     ./review
 
 CMD ["/bin/bash"]
