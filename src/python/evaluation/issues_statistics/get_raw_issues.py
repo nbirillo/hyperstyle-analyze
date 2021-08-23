@@ -12,25 +12,25 @@ sys.path.append('../../..')
 import numpy as np
 import pandas as pd
 from pandarallel import pandarallel
-from src.python.common.tool_arguments import RunToolArgument
+from hyperstyle.src.python.common.tool_arguments import RunToolArgument
 from src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path, write_df_to_file
 from src.python.evaluation.common.util import ColumnName
 from src.python.evaluation.issues_statistics.common.raw_issue_encoder_decoder import RawIssueEncoder
-from src.python.review.application_config import LanguageVersion
-from src.python.review.common.file_system import (
+from hyperstyle.src.python.review.application_config import LanguageVersion
+from hyperstyle.src.python.review.common.file_system import (
     create_file,
     Extension,
     get_name_from_path,
     get_parent_folder,
 )
-from src.python.review.common.language import Language
-from src.python.review.inspectors.issue import (
+from hyperstyle.src.python.review.common.language import Language
+from hyperstyle.src.python.review.inspectors.issue import (
     BaseIssue,
     IssueType,
     Measurable,
 )
-from src.python.review.reviewers.common import LANGUAGE_TO_INSPECTORS
-from src.python.review.reviewers.utils.issues_filter import filter_duplicate_issues
+from hyperstyle.src.python.review.reviewers.common import LANGUAGE_TO_INSPECTORS
+from hyperstyle.src.python.review.reviewers.utils.issues_filter import filter_duplicate_issues
 
 LANG = ColumnName.LANG.value
 CODE = ColumnName.CODE.value

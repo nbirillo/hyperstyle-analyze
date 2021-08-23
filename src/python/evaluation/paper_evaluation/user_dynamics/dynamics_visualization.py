@@ -7,11 +7,12 @@ from typing import List
 
 import pandas as pd
 import plotly.express as px
-from src.python.evaluation.common.pandas_util import logger
-from src.python.evaluation.paper_evaluation.user_dynamics.user_statistics import DynamicsColumn
-from src.python.review.common.file_system import (
+from hyperstyle.src.python.review.common.file_system import (
     Extension, extension_file_condition, get_all_file_system_items, get_parent_folder,
 )
+
+from src.python.evaluation.common.pandas_util import logger
+from src.python.evaluation.paper_evaluation.user_dynamics.user_statistics import DynamicsColumn
 
 MEDIAN_COLUMN = 'Median number of code quality issues in submissions'
 FREQ_COLUMN = 'Number of users'

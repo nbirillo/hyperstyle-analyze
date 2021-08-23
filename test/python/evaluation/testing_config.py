@@ -1,8 +1,9 @@
 from argparse import Namespace
 
+from hyperstyle.src.python.review.reviewers.perform_review import OutputFormat
+
 from src.python import MAIN_FOLDER
 from src.python.evaluation.common.util import EvaluationArgument
-from src.python.review.reviewers.perform_review import OutputFormat
 
 
 def get_testing_arguments(to_add_traceback=None, to_add_tool_path=None, to_add_history=None) -> Namespace:

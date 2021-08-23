@@ -3,12 +3,7 @@ from dataclasses import dataclass
 from statistics import median
 from typing import Dict, List, Tuple
 
-from src.python.review.inspectors.issue import BaseIssue, IssueType, ShortIssue
-
-
-@dataclass(frozen=True, eq=True)
-class PenaltyIssue(BaseIssue):
-    influence_on_penalty: int
+from hyperstyle.src.python.review.inspectors.issue import IssueType, ShortIssue
 
 
 @dataclass(frozen=True)

@@ -6,14 +6,15 @@ import numpy as np
 import pandas as pd
 import torch
 import transformers
+from hyperstyle.src.python.review.common.file_system import Extension
+from torch.utils.data import DataLoader
+from transformers import RobertaForSequenceClassification
+
 from src.python.evaluation.common.csv_util import write_dataframe_to_csv
 from src.python.evaluation.qodana.imitation_model.common.evaluation_config import configure_arguments
 from src.python.evaluation.qodana.imitation_model.common.metric import Measurer
 from src.python.evaluation.qodana.imitation_model.common.util import DatasetColumnArgument, MeasurerArgument
 from src.python.evaluation.qodana.imitation_model.dataset.dataset import QodanaDataset
-from src.python.review.common.file_system import Extension
-from torch.utils.data import DataLoader
-from transformers import RobertaForSequenceClassification
 
 
 def get_predictions(eval_dataloader: torch.utils.data.DataLoader,

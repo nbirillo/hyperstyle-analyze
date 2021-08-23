@@ -1,13 +1,14 @@
 from pathlib import Path
-from test.python.evaluation import INSPECTORS_DIR_PATH
 
 import pytest
+from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
+from hyperstyle.src.python.review.inspectors.issue import IssueDifficulty, IssueType
+
 from src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path
 from src.python.evaluation.common.util import ColumnName
 from src.python.evaluation.inspectors.common.statistics import PenaltyIssue
 from src.python.evaluation.inspectors.diffs_between_df import find_diffs
-from src.python.review.inspectors.inspector_type import InspectorType
-from src.python.review.inspectors.issue import IssueDifficulty, IssueType
+from test.python.evaluation import INSPECTORS_DIR_PATH
 
 RESOURCES_PATH = INSPECTORS_DIR_PATH / 'diffs_between_df'
 

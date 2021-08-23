@@ -1,9 +1,9 @@
-from test.python.evaluation import XLSX_DATA_FOLDER
-from test.python.evaluation.testing_config import get_testing_arguments
-
 import pytest
+
 from src.python.evaluation.evaluation_config import EvaluationConfig
 from src.python.evaluation.evaluation_run_tool import get_solutions_df, inspect_solutions_df
+from test.python.evaluation import XLSX_DATA_FOLDER
+from test.python.evaluation.testing_config import get_testing_arguments
 
 
 def test_incorrect_data_path():

@@ -4,17 +4,18 @@ from pathlib import Path
 from typing import Iterable, Set
 
 import pandas as pd
-from src.python.common.tool_arguments import RunToolArgument
+from hyperstyle.src.python.common.tool_arguments import RunToolArgument
+from hyperstyle.src.python.review.common.file_system import Extension, get_parent_folder
+from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
+from hyperstyle.src.python.review.inspectors.issue import BaseIssue, IssueType
+from hyperstyle.src.python.review.reviewers.utils.print_review import convert_issue_to_json
+
 from src.python.evaluation.common.pandas_util import (
     drop_duplicates, filter_df_by_iterable_value, get_solutions_df_by_file_path, write_df_to_file,
 )
 from src.python.evaluation.common.util import ColumnName, parse_set_arg
 from src.python.evaluation.qodana.util.issue_types import QODANA_CLASS_NAME_TO_ISSUE_TYPE
 from src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue
-from src.python.review.common.file_system import Extension, get_parent_folder
-from src.python.review.inspectors.inspector_type import InspectorType
-from src.python.review.inspectors.issue import BaseIssue, IssueType
-from src.python.review.reviewers.utils.print_review import convert_issue_to_json
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:

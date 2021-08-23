@@ -1,7 +1,8 @@
 import argparse
 
+from hyperstyle.src.python.review.common.file_system import Extension
+
 from src.python.evaluation.qodana.imitation_model.common.util import ModelCommonArgument
-from src.python.review.common.file_system import Extension
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:

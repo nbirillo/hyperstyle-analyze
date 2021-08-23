@@ -3,11 +3,12 @@ import os
 from pathlib import Path
 
 import pandas as pd
+from hyperstyle.src.python.review.common.file_system import Extension
 from sklearn.model_selection import train_test_split
+
 from src.python.evaluation.common.csv_util import write_dataframe_to_csv
 from src.python.evaluation.common.util import ColumnName
 from src.python.evaluation.qodana.imitation_model.common.util import SeedArgument
-from src.python.review.common.file_system import Extension
 
 
 def configure_parser() -> argparse.ArgumentParser:

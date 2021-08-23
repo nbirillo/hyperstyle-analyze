@@ -3,13 +3,15 @@ from pathlib import Path
 from typing import List, Set
 
 import pandas as pd
-from src.python.common.tool_arguments import RunToolArgument
+from hyperstyle.src.python.common.tool_arguments import RunToolArgument
+from hyperstyle.src.python.review.common.file_system import (
+    Extension, get_parent_folder, serialize_data_and_write_to_file,
+)
+from hyperstyle.src.python.review.inspectors.issue import BaseIssue
+from hyperstyle.src.python.review.quality.penalty import PenaltyIssue
+
 from src.python.evaluation.common.pandas_util import get_issues_from_json, get_solutions_df_by_file_path
 from src.python.evaluation.common.util import ColumnName, parse_set_arg
-from src.python.evaluation.inspectors.common.statistics import PenaltyIssue
-from src.python.review.common.file_system import Extension, get_parent_folder, serialize_data_and_write_to_file
-from src.python.review.inspectors.issue import BaseIssue
-
 
 TRACEBACK = ColumnName.TRACEBACK.value
 ID = ColumnName.ID.value

@@ -13,14 +13,14 @@ sys.path.append('../../..')
 
 import pandas as pd
 from pandarallel import pandarallel
-from src.python.common.tool_arguments import RunToolArgument
+from hyperstyle.src.python.common.tool_arguments import RunToolArgument
 from src.python.evaluation.common.pandas_util import get_solutions_df, write_df_to_file
 from src.python.evaluation.common.util import ColumnName, EvaluationArgument, script_structure_rule
 from src.python.evaluation.evaluation_config import EvaluationConfig
-from src.python.review.application_config import LanguageVersion
-from src.python.review.common.file_system import create_file
-from src.python.review.common.subprocess_runner import run_in_subprocess
-from src.python.review.reviewers.perform_review import OutputFormat
+from hyperstyle.src.python.review.application_config import LanguageVersion
+from hyperstyle.src.python.review.common.file_system import create_file
+from hyperstyle.src.python.review.common.subprocess_runner import run_in_subprocess
+from hyperstyle.src.python.review.reviewers.perform_review import OutputFormat
 
 logger = logging.getLogger(__name__)
 

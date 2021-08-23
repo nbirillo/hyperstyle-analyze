@@ -1,11 +1,11 @@
-from test.python.common_util import equal_df
-from test.python.evaluation import TARGET_XLSX_DATA_FOLDER, XLSX_DATA_FOLDER
-from test.python.evaluation.testing_config import get_testing_arguments
-
 import pandas as pd
 import pytest
+from hyperstyle.test.python.common_util import equal_df
+
 from src.python.evaluation.evaluation_config import EvaluationConfig
 from src.python.evaluation.evaluation_run_tool import get_solutions_df, inspect_solutions_df
+from test.python.evaluation import TARGET_XLSX_DATA_FOLDER, XLSX_DATA_FOLDER
+from test.python.evaluation.testing_config import get_testing_arguments
 
 FILE_NAMES = [
     ('test_sorted_order.xlsx', 'target_sorted_order.xlsx', False),

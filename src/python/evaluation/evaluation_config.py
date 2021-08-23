@@ -4,14 +4,15 @@ from argparse import Namespace
 from pathlib import Path
 from typing import List, Optional, Union
 
-from src.python.common.tool_arguments import RunToolArgument
-from src.python.evaluation.common.util import EvaluationArgument
-from src.python.review.application_config import LanguageVersion
-from src.python.review.common.file_system import (
+from hyperstyle.src.python.common.tool_arguments import RunToolArgument
+from hyperstyle.src.python.review.application_config import LanguageVersion
+from hyperstyle.src.python.review.common.file_system import (
     Extension,
     get_parent_folder,
     get_restricted_extension,
 )
+
+from src.python.evaluation.common.util import EvaluationArgument
 
 logger = logging.getLogger(__name__)
 

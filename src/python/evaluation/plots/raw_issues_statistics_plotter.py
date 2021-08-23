@@ -15,7 +15,7 @@ from src.python.evaluation.plots.common.utils import (
     save_plot,
 )
 from src.python.evaluation.plots.plotters.raw_issues_statistics_plotters import PlotConfig, PlotTypes
-from src.python.review.common.file_system import Extension, parse_yaml
+from hyperstyle.src.python.review.common.file_system import Extension, parse_yaml
 
 
 @unique

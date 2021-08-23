@@ -8,11 +8,12 @@ from typing import Dict, List, Optional
 
 import pandas as pd
 import plotly.graph_objects as go
+from hyperstyle.src.python.review.common.file_system import Extension, parse_yaml
 from plotly.subplots import make_subplots
+
 from src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path
 from src.python.evaluation.plots.common.utils import get_supported_extensions, save_plot
 from src.python.evaluation.plots.plotters.raw_issues_statistics_plotters import prepare_stats
-from src.python.review.common.file_system import Extension, parse_yaml
 
 logger = logging.getLogger(__name__)
 COLORWAY = ['rgb(47,22,84)', 'rgb(99,47,177)', 'rgb(153,110,216)']
