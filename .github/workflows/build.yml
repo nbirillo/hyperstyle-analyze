@@ -27,6 +27,8 @@ jobs:
         run: |
           export PYTHONPATH=$PYTHONPATH:$pwd/main/venv/src/hyperstyle
           echo $PYTHONPATH
+          echo $VIRTUAL_ENV
+          cd $VIRTUAL_ENV
           ls
           cd main/venv
           cd $pwd/main/venv/src/hyperstyle
