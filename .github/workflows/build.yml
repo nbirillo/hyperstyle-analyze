@@ -18,27 +18,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - uses: actions/setup-python@v2
-
-      - uses: syphar/restore-virtualenv@v1
-        id: cache-virtualenv
-
-      - uses: syphar/restore-pip-download-cache@v1
-        if: steps.cache-virtualenv.outputs.cache-hit != 'true'
-
-        # the package installation will only be executed when the
-        # requirements-files have changed.
-      - run: pip install -r requirements-test.txt -r requirements.txt -r requirements-roberta.txt
-        if: steps.cache-virtualenv.outputs.cache-hit != 'true'
-
       - name: Install hyperstyle
         run: |
           pip install git+https://github.com/hyperskill/hyperstyle.git@delete-evaluation#egg=hyperstyle
+          pip install --no-cache-dir -r requirements-test.txt -r requirements.txt -r requirements-roberta.txt
 
       - name: Add hyperstyle into PYTHONPATH
         run: |
-          echo $VIRTUAL_ENV
-          cd $VIRTUAL_ENV
+          export PYTHONPATH=$PYTHONPATH:$pwd/main/venv/src/hyperstyle
+          echo $PYTHONPATH
+          cd /usr/local/bin/python
           ls
           cd main/venv
           cd $pwd/main/venv/src/hyperstyle
