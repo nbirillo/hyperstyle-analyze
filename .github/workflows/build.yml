@@ -31,11 +31,11 @@ jobs:
         run: |
           cd ./main/venv
           ls
-          export PYTHONPATH=$PYTHONPATH:./main/venv/src/hyperstyle
+          export PYTHONPATH=$PYTHONPATH:$pwd/main/venv/src/hyperstyle
           echo $PYTHONPATH
           which pip
           ls
-          cd main/venv
+          cd $pwd/main/venv
           cd $pwd/main/venv/src/hyperstyle
 
       - name: Lint with flake8
