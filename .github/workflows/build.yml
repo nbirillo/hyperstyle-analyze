@@ -21,9 +21,12 @@ jobs:
       - name: Install requirements
         run: |
           pip install git+https://github.com/hyperskill/hyperstyle.git@delete-evaluation#egg=hyperstyle
+          pip install --no-cache-dir -r requirements-test.txt -r requirements.txt -r requirements-roberta.txt
+
+      - name: Add hyperstyle into PYTHONPATH
+        run: |
           export PYTHONPATH=$PYTHONPATH:$GITHUB_WORKSPACE/main/venv/src/hyperstyle
           echo $PYTHONPATH
-          pip install --no-cache-dir -r requirements-test.txt -r requirements.txt -r requirements-roberta.txt
 
       - name: Lint with flake8
         run: |
