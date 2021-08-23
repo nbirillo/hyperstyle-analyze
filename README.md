@@ -10,7 +10,7 @@ A set of analysis utilities for the [Hyperstyle](https://github.com/hyperskill/h
 
 Simply clone the repository and run the following commands:
 
-1. `pip install -e git+https://github.com/hyperskill/hyperstyle.git@develop#egg=review`
+1. `pip install -e git+https://github.com/hyperskill/hyperstyle.git@develop#egg=hyperstyle`
 2. `pip install -r requirements.txt`
 3. `pip install -r requirements-test.txt` for tests
 4. `pip install -r requirements-roberta.txt` for roberta model
