@@ -27,7 +27,7 @@ jobs:
         run: |
           export PYTHONPATH=$PYTHONPATH:$pwd/main/venv/src/hyperstyle
           echo $PYTHONPATH
-          cd /usr/local/bin/python
+          which pip
           ls
           cd main/venv
           cd $pwd/main/venv/src/hyperstyle
