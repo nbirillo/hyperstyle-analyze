@@ -18,6 +18,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Setup venv
+        run: |
+          python -m venv ./venv
+          tree venv
+          cd $pwd/venv
+          ls
+
       - name: Install hyperstyle
         run: |
           pip install git+https://github.com/hyperskill/hyperstyle.git@delete-evaluation#egg=hyperstyle
