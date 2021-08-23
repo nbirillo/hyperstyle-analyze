@@ -5,7 +5,6 @@ from typing import Dict, List
 
 import pandas as pd
 from hyperstyle.src.python.common.tool_arguments import RunToolArgument
-
 from src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue, QodanaJsonField
 
 

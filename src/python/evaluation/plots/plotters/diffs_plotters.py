@@ -4,7 +4,6 @@ from typing import Any, Callable, Dict, Optional
 import pandas as pd
 import plotly.graph_objects as go
 from hyperstyle.src.python.review.inspectors.issue import IssueType
-
 from src.python.evaluation.inspectors.common.statistics import IssuesStatistics, PenaltyInfluenceStatistics
 from src.python.evaluation.plots.common import plotly_consts
 from src.python.evaluation.plots.common.utils import create_bar_plot, create_box_plot

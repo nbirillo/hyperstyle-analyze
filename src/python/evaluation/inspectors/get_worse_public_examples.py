@@ -6,7 +6,6 @@ import pandas as pd
 from hyperstyle.src.python.common.tool_arguments import RunToolArgument
 from hyperstyle.src.python.review.common.file_system import deserialize_data_from_file, Extension, get_parent_folder
 from hyperstyle.src.python.review.quality.penalty import PenaltyIssue
-
 from src.python.evaluation.common.csv_util import write_dataframe_to_csv
 from src.python.evaluation.common.pandas_util import filter_df_by_single_value, get_solutions_df_by_file_path
 from src.python.evaluation.common.util import ColumnName

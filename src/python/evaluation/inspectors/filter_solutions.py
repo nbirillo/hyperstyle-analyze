@@ -6,7 +6,6 @@ from typing import Set
 from hyperstyle.src.python.common.tool_arguments import RunToolArgument
 from hyperstyle.src.python.review.application_config import LanguageVersion
 from hyperstyle.src.python.review.common.file_system import Extension, get_parent_folder, get_restricted_extension
-
 from src.python.evaluation.common.pandas_util import (
     drop_duplicates,
     filter_df_by_language,

@@ -12,10 +12,6 @@ sys.path.append('../../..')
 
 import pandas as pd
 from pandarallel import pandarallel
-from src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path, write_df_to_file
-from src.python.evaluation.common.util import ColumnName
-from src.python.evaluation.issues_statistics.common.raw_issue_encoder_decoder import RawIssueDecoder
-from src.python.evaluation.issues_statistics.get_raw_issues import RAW_ISSUES
 from hyperstyle.src.python.review.application_config import LanguageVersion
 from hyperstyle.src.python.review.common.file_system import Extension, get_parent_folder, get_total_code_lines_from_code
 from hyperstyle.src.python.review.common.language import Language
@@ -23,6 +19,10 @@ from hyperstyle.src.python.review.inspectors.issue import BaseIssue, ISSUE_TYPE_
 from hyperstyle.src.python.review.quality.rules.code_style_scoring import CodeStyleRule
 from hyperstyle.src.python.review.quality.rules.line_len_scoring import LineLengthRule
 from hyperstyle.src.python.review.reviewers.utils.code_statistics import get_code_style_lines
+from src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path, write_df_to_file
+from src.python.evaluation.common.util import ColumnName
+from src.python.evaluation.issues_statistics.common.raw_issue_encoder_decoder import RawIssueDecoder
+from src.python.evaluation.issues_statistics.get_raw_issues import RAW_ISSUES
 
 ID = ColumnName.ID.value
 LANG = ColumnName.LANG.value

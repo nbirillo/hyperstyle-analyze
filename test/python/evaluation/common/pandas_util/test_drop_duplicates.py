@@ -2,8 +2,8 @@ from pathlib import Path
 
 import pytest
 from hyperstyle.test.python.common_util import equal_df, get_in_and_out_list
-
 from src.python.evaluation.common.pandas_util import drop_duplicates, get_solutions_df_by_file_path
+
 from test.python.evaluation import PANDAS_UTIL_DIR_PATH
 
 RESOURCES_PATH = PANDAS_UTIL_DIR_PATH / 'drop_duplicates'

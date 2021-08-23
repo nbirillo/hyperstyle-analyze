@@ -6,7 +6,6 @@ import pandas as pd
 from hyperstyle.src.python.review.common.file_system import (
     Extension, extension_file_condition, get_all_file_system_items,
 )
-
 from src.python.evaluation.common.csv_util import write_dataframe_to_csv
 from src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path
 from src.python.evaluation.common.util import parse_set_arg

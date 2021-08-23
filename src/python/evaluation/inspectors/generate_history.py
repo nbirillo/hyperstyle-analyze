@@ -13,7 +13,6 @@ from hyperstyle.src.python.review.common.file_system import (
 )
 from hyperstyle.src.python.review.common.language import Language
 from pandarallel import pandarallel
-
 from src.python.evaluation.common.pandas_util import (
     get_issues_from_json,
     get_solutions_df_by_file_path,

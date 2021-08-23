@@ -10,7 +10,6 @@ import pandas as pd
 import plotly.graph_objects as go
 from hyperstyle.src.python.review.common.file_system import Extension, parse_yaml
 from plotly.subplots import make_subplots
-
 from src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path
 from src.python.evaluation.plots.common.utils import get_supported_extensions, save_plot
 from src.python.evaluation.plots.plotters.raw_issues_statistics_plotters import prepare_stats

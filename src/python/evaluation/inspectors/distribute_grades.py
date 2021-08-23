@@ -5,7 +5,6 @@ from typing import Dict, Optional, Tuple
 import pandas as pd
 from hyperstyle.src.python.common.tool_arguments import RunToolArgument
 from hyperstyle.src.python.review.common.file_system import Extension, get_parent_folder, get_restricted_extension
-
 from src.python.evaluation.common.pandas_util import get_solutions_df, get_solutions_df_by_file_path, write_df_to_file
 from src.python.evaluation.common.util import ColumnName
 

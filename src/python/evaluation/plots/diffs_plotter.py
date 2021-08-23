@@ -8,6 +8,7 @@ sys.path.append('../../../..')
 
 import plotly.graph_objects as go
 from hyperstyle.src.python.common.tool_arguments import RunToolArgument
+from hyperstyle.src.python.review.common.file_system import deserialize_data_from_file, Extension, parse_yaml
 from src.python.evaluation.inspectors.common.statistics import (
     GeneralInspectorsStatistics,
     IssuesStatistics,
@@ -22,7 +23,6 @@ from src.python.evaluation.plots.plotters.diffs_plotters import (
     get_penalty_influence_distribution,
     get_unique_issues_by_category,
 )
-from hyperstyle.src.python.review.common.file_system import deserialize_data_from_file, Extension, parse_yaml
 
 
 @unique

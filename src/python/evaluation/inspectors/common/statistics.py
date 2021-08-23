@@ -4,6 +4,7 @@ from statistics import median
 from typing import Dict, List, Tuple
 
 from hyperstyle.src.python.review.inspectors.issue import IssueType, ShortIssue
+from hyperstyle.src.python.review.quality.penalty import PenaltyIssue
 
 
 @dataclass(frozen=True)

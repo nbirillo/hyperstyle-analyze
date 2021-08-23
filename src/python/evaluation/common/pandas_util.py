@@ -9,7 +9,6 @@ from hyperstyle.src.python.review.application_config import LanguageVersion
 from hyperstyle.src.python.review.common.file_system import Extension, get_restricted_extension
 from hyperstyle.src.python.review.quality.penalty import PenaltyIssue
 from hyperstyle.src.python.review.reviewers.utils.print_review import convert_json_to_issues
-
 from src.python.evaluation.common.csv_util import write_dataframe_to_csv
 from src.python.evaluation.common.util import ColumnName
 from src.python.evaluation.common.xlsx_util import create_workbook, remove_sheet, write_dataframe_to_xlsx_sheet

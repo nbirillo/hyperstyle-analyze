@@ -6,7 +6,6 @@ from typing import Callable, Dict, Optional, Tuple
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
-
 from src.python.evaluation.issues_statistics.get_raw_issues_statistics import VALUE
 from src.python.evaluation.plots.common.utils import (
     COLOR,

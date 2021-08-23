@@ -16,7 +16,6 @@ from hyperstyle.src.python.review.inspectors.issue import (
     LineLenIssue,
     MaintainabilityLackIssue,
 )
-
 from src.python.evaluation.issues_statistics.common.raw_issue_encoder_decoder import RawIssueDecoder, RawIssueEncoder
 
 FILE_PATH = 'some_file.py'

@@ -7,7 +7,6 @@ from hyperstyle.src.python.common.tool_arguments import RunToolArgument
 from hyperstyle.src.python.review.common.file_system import deserialize_data_from_file
 from hyperstyle.src.python.review.inspectors.issue import ShortIssue
 from hyperstyle.src.python.review.quality.penalty import PenaltyIssue
-
 from src.python.evaluation.common.util import ColumnName
 from src.python.evaluation.inspectors.common.statistics import (
     GeneralInspectorsStatistics, IssuesStatistics, PenaltyInfluenceStatistics,
