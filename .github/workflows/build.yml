@@ -21,7 +21,7 @@ jobs:
       - name: Install requirements
         run: |
           pip install git+https://github.com/hyperskill/hyperstyle.git@delete-evaluation#egg=hyperstyle
-          pip install --no-cache-dir -r requirements-test.txt -r requirements.txt requirements-roberta
+          pip install --no-cache-dir -r requirements-test.txt -r requirements.txt requirements-roberta.txt
 
       - name: Lint with flake8
         run: |
