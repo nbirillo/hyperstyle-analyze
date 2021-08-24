@@ -1,7 +1,6 @@
-from evaluation import XLSX_DATA_FOLDER
-from evaluation.testing_config import get_testing_arguments
-
 import pytest
+from analysis.test.python.evaluation import XLSX_DATA_FOLDER
+from analysis.test.python.evaluation.testing_config import get_testing_arguments
 from evaluation.evaluation_config import EvaluationConfig
 from evaluation.evaluation_run_tool import get_solutions_df, inspect_solutions_df
 

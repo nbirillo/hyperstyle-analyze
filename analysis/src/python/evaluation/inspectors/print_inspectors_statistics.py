@@ -6,7 +6,6 @@ from typing import Dict, List
 from hyperstyle.src.python.review.common.file_system import deserialize_data_from_file
 from hyperstyle.src.python.review.inspectors.issue import ShortIssue
 from hyperstyle.src.python.review.quality.penalty import PenaltyIssue
-
 from evaluation.common.tool_arguments import EvaluationRunToolArgument
 from evaluation.common.util import ColumnName
 from evaluation.inspectors.common.statistics import (

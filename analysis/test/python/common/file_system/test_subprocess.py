@@ -7,9 +7,8 @@ from hyperstyle.src.python.review.application_config import LanguageVersion
 from hyperstyle.src.python.review.common.file_system import create_file, get_content_from_file
 from hyperstyle.src.python.review.common.subprocess_runner import run_in_subprocess
 from evaluation.evaluation_config import EvaluationConfig
-
 from common import FILE_SYSTEM_DATA_FOLDER
-from evaluation.testing_config import get_testing_arguments
+from analysis.test.python.evaluation.testing_config import get_testing_arguments
 
 INPUT_DATA = [
     ('in_1.java', LanguageVersion.JAVA_11),

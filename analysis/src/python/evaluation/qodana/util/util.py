@@ -4,7 +4,6 @@ from pathlib import Path
 from typing import Dict, List
 
 import pandas as pd
-
 from evaluation.common.tool_arguments import EvaluationRunToolArgument
 from evaluation.qodana.util.models import QodanaColumnName, QodanaIssue, QodanaJsonField
 

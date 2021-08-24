@@ -8,8 +8,6 @@ import traceback
 from pathlib import Path
 from typing import Optional
 
-from evaluation.common.tool_arguments import EvaluationRunToolArgument
-
 sys.path.append('')
 sys.path.append('../../..')
 
@@ -18,6 +16,7 @@ from pandarallel import pandarallel
 from hyperstyle.src.python.common.tool_arguments import RunToolArgument
 from evaluation.common.pandas_util import get_solutions_df, write_df_to_file
 from evaluation.common.util import ColumnName, EvaluationArgument, script_structure_rule
+from evaluation.common.tool_arguments import EvaluationRunToolArgument
 from evaluation.evaluation_config import EvaluationConfig
 from hyperstyle.src.python.review.application_config import LanguageVersion
 from hyperstyle.src.python.review.common.file_system import create_file

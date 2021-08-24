@@ -12,8 +12,7 @@ from evaluation.issues_statistics.get_raw_issues_statistics import (
     DEFAULT_OUTPUT_FOLDER_NAME,
     inspect_raw_issues,
 )
-
-from evaluation.issues_statistics import (
+from analysis.test.python.evaluation.issues_statistics import (
     GET_RAW_ISSUES_STATISTICS_TARGET_FILES_FOLDER,
     GET_RAW_ISSUES_STATISTICS_TEST_FILES_FOLDER,
 )

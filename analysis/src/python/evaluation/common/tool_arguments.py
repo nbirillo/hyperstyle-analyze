@@ -1,4 +1,4 @@
-from enum import unique, Enum
+from enum import Enum, unique
 
 from hyperstyle.src.python.common.tool_arguments import ArgumentsInfo
 from hyperstyle.src.python.review.application_config import LanguageVersion

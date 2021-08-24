@@ -6,8 +6,6 @@ import sys
 from pathlib import Path
 from typing import List, Optional
 
-from evaluation.common.tool_arguments import EvaluationRunToolArgument
-
 sys.path.append('')
 sys.path.append('../../..')
 
@@ -18,6 +16,7 @@ from hyperstyle.src.python.common.tool_arguments import RunToolArgument
 from evaluation.common.pandas_util import get_solutions_df_by_file_path, write_df_to_file
 from evaluation.common.util import ColumnName
 from evaluation.issues_statistics.common.raw_issue_encoder_decoder import RawIssueEncoder
+from evaluation.common.tool_arguments import EvaluationRunToolArgument
 from hyperstyle.src.python.review.application_config import LanguageVersion
 from hyperstyle.src.python.review.common.file_system import (
     create_file,
@@ -96,12 +95,11 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
 
 
 def _filter_issues(
-    issues: List[BaseIssue],
-    allow_duplicates: bool,
-    allow_zero_measure_issues: bool,
-    allow_info_issues: bool,
+        issues: List[BaseIssue],
+        allow_duplicates: bool,
+        allow_zero_measure_issues: bool,
+        allow_info_issues: bool,
 ) -> List[BaseIssue]:
-
     filtered_issues = issues
 
     if not allow_duplicates:
@@ -124,14 +122,13 @@ def _check_issues_for_errors(issues: List[BaseIssue]) -> bool:
 
 
 def _inspect_row(
-    row: pd.Series,
-    solutions_file_path: Path,
-    allow_duplicates: bool,
-    allow_zero_measure_issues: bool,
-    allow_info_issues: bool,
-    to_safe_path: bool,
+        row: pd.Series,
+        solutions_file_path: Path,
+        allow_duplicates: bool,
+        allow_zero_measure_issues: bool,
+        allow_info_issues: bool,
+        to_safe_path: bool,
 ) -> Optional[str]:
-
     print(f'{row[ID]}: processing started')
 
     if pd.isnull(row[LANG]):
@@ -217,14 +214,13 @@ def _get_output_path(solutions_file_path: Path, output_path: Optional[Path]) -> 
 
 
 def inspect_solutions(
-    solutions_df: pd.DataFrame,
-    solutions_file_path: Path,
-    allow_duplicates: bool,
-    allow_zero_measure_issues: bool,
-    allow_info_issues: bool,
-    to_save_path: bool,
+        solutions_df: pd.DataFrame,
+        solutions_file_path: Path,
+        allow_duplicates: bool,
+        allow_zero_measure_issues: bool,
+        allow_info_issues: bool,
+        to_save_path: bool,
 ) -> pd.DataFrame:
-
     pandarallel.initialize()
 
     solutions_df[RAW_ISSUES] = solutions_df.parallel_apply(
