@@ -5,10 +5,10 @@ from typing import Dict, List
 import pandas as pd
 from hyperstyle.src.python.review.common.file_system import deserialize_data_from_file, Extension, get_parent_folder
 from hyperstyle.src.python.review.quality.penalty import PenaltyIssue
-from evaluation.common.csv_util import write_dataframe_to_csv
-from evaluation.common.pandas_util import filter_df_by_single_value, get_solutions_df_by_file_path
-from evaluation.common.tool_arguments import EvaluationRunToolArgument
-from evaluation.common.util import ColumnName
+from analysis.src.python.evaluation.common.csv_util import write_dataframe_to_csv
+from analysis.src.python.evaluation.common.pandas_util import filter_df_by_single_value, get_solutions_df_by_file_path
+from analysis.src.python.evaluation.common.tool_arguments import EvaluationRunToolArgument
+from analysis.src.python.evaluation.common.util import ColumnName
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:

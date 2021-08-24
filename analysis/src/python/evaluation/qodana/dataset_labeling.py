@@ -9,15 +9,15 @@ from collections import defaultdict
 from math import ceil
 from pathlib import Path
 from typing import Dict, List, Optional
-
-sys.path.append('../../../..')
-
+sys.path.append('')
+from analysis import MAIN_FOLDER
+sys.path.append(f'{MAIN_FOLDER.parent.parent}/main/venv/src')
 import numpy as np
 import pandas as pd
-from evaluation.common.csv_util import write_dataframe_to_csv
-from evaluation.common.util import ColumnName
-from evaluation.qodana.util.models import QodanaColumnName, QodanaIssue
-from evaluation.qodana.util.util import to_json
+from analysis.src.python.evaluation.common.csv_util import write_dataframe_to_csv
+from analysis.src.python.evaluation.common.util import ColumnName
+from analysis.src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue
+from analysis.src.python.evaluation.qodana.util.util import to_json
 from hyperstyle.src.python.review.application_config import LanguageVersion
 from hyperstyle.src.python.review.common.file_system import (
     copy_directory,

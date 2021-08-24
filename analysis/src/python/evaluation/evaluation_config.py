@@ -11,7 +11,7 @@ from hyperstyle.src.python.review.common.file_system import (
     get_parent_folder,
     get_restricted_extension,
 )
-from evaluation.common.util import EvaluationArgument
+from analysis.src.python.evaluation.common.util import EvaluationArgument
 
 logger = logging.getLogger(__name__)
 

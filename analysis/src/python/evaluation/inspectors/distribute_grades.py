@@ -4,9 +4,9 @@ from typing import Dict, Optional, Tuple
 
 import pandas as pd
 from hyperstyle.src.python.review.common.file_system import Extension, get_parent_folder, get_restricted_extension
-from evaluation.common.pandas_util import get_solutions_df, get_solutions_df_by_file_path, write_df_to_file
-from evaluation.common.tool_arguments import EvaluationRunToolArgument
-from evaluation.common.util import ColumnName
+from analysis.src.python.evaluation.common.pandas_util import get_solutions_df, get_solutions_df_by_file_path, write_df_to_file
+from analysis.src.python.evaluation.common.tool_arguments import EvaluationRunToolArgument
+from analysis.src.python.evaluation.common.util import ColumnName
 
 CodeToGradesDict = Dict[str, Tuple[str, Optional[str]]]
 

@@ -4,8 +4,8 @@ import sys
 from pathlib import Path
 
 from hyperstyle.src.python.review.common.file_system import get_content_from_file
-from evaluation.evaluation_run_tool import logger
-from evaluation.paper_evaluation.survey_handler.survey_statistics import SurveyJsonField, SurveyStatistics
+from analysis.src.python.evaluation.evaluation_run_tool import logger
+from analysis.src.python.evaluation.paper_evaluation.survey_handler.survey_statistics import SurveyJsonField, SurveyStatistics
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:

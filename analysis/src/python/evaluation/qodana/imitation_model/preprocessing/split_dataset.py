@@ -5,9 +5,9 @@ from pathlib import Path
 import pandas as pd
 from hyperstyle.src.python.review.common.file_system import Extension
 from sklearn.model_selection import train_test_split
-from evaluation.common.csv_util import write_dataframe_to_csv
-from evaluation.common.util import ColumnName
-from evaluation.qodana.imitation_model.common.util import SeedArgument
+from analysis.src.python.evaluation.common.csv_util import write_dataframe_to_csv
+from analysis.src.python.evaluation.common.util import ColumnName
+from analysis.src.python.evaluation.qodana.imitation_model.common.util import SeedArgument
 
 
 def configure_parser() -> argparse.ArgumentParser:

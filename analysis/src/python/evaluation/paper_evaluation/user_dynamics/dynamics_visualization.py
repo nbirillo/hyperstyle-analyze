@@ -10,8 +10,8 @@ import plotly.express as px
 from hyperstyle.src.python.review.common.file_system import (
     Extension, extension_file_condition, get_all_file_system_items, get_parent_folder,
 )
-from evaluation.common.pandas_util import logger
-from evaluation.paper_evaluation.user_dynamics.user_statistics import DynamicsColumn
+from analysis.src.python.evaluation.common.pandas_util import logger
+from analysis.src.python.evaluation.paper_evaluation.user_dynamics.user_statistics import DynamicsColumn
 
 MEDIAN_COLUMN = 'Median number of code quality issues in submissions'
 FREQ_COLUMN = 'Number of users'

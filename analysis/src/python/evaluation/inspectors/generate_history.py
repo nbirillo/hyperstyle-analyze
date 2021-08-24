@@ -12,14 +12,14 @@ from hyperstyle.src.python.review.common.file_system import (
 )
 from hyperstyle.src.python.review.common.language import Language
 from pandarallel import pandarallel
-from evaluation.common.pandas_util import (
+from analysis.src.python.evaluation.common.pandas_util import (
     get_issues_from_json,
     get_solutions_df_by_file_path,
     write_df_to_file,
 )
-from evaluation.common.tool_arguments import EvaluationRunToolArgument
-from evaluation.common.util import ColumnName, EvaluationArgument
-from evaluation.evaluation_run_tool import get_language_version
+from analysis.src.python.evaluation.common.tool_arguments import EvaluationRunToolArgument
+from analysis.src.python.evaluation.common.util import ColumnName, EvaluationArgument
+from analysis.src.python.evaluation.evaluation_run_tool import get_language_version
 
 TRACEBACK = EvaluationArgument.TRACEBACK.value
 GRADE = ColumnName.GRADE.value

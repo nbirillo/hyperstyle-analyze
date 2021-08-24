@@ -13,8 +13,8 @@ from hyperstyle.src.python.review.inspectors.issue import (
     MaintainabilityLackIssue,
 )
 from hyperstyle.test.python.common_util import equal_df
-from evaluation.common.pandas_util import get_solutions_df_by_file_path
-from evaluation.issues_statistics.get_raw_issues import _filter_issues, _get_output_path, inspect_solutions
+from analysis.src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path
+from analysis.src.python.evaluation.issues_statistics.get_raw_issues import _filter_issues, _get_output_path, inspect_solutions
 from analysis.test.python.evaluation.issues_statistics import (
     GET_RAW_ISSUES_TARGET_FILES_FOLDER, GET_RAW_ISSUES_TEST_FILES_FOLDER,
 )

@@ -19,10 +19,10 @@ from hyperstyle.src.python.review.inspectors.issue import BaseIssue, ISSUE_TYPE_
 from hyperstyle.src.python.review.quality.rules.code_style_scoring import CodeStyleRule
 from hyperstyle.src.python.review.quality.rules.line_len_scoring import LineLengthRule
 from hyperstyle.src.python.review.reviewers.utils.code_statistics import get_code_style_lines
-from evaluation.common.pandas_util import get_solutions_df_by_file_path, write_df_to_file
-from evaluation.common.util import ColumnName
-from evaluation.issues_statistics.common.raw_issue_encoder_decoder import RawIssueDecoder
-from evaluation.issues_statistics.get_raw_issues import RAW_ISSUES
+from analysis.src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path, write_df_to_file
+from analysis.src.python.evaluation.common.util import ColumnName
+from analysis.src.python.evaluation.issues_statistics.common.raw_issue_encoder_decoder import RawIssueDecoder
+from analysis.src.python.evaluation.issues_statistics.get_raw_issues import RAW_ISSUES
 
 ID = ColumnName.ID.value
 LANG = ColumnName.LANG.value

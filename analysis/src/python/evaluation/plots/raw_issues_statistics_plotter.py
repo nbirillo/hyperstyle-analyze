@@ -9,13 +9,13 @@ sys.path.append('../../../..')
 
 import plotly.graph_objects as go
 from hyperstyle.src.python.review.common.file_system import Extension, parse_yaml
-from evaluation.common.pandas_util import get_solutions_df_by_file_path
-from evaluation.plots.common import plotly_consts
-from evaluation.plots.common.utils import (
+from analysis.src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path
+from analysis.src.python.evaluation.plots.common import plotly_consts
+from analysis.src.python.evaluation.plots.common.utils import (
     get_supported_extensions,
     save_plot,
 )
-from evaluation.plots.plotters.raw_issues_statistics_plotters import PlotConfig, PlotTypes
+from analysis.src.python.evaluation.plots.plotters.raw_issues_statistics_plotters import PlotConfig, PlotTypes
 
 
 @unique

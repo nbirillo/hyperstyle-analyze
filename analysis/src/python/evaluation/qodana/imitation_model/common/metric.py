@@ -3,7 +3,7 @@ from typing import Optional
 
 import torch
 from sklearn.metrics import multilabel_confusion_matrix
-from evaluation.qodana.imitation_model.common.util import MeasurerArgument
+from analysis.src.python.evaluation.qodana.imitation_model.common.util import MeasurerArgument
 
 logger = logging.getLogger(__name__)
 

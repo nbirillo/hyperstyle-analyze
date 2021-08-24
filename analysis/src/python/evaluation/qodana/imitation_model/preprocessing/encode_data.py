@@ -9,9 +9,9 @@ import numpy as np
 import pandas as pd
 from hyperstyle.src.python.review.common.file_system import Extension
 from sklearn.preprocessing import MultiLabelBinarizer
-from evaluation.common.csv_util import write_dataframe_to_csv
-from evaluation.common.util import ColumnName
-from evaluation.qodana.imitation_model.common.util import CustomTokens, DatasetColumnArgument
+from analysis.src.python.evaluation.common.csv_util import write_dataframe_to_csv
+from analysis.src.python.evaluation.common.util import ColumnName
+from analysis.src.python.evaluation.qodana.imitation_model.common.util import CustomTokens, DatasetColumnArgument
 
 logger = logging.getLogger(__name__)
 sys.path.append('')

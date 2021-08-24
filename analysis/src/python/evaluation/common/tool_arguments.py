@@ -2,7 +2,7 @@ from enum import Enum, unique
 
 from hyperstyle.src.python.common.tool_arguments import ArgumentsInfo
 from hyperstyle.src.python.review.application_config import LanguageVersion
-from evaluation.common.util import ColumnName
+from analysis.src.python.evaluation.common.util import ColumnName
 
 
 @unique

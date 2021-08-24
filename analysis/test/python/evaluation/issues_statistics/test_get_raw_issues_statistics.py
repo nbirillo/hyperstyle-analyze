@@ -5,8 +5,8 @@ import pandas as pd
 import pytest
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.test.python.common_util import equal_df
-from evaluation.common.pandas_util import get_solutions_df_by_file_path
-from evaluation.issues_statistics.get_raw_issues_statistics import (
+from analysis.src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path
+from analysis.src.python.evaluation.issues_statistics.get_raw_issues_statistics import (
     _convert_language_code_to_language,
     _get_output_folder,
     DEFAULT_OUTPUT_FOLDER_NAME,

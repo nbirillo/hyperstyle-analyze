@@ -6,8 +6,8 @@ from typing import Callable, Dict, Optional, Tuple
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
-from evaluation.issues_statistics.get_raw_issues_statistics import VALUE
-from evaluation.plots.common.utils import (
+from analysis.src.python.evaluation.issues_statistics.get_raw_issues_statistics import VALUE
+from analysis.src.python.evaluation.plots.common.utils import (
     COLOR,
     COLORWAY,
     create_box_plot,

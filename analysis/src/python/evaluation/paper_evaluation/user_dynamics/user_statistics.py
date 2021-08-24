@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from enum import Enum, unique
 from typing import Dict, List
 
-from evaluation.inspectors.common.statistics import PenaltyIssue
+from analysis.src.python.evaluation.inspectors.common.statistics import PenaltyIssue
 
 
 @unique

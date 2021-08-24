@@ -8,13 +8,13 @@ import pandas as pd
 from hyperstyle.src.python.review.common.file_system import Extension, get_parent_folder, get_restricted_extension
 from hyperstyle.src.python.review.inspectors.issue import IssueType
 from hyperstyle.src.python.review.quality.penalty import PenaltyIssue
-from evaluation.common.csv_util import write_dataframe_to_csv
-from evaluation.common.pandas_util import (
+from analysis.src.python.evaluation.common.csv_util import write_dataframe_to_csv
+from analysis.src.python.evaluation.common.pandas_util import (
     filter_df_by_single_value, get_issues_from_json, get_solutions_df, logger,
 )
-from evaluation.common.tool_arguments import EvaluationRunToolArgument
-from evaluation.common.util import ColumnName
-from evaluation.paper_evaluation.user_dynamics.user_statistics import DynamicsColumn
+from analysis.src.python.evaluation.common.tool_arguments import EvaluationRunToolArgument
+from analysis.src.python.evaluation.common.util import ColumnName
+from analysis.src.python.evaluation.paper_evaluation.user_dynamics.user_statistics import DynamicsColumn
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:

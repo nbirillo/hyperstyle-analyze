@@ -7,7 +7,9 @@ import time
 import traceback
 from pathlib import Path
 from typing import Optional
-
+sys.path.append('')
+from analysis import MAIN_FOLDER
+sys.path.append(f'{MAIN_FOLDER.parent.parent}/main/venv/src')
 import pandas as pd
 from pandarallel import pandarallel
 from analysis.src.python.evaluation.common.pandas_util import get_solutions_df, write_df_to_file

@@ -1,8 +1,8 @@
 import pandas as pd
 import pytest
 from hyperstyle.test.python.common_util import equal_df
-from evaluation.evaluation_config import EvaluationConfig
-from evaluation.evaluation_run_tool import get_solutions_df, inspect_solutions_df
+from analysis.src.python.evaluation.evaluation_config import EvaluationConfig
+from analysis.src.python.evaluation.evaluation_run_tool import get_solutions_df, inspect_solutions_df
 from analysis.test.python.evaluation import TARGET_XLSX_DATA_FOLDER, XLSX_DATA_FOLDER
 from analysis.test.python.evaluation.testing_config import get_testing_arguments
 

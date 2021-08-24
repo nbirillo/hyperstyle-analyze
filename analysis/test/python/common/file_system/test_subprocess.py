@@ -6,7 +6,7 @@ import pytest
 from hyperstyle.src.python.review.application_config import LanguageVersion
 from hyperstyle.src.python.review.common.file_system import create_file, get_content_from_file
 from hyperstyle.src.python.review.common.subprocess_runner import run_in_subprocess
-from evaluation.evaluation_config import EvaluationConfig
+from analysis.src.python.evaluation.evaluation_config import EvaluationConfig
 from common import FILE_SYSTEM_DATA_FOLDER
 from analysis.test.python.evaluation.testing_config import get_testing_arguments
 

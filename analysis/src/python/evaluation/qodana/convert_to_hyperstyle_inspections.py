@@ -8,13 +8,13 @@ from hyperstyle.src.python.review.common.file_system import Extension, get_paren
 from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
 from hyperstyle.src.python.review.inspectors.issue import BaseIssue, IssueType
 from hyperstyle.src.python.review.reviewers.utils.print_review import convert_issue_to_json
-from evaluation.common.pandas_util import (
+from analysis.src.python.evaluation.common.pandas_util import (
     drop_duplicates, filter_df_by_iterable_value, get_solutions_df_by_file_path, write_df_to_file,
 )
-from evaluation.common.tool_arguments import EvaluationRunToolArgument
-from evaluation.common.util import ColumnName, parse_set_arg
-from evaluation.qodana.util.issue_types import QODANA_CLASS_NAME_TO_ISSUE_TYPE
-from evaluation.qodana.util.models import QodanaColumnName, QodanaIssue
+from analysis.src.python.evaluation.common.tool_arguments import EvaluationRunToolArgument
+from analysis.src.python.evaluation.common.util import ColumnName, parse_set_arg
+from analysis.src.python.evaluation.qodana.util.issue_types import QODANA_CLASS_NAME_TO_ISSUE_TYPE
+from analysis.src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:

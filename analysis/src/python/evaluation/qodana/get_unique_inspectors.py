@@ -6,10 +6,10 @@ from typing import Dict, List, Optional
 
 import pandas as pd
 from hyperstyle.src.python.review.common.file_system import Extension, get_parent_folder
-from evaluation.common.csv_util import write_dataframe_to_csv
-from evaluation.common.pandas_util import get_solutions_df_by_file_path
-from evaluation.common.tool_arguments import EvaluationRunToolArgument
-from evaluation.qodana.util.models import QodanaColumnName, QodanaIssue
+from analysis.src.python.evaluation.common.csv_util import write_dataframe_to_csv
+from analysis.src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path
+from analysis.src.python.evaluation.common.tool_arguments import EvaluationRunToolArgument
+from analysis.src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue
 
 INSPECTION_ID = QodanaColumnName.INSPECTION_ID.value
 INSPECTIONS = QodanaColumnName.INSPECTIONS.value

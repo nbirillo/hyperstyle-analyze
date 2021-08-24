@@ -4,12 +4,12 @@ import sys
 from pathlib import Path
 
 import torch
-from evaluation.qodana.imitation_model.common.metric import Measurer
-from evaluation.qodana.imitation_model.common.train_config import (
+from analysis.src.python.evaluation.qodana.imitation_model.common.metric import Measurer
+from analysis.src.python.evaluation.qodana.imitation_model.common.train_config import (
     configure_arguments, MultilabelTrainer, TrainingArgs,
 )
-from evaluation.qodana.imitation_model.common.util import DatasetColumnArgument
-from evaluation.qodana.imitation_model.dataset.dataset import QodanaDataset
+from analysis.src.python.evaluation.qodana.imitation_model.common.util import DatasetColumnArgument
+from analysis.src.python.evaluation.qodana.imitation_model.dataset.dataset import QodanaDataset
 from transformers import RobertaForSequenceClassification
 
 

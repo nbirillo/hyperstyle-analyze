@@ -1,8 +1,8 @@
 import pytest
 from analysis.test.python.evaluation import XLSX_DATA_FOLDER
 from analysis.test.python.evaluation.testing_config import get_testing_arguments
-from evaluation.evaluation_config import EvaluationConfig
-from evaluation.evaluation_run_tool import get_solutions_df, inspect_solutions_df
+from analysis.src.python.evaluation.evaluation_config import EvaluationConfig
+from analysis.src.python.evaluation.evaluation_run_tool import get_solutions_df, inspect_solutions_df
 
 FILE_NAMES = [
     'test_wrong_column_name.xlsx',

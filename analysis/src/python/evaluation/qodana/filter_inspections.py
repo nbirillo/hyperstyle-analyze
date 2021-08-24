@@ -6,11 +6,11 @@ import pandas as pd
 from hyperstyle.src.python.review.common.file_system import (
     Extension, extension_file_condition, get_all_file_system_items,
 )
-from evaluation.common.csv_util import write_dataframe_to_csv
-from evaluation.common.pandas_util import get_solutions_df_by_file_path
-from evaluation.common.util import parse_set_arg
-from evaluation.qodana.util.models import QodanaColumnName, QodanaIssue
-from evaluation.qodana.util.util import to_json
+from analysis.src.python.evaluation.common.csv_util import write_dataframe_to_csv
+from analysis.src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path
+from analysis.src.python.evaluation.common.util import parse_set_arg
+from analysis.src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue
+from analysis.src.python.evaluation.qodana.util.util import to_json
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:

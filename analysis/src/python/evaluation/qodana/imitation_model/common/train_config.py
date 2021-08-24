@@ -1,7 +1,7 @@
 import argparse
 
 import torch
-from evaluation.qodana.imitation_model.common.util import (
+from analysis.src.python.evaluation.qodana.imitation_model.common.util import (
     DatasetColumnArgument,
     ModelCommonArgument,
     SeedArgument,

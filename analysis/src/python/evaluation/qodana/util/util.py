@@ -4,8 +4,8 @@ from pathlib import Path
 from typing import Dict, List
 
 import pandas as pd
-from evaluation.common.tool_arguments import EvaluationRunToolArgument
-from evaluation.qodana.util.models import QodanaColumnName, QodanaIssue, QodanaJsonField
+from analysis.src.python.evaluation.common.tool_arguments import EvaluationRunToolArgument
+from analysis.src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue, QodanaJsonField
 
 
 def to_json(issues: List[QodanaIssue]) -> str:
