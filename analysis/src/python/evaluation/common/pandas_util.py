@@ -105,3 +105,8 @@ def get_issues_from_json(str_json: str) -> List[PenaltyIssue]:
 
 def get_issues_by_row(df: pd.DataFrame, row: int) -> List[PenaltyIssue]:
     return get_issues_from_json(df.iloc[row][ColumnName.TRACEBACK.value])
+
+
+def equal_df(expected_df: pd.DataFrame, actual_df: pd.DataFrame) -> bool:
+    return expected_df.reset_index(drop=True).equals(
+        actual_df.reset_index(drop=True)) or (expected_df.empty and actual_df.empty)

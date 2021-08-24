@@ -1,8 +1,11 @@
 from enum import Enum, unique
-from typing import Set
+from pathlib import Path
+from typing import List, Set, Tuple
 
 from src.python.review.application_config import LanguageVersion
-from src.python.review.common.file_system import Extension
+from src.python.review.common.file_system import (
+    Extension, get_all_file_system_items, match_condition, pair_in_and_out_files,
+)
 
 
 @unique
@@ -51,3 +54,11 @@ script_structure_rule = ('Please, make sure your XLSX-file matches following scr
 # Split string by separator
 def parse_set_arg(str_arg: str, separator: str = ',') -> Set[str]:
     return set(str_arg.split(separator))
+
+
+def get_in_and_out_list(root: Path,
+                        in_ext: Extension = Extension.CSV,
+                        out_ext: Extension = Extension.CSV) -> List[Tuple[Path, Path]]:
+    in_files = get_all_file_system_items(root, match_condition(rf'in_\d+{in_ext.value}'))
+    out_files = get_all_file_system_items(root, match_condition(rf'out_\d+{out_ext.value}'))
+    return pair_in_and_out_files(in_files, out_files)

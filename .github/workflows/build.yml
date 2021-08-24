@@ -26,12 +26,6 @@ jobs:
         run: |
           ./main/venv/bin/pip install -e git+https://github.com/hyperskill/hyperstyle.git@delete-evaluation#egg=hyperstyle
           ./main/venv/bin/pip install --no-cache-dir -r requirements-test.txt -r requirements.txt -r requirements-roberta.txt
-#
-#      - name: Add hyperstyle into PYTHONPATH
-#        run: |
-#          export PYTHONPATH=$PYTHONPATH:$pwd/main/venv/src/hyperstyle
-#          export PYTHONPATH=$PYTHONPATH:$pwd/main/venv/src
-#          echo $PYTHONPATH
 
       - name: Lint with flake8
         run: |
@@ -53,13 +47,6 @@ jobs:
         with:
           add: "['whitelist.txt']"
           message: 'Sort whitelists (Github Actions)'
-
-#      - name: Set hyperstyle path
-#        run: |
-#          mkdir ~/hyperstyle_repo
-#          cd ~/hyperstyle_repo
-#          git clone https://github.com/hyperskill/hyperstyle.git
-#          export HYPERSTYLE_RUNNER_PATH="$(pwd)/hyperstyle/src/python/review/run_tool.py"
 
       - name: Test with pytest
         run: |

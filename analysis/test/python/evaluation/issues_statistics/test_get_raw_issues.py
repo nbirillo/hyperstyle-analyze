@@ -12,8 +12,7 @@ from src.python.review.inspectors.issue import (
     LineLenIssue,
     MaintainabilityLackIssue,
 )
-from hyperstyle.test.python.common_util import equal_df
-from analysis.src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path
+from analysis.src.python.evaluation.common.pandas_util import equal_df, get_solutions_df_by_file_path
 from analysis.src.python.evaluation.issues_statistics.get_raw_issues import (
     _filter_issues, _get_output_path, inspect_solutions,
 )
