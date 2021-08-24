@@ -1,4 +1,4 @@
-from evaluation import CURRENT_TEST_DATA_FOLDER
+from analysis.test.python.evaluation import CURRENT_TEST_DATA_FOLDER
 
 ISSUES_STATISTICS_TEST_DATA_FOLDER = CURRENT_TEST_DATA_FOLDER / 'issues_statistics'
 

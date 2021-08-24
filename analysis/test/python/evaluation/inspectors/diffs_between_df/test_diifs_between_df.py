@@ -95,4 +95,4 @@ def test(old_file: Path, new_file: Path, diffs: dict):
     old_df = get_solutions_df_by_file_path(RESOURCES_PATH / old_file)
     new_df = get_solutions_df_by_file_path(RESOURCES_PATH / new_file)
     actual_diffs = find_diffs(old_df, new_df)
-    assert actual_diffs == diffs
+    assert sorted(actual_diffs) == sorted(diffs)

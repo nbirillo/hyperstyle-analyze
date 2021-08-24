@@ -22,8 +22,12 @@ from analysis.src.python.evaluation.inspectors.inspectors_stat.issues.flake8_all
     ALL_IMPORT_ORDER_ISSUES, ALL_RETURN_ISSUES, ALL_SPELLCHECK_ISSUES, ALL_STANDARD_ISSUES, ALL_WPS_ISSUES,
     FLAKE8_DISABLED_ISSUES,
 )
-from analysis.src.python.evaluation.inspectors.inspectors_stat.issues.other_issues import PYTHON_AST_ISSUES, PYTHON_RADON_ISSUES
-from analysis.src.python.evaluation.inspectors.inspectors_stat.issues.pylint_all_issues import ALL_ISSUES, PYLINT_DISABLED_ISSUES
+from analysis.src.python.evaluation.inspectors.inspectors_stat.issues.other_issues import (
+    PYTHON_AST_ISSUES, PYTHON_RADON_ISSUES,
+)
+from analysis.src.python.evaluation.inspectors.inspectors_stat.issues.pylint_all_issues import (
+    ALL_ISSUES, PYLINT_DISABLED_ISSUES,
+)
 
 
 def __get_flake8_issue_keys() -> Set[str]:

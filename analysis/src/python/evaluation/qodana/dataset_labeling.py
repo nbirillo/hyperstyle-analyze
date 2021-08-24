@@ -10,8 +10,7 @@ from math import ceil
 from pathlib import Path
 from typing import Dict, List, Optional
 sys.path.append('')
-from analysis import MAIN_FOLDER
-sys.path.append(f'{MAIN_FOLDER.parent.parent}/main/venv/src')
+
 import numpy as np
 import pandas as pd
 from analysis.src.python.evaluation.common.csv_util import write_dataframe_to_csv
