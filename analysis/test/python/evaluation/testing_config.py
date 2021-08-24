@@ -15,7 +15,7 @@ def get_testing_arguments(to_add_traceback=None, to_add_tool_path=None, to_add_h
 
     if to_add_tool_path:
         testing_arguments.tool_path = HYPERSTYLE_RUNNER_PATH
-        print(f'HYPERSTYLE_RUNNER_PATH FINAL: {HYPERSTYLE_RUNNER_PATH}')
+        print("PATH: " + str(HYPERSTYLE_RUNNER_PATH))
 
     if to_add_history:
         testing_arguments.with_history = True

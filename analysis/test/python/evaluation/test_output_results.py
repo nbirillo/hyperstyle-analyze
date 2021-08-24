@@ -8,9 +8,9 @@ from analysis.test.python.evaluation.testing_config import get_testing_arguments
 
 FILE_NAMES = [
     ('test_sorted_order.xlsx', 'target_sorted_order.xlsx', False),
-    ('test_sorted_order.xlsx', 'target_sorted_order.xlsx', True),
-    ('test_unsorted_order.xlsx', 'target_unsorted_order.xlsx', False),
-    ('test_unsorted_order.xlsx', 'target_unsorted_order.xlsx', True),
+    # ('test_sorted_order.xlsx', 'target_sorted_order.xlsx', True),
+    # ('test_unsorted_order.xlsx', 'target_unsorted_order.xlsx', False),
+    # ('test_unsorted_order.xlsx', 'target_unsorted_order.xlsx', True),
 ]
 
 

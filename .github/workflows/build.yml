@@ -54,12 +54,12 @@ jobs:
           add: "['whitelist.txt']"
           message: 'Sort whitelists (Github Actions)'
 
-      - name: Set hyperstyle path
-        run: |
-          mkdir ~/hyperstyle_repo
-          cd ~/hyperstyle_repo
-          git clone https://github.com/hyperskill/hyperstyle.git
-          export HYPERSTYLE_RUNNER_PATH=$(pwd)/hyperstyle/src/python/review/run_tool.py
+#      - name: Set hyperstyle path
+#        run: |
+#          mkdir ~/hyperstyle_repo
+#          cd ~/hyperstyle_repo
+#          git clone https://github.com/hyperskill/hyperstyle.git
+#          export HYPERSTYLE_RUNNER_PATH="$(pwd)/hyperstyle/src/python/review/run_tool.py"
 
       - name: Test with pytest
         run: |
