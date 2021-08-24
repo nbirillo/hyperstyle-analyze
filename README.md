@@ -37,7 +37,7 @@ We use [`pytest`](https://docs.pytest.org/en/latest/contents.html) library for t
 
 __Note__: If you have `ModuleNotFoundError` while you try to run tests, please call `pip install -e .`
  before using the test system. Also, you should add `hyperstyle` into `PYTHONPATH`: 
-`export PYTHONPATH=$PYTHONPATH:$pwd/main/venv/src/hyperstyle`.
+`export PYTHONPATH=$PYTHONPATH:$(pwd)/main/venv/src/hyperstyle`.
 
 Use `pytest` from the root directory to run __ALL__ tests.
 

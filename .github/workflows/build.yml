@@ -59,7 +59,7 @@ jobs:
           mkdir ~/hyperstyle_repo
           cd ~/hyperstyle_repo
           git clone https://github.com/hyperskill/hyperstyle.git
-          export HYPERSTYLE_RUNNER_PATH=~/hyperstyle_repo/hyperstyle/src/python/review/run_tool.py
+          export HYPERSTYLE_RUNNER_PATH=$(pwd)/hyperstyle/src/python/review/run_tool.py
 
       - name: Test with pytest
         run: |
