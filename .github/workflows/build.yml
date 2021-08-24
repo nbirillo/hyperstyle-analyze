@@ -27,6 +27,11 @@ jobs:
           ./main/venv/bin/pip install -e git+https://github.com/hyperskill/hyperstyle.git@delete-evaluation#egg=hyperstyle
           ./main/venv/bin/pip install --no-cache-dir -r requirements-test.txt -r requirements.txt -r requirements-roberta.txt
 
+      - name: Check
+        run: |
+          cd /__w/hyperstyle-analyze/hyperstyle-analyze/main/venv/src/hyperstyle/src/python/review/
+          ls
+
       - name: Lint with flake8
         run: |
           # stop the build if there are Python syntax errors or undefined names

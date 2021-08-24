@@ -18,6 +18,7 @@ logger = logging.getLogger(__name__)
 
 class EvaluationConfig:
     def __init__(self, args: Namespace):
+        print(f'TOOL PATH: {args.tool_path}')
         self.tool_path: Union[str, Path] = args.tool_path
         self.format: str = args.format
         self.solutions_file_path: Union[str, Path] = args.solutions_file_path
