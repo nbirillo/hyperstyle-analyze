@@ -70,7 +70,7 @@ def run_in_subprocess_with_working_dir(command: List[str], working_dir: str) -> 
         command,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
-        cwd=working_dir
+        cwd=working_dir,
     )
 
     stdout = process.stdout.decode()
