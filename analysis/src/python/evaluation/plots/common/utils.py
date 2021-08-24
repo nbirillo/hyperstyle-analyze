@@ -5,7 +5,7 @@ from typing import Dict, List, Optional
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-from hyperstyle.src.python.review.common.file_system import Extension
+from src.python.review.common.file_system import Extension
 from analysis.src.python.evaluation.plots.common import plotly_consts
 
 COLOR = Optional[plotly_consts.COLOR]

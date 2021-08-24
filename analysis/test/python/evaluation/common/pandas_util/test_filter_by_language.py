@@ -1,8 +1,8 @@
 from pathlib import Path
 
 import pytest
-from hyperstyle.src.python.review.application_config import LanguageVersion
-from hyperstyle.src.python.review.common.file_system import get_name_from_path
+from src.python.review.application_config import LanguageVersion
+from src.python.review.common.file_system import get_name_from_path
 from hyperstyle.test.python.common_util import equal_df, get_in_and_out_list
 from analysis.src.python.evaluation.common.pandas_util import filter_df_by_language, get_solutions_df_by_file_path
 from analysis.test.python.evaluation import PANDAS_UTIL_DIR_PATH

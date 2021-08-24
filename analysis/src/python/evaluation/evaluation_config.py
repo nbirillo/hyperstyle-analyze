@@ -4,9 +4,9 @@ from argparse import Namespace
 from pathlib import Path
 from typing import List, Optional, Union
 
-from hyperstyle.src.python.common.tool_arguments import RunToolArgument
-from hyperstyle.src.python.review.application_config import LanguageVersion
-from hyperstyle.src.python.review.common.file_system import (
+from src.python.common.tool_arguments import RunToolArgument
+from src.python.review.application_config import LanguageVersion
+from src.python.review.common.file_system import (
     Extension,
     get_parent_folder,
     get_restricted_extension,

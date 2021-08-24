@@ -7,7 +7,7 @@ from typing import List
 
 import pandas as pd
 import plotly.express as px
-from hyperstyle.src.python.review.common.file_system import (
+from src.python.review.common.file_system import (
     Extension, extension_file_condition, get_all_file_system_items, get_parent_folder,
 )
 from analysis.src.python.evaluation.common.pandas_util import logger

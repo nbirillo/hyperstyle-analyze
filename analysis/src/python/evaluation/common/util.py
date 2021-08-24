@@ -1,8 +1,8 @@
 from enum import Enum, unique
 from typing import Set
 
-from hyperstyle.src.python.review.application_config import LanguageVersion
-from hyperstyle.src.python.review.common.file_system import Extension
+from src.python.review.application_config import LanguageVersion
+from src.python.review.common.file_system import Extension
 
 
 @unique

@@ -17,8 +17,8 @@ from analysis.src.python.evaluation.common.csv_util import write_dataframe_to_cs
 from analysis.src.python.evaluation.common.util import ColumnName
 from analysis.src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue
 from analysis.src.python.evaluation.qodana.util.util import to_json
-from hyperstyle.src.python.review.application_config import LanguageVersion
-from hyperstyle.src.python.review.common.file_system import (
+from src.python.review.application_config import LanguageVersion
+from src.python.review.common.file_system import (
     copy_directory,
     copy_file,
     create_file,
@@ -30,8 +30,8 @@ from hyperstyle.src.python.review.common.file_system import (
     match_condition,
     remove_directory,
 )
-from hyperstyle.src.python.review.common.subprocess_runner import run_and_wait
-from hyperstyle.src.python.review.run_tool import positive_int
+from src.python.review.common.subprocess_runner import run_and_wait
+from src.python.review.run_tool import positive_int
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)

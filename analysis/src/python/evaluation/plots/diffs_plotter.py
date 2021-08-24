@@ -7,8 +7,8 @@ from typing import Any, Callable, Dict, Union
 sys.path.append('../../../..')
 
 import plotly.graph_objects as go
-from hyperstyle.src.python.common.tool_arguments import RunToolArgument
-from hyperstyle.src.python.review.common.file_system import deserialize_data_from_file, Extension, parse_yaml
+from src.python.common.tool_arguments import RunToolArgument
+from src.python.review.common.file_system import deserialize_data_from_file, Extension, parse_yaml
 from analysis.src.python.evaluation.inspectors.common.statistics import (
     GeneralInspectorsStatistics,
     IssuesStatistics,

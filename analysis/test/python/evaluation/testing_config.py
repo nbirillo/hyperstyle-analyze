@@ -1,7 +1,7 @@
 from argparse import Namespace
 
-from hyperstyle.src.python.review.reviewers.perform_review import OutputFormat
-from hyperstyle.src.python import MAIN_FOLDER
+from src.python.review.reviewers.perform_review import OutputFormat
+from src.python import MAIN_FOLDER
 from analysis.src.python.evaluation.common.util import EvaluationArgument
 
 

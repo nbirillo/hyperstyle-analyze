@@ -4,13 +4,13 @@ from collections import Counter
 from pathlib import Path
 
 import pandas as pd
-from hyperstyle.src.python.review.common.file_system import (
+from src.python.review.common.file_system import (
     Extension,
     get_name_from_path,
     get_parent_folder,
     get_restricted_extension,
 )
-from hyperstyle.src.python.review.common.language import Language
+from src.python.review.common.language import Language
 from pandarallel import pandarallel
 from analysis.src.python.evaluation.common.pandas_util import (
     get_issues_from_json,

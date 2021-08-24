@@ -1,4 +1,4 @@
-from hyperstyle.src.python import MAIN_FOLDER
+from src.python import MAIN_FOLDER
 from analysis.test.python import TEST_DATA_FOLDER
 
 

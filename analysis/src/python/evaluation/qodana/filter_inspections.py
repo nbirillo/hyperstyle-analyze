@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import List
 
 import pandas as pd
-from hyperstyle.src.python.review.common.file_system import (
+from src.python.review.common.file_system import (
     Extension, extension_file_condition, get_all_file_system_items,
 )
 from analysis.src.python.evaluation.common.csv_util import write_dataframe_to_csv

@@ -8,7 +8,7 @@ from typing import Dict, List, Optional
 sys.path.append('../../../..')
 
 import plotly.graph_objects as go
-from hyperstyle.src.python.review.common.file_system import Extension, parse_yaml
+from src.python.review.common.file_system import Extension, parse_yaml
 from analysis.src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path
 from analysis.src.python.evaluation.plots.common import plotly_consts
 from analysis.src.python.evaluation.plots.common.utils import (

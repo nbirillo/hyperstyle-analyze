@@ -3,7 +3,7 @@ import os
 from pathlib import Path
 
 import pandas as pd
-from hyperstyle.src.python.review.common.file_system import Extension
+from src.python.review.common.file_system import Extension
 from sklearn.model_selection import train_test_split
 from analysis.src.python.evaluation.common.csv_util import write_dataframe_to_csv
 from analysis.src.python.evaluation.common.util import ColumnName

@@ -2,10 +2,10 @@ import argparse
 from pathlib import Path
 
 import pandas as pd
-from hyperstyle.src.python.review.common.file_system import (
+from src.python.review.common.file_system import (
     Extension, get_parent_folder, get_restricted_extension, serialize_data_and_write_to_file,
 )
-from hyperstyle.src.python.review.quality.model import QualityType
+from src.python.review.quality.model import QualityType
 from analysis.src.python.evaluation.common.pandas_util import (
     get_inconsistent_positions, get_issues_by_row, get_solutions_df, get_solutions_df_by_file_path,
 )

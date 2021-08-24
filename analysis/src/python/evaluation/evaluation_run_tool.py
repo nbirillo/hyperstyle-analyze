@@ -15,11 +15,11 @@ from analysis.src.python.evaluation.common.pandas_util import get_solutions_df, 
 from analysis.src.python.evaluation.common.util import ColumnName, EvaluationArgument, script_structure_rule
 from analysis.src.python.evaluation.common.tool_arguments import EvaluationRunToolArgument
 from analysis.src.python.evaluation.evaluation_config import EvaluationConfig
-from hyperstyle.src.python.common.tool_arguments import RunToolArgument
-from hyperstyle.src.python.review.application_config import LanguageVersion
-from hyperstyle.src.python.review.common.file_system import create_file
-from hyperstyle.src.python.review.common.subprocess_runner import run_in_subprocess
-from hyperstyle.src.python.review.reviewers.perform_review import OutputFormat
+from src.python.common.tool_arguments import RunToolArgument
+from src.python.review.application_config import LanguageVersion
+from src.python.review.common.file_system import create_file
+from src.python.review.common.subprocess_runner import run_in_subprocess
+from src.python.review.reviewers.perform_review import OutputFormat
 
 logger = logging.getLogger(__name__)
 

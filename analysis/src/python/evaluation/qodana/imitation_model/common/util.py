@@ -1,6 +1,6 @@
 from enum import Enum, unique
 
-from hyperstyle.src.python.common.tool_arguments import ArgumentsInfo
+from src.python.common.tool_arguments import ArgumentsInfo
 
 
 @unique
