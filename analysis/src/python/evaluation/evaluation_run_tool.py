@@ -93,7 +93,7 @@ def __inspect_row(lang: str, code: str, fragment_id: int, history: Optional[str]
     extension = get_language_version(lang).extension_by_language().value
     tmp_file_path = config.solutions_file_path.parent.absolute() / f'inspected_code_{fragment_id}{extension}'
     temp_file = next(create_file(tmp_file_path, code))
-    command = config.build_command(temp_file, lang, history)
+    command = config.build_command(temp_file, lang, history, with_relative_path=True)
     results = run_in_subprocess_with_working_dir(command, config.get_tool_root())
     # results = run_in_subprocess(command)
     os.remove(temp_file)

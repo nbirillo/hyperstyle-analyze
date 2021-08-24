@@ -35,9 +35,14 @@ class EvaluationConfig:
         else:
             self.output_file_name = output_file_name
 
-    def build_command(self, inspected_file_path: Union[str, Path], lang: str, history: Optional[str]) -> List[str]:
+    def build_command(self, inspected_file_path: Union[str, Path], lang: str, history: Optional[str],
+                      with_relative_path: bool = False) -> List[str]:
+        if with_relative_path:
+            cur_tool_path = os.path.relpath(self.tool_path, self.get_tool_root())
+        else:
+            cur_tool_path = self.tool_path
         command = [LanguageVersion.PYTHON_3.value,
-                   self.tool_path,
+                   cur_tool_path,
                    inspected_file_path,
                    RunToolArgument.FORMAT.value.short_name, self.format]
 
