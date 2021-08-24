@@ -30,6 +30,7 @@ jobs:
       - name: Check if hyperstyle runs successfully
         run: |
           cd /__w/hyperstyle-analyze/hyperstyle-analyze/main/venv/src/hyperstyle
+          pip install -r requirements.txt
           python src/python/review/run_tool.py /__w/hyperstyle-analyze/hyperstyle-analyze/main/venv/src/hyperstyle/setup.py
 
       - name: Lint with flake8
