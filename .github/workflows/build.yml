@@ -50,7 +50,7 @@ jobs:
       - name: Lint with flake8
         run: |
           # activate venv
-          source main/venv/bin/activate
+          source ./main/venv/bin/activate
           # stop the build if there are Python syntax errors or undefined names
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,venv,test/resources,.eggs,review.egg-info,.pytest_cache,node_modules
           # TODO: change max-complexity into 10 after refactoring
