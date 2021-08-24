@@ -11,4 +11,3 @@ if os.getenv('HYPERSTYLE_RUNNER_PATH') is not None:
 else:
     HYPERSTYLE_RUNNER_PATH = Path(HYPERSTYLE_PATH) / 'hyperstyle/src/python/review/run_tool.py'
     print(f'HYPERSTYLE_RUNNER_PATH: {HYPERSTYLE_RUNNER_PATH}')
-print(f'HYPERSTYLE_RUNNER_PATH FINAL: {HYPERSTYLE_RUNNER_PATH}')
