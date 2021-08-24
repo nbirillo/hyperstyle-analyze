@@ -22,24 +22,24 @@ jobs:
         run: |
           python -m venv ./main/venv
 
-      - name: Install hyperstyle
-        run: |
-          cd ./main/venv
-          mkdir src
-          cd src
-          git clone https://github.com/hyperskill/hyperstyle.git
-          cd hyperstyle
-          git fetch
-          git checkout origin/delete-evaluation
-          cd ../../../../
-
-          ./main/venv/bin/pip install git+https://github.com/hyperskill/hyperstyle.git@delete-evaluation#egg=hyperstyle
-          ./main/venv/bin/pip install --no-cache-dir -r requirements-test.txt -r requirements.txt -r requirements-roberta.txt
+#      - name: Install hyperstyle
+#        run: |
+#          cd ./main/venv
+#          mkdir src
+#          cd src
+#          git clone https://github.com/hyperskill/hyperstyle.git
+#          cd hyperstyle
+#          git fetch
+#          git checkout origin/delete-evaluation
+#          cd ../../../../
+#
+#          ./main/venv/bin/pip install git+https://github.com/hyperskill/hyperstyle.git@delete-evaluation#egg=hyperstyle
+#          ./main/venv/bin/pip install --no-cache-dir -r requirements-test.txt -r requirements.txt -r requirements-roberta.txt
 
       - name: Install requirements
         run: |
-          pip install git+https://github.com/hyperskill/hyperstyle.git@delete-evaluation#egg=hyperstyle
-          pip install --no-cache-dir -r requirements-test.txt -r requirements.txt -r requirements-roberta.txt
+          ./main/venv/bin/pip install -e git+https://github.com/hyperskill/hyperstyle.git@delete-evaluation#egg=hyperstyle
+          ./main/venv/bin/pip install --no-cache-dir -r requirements-test.txt -r requirements.txt -r requirements-roberta.txt
 
       - name: Add hyperstyle into PYTHONPATH
         run: |
