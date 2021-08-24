@@ -1,7 +1,7 @@
 from argparse import Namespace
 
 from src.python.review.reviewers.perform_review import OutputFormat
-from src.python import MAIN_FOLDER
+from analysis import HYPERSTYLE_RUNNER_PATH
 from analysis.src.python.evaluation.common.util import EvaluationArgument
 
 
@@ -14,7 +14,7 @@ def get_testing_arguments(to_add_traceback=None, to_add_tool_path=None, to_add_h
         testing_arguments.traceback = True
 
     if to_add_tool_path:
-        testing_arguments.tool_path = MAIN_FOLDER.parent / 'review/run_tool.py'
+        testing_arguments.tool_path = HYPERSTYLE_RUNNER_PATH
 
     if to_add_history:
         testing_arguments.with_history = True

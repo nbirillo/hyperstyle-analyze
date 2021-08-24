@@ -7,10 +7,12 @@ import time
 import traceback
 from pathlib import Path
 from typing import Optional
+
 sys.path.append('')
 
 import pandas as pd
 from pandarallel import pandarallel
+from analysis import HYPERSTYLE_RUNNER_PATH
 from analysis.src.python.evaluation.common.pandas_util import get_solutions_df, write_df_to_file
 from analysis.src.python.evaluation.common.util import ColumnName, EvaluationArgument, script_structure_rule
 from analysis.src.python.evaluation.common.tool_arguments import EvaluationRunToolArgument
@@ -30,7 +32,7 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                         help=EvaluationRunToolArgument.SOLUTIONS_FILE_PATH.value.description)
 
     parser.add_argument('-tp', '--tool-path',
-                        default=Path(f'{os.path.dirname(os.path.abspath(__file__))}/../review/run_tool.py'),
+                        default=HYPERSTYLE_RUNNER_PATH,
                         type=lambda value: Path(value).absolute(),
                         help='Path to script to run on files.')
 
