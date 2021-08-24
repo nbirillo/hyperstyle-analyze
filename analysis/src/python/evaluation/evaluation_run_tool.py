@@ -14,13 +14,13 @@ import pandas as pd
 from pandarallel import pandarallel
 from analysis import HYPERSTYLE_RUNNER_PATH
 from analysis.src.python.evaluation.common.pandas_util import get_solutions_df, write_df_to_file
-from analysis.src.python.evaluation.common.util import ColumnName, EvaluationArgument, script_structure_rule
+from analysis.src.python.evaluation.common.util import ColumnName, EvaluationArgument, script_structure_rule, \
+    run_in_subprocess_with_working_dir
 from analysis.src.python.evaluation.common.tool_arguments import EvaluationRunToolArgument
 from analysis.src.python.evaluation.evaluation_config import EvaluationConfig
 from src.python.common.tool_arguments import RunToolArgument
 from src.python.review.application_config import LanguageVersion
 from src.python.review.common.file_system import create_file
-from src.python.review.common.subprocess_runner import run_in_subprocess
 from src.python.review.reviewers.perform_review import OutputFormat
 
 logger = logging.getLogger(__name__)
@@ -94,7 +94,8 @@ def __inspect_row(lang: str, code: str, fragment_id: int, history: Optional[str]
     tmp_file_path = config.solutions_file_path.parent.absolute() / f'inspected_code_{fragment_id}{extension}'
     temp_file = next(create_file(tmp_file_path, code))
     command = config.build_command(temp_file, lang, history)
-    results = run_in_subprocess(command)
+    results = run_in_subprocess_with_working_dir(command, config.get_tool_root())
+    # results = run_in_subprocess(command)
     os.remove(temp_file)
     return results
 

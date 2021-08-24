@@ -48,6 +48,9 @@ class EvaluationConfig:
             command.extend([RunToolArgument.LANG_VERSION.value.long_name, lang])
         return command
 
+    def get_tool_root(self) -> str:
+        return self.tool_path.parent.parent.parent.parent
+
     def get_output_file_path(self) -> Path:
         if self.output_folder_path is None:
             try:

@@ -1,3 +1,4 @@
+import subprocess
 from enum import Enum, unique
 from pathlib import Path
 from typing import List, Set, Tuple
@@ -62,3 +63,16 @@ def get_in_and_out_list(root: Path,
     in_files = get_all_file_system_items(root, match_condition(rf'in_\d+{in_ext.value}'))
     out_files = get_all_file_system_items(root, match_condition(rf'out_\d+{out_ext.value}'))
     return pair_in_and_out_files(in_files, out_files)
+
+
+def run_in_subprocess_with_working_dir(command: List[str], working_dir: str) -> str:
+    process = subprocess.run(
+        command,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        cwd=working_dir
+    )
+
+    stdout = process.stdout.decode()
+
+    return stdout
