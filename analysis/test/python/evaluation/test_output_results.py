@@ -30,5 +30,4 @@ def test_correct_output(test_file: str, target_file: str, output_type: bool):
         sheet_name = 'traceback'
     target_dataframe = pd.read_excel(TARGET_XLSX_DATA_FOLDER / target_file, sheet_name=sheet_name)
 
-    assert list(target_dataframe['traceback']) == list(test_dataframe['traceback'])
     assert equal_df(target_dataframe, test_dataframe)

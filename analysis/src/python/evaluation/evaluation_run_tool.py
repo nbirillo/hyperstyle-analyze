@@ -99,7 +99,9 @@ def __inspect_row(lang: str, code: str, fragment_id: int, history: Optional[str]
     return results
 
 
-def __get_grade_from_traceback(traceback: str) -> str:
+def __get_grade_from_traceback(traceback: Optional[str]) -> Optional[str]:
+    if traceback is None:
+        return None
     # this regular expression matches final tool grade: EXCELLENT, GOOD, MODERATE or BAD
     return re.match(r'^.*{"code":\s"([A-Z]+)"', traceback).group(1)
 
