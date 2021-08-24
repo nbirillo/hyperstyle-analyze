@@ -103,7 +103,11 @@ def __get_grade_from_traceback(traceback: Optional[str]) -> Optional[str]:
     if traceback is None:
         return None
     # this regular expression matches final tool grade: EXCELLENT, GOOD, MODERATE or BAD
-    return re.match(r'^.*{"code":\s"([A-Z]+)"', traceback).group(1)
+    print(f'MATCH: {traceback}')
+    match = re.match(r'^.*{"code":\s"([A-Z]+)"', traceback)
+    if match is None:
+        return None
+    return match.group(1)
 
 
 # TODO: calculate grade after it
