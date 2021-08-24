@@ -1,4 +1,3 @@
-import os
 from pathlib import Path
 from typing import List
 
@@ -17,26 +16,19 @@ def get_version() -> str:
         return version_file.read().replace('\n', '')
 
 
-def get_inspectors_additional_files() -> List[str]:
-    inspectors_path = current_dir / 'src' / 'python' / 'review' / 'inspectors'
-    result = []
-    for root, _, files in os.walk(inspectors_path):
-        for file in files:
-            if not file.endswith('.py'):
-                result.append(str(Path(root) / file))
-
-    return result
+def get_requires() -> List[str]:
+    with open(current_dir / 'requirements.txt') as requirements_file:
+        return requirements_file.read().split('\n')
 
 
 setup(
-    name='review',
+    name='hyperstyle_analysis',
     version=get_version(),
-    description='review',
+    description='A set of analysis utilities for the Hyperstyle project.',
     long_description=get_long_description(),
     long_description_content_type='text/markdown',
-    url='https://github.com/hyperskill/hyperstyle',
+    url='https://github.com/hyperskill/hyperstyle-analyze',
     author='Stepik.org',
-    author_email='ivan.magda@stepik.org',
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
@@ -45,26 +37,19 @@ setup(
         'Programming Language :: Python :: 3',
         'Operating System :: OS Independent',
     ],
-    keywords='code review',
+    keywords='analysis',
     python_requires='>=3.8, <4',
-    install_requires=['upsourceapi'],
+    install_requires=get_requires(),
     packages=find_packages(exclude=[
         '*.unit_tests',
         '*.unit_tests.*',
         'unit_tests.*',
         'unit_tests',
-        '*.functional_tests',
-        '*.functional_tests.*',
-        'functional_tests.*',
-        'functional_tests',
     ]),
     zip_safe=False,
-    package_data={
-        '': get_inspectors_additional_files(),
-    },
     entry_points={
         'console_scripts': [
-            'review=src.python.review.run_tool:main',
+            'analysis=analysis.src.python.evaluation.evaluation_run_tool:main',
         ],
     },
 )

@@ -18,21 +18,33 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Setup venv
+        run: |
+          python -m venv ./main/venv
+
       - name: Install requirements
         run: |
-          pip install --no-cache-dir -r requirements-test.txt -r requirements.txt
+          ./main/venv/bin/pip install -e git+https://github.com/hyperskill/hyperstyle.git@delete-evaluation#egg=hyperstyle
+          ./main/venv/bin/pip install --no-cache-dir -r requirements-test.txt -r requirements.txt -r requirements-roberta.txt
+
+      - name: Check if hyperstyle runs successfully
+        run: |
+          cd /__w/hyperstyle-analyze/hyperstyle-analyze/main/venv/src/hyperstyle
+          pip install -r requirements.txt
+          npm install eslint@7.5.0 -g && eslint --init
+          python src/python/review/run_tool.py /__w/hyperstyle-analyze/hyperstyle-analyze/main/venv/src/hyperstyle/setup.py
 
       - name: Lint with flake8
         run: |
           # stop the build if there are Python syntax errors or undefined names
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,venv,test/resources,.eggs,review.egg-info,.pytest_cache,node_modules
+          ./main/venv/bin/flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,venv,analysis/test/resources,.eggs,review.egg-info,.pytest_cache,node_modules
           # TODO: change max-complexity into 10 after refactoring
           # TODO: remove R504, A003, E800, E402, WPS1, WPS2, WPS3, WPS4, WPS5, WPS6, H601
-          flake8 . --count --max-complexity=11 --max-line-length=120 --max-doc-length=120 --ignore=R504,A003,E800,E402,W503,WPS1,WPS2,WPS3,WPS4,WPS5,WPS6,H601 --statistics --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,venv,test/resources,.eggs,review.egg-info,.pytest_cache,node_modules
+          ./main/venv/bin/flake8 . --count --max-complexity=11 --max-line-length=120 --max-doc-length=120 --ignore=R504,A003,E800,E402,W503,WPS1,WPS2,WPS3,WPS4,WPS5,WPS6,H601,I100 --statistics --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,venv,analysis/test/resources,.eggs,review.egg-info,.pytest_cache,node_modules
 
       - name: Sort whitelists
         run: |
-          for file in "whitelist.txt" "src/python/review/inspectors/flake8/whitelist.txt"
+          for file in "whitelist.txt"
           do
             LC_ALL=C sort $file -o $file
           done
@@ -40,26 +52,9 @@ jobs:
       - name: Commit sorted whitelists
         uses: EndBug/add-and-commit@v7.2.1
         with:
-          add: "['whitelist.txt', 'src/python/review/inspectors/flake8/whitelist.txt']"
+          add: "['whitelist.txt']"
           message: 'Sort whitelists (Github Actions)'
-
-      - name: Set up Eslint
-        run: |
-          # Consistent with eslint version in Dockerfile
-          npm install eslint@7.5.0 -g && eslint --init
 
       - name: Test with pytest
         run: |
-          pytest
-
-      - name: Check installed module can run python linters
-        run: |
-            python src/python/review/run_tool.py setup.py
-
-      - name: Check installed module can run java linters
-        run: |
-            python src/python/review/run_tool.py test/resources/inspectors/java/test_algorithm_with_scanner.java
-
-      - name: Check installed module can run js linters
-        run: |
-          python src/python/review/run_tool.py test/resources/inspectors/js/case0_no_issues.js
+          ./main/venv/bin/pytest
