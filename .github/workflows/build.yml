@@ -24,7 +24,7 @@ jobs:
 
       - name: Install requirements
         run: |
-          ./main/venv/bin/pip install -e git+https://github.com/hyperskill/hyperstyle.git@delete-evaluation#egg=hyperstyle
+          ./main/venv/bin/pip install -e git+https://github.com/hyperskill/hyperstyle.git@develop#egg=hyperstyle
           ./main/venv/bin/pip install --no-cache-dir -r requirements-test.txt -r requirements.txt -r requirements-roberta.txt
 
       - name: Check if hyperstyle runs successfully
