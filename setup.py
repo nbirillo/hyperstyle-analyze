@@ -49,7 +49,7 @@ setup(
     zip_safe=False,
     entry_points={
         'console_scripts': [
-            'analysis=src.python.evaluation.evaluation_run_tool:main',
+            'analysis=analysis.src.python.evaluation.evaluation_run_tool:main',
         ],
     },
 )
