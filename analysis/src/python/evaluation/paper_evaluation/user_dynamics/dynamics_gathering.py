@@ -5,7 +5,6 @@ from typing import List
 
 import numpy as np
 import pandas as pd
-from src.python.review.common.file_system import Extension, get_parent_folder, get_restricted_extension
 from src.python.review.inspectors.issue import IssueType
 from src.python.review.quality.penalty import PenaltyIssue
 from analysis.src.python.evaluation.common.csv_util import write_dataframe_to_csv
@@ -13,7 +12,9 @@ from analysis.src.python.evaluation.common.pandas_util import (
     filter_df_by_single_value, get_issues_from_json, get_solutions_df, logger,
 )
 from analysis.src.python.evaluation.common.tool_arguments import EvaluationRunToolArgument
-from analysis.src.python.evaluation.common.util import ColumnName
+from analysis.src.python.evaluation.common.util import (
+    AnalysisExtension, ColumnName, get_parent_folder, get_restricted_extension,
+)
 from analysis.src.python.evaluation.paper_evaluation.user_dynamics.user_statistics import DynamicsColumn
 
 
@@ -40,7 +41,7 @@ def __write_dynamics(output_path: Path, user_fragments: pd.DataFrame, index: int
     output_path.mkdir(parents=True, exist_ok=True)
     user_fragments.columns = [DynamicsColumn.ISSUE_COUNT.value]
     user_fragments[ColumnName.TIME.value] = np.arange(len(user_fragments))
-    write_dataframe_to_csv(output_path / f'user_{index}{Extension.CSV.value}', user_fragments)
+    write_dataframe_to_csv(output_path / f'user_{index}{AnalysisExtension.CSV.value}', user_fragments)
 
 
 def __get_users_statistics(solutions_df: pd.DataFrame, output_path: Path) -> None:
@@ -70,7 +71,7 @@ def main() -> int:
     try:
         args = parser.parse_args()
         solutions_file_path = args.solutions_file_path
-        extension = get_restricted_extension(solutions_file_path, [Extension.CSV])
+        extension = get_restricted_extension(solutions_file_path, [AnalysisExtension.CSV])
         solutions_df = get_solutions_df(extension, solutions_file_path)
 
         output_path = get_parent_folder(Path(solutions_file_path)) / 'dynamics'

@@ -8,7 +8,6 @@ from typing import Dict, List, Optional
 sys.path.append('../../../..')
 
 import plotly.graph_objects as go
-from src.python.review.common.file_system import Extension, parse_yaml
 from analysis.src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path
 from analysis.src.python.evaluation.plots.common import plotly_consts
 from analysis.src.python.evaluation.plots.common.utils import (
@@ -16,6 +15,7 @@ from analysis.src.python.evaluation.plots.common.utils import (
     save_plot,
 )
 from analysis.src.python.evaluation.plots.plotters.raw_issues_statistics_plotters import PlotConfig, PlotTypes
+from analysis.src.python.evaluation.common.util import AnalysisExtension, parse_yaml
 
 
 @unique
@@ -60,7 +60,7 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         '--file-extension',
         type=str,
-        default=Extension.SVG.value,
+        default=AnalysisExtension.SVG.value,
         choices=get_supported_extensions(),
         help='Allows you to select the extension of output files.',
     )
@@ -114,13 +114,14 @@ def get_plot_configs(column_name: str, column_config: Dict) -> List[PlotConfig]:
     return plot_configs
 
 
-def _save_plots(plots: Dict[str, go.Figure], save_dir: Path, extension: Extension, column: str, plot_type: str) -> None:
+def _save_plots(plots: Dict[str, go.Figure], save_dir: Path,
+                extension: AnalysisExtension, column: str, plot_type: str) -> None:
     for output_name, plot in plots.items():
         subdir = save_dir / column
         save_plot(plot, subdir, plot_name=f'{column}_{plot_type}_{output_name}', extension=extension)
 
 
-def plot_and_save(config: Dict, save_dir: Path, extension: Extension, group_stats: bool) -> None:
+def plot_and_save(config: Dict, save_dir: Path, extension: AnalysisExtension, group_stats: bool) -> None:
     stats_by_lang = {
         lang: get_solutions_df_by_file_path(Path(lang_stats)) for lang, lang_stats in config.pop(STATS).items()
     }
@@ -140,7 +141,7 @@ def main():
 
     logging.basicConfig(level=logging.INFO)
 
-    extension = Extension(args.file_extension)
+    extension = AnalysisExtension(args.file_extension)
     config = parse_yaml(args.config_path)
 
     plot_and_save(config, args.save_dir, extension, args.group_stats)

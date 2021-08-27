@@ -6,11 +6,11 @@ from typing import Any, Iterable, List, Set, Union
 import numpy as np
 import pandas as pd
 from src.python.review.application_config import LanguageVersion
-from src.python.review.common.file_system import Extension, get_restricted_extension
+from src.python.review.common.file_system import Extension
 from src.python.review.quality.penalty import PenaltyIssue
 from src.python.review.reviewers.utils.print_review import convert_json_to_issues
 from analysis.src.python.evaluation.common.csv_util import write_dataframe_to_csv
-from analysis.src.python.evaluation.common.util import ColumnName
+from analysis.src.python.evaluation.common.util import AnalysisExtension, ColumnName, get_restricted_extension
 from analysis.src.python.evaluation.common.xlsx_util import create_workbook, remove_sheet, write_dataframe_to_xlsx_sheet
 
 logger = logging.getLogger(__name__)
@@ -70,9 +70,9 @@ def get_diffs(first: pd.DataFrame, second: pd.DataFrame) -> pd.DataFrame:
         index=changed.index)
 
 
-def get_solutions_df(ext: Extension, file_path: Union[str, Path]) -> pd.DataFrame:
+def get_solutions_df(ext: Union[Extension, AnalysisExtension], file_path: Union[str, Path]) -> pd.DataFrame:
     try:
-        if ext == Extension.XLSX:
+        if ext == AnalysisExtension.XLSX:
             lang_code_dataframe = pd.read_excel(file_path)
         else:
             lang_code_dataframe = pd.read_csv(file_path)
@@ -84,14 +84,14 @@ def get_solutions_df(ext: Extension, file_path: Union[str, Path]) -> pd.DataFram
 
 
 def get_solutions_df_by_file_path(path: Path) -> pd.DataFrame:
-    ext = get_restricted_extension(path, [Extension.XLSX, Extension.CSV])
+    ext = get_restricted_extension(path, [AnalysisExtension.XLSX, AnalysisExtension.CSV])
     return get_solutions_df(ext, path)
 
 
-def write_df_to_file(df: pd.DataFrame, output_file_path: Path, extension: Extension) -> None:
-    if extension == Extension.CSV:
+def write_df_to_file(df: pd.DataFrame, output_file_path: Path, extension: Union[AnalysisExtension, Extension]) -> None:
+    if extension == AnalysisExtension.CSV:
         write_dataframe_to_csv(output_file_path, df)
-    elif extension == Extension.XLSX:
+    elif extension == AnalysisExtension.XLSX:
         create_workbook(output_file_path)
         write_dataframe_to_xlsx_sheet(output_file_path, df, 'inspection_results')
         # remove empty sheet that was initially created with the workbook

@@ -6,7 +6,7 @@ import pandas as pd
 from src.python.review.common.file_system import Extension
 from sklearn.model_selection import train_test_split
 from analysis.src.python.evaluation.common.csv_util import write_dataframe_to_csv
-from analysis.src.python.evaluation.common.util import ColumnName
+from analysis.src.python.evaluation.common.util import AnalysisExtension, ColumnName
 from analysis.src.python.evaluation.qodana.imitation_model.common.util import SeedArgument
 
 
@@ -67,7 +67,8 @@ def split_dataset(dataset_path: str, output_directory_path: str, val_size: float
                     ("test", code_test, target_test)]:
         df = pd.concat([holdout[1], holdout[2]], axis=1)
         os.makedirs(os.path.join(output_directory_path, holdout[0]), exist_ok=True)
-        write_dataframe_to_csv(Path(output_directory_path) / holdout[0] / f'{holdout[0]}{Extension.CSV.value}', df)
+        write_dataframe_to_csv(Path(output_directory_path) / holdout[0] / f'{holdout[0]}{AnalysisExtension.CSV.value}',
+                               df)
 
 
 if __name__ == "__main__":

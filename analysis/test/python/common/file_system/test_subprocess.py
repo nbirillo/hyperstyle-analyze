@@ -4,11 +4,12 @@ from typing import Optional
 
 import pytest
 from src.python.review.application_config import LanguageVersion
-from src.python.review.common.file_system import create_file, get_content_from_file
+from src.python.review.common.file_system import get_content_from_file
 from src.python.review.common.subprocess_runner import run_in_subprocess
 from analysis.src.python.evaluation.evaluation_config import EvaluationConfig
 from analysis.test.python.common import FILE_SYSTEM_DATA_FOLDER
 from analysis.test.python.evaluation.testing_config import get_testing_arguments
+from analysis.src.python.evaluation.common.util import create_file
 
 INPUT_DATA = [
     ('in_1.java', LanguageVersion.JAVA_11),

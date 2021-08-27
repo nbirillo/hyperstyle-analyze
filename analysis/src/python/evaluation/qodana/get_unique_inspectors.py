@@ -5,11 +5,11 @@ from pathlib import Path
 from typing import Dict, List, Optional
 
 import pandas as pd
-from src.python.review.common.file_system import Extension, get_parent_folder
 from analysis.src.python.evaluation.common.csv_util import write_dataframe_to_csv
 from analysis.src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path
 from analysis.src.python.evaluation.common.tool_arguments import EvaluationRunToolArgument
 from analysis.src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue
+from analysis.src.python.evaluation.common.util import AnalysisExtension, get_parent_folder
 
 INSPECTION_ID = QodanaColumnName.INSPECTION_ID.value
 INSPECTIONS = QodanaColumnName.INSPECTIONS.value
@@ -86,7 +86,7 @@ def main() -> None:
     inspections_df = __create_unique_inspections_df(__get_inspections_from_df(solutions_df), inspection_id_to_fragments)
 
     output_path = get_parent_folder(Path(solutions_file_path))
-    write_dataframe_to_csv(output_path / f'inspections{Extension.CSV.value}', inspections_df)
+    write_dataframe_to_csv(output_path / f'inspections{AnalysisExtension.CSV.value}', inspections_df)
 
 
 if __name__ == '__main__':

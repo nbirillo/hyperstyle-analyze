@@ -7,11 +7,10 @@ from typing import List
 
 import pandas as pd
 import plotly.express as px
-from src.python.review.common.file_system import (
-    Extension, extension_file_condition, get_all_file_system_items, get_parent_folder,
-)
+from src.python.review.common.file_system import get_all_file_system_items
 from analysis.src.python.evaluation.common.pandas_util import logger
 from analysis.src.python.evaluation.paper_evaluation.user_dynamics.user_statistics import DynamicsColumn
+from analysis.src.python.evaluation.common.util import AnalysisExtension, extension_file_condition, get_parent_folder
 
 MEDIAN_COLUMN = 'Median number of code quality issues in submissions'
 FREQ_COLUMN = 'Number of users'
@@ -30,7 +29,7 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
 
 
 def __get_medians(dynamics_folder_path: Path) -> List[float]:
-    dynamics_paths = get_all_file_system_items(dynamics_folder_path, extension_file_condition(Extension.CSV))
+    dynamics_paths = get_all_file_system_items(dynamics_folder_path, extension_file_condition(AnalysisExtension.CSV))
     medians = []
     for dynamic in dynamics_paths:
         dynamic_df = pd.read_csv(dynamic)
@@ -82,7 +81,8 @@ def main() -> int:
                           textposition='outside')
         fig.update_layout(uniformtext_minsize=11, uniformtext_mode='hide')
 
-        output_path = get_parent_folder(args.old_dynamics_folder_path) / f'evaluation_chart{Extension.PDF.value}'
+        output_path = get_parent_folder(
+            args.old_dynamics_folder_path) / f'evaluation_chart{AnalysisExtension.PDF.value}'
         fig.write_image(str(output_path))
         fig.show()
         return 0

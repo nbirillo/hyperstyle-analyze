@@ -3,14 +3,13 @@ from pathlib import Path
 from typing import List, Set
 
 import pandas as pd
-from src.python.review.common.file_system import (
-    Extension, get_parent_folder, serialize_data_and_write_to_file,
-)
 from src.python.review.inspectors.issue import BaseIssue
 from src.python.review.quality.penalty import PenaltyIssue
 from analysis.src.python.evaluation.common.pandas_util import get_issues_from_json, get_solutions_df_by_file_path
 from analysis.src.python.evaluation.common.tool_arguments import EvaluationRunToolArgument
-from analysis.src.python.evaluation.common.util import ColumnName, parse_set_arg
+from analysis.src.python.evaluation.common.util import (
+    AnalysisExtension, ColumnName, get_parent_folder, parse_set_arg, serialize_data_and_write_to_file,
+)
 
 TRACEBACK = ColumnName.TRACEBACK.value
 ID = ColumnName.ID.value
@@ -60,7 +59,7 @@ def main() -> None:
     issues = parse_set_arg(args.issues)
 
     diffs = get_statistics_dict(solutions_df, issues)
-    output_path = get_parent_folder(Path(solutions_file_path)) / f'diffs{Extension.PICKLE.value}'
+    output_path = get_parent_folder(Path(solutions_file_path)) / f'diffs{AnalysisExtension.PICKLE.value}'
     serialize_data_and_write_to_file(output_path, diffs)
 
 

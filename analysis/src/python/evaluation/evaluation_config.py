@@ -6,12 +6,9 @@ from typing import List, Optional, Union
 
 from src.python.common.tool_arguments import RunToolArgument
 from src.python.review.application_config import LanguageVersion
-from src.python.review.common.file_system import (
-    Extension,
-    get_parent_folder,
-    get_restricted_extension,
+from analysis.src.python.evaluation.common.util import (
+    AnalysisExtension, EvaluationArgument, get_parent_folder, get_restricted_extension,
 )
-from analysis.src.python.evaluation.common.util import EvaluationArgument
 
 logger = logging.getLogger(__name__)
 
@@ -25,7 +22,8 @@ class EvaluationConfig:
         self.traceback: bool = args.traceback
         self.with_history: bool = args.with_history
         self.output_folder_path: Union[str, Path] = args.output_folder_path
-        self.extension: Extension = get_restricted_extension(self.solutions_file_path, [Extension.XLSX, Extension.CSV])
+        self.extension: AnalysisExtension = get_restricted_extension(self.solutions_file_path,
+                                                                     [AnalysisExtension.XLSX, AnalysisExtension.CSV])
         self.__init_output_file_name(args.output_file_name)
         self.to_drop_nan: bool = args.to_drop_nan
 

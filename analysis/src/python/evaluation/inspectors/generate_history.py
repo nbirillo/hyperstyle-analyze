@@ -4,12 +4,6 @@ from collections import Counter
 from pathlib import Path
 
 import pandas as pd
-from src.python.review.common.file_system import (
-    Extension,
-    get_name_from_path,
-    get_parent_folder,
-    get_restricted_extension,
-)
 from src.python.review.common.language import Language
 from pandarallel import pandarallel
 from analysis.src.python.evaluation.common.pandas_util import (
@@ -18,7 +12,9 @@ from analysis.src.python.evaluation.common.pandas_util import (
     write_df_to_file,
 )
 from analysis.src.python.evaluation.common.tool_arguments import EvaluationRunToolArgument
-from analysis.src.python.evaluation.common.util import ColumnName, EvaluationArgument
+from analysis.src.python.evaluation.common.util import (
+    AnalysisExtension, ColumnName, EvaluationArgument, get_name_from_path, get_parent_folder, get_restricted_extension,
+)
 from analysis.src.python.evaluation.evaluation_run_tool import get_language_version
 
 TRACEBACK = EvaluationArgument.TRACEBACK.value
@@ -121,9 +117,9 @@ def main():
     if output_path is None:
         output_dir = get_parent_folder(solutions_file_path)
         dataset_name = get_name_from_path(solutions_file_path, with_extension=False)
-        output_path = output_dir / f'{dataset_name}_with_history{Extension.CSV.value}'
+        output_path = output_dir / f'{dataset_name}_with_history{AnalysisExtension.CSV.value}'
 
-    output_ext = get_restricted_extension(solutions_file_path, [Extension.XLSX, Extension.CSV])
+    output_ext = get_restricted_extension(solutions_file_path, [AnalysisExtension.XLSX, AnalysisExtension.CSV])
     write_df_to_file(solutions_df, output_path, output_ext)
 
 

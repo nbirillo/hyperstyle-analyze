@@ -3,12 +3,13 @@ from pathlib import Path
 from typing import Dict, Optional, Tuple
 
 import pandas as pd
-from src.python.review.common.file_system import Extension, get_parent_folder, get_restricted_extension
 from analysis.src.python.evaluation.common.pandas_util import (
     get_solutions_df, get_solutions_df_by_file_path, write_df_to_file,
 )
 from analysis.src.python.evaluation.common.tool_arguments import EvaluationRunToolArgument
-from analysis.src.python.evaluation.common.util import ColumnName
+from analysis.src.python.evaluation.common.util import (
+    AnalysisExtension, ColumnName, get_parent_folder, get_restricted_extension,
+)
 
 CodeToGradesDict = Dict[str, Tuple[str, Optional[str]]]
 
@@ -53,7 +54,7 @@ def main() -> None:
     args = parser.parse_args()
 
     all_solutions_file_path = args.solutions_file_path_all
-    output_ext = get_restricted_extension(all_solutions_file_path, [Extension.XLSX, Extension.CSV])
+    output_ext = get_restricted_extension(all_solutions_file_path, [AnalysisExtension.XLSX, AnalysisExtension.CSV])
     all_solutions_df = get_solutions_df(output_ext, all_solutions_file_path)
     uniq_solutions_df = get_solutions_df_by_file_path(args.solutions_file_path_uniq)
 

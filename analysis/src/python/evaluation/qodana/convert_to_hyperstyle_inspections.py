@@ -4,7 +4,6 @@ from pathlib import Path
 from typing import Iterable, Set
 
 import pandas as pd
-from src.python.review.common.file_system import Extension, get_parent_folder
 from src.python.review.inspectors.inspector_type import InspectorType
 from src.python.review.inspectors.issue import BaseIssue, IssueType
 from src.python.review.reviewers.utils.print_review import convert_issue_to_json
@@ -12,7 +11,7 @@ from analysis.src.python.evaluation.common.pandas_util import (
     drop_duplicates, filter_df_by_iterable_value, get_solutions_df_by_file_path, write_df_to_file,
 )
 from analysis.src.python.evaluation.common.tool_arguments import EvaluationRunToolArgument
-from analysis.src.python.evaluation.common.util import ColumnName, parse_set_arg
+from analysis.src.python.evaluation.common.util import AnalysisExtension, ColumnName, get_parent_folder, parse_set_arg
 from analysis.src.python.evaluation.qodana.util.issue_types import QODANA_CLASS_NAME_TO_ISSUE_TYPE
 from analysis.src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue
 
@@ -90,7 +89,7 @@ def __prepare_qodana_df(qodana_df: pd.DataFrame, hyperstyle_df: pd.DataFrame,
 
 def __write_updated_df(old_df_path: Path, df: pd.DataFrame, name_prefix: str) -> None:
     output_path = get_parent_folder(Path(old_df_path))
-    write_df_to_file(df, output_path / f'{name_prefix}_updated{Extension.CSV.value}', Extension.CSV)
+    write_df_to_file(df, output_path / f'{name_prefix}_updated{AnalysisExtension.CSV.value}', AnalysisExtension.CSV)
 
 
 def __reassign_ids(df: pd.DataFrame) -> pd.DataFrame:

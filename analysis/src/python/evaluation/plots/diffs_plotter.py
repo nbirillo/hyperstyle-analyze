@@ -8,7 +8,6 @@ sys.path.append('../../../..')
 
 import plotly.graph_objects as go
 from src.python.common.tool_arguments import RunToolArgument
-from src.python.review.common.file_system import deserialize_data_from_file, Extension, parse_yaml
 from analysis.src.python.evaluation.inspectors.common.statistics import (
     GeneralInspectorsStatistics,
     IssuesStatistics,
@@ -23,6 +22,7 @@ from analysis.src.python.evaluation.plots.plotters.diffs_plotters import (
     get_penalty_influence_distribution,
     get_unique_issues_by_category,
 )
+from analysis.src.python.evaluation.common.util import AnalysisExtension, deserialize_data_from_file, parse_yaml
 
 
 @unique
@@ -102,7 +102,7 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         '--file-extension',
         type=str,
-        default=Extension.SVG.value,
+        default=AnalysisExtension.SVG.value,
         choices=get_supported_extensions(),
         help='Allows you to select the extension of output files',
     )
@@ -143,7 +143,7 @@ def plot_and_save(
     config: Dict,
     general_statistics: GeneralInspectorsStatistics,
     save_dir: Path,
-    extension: Extension,
+    extension: AnalysisExtension,
 ) -> None:
     for plot_type in PlotTypes:
         if plot_type.value in config:
@@ -162,7 +162,7 @@ def main() -> None:
     diffs = deserialize_data_from_file(args.diffs_file_path)
     general_statistics = gather_statistics(diffs)
 
-    extension = Extension(args.file_extension)
+    extension = AnalysisExtension(args.file_extension)
     config = parse_yaml(args.config_path)
 
     plot_and_save(config, general_statistics, args.save_dir, extension)

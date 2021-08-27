@@ -3,13 +3,13 @@ import logging
 import sys
 from pathlib import Path
 
-from src.python.review.common.file_system import Extension, get_restricted_extension
 from analysis.src.python.evaluation.common.pandas_util import get_solutions_df
 from analysis.src.python.evaluation.common.tool_arguments import EvaluationRunToolArgument
 from analysis.src.python.evaluation.paper_evaluation.comparison_with_other_tools.tutor_statistics import (
     IssuesStatistics, TutorStatistics,
 )
 from analysis.src.python.evaluation.paper_evaluation.comparison_with_other_tools.util import ComparisonColumnName
+from analysis.src.python.evaluation.common.util import AnalysisExtension, get_restricted_extension
 
 sys.path.append('')
 sys.path.append('../../..')
@@ -35,7 +35,7 @@ def main() -> int:
     try:
         args = parser.parse_args()
         solutions_file_path = args.solutions_file_path
-        extension = get_restricted_extension(solutions_file_path, [Extension.CSV])
+        extension = get_restricted_extension(solutions_file_path, [AnalysisExtension.CSV])
         solutions_df = get_solutions_df(extension, solutions_file_path)
         tutor_stat = TutorStatistics(solutions_df, to_drop_duplicates=True)
         tutor_stat.print_tasks_stat()

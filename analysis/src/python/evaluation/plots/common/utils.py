@@ -1,12 +1,13 @@
 import os
 from pathlib import Path
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Union
 
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 from src.python.review.common.file_system import Extension
 from analysis.src.python.evaluation.plots.common import plotly_consts
+from evaluation.common.util import AnalysisExtension
 
 COLOR = Optional[plotly_consts.COLOR]
 COLORWAY = Optional[plotly_consts.COLORWAY]
@@ -16,9 +17,9 @@ LINES = Optional[Dict[int, Optional[str]]]
 
 
 def get_supported_extensions() -> List[str]:
-    extensions = Extension.get_image_extensions()
-    extensions.append(Extension.JSON)
-    extensions.append(Extension.HTML)
+    extensions = AnalysisExtension.get_image_extensions()
+    extensions.append(AnalysisExtension.JSON)
+    extensions.append(AnalysisExtension.HTML)
     return [extension.value for extension in extensions]
 
 
@@ -178,11 +179,11 @@ def save_plot(
     fig: go.Figure,
     dir_path: Path,
     plot_name: str = "result_plot",
-    extension: Extension = Extension.SVG,
+    extension: Union[Extension, AnalysisExtension] = AnalysisExtension.SVG,
 ) -> None:
     os.makedirs(dir_path, exist_ok=True)
     file = dir_path / f"{plot_name}{extension.value}"
-    if extension == Extension.HTML:
+    if extension == AnalysisExtension.HTML:
         fig.write_html(str(file))
     else:
         fig.write_image(str(file))

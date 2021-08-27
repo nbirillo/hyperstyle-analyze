@@ -3,12 +3,13 @@ from pathlib import Path
 from typing import Dict, List
 
 import pandas as pd
-from src.python.review.common.file_system import deserialize_data_from_file, Extension, get_parent_folder
 from src.python.review.quality.penalty import PenaltyIssue
 from analysis.src.python.evaluation.common.csv_util import write_dataframe_to_csv
 from analysis.src.python.evaluation.common.pandas_util import filter_df_by_single_value, get_solutions_df_by_file_path
 from analysis.src.python.evaluation.common.tool_arguments import EvaluationRunToolArgument
-from analysis.src.python.evaluation.common.util import ColumnName
+from analysis.src.python.evaluation.common.util import (
+    AnalysisExtension, ColumnName, deserialize_data_from_file, get_parent_folder,
+)
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:
@@ -60,7 +61,7 @@ def main() -> None:
 
     public_fragments = __get_public_fragments(solutions_df, diffs)
 
-    output_path = get_parent_folder(Path(solutions_file_path)) / f'worse_fragments{Extension.CSV.value}'
+    output_path = get_parent_folder(Path(solutions_file_path)) / f'worse_fragments{AnalysisExtension.CSV.value}'
     write_dataframe_to_csv(output_path, public_fragments.head(args.n))
 
 

@@ -7,10 +7,9 @@ from typing import List
 
 import numpy as np
 import pandas as pd
-from src.python.review.common.file_system import Extension
 from sklearn.preprocessing import MultiLabelBinarizer
 from analysis.src.python.evaluation.common.csv_util import write_dataframe_to_csv
-from analysis.src.python.evaluation.common.util import ColumnName
+from analysis.src.python.evaluation.common.util import AnalysisExtension, ColumnName
 from analysis.src.python.evaluation.qodana.imitation_model.common.util import CustomTokens, DatasetColumnArgument
 
 logger = logging.getLogger(__name__)
@@ -141,7 +140,7 @@ def main() -> None:
     output_file_path = args.output_file_path
 
     if output_file_path == 'input_file_directory':
-        output_file_path = Path(dataset_path).parent / f'encoded_dataset{Extension.CSV.value}'
+        output_file_path = Path(dataset_path).parent / f'encoded_dataset{AnalysisExtension.CSV.value}'
 
     # nan -> \n (empty rows)
     df = pd.read_csv(dataset_path)
