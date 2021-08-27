@@ -2,6 +2,7 @@ import argparse
 
 from src.python.review.common.file_system import Extension
 from analysis.src.python.evaluation.qodana.imitation_model.common.util import ModelCommonArgument
+from evaluation.common.util import AnalysisExtension
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:
@@ -25,7 +26,8 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument('-sf', '--save_f1_score',
                         default=None,
                         action="store_true",
-                        help=f'If enabled report with f1 scores by class will be saved to the {Extension.CSV.value}'
+                        help='If enabled report with f1 scores by class will be '
+                             f'saved to the {AnalysisExtension.CSV.value}'
                              ' File will be saved to the labeled dataset parent directory. Default is False.')
 
     parser.add_argument(ModelCommonArgument.CONTEXT_LENGTH.value.short_name,

@@ -2,12 +2,11 @@ from pathlib import Path
 
 import pytest
 from src.python.review.application_config import LanguageVersion
-from src.python.review.common.file_system import get_name_from_path
 from analysis.src.python.evaluation.common.pandas_util import (
     equal_df, filter_df_by_language, get_solutions_df_by_file_path,
 )
 from analysis.test.python.evaluation import PANDAS_UTIL_DIR_PATH
-from analysis.src.python.evaluation.common.util import get_in_and_out_list
+from analysis.src.python.evaluation.common.util import get_in_and_out_list, get_name_from_path
 
 RESOURCES_PATH = PANDAS_UTIL_DIR_PATH / 'filter_by_language'
 

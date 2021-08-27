@@ -15,13 +15,12 @@ from pandarallel import pandarallel
 from analysis import HYPERSTYLE_RUNNER_PATH
 from analysis.src.python.evaluation.common.pandas_util import get_solutions_df, write_df_to_file
 from analysis.src.python.evaluation.common.util import (
-    ColumnName, EvaluationArgument, run_in_subprocess_with_working_dir, script_structure_rule,
+    ColumnName, create_file, EvaluationArgument, run_in_subprocess_with_working_dir, script_structure_rule,
 )
 from analysis.src.python.evaluation.common.tool_arguments import EvaluationRunToolArgument
 from analysis.src.python.evaluation.evaluation_config import EvaluationConfig
 from src.python.common.tool_arguments import RunToolArgument
 from src.python.review.application_config import LanguageVersion
-from src.python.review.common.file_system import create_file
 from src.python.review.reviewers.perform_review import OutputFormat
 
 logger = logging.getLogger(__name__)

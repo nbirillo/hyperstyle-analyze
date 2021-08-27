@@ -4,7 +4,6 @@ from pathlib import Path
 from typing import Set
 
 from src.python.review.application_config import LanguageVersion
-from src.python.review.common.file_system import Extension, get_parent_folder, get_restricted_extension
 from analysis.src.python.evaluation.common.pandas_util import (
     drop_duplicates,
     filter_df_by_language,
@@ -12,6 +11,7 @@ from analysis.src.python.evaluation.common.pandas_util import (
     write_df_to_file,
 )
 from analysis.src.python.evaluation.common.tool_arguments import EvaluationRunToolArgument
+from analysis.src.python.evaluation.common.util import AnalysisExtension, get_parent_folder, get_restricted_extension
 
 logger = logging.getLogger(__name__)
 
@@ -46,7 +46,7 @@ def main() -> None:
     args = parser.parse_args()
 
     solutions_file_path = args.solutions_file_path
-    ext = get_restricted_extension(solutions_file_path, [Extension.XLSX, Extension.CSV])
+    ext = get_restricted_extension(solutions_file_path, [AnalysisExtension.XLSX, AnalysisExtension.CSV])
     solutions_df = get_solutions_df(ext, solutions_file_path)
 
     filtered_df = filter_df_by_language(solutions_df, args.languages)

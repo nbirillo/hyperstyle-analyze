@@ -2,15 +2,14 @@ import argparse
 from pathlib import Path
 
 import pandas as pd
-from src.python.review.common.file_system import (
-    Extension, get_parent_folder, get_restricted_extension, serialize_data_and_write_to_file,
-)
 from src.python.review.quality.model import QualityType
 from analysis.src.python.evaluation.common.pandas_util import (
     get_inconsistent_positions, get_issues_by_row, get_solutions_df, get_solutions_df_by_file_path,
 )
 from analysis.src.python.evaluation.common.tool_arguments import EvaluationRunToolArgument
-from analysis.src.python.evaluation.common.util import ColumnName
+from analysis.src.python.evaluation.common.util import (
+    AnalysisExtension, ColumnName, get_parent_folder, get_restricted_extension, serialize_data_and_write_to_file,
+)
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:
@@ -94,14 +93,14 @@ def main() -> None:
     args = parser.parse_args()
 
     old_solutions_file_path = args.solutions_file_path_old
-    output_ext = get_restricted_extension(old_solutions_file_path, [Extension.XLSX, Extension.CSV])
+    output_ext = get_restricted_extension(old_solutions_file_path, [AnalysisExtension.XLSX, AnalysisExtension.CSV])
     old_solutions_df = get_solutions_df(output_ext, old_solutions_file_path)
 
     new_solutions_file_path = args.solutions_file_path_new
     new_solutions_df = get_solutions_df_by_file_path(new_solutions_file_path)
 
     diffs = find_diffs(old_solutions_df, new_solutions_df)
-    output_path = get_parent_folder(Path(old_solutions_file_path)) / f'diffs{Extension.PICKLE.value}'
+    output_path = get_parent_folder(Path(old_solutions_file_path)) / f'diffs{AnalysisExtension.PICKLE.value}'
     serialize_data_and_write_to_file(output_path, diffs)
 
 

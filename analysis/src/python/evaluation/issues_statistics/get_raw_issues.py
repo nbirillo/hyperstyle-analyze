@@ -13,16 +13,13 @@ import pandas as pd
 from pandarallel import pandarallel
 from src.python.common.tool_arguments import RunToolArgument
 from analysis.src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path, write_df_to_file
-from analysis.src.python.evaluation.common.util import ColumnName
+from analysis.src.python.evaluation.common.util import (
+    AnalysisExtension, ColumnName, create_file, get_name_from_path, get_parent_folder,
+)
 from analysis.src.python.evaluation.issues_statistics.common.raw_issue_encoder_decoder import RawIssueEncoder
 from analysis.src.python.evaluation.common.tool_arguments import EvaluationRunToolArgument
 from src.python.review.application_config import LanguageVersion
-from src.python.review.common.file_system import (
-    create_file,
-    Extension,
-    get_name_from_path,
-    get_parent_folder,
-)
+from src.python.review.common.file_system import Extension
 from src.python.review.common.language import Language
 from src.python.review.inspectors.issue import (
     BaseIssue,
@@ -37,7 +34,7 @@ CODE = ColumnName.CODE.value
 ID = ColumnName.ID.value
 RAW_ISSUES = 'raw_issues'
 
-ALLOWED_EXTENSION = {Extension.XLSX, Extension.CSV}
+ALLOWED_EXTENSION = {AnalysisExtension.XLSX, AnalysisExtension.CSV}
 
 ERROR_CODES = [
     'E999',  # flake8
@@ -193,7 +190,7 @@ def _inspect_row(
 
 def _is_correct_output_path(output_path: Path) -> bool:
     try:
-        output_extension = Extension.get_extension_from_file(str(output_path))
+        output_extension = AnalysisExtension.get_extension_from_file(str(output_path))
     except ValueError:
         return False
 
@@ -206,7 +203,7 @@ def _get_output_path(solutions_file_path: Path, output_path: Optional[Path]) -> 
             return output_path
         logger.warning('The output path is not correct. The resulting dataset will be saved next to the original one.')
 
-    extension = Extension.get_extension_from_file(str(solutions_file_path))
+    extension = AnalysisExtension.get_extension_from_file(str(solutions_file_path))
     output_dir = get_parent_folder(solutions_file_path)
     dataset_name = get_name_from_path(solutions_file_path, with_extension=False)
     return output_dir / f'{dataset_name}_with_raw_issues{extension.value}'

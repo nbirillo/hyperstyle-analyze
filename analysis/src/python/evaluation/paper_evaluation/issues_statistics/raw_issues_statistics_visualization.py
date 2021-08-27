@@ -8,11 +8,11 @@ from typing import Dict, List, Optional
 
 import pandas as pd
 import plotly.graph_objects as go
-from src.python.review.common.file_system import Extension, parse_yaml
 from plotly.subplots import make_subplots
 from analysis.src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path
 from analysis.src.python.evaluation.plots.common.utils import get_supported_extensions, save_plot
 from analysis.src.python.evaluation.plots.plotters.raw_issues_statistics_plotters import prepare_stats
+from analysis.src.python.evaluation.common.util import AnalysisExtension, parse_yaml
 
 logger = logging.getLogger(__name__)
 COLORWAY = ['rgb(47,22,84)', 'rgb(99,47,177)', 'rgb(153,110,216)']
@@ -101,7 +101,7 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         '--file-extension',
         type=str,
-        default=Extension.SVG.value,
+        default=AnalysisExtension.SVG.value,
         choices=get_supported_extensions(),
         help='Allows you to select the extension of output files.',
     )
@@ -168,7 +168,7 @@ def build_subplots(df: pd.DataFrame, plot_config: PlotConfig, trace_configs: Lis
     return fig
 
 
-def plot_and_save(stats: pd.DataFrame, config: Dict, output_dir: Path, extension: Extension) -> None:
+def plot_and_save(stats: pd.DataFrame, config: Dict, output_dir: Path, extension: AnalysisExtension) -> None:
     for group_name, group_config in config.items():
         plot_config = PlotConfig.get_from_dict(group_name, group_config.pop(_PLOT_CONFIG))
         trace_configs = []
@@ -188,7 +188,7 @@ def main():
         config = parse_yaml(args.config_path)
         stats = get_solutions_df_by_file_path(args.stats_path)
 
-        plot_and_save(stats, config, args.save_dir, Extension(args.file_extension))
+        plot_and_save(stats, config, args.save_dir, AnalysisExtension(args.file_extension))
 
         return 0
 

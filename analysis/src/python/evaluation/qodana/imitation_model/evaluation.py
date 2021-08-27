@@ -6,7 +6,6 @@ import numpy as np
 import pandas as pd
 import torch
 import transformers
-from src.python.review.common.file_system import Extension
 from torch.utils.data import DataLoader
 from transformers import RobertaForSequenceClassification
 from analysis.src.python.evaluation.common.csv_util import write_dataframe_to_csv
@@ -14,6 +13,7 @@ from analysis.src.python.evaluation.qodana.imitation_model.common.evaluation_con
 from analysis.src.python.evaluation.qodana.imitation_model.common.metric import Measurer
 from analysis.src.python.evaluation.qodana.imitation_model.common.util import DatasetColumnArgument, MeasurerArgument
 from analysis.src.python.evaluation.qodana.imitation_model.dataset.dataset import QodanaDataset
+from evaluation.common.util import AnalysisExtension
 
 
 def get_predictions(eval_dataloader: torch.utils.data.DataLoader,
@@ -33,7 +33,7 @@ def get_predictions(eval_dataloader: torch.utils.data.DataLoader,
 
 
 def save_f1_scores(output_directory_path: Path, f1_score_by_class_dict: dict) -> None:
-    f1_score_report_file_name = f'{MeasurerArgument.F1_SCORES_BY_CLS.value}{Extension.CSV.value}'
+    f1_score_report_file_name = f'{MeasurerArgument.F1_SCORES_BY_CLS.value}{AnalysisExtension.CSV.value}'
     f1_score_report_path = Path(output_directory_path).parent / f1_score_report_file_name
     f1_score_report_df = pd.DataFrame({MeasurerArgument.F1_SCORE.value: f1_score_by_class_dict.values(),
                                        'inspection_id': range(len(f1_score_by_class_dict.values()))})
@@ -45,7 +45,7 @@ def main():
     configure_arguments(parser)
     args = parser.parse_args()
     if args.output_directory_path is None:
-        args.output_directory_path = Path(args.test_dataset_path).parent / f'predictions{Extension.CSV.value}'
+        args.output_directory_path = Path(args.test_dataset_path).parent / f'predictions{AnalysisExtension.CSV.value}'
 
     test_dataset = QodanaDataset(args.test_dataset_path, args.context_length)
     num_labels = test_dataset[0][DatasetColumnArgument.LABELS.value].shape[0]

@@ -14,23 +14,18 @@ sys.path.append('')
 import numpy as np
 import pandas as pd
 from analysis.src.python.evaluation.common.csv_util import write_dataframe_to_csv
-from analysis.src.python.evaluation.common.util import ColumnName
+from analysis.src.python.evaluation.common.util import (
+    ColumnName, copy_directory, copy_file, create_file, get_name_from_path,
+    get_parent_folder, match_condition, remove_directory, run_and_wait,
+)
 from analysis.src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue
 from analysis.src.python.evaluation.qodana.util.util import to_json
 from src.python.review.application_config import LanguageVersion
 from src.python.review.common.file_system import (
-    copy_directory,
-    copy_file,
-    create_file,
     Extension,
     get_all_file_system_items,
     get_content_from_file,
-    get_name_from_path,
-    get_parent_folder,
-    match_condition,
-    remove_directory,
 )
-from src.python.review.common.subprocess_runner import run_and_wait
 from src.python.review.run_tool import positive_int
 
 logger = logging.getLogger(__name__)
