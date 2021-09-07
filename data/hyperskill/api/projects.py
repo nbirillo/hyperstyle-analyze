@@ -1,13 +1,12 @@
 from dataclasses import dataclass, field
 from typing import List, Optional, Dict
 
-from data.hyperskill.api.meta import Meta
+from data.common_api.response import PageRequestParams, PageResponse, Object
 
 
 @dataclass
-class ProjectsRequestParams:
-    page: int = 1
-    page_size: int = 10
+class ProjectsRequestParams(PageRequestParams):
+    pass
 
 
 @dataclass
@@ -19,7 +18,7 @@ class ProjectsByLevel:
 
 
 @dataclass
-class Project:
+class Project(Object):
     id: int
     title: str
     use_ide: bool
@@ -47,6 +46,8 @@ class Project:
 
 
 @dataclass
-class ProjectsResponse:
+class ProjectsResponse(PageResponse[Project]):
     projects: List[Project]
-    meta: Meta
+
+    def get_objects(self) -> List[Project]:
+        return self.projects

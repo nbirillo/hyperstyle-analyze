@@ -1,17 +1,16 @@
 from dataclasses import dataclass
 from typing import List, Optional
 
-from data.hyperskill.api.meta import Meta
+from data.common_api.response import PageRequestParams, PageResponse, Object
 
 
 @dataclass
-class TopicsRequestParams:
-    page: int = 1
-    page_size: int = 10
+class TopicsRequestParams(PageRequestParams):
+    pass
 
 
 @dataclass
-class Topic:
+class Topic(Object):
     id: int
     children: List[int]
     depth: int
@@ -36,6 +35,8 @@ class Topic:
 
 
 @dataclass
-class TopicsResponse:
+class TopicsResponse(PageResponse[Topic]):
     topics: List[Topic]
-    meta: Meta
+
+    def get_objects(self) -> List[Topic]:
+        return self.topics
