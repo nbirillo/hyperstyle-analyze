@@ -1,17 +1,18 @@
 from dataclasses import dataclass
-from typing import List
+from typing import List, Optional
+
+from data.common_api.response import PageRequestParams, Object, PageResponse
 
 
 @dataclass
-class SearchResultsRequestParams:
-    query: str
+class SearchResultsRequestParams(PageRequestParams):
+    query: str = ""
     is_popular: bool = True
-    page: int = 1
     type: str = "course"
 
 
 @dataclass
-class SearchResult:
+class SearchResult(Object):
     course: int
     course_title: str
     id: int
@@ -21,9 +22,12 @@ class SearchResult:
     target_type: str
     course_owner: int
     course_slug: str
-    course_cover: str
+    course_cover: Optional[str] = ""
 
 
 @dataclass
-class SearchResultsResponse:
+class SearchResultsResponse(PageResponse):
     search_results: List[SearchResult]
+
+    def get_objects(self) -> List[SearchResult]:
+        return self.search_results
