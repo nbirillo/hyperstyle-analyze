@@ -1,9 +1,16 @@
 from dataclasses import dataclass, field
 from typing import List, Optional
 
+from data.common_api.response import PageRequestParams, Object
+
 
 @dataclass
-class Course:
+class CourseRequestParams(PageRequestParams):
+    pass
+
+
+@dataclass
+class Course(Object):
     id: int
     summary: str
     workload: str
@@ -37,3 +44,6 @@ class Course:
 @dataclass
 class CoursesResponse:
     courses: List[Course]
+
+    def get_objects(self) -> List[Course]:
+        return self.courses

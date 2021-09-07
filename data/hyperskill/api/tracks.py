@@ -1,13 +1,12 @@
 from dataclasses import dataclass, field
 from typing import List, Optional
 
-from data.hyperskill.api.meta import Meta
+from data.common_api.response import PageResponse, Object, PageRequestParams
 
 
 @dataclass
-class TracksRequestParams:
-    page: int = 1
-    page_size: int = 10
+class TracksRequestParams(PageRequestParams):
+    pass
 
 
 @dataclass
@@ -19,7 +18,7 @@ class ProjectsByLevel:
 
 
 @dataclass
-class Track:
+class Track(Object):
     id: int
     title: str
     description: str
@@ -44,6 +43,8 @@ class Track:
 
 
 @dataclass
-class TracksResponse:
+class TracksResponse(PageResponse[Track]):
     tracks: List[Track]
-    meta: Meta
+
+    def get_objects(self) -> List[Track]:
+        return self.tracks
