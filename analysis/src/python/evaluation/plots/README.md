@@ -39,6 +39,7 @@ The configuration file is a dictionary in yaml format, where each chart you want
 * `penalty_influence_distribution` to plot the distribution of penalty influence by category
 
 **Possible parameters**:
+
 Parametr | Description
 ---|---
 **x_axis_name** | Name of the x-axis. The default value depends on the type of chart.
@@ -117,6 +118,7 @@ The configuration file is a dictionary in yaml format, where
 * `box_plot`
 
 **Possible parameters**:
+
 Parametr | Description
 ---|---
 **x_axis_name** | Name of the x-axis. The default value depends on the type of chart.

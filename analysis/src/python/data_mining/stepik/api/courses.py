@@ -1,11 +1,11 @@
 from dataclasses import dataclass, field
 from typing import List, Optional
 
-from data.common_api.response import PageRequestParams, Object
+from analysis.src.python.data_mining.api.platform_entities import Response, RequestParams, Object
 
 
 @dataclass
-class CourseRequestParams(PageRequestParams):
+class CourseRequestParams(RequestParams):
     pass
 
 
@@ -42,7 +42,7 @@ class Course(Object):
 
 
 @dataclass
-class CoursesResponse:
+class CoursesResponse(Response[Course]):
     courses: List[Course]
 
     def get_objects(self) -> List[Course]:
