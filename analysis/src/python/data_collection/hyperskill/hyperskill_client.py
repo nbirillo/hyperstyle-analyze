@@ -3,13 +3,13 @@ import sys
 from enum import Enum
 from typing import List
 
-from analysis.src.python.data_mining.api.platform_api import PlatformApi
-from analysis.src.python.data_mining.hyperskill.api.projects import ProjectsResponse, ProjectsRequestParams, Project
-from analysis.src.python.data_mining.hyperskill.api.search_results import SearchResult, SearchResultsRequestParams, \
+from analysis.src.python.data_collection.api.platform_api import PlatformClient
+from analysis.src.python.data_collection.hyperskill.api.projects import ProjectsResponse, ProjectsRequestParams, Project
+from analysis.src.python.data_collection.hyperskill.api.search_results import SearchResult, SearchResultsRequestParams, \
     SearchResultsResponse
-from analysis.src.python.data_mining.hyperskill.api.steps import StepsRequestParams, StepsResponse, Step
-from analysis.src.python.data_mining.hyperskill.api.topics import TopicsResponse, TopicsRequestParams, Topic
-from analysis.src.python.data_mining.hyperskill.api.tracks import TracksResponse, TracksRequestParams, Track
+from analysis.src.python.data_collection.hyperskill.api.steps import StepsRequestParams, StepsResponse, Step
+from analysis.src.python.data_collection.hyperskill.api.topics import TopicsResponse, TopicsRequestParams, Topic
+from analysis.src.python.data_collection.hyperskill.api.tracks import TracksResponse, TracksRequestParams, Track
 
 
 class ObjectClass(str, Enum):
@@ -20,7 +20,7 @@ class ObjectClass(str, Enum):
     TOPIC = 'topic'
 
 
-class HyperskillAPI(PlatformApi):
+class HyperskillClient(PlatformClient):
     API_HOST = 'https://hyperskill.org/'
 
     def __init__(self):
@@ -58,7 +58,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args(sys.argv[1:])
 
-    api = HyperskillAPI()
+    api = HyperskillClient()
     if args.object == ObjectClass.TOPIC:
         api.get_topics(save_to_csv=True)
     elif args.object == ObjectClass.TRACK:

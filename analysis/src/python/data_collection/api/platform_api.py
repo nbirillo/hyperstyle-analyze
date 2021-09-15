@@ -5,14 +5,14 @@ from typing import List, Type, Optional, TypeVar
 import requests
 from dacite import from_dict
 
-from analysis.src.python.data_mining.api.platform_entities import RequestParams, Object, Response
-from analysis.src.python.data_mining.utils.csv_utils import save_objects_to_csv
-from analysis.src.python.data_mining.utils.json_utils import kebab_to_snake_case
+from analysis.src.python.data_collection.api.platform_entities import RequestParams, Object, Response
+from analysis.src.python.data_collection.utils.csv_utils import save_objects_to_csv
+from analysis.src.python.data_collection.utils.json_utils import kebab_to_snake_case
 
 T = TypeVar('T', bound=Object)
 
 
-class PlatformApi:
+class PlatformClient:
 
     def __init__(self, host: str, token: str = None):
         self.host = host

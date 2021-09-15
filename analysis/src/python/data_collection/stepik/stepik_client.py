@@ -6,9 +6,9 @@ from typing import List
 
 import requests
 
-from analysis.src.python.data_mining.api.platform_api import PlatformApi
-from analysis.src.python.data_mining.stepik.api.courses import CoursesResponse, CourseRequestParams, Course
-from analysis.src.python.data_mining.stepik.api.search_results import SearchResult, SearchResultsRequestParams, \
+from analysis.src.python.data_collection.api.platform_api import PlatformClient
+from analysis.src.python.data_collection.stepik.api.courses import CoursesResponse, CourseRequestParams, Course
+from analysis.src.python.data_collection.stepik.api.search_results import SearchResult, SearchResultsRequestParams, \
     SearchResultsResponse
 
 
@@ -17,7 +17,7 @@ class ObjectClass(str, Enum):
     SEARCH_RESULT = 'search-result'
 
 
-class StepicAPI(PlatformApi):
+class StepicClient(PlatformClient):
     API_HOST = 'https://stepik.org'
 
     def __init__(self):
@@ -57,7 +57,7 @@ if __name__ == '__main__':
 
     args = parser.parse_args(sys.argv[1:])
 
-    api = StepicAPI()
+    api = StepicClient()
 
     if args.object == ObjectClass.COURSE:
         api.get_courses(args.ids, save_to_csv=True)

@@ -3,7 +3,7 @@ import os
 from dataclasses import asdict
 from typing import List, Type, TypeVar
 
-from analysis.src.python.data_mining.api.platform_entities import Object
+from analysis.src.python.data_collection.api.platform_entities import Object
 
 
 class CsvWriter:

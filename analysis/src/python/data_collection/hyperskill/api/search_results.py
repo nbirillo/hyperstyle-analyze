@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import List
 
-from analysis.src.python.data_mining.api.platform_entities import RequestParams, Object, Response, Meta
+from analysis.src.python.data_collection.api.platform_entities import RequestParams, Object, Response, Meta
 
 
 @dataclass
