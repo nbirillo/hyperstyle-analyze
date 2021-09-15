@@ -1,12 +1,11 @@
 from dataclasses import dataclass
 from typing import List
 
-from data.common_api.meta import Meta
-from data.common_api.response import PageRequestParams, PageResponse, Object
+from analysis.src.python.data_mining.api.platform_entities import RequestParams, Object, Response, Meta
 
 
 @dataclass
-class SearchResultsRequestParams(PageRequestParams):
+class SearchResultsRequestParams(RequestParams):
     query: str = ""
     include_groups: bool = True
     include_projects: bool = True
@@ -21,7 +20,7 @@ class SearchResult(Object):
 
 
 @dataclass
-class SearchResultsResponse(PageResponse[SearchResult]):
+class SearchResultsResponse(Response[SearchResult]):
     search_results: List[SearchResult]
     meta: Meta
 

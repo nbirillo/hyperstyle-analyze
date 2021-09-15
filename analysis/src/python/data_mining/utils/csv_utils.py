@@ -1,6 +1,9 @@
 import csv
 import os
-from typing import List
+from dataclasses import asdict
+from typing import List, Type, TypeVar
+
+from analysis.src.python.data_mining.api.platform_entities import Object
 
 
 class CsvWriter:
@@ -18,3 +21,12 @@ class CsvWriter:
         with open(self.csv_path, 'a+', newline='', encoding='utf8') as f:
             writer = csv.DictWriter(f, fieldnames=self.fieldnames)
             writer.writerow({k: data[k] for k in self.fieldnames})
+
+
+T = TypeVar('T', bound=Object)
+
+
+def save_objects_to_csv(objects: List[T], obj_class: str, obj_type: Type[T]):
+    csv_writer = CsvWriter('result', f'{obj_class}s.csv', list(obj_type.__annotations__.keys()))
+    for obj in objects:
+        csv_writer.write_csv(asdict(obj))

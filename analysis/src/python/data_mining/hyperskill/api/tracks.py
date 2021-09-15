@@ -1,11 +1,11 @@
 from dataclasses import dataclass, field
 from typing import List, Optional
 
-from data.common_api.response import PageResponse, Object, PageRequestParams
+from analysis.src.python.data_mining.api.platform_entities import RequestParams, Object, Response
 
 
 @dataclass
-class TracksRequestParams(PageRequestParams):
+class TracksRequestParams(RequestParams):
     pass
 
 
@@ -43,7 +43,7 @@ class Track(Object):
 
 
 @dataclass
-class TracksResponse(PageResponse[Track]):
+class TracksResponse(Response[Track]):
     tracks: List[Track]
 
     def get_objects(self) -> List[Track]:

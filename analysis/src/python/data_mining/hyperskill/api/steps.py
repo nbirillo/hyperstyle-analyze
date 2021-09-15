@@ -1,11 +1,11 @@
 from dataclasses import dataclass, field
 from typing import List
 
-from data.common_api.response import PageRequestParams, PageResponse, Object
+from analysis.src.python.data_mining.api.platform_entities import RequestParams, Object, Response
 
 
 @dataclass
-class StepsRequestParams(PageRequestParams):
+class StepsRequestParams(RequestParams):
     topic: int = 0
 
 
@@ -76,7 +76,7 @@ class Step(Object):
 
 
 @dataclass
-class StepsResponse(PageResponse[Step]):
+class StepsResponse(Response[Step]):
     steps: List[Step]
 
     def get_objects(self) -> List[Step]:
