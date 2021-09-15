@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 from typing import List, Optional
 
-from data.common_api.response import PageRequestParams, PageResponse, Object
+from analysis.src.python.data_mining.api.platform_entities import RequestParams, Object, Response
 
 
 @dataclass
-class TopicsRequestParams(PageRequestParams):
+class TopicsRequestParams(RequestParams):
     pass
 
 
@@ -35,7 +35,7 @@ class Topic(Object):
 
 
 @dataclass
-class TopicsResponse(PageResponse[Topic]):
+class TopicsResponse(Response[Topic]):
     topics: List[Topic]
 
     def get_objects(self) -> List[Topic]:

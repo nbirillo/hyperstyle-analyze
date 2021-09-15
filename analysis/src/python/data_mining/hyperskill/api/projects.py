@@ -1,20 +1,12 @@
 from dataclasses import dataclass, field
 from typing import List, Optional, Dict
 
-from data.common_api.response import PageRequestParams, PageResponse, Object
+from analysis.src.python.data_mining.api.platform_entities import Object, RequestParams, Response
 
 
 @dataclass
-class ProjectsRequestParams(PageRequestParams):
+class ProjectsRequestParams(RequestParams):
     pass
-
-
-@dataclass
-class ProjectsByLevel:
-    easy: List[int] = field(default_factory=list)
-    medium: List[int] = field(default_factory=list)
-    hard: List[int] = field(default_factory=list)
-    nightmare: List[int] = field(default_factory=list)
 
 
 @dataclass
@@ -46,7 +38,7 @@ class Project(Object):
 
 
 @dataclass
-class ProjectsResponse(PageResponse[Project]):
+class ProjectsResponse(Response[Project]):
     projects: List[Project]
 
     def get_objects(self) -> List[Project]:

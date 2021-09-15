@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 from typing import List, Optional
 
-from data.common_api.response import PageRequestParams, Object, PageResponse
+from analysis.src.python.data_mining.api.platform_entities import Response, Object, RequestParams
 
 
 @dataclass
-class SearchResultsRequestParams(PageRequestParams):
+class SearchResultsRequestParams(RequestParams):
     query: str = ""
     is_popular: bool = True
     type: str = "course"
@@ -26,7 +26,7 @@ class SearchResult(Object):
 
 
 @dataclass
-class SearchResultsResponse(PageResponse):
+class SearchResultsResponse(Response[SearchResult]):
     search_results: List[SearchResult]
 
     def get_objects(self) -> List[SearchResult]:
