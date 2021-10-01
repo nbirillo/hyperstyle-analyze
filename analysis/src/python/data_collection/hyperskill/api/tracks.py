@@ -24,18 +24,18 @@ class Track(Object):
     description: str
     projects: List[int]
     projects_by_level: ProjectsByLevel
-    best_rated_project: int
-    fastest_to_complete_project: int
-    progress_id: str
+    best_rated_project: Optional[int]
+    fastest_to_complete_project: Optional[int]
+    progress_id: Optional[str]
     seconds_to_complete: float
     topics_count: int
     results: str
-    is_on_onboarding: bool
+    is_on_onboarding: Optional[bool]
     is_beta: bool
     is_free: bool
     careers: str
-    root_topic_id: Optional[int] = ""
-    type: Optional[str] = ""
+    root_topic_id: Optional[int]
+    type: Optional[str]
     url: str = field(init=False)
 
     def __post_init__(self):

@@ -1,21 +1,21 @@
 from dataclasses import dataclass, field
-from typing import List
+from typing import List, Optional
 
 from analysis.src.python.data_collection.api.platform_entities import RequestParams, Object, Response
 
 
 @dataclass
 class StepsRequestParams(RequestParams):
-    topic: int = 0
+    topic: Optional[int] = None
 
 
 @dataclass
 class Options:
-    task_type: str
-    lesson_type: str
-    title: str
-    description_text: str
-    description_format: str
+    task_type: Optional[str]
+    lesson_type: Optional[str]
+    title: Optional[str]
+    description_text: Optional[str]
+    description_format: Optional[str]
 
 
 @dataclass
@@ -42,27 +42,27 @@ class LikesStatistics:
 class Step(Object):
     id: int
     title: str
-    project: int
+    project: Optional[int]
     bloom_level: int
     seconds_to_complete: float
     can_abandon: bool
     success_rate: float
     solved_by: int
-    topic: str
+    topic: int
     can_skip: bool
     check_profile: str
     block: Block
     comments_statistics: List[CommentStatistics]
     content_created_at: str
     last_completed_at: str
-    likes_statistics: LikesStatistics
+    likes_statistics: List[LikesStatistics]
     lesson_stepik_id: int
     stepik_id: int
     position: int
-    stage: int
-    topic_theory: str
+    stage: Optional[int]
+    topic_theory: int
     type: str
-    popular_ide: str
+    popular_ide: Optional[str]
     is_abandoned: bool
     is_completed: bool
     is_cribbed: bool

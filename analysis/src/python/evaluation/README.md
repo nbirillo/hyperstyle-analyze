@@ -26,6 +26,7 @@ Required arguments:
 `solutions_file_path` — path to xlsx-file or csv-file with code samples to inspect.
 
 Optional arguments:
+
 Argument | Description
 --- | ---
 |**&#8209;f**, **&#8209;&#8209;format**| The output format. Available values: `json`, `text`. The default value is `json` . Use this argument when `traceback` is enabled, otherwise it will not be used.|

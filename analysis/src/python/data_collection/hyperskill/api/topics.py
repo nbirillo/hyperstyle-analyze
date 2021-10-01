@@ -25,10 +25,10 @@ class Topic(Object):
     title: str
     topological_index: int
     is_deprecated: bool
-    theory: Optional[int] = None
-    root_subgroup_title: Optional[str] = ""
-    parent_id: Optional[int] = None
-    verification_step: Optional[int] = None
+    theory: Optional[int]
+    root_subgroup_title: Optional[str]
+    parent_id: Optional[int]
+    verification_step: Optional[int]
 
     def __post_init__(self):
         self.url = f'https://hyperskill.org/topics/{self.id}'

@@ -13,8 +13,9 @@ Run the [dataset_labeling.py](dataset_labeling.py) with the arguments from comma
 `dataset_path` — path to dataset.
 
 ### Optional arguments
+
 | Argument | Description |
-|-|-|
+|---|---|
 | **&#8209;c**, **&#8209;&#8209;config** | Path to qodana.yaml. If the path is not specified, Qodana will start without a configuration file. |
 | **&#8209;l**, **&#8209;&#8209;limit** | Allows you to read only the specified number of first rows from the dataset. If no limit is specified, the whole dataset will be processed. |
 | **&#8209;s**, **&#8209;&#8209;chunk&#8209;size** | The number of files that Qodana will process at a time. Default is `5000`. |
@@ -81,6 +82,7 @@ Required arguments:
 `solutions_file_path` — path to csv-file with code samples graded by [dataset_labeling.py](dataset_labeling.py) script.
 
 Optional arguments:
+
 Argument | Description
 --- | ---
 |**&#8209;&#8209;uniq**| To count all fragments for each inspection where was this inspection (without duplicates). By default it disabled. |
@@ -128,6 +130,7 @@ Required arguments:
 - `inspections_path` — path to csv-file with inspections list from the input file. You can get this file by [get_unique_inspectors.py](get_unique_inspectors.py) script.
 
 Optional arguments:
+
 Argument | Description
 --- | ---
 |**&#8209;&#8209;remove&#8209;duplicates**| Remove duplicates around inspections in each row. Default value is `False`. |
@@ -190,6 +193,7 @@ Required arguments:
 - `inspections_path` — path to csv-file with inspections list from the input file. You can get this file by [get_unique_inspectors.py](get_unique_inspectors.py) script.
 
 Optional arguments:
+
 Argument | Description
 --- | ---
 |**&#8209;&#8209;remove&#8209;duplicates**| Remove duplicates around inspections in each row. Default value is `False`. |
