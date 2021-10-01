@@ -19,6 +19,7 @@ Run the [get_raw_issues.py](get_raw_issues.py) with the arguments from command l
 - `solutions_file_path` — path to xlsx-file or csv-file with code samples to inspect.
 
 **Optional arguments:**
+
 | Argument | Description |
 |----------|-------------|
 | **&#8209;&#8209;allow&#8209;duplicates** | Allow duplicate issues found by different linters. By default, duplicates are skipped. |
@@ -54,6 +55,7 @@ Run the [get_raw_issues_statistics.py](get_raw_issues_statistics.py) with the ar
 - `solutions_with_raw_issues` — path to an xlsx- or csv-file with code samples and raw issues, which were received with [get_raw_issues.py](get_raw_issues.py).
 
 **Optional arguments:**
+
 | Argument | Description |
 |----------|-------------|
 | **&#8209;o**, **&#8209;&#8209;output** | Path to the folder where datasets with statistics will be saved. If not specified, the datasets will be saved in the folder next to the original dataset. |
