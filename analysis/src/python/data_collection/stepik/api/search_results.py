@@ -22,7 +22,7 @@ class SearchResult(Object):
     target_type: str
     course_owner: int
     course_slug: str
-    course_cover: Optional[str] = ""
+    course_cover: Optional[str]
 
 
 @dataclass

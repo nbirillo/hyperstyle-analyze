@@ -12,6 +12,7 @@ from analysis.src.python.data_collection.utils.json_utils import kebab_to_snake_
 T = TypeVar('T', bound=Object)
 
 
+# Base class for hyperskill and stepik clients which wraps data exchange process with platforms according to open APIs.
 class PlatformClient:
 
     def __init__(self, host: str, token: str = None):
@@ -27,7 +28,8 @@ class PlatformClient:
         if obj_id is not None:
             api_url = '{}/{}'.format(api_url, obj_id)
         if params is not None:
-            api_url = '{}?{}'.format(api_url, urllib.parse.urlencode(params))
+            dict_params = {k: v for k, v in asdict(params).items() if v is not None}
+            api_url = '{}?{}'.format(api_url, urllib.parse.urlencode(dict_params))
         if self.token is not None:
             raw_response = requests.get(api_url, headers={'Authorization': 'Bearer ' + self.token})
         else:
@@ -49,7 +51,7 @@ class PlatformClient:
                     obj_response_type: Type[Response[T]],
                     params: RequestParams,
                     obj_ids: List[int] = None,
-                    save_to_csv: bool = False):
+                    save_to_csv: bool = False) -> List[T]:
         if obj_ids is None:
             objects = self._get_objects_all(obj_class, obj_response_type, params)
         else:
@@ -68,7 +70,7 @@ class PlatformClient:
             print(f'Getting {obj_class} page: {page}')
             try:
                 params.page = page
-                response = self._fetch(obj_class, asdict(params), obj_response_type)
+                response = self._fetch(obj_class, params, obj_response_type)
                 if response is None:
                     return objects
                 objects += response.get_objects()
@@ -92,7 +94,7 @@ class PlatformClient:
                 print(f'Getting object {obj_class} by id {obj_id} page: {page}')
                 try:
                     params.page = page
-                    response = self._fetch(obj_class, asdict(params), obj_response_type, obj_id)
+                    response = self._fetch(obj_class, params, obj_response_type, obj_id)
                     if response is None:
                         break
                     objects += response.get_objects()

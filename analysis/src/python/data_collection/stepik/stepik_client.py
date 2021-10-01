@@ -38,11 +38,11 @@ class StepicClient(PlatformClient):
             exit(1)
         return token
 
-    def get_courses(self, course_ids: List[int], save_to_csv=False) -> List[Course]:
+    def get_courses(self, course_ids: List[int], save_to_csv: bool = False) -> List[Course]:
         return self.get_objects(ObjectClass.COURSE, Course, CoursesResponse, CourseRequestParams(), course_ids,
                                 save_to_csv)
 
-    def get_search_results(self, query: str, save_to_csv=False) -> List[SearchResult]:
+    def get_search_results(self, query: str, save_to_csv: bool = False) -> List[SearchResult]:
         return self.get_objects(ObjectClass.SEARCH_RESULT, SearchResult, SearchResultsResponse,
                                 SearchResultsRequestParams(query=query), save_to_csv=save_to_csv)
 

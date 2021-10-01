@@ -26,23 +26,23 @@ class HyperskillClient(PlatformClient):
     def __init__(self):
         super().__init__(self.API_HOST)
 
-    def get_steps(self, topic_id: int, save_to_csv=False, ids: List[int] = None) -> List[Step]:
+    def get_steps(self, topic_id: int = None, save_to_csv: bool = False, ids: List[int] = None) -> List[Step]:
         return self.get_objects(ObjectClass.STEP, Step, StepsResponse, StepsRequestParams(topic=topic_id), ids,
                                 save_to_csv)
 
-    def get_tracks(self, save_to_csv=False, ids: List[int] = None) -> List[Track]:
+    def get_tracks(self, save_to_csv: bool = False, ids: List[int] = None) -> List[Track]:
         return self.get_objects(ObjectClass.TRACK, Track, TracksResponse, TracksRequestParams(), ids,
                                 save_to_csv)
 
-    def get_projects(self, save_to_csv=False, ids: List[int] = None) -> List[Project]:
+    def get_projects(self, save_to_csv: bool = False, ids: List[int] = None) -> List[Project]:
         return self.get_objects(ObjectClass.PROJECT, Project, ProjectsResponse, ProjectsRequestParams(), ids,
                                 save_to_csv)
 
-    def get_topics(self, save_to_csv=False, ids: List[int] = None) -> List[Topic]:
+    def get_topics(self, save_to_csv: bool = False, ids: List[int] = None) -> List[Topic]:
         return self.get_objects(ObjectClass.TOPIC, Topic, TopicsResponse, TopicsRequestParams(), ids,
                                 save_to_csv)
 
-    def get_search_results(self, query: str, save_to_csv=False) -> List[SearchResult]:
+    def get_search_results(self, query: str, save_to_csv: bool = False) -> List[SearchResult]:
         return self.get_objects(ObjectClass.SEARCH_RESULT, SearchResult, SearchResultsResponse,
                                 SearchResultsRequestParams(query=query), save_to_csv=save_to_csv)
 
