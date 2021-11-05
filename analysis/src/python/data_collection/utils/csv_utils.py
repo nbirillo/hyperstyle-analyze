@@ -2,7 +2,7 @@ import csv
 import logging
 import os
 from dataclasses import asdict
-from typing import List, Type, TypeVar
+from typing import List, TypeVar
 
 from analysis.src.python.data_collection.api.platform_objects import Object
 

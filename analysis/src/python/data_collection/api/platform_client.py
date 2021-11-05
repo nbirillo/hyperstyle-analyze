@@ -17,7 +17,12 @@ T = TypeVar('T', bound=Object)
 class PlatformClient:
     """ Base class for hyperskill and stepik clients which wraps data exchange process according to open APIs. """
 
-    def _get_token(self, host: str, client_id: str, client_secret: str) -> str:
+    def __init__(self, host: str, client_id: str, client_secret: str):
+        self.host = host
+        self.token = self._get_token(host, client_id, client_secret)
+
+    @staticmethod
+    def _get_token(host: str, client_id: str, client_secret: str) -> str:
         auth = requests.auth.HTTPBasicAuth(client_id, client_secret)
         response = requests.post('{}/oauth2/token/'.format(host),
                                  data={'grant_type': 'client_credentials'},
@@ -27,10 +32,6 @@ class PlatformClient:
             print('Unable to authorize with provided credentials')
             exit(1)
         return token
-
-    def __init__(self, host: str, client_id: str, client_secret: str):
-        self.host = host
-        self.token = self._get_token(host, client_id, client_secret)
 
     def get_objects(self,
                     obj_class: str,
@@ -79,6 +80,7 @@ class PlatformClient:
                params: BaseRequestParams,
                obj_response_type: Type[ObjectResponse[T]],
                obj_id: Optional[int] = None) -> Optional[ObjectResponse[T]]:
+
         api_url = '{}/api/{}s'.format(self.host, obj_class, obj_id)
         if obj_id is not None:
             api_url = '{}/{}'.format(api_url, obj_id)
