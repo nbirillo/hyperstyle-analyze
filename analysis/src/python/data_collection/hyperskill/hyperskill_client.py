@@ -4,17 +4,17 @@ import os
 import sys
 from typing import List, Optional, Callable, Dict
 
-from analysis.src.python.data_collection.api.platform_api import PlatformClient
+from analysis.src.python.data_collection.api.platform_client import PlatformClient
 from analysis.src.python.data_collection.api.platform_objects import Object, BaseRequestParams
 from analysis.src.python.data_collection.hyperskill.api.projects import ProjectsResponse, Project
 from analysis.src.python.data_collection.hyperskill.api.search_results import \
     SearchResult, SearchResultsRequestParams, SearchResultsResponse
 from analysis.src.python.data_collection.hyperskill.api.steps import StepsResponse, StepsRequestParams
-from analysis.src.python.data_collection.hyperskill.api.submission import SubmissionResponse, SubmissionRequestParams
+from analysis.src.python.data_collection.hyperskill.api.submissions import SubmissionResponse, SubmissionRequestParams
 from analysis.src.python.data_collection.hyperskill.api.topics import TopicsResponse, Topic
 from analysis.src.python.data_collection.hyperskill.api.tracks import TracksResponse, Track
-from analysis.src.python.data_collection.hyperskill.api.user import UserResponse, User
-from analysis.src.python.data_collection.hyperskill.hyperskill_platform import HyperskillPlatform, ObjectClass
+from analysis.src.python.data_collection.hyperskill.api.users import UserResponse, User
+from analysis.src.python.data_collection.hyperskill.hyperskill_objects import HyperskillPlatform, ObjectClass
 from analysis.src.python.data_collection.utils.csv_utils import save_objects_to_csv
 
 log = logging.getLogger()

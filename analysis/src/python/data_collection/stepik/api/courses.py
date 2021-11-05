@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 from typing import List, Optional
 
 from analysis.src.python.data_collection.api.platform_objects import ObjectResponse, BaseRequestParams, Object
+from analysis.src.python.data_collection.stepik.stepik_objects import StepikPlatform
 
 
 @dataclass
@@ -33,12 +34,12 @@ class Course(Object):
     description: str
     total_units: int
     videos_duration: int
-    time_to_complete: int
+    time_to_complete: Optional[int]
     language: str
     url: str = field(init=False)
 
     def __post_init__(self):
-        self.url = f'https://stepik.org/course/{self.id}/promo'
+        self.url = f'{StepikPlatform.BASE_URL}/course/{self.id}/promo'
 
 
 @dataclass

@@ -2,7 +2,7 @@ from dataclasses import dataclass, field
 from typing import List, Optional, Dict
 
 from analysis.src.python.data_collection.api.platform_objects import Object, BaseRequestParams, ObjectResponse
-from analysis.src.python.data_collection.hyperskill.hyperskill_platform import HyperskillPlatform
+from analysis.src.python.data_collection.hyperskill.hyperskill_objects import HyperskillPlatform
 
 
 @dataclass
