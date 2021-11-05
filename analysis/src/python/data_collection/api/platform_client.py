@@ -81,7 +81,7 @@ class PlatformClient:
                obj_response_type: Type[ObjectResponse[T]],
                obj_id: Optional[int] = None) -> Optional[ObjectResponse[T]]:
 
-        api_url = '{}/api/{}s'.format(self.host, obj_class, obj_id)
+        api_url = '{}/api/{}s'.format(self.host, obj_class)
         if obj_id is not None:
             api_url = '{}/{}'.format(api_url, obj_id)
         if params is not None:
