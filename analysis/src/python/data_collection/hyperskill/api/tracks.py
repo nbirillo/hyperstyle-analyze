@@ -1,11 +1,12 @@
 from dataclasses import dataclass, field
 from typing import List, Optional
 
-from analysis.src.python.data_collection.api.platform_entities import RequestParams, Object, Response
+from analysis.src.python.data_collection.api.platform_objects import BaseRequestParams, Object, ObjectResponse
+from analysis.src.python.data_collection.hyperskill.hyperskill_platform import HyperskillPlatform
 
 
 @dataclass
-class TracksRequestParams(RequestParams):
+class TracksRequestParams(BaseRequestParams):
     pass
 
 
@@ -39,11 +40,11 @@ class Track(Object):
     url: str = field(init=False)
 
     def __post_init__(self):
-        self.url = f'https://hyperskill.org/tracks/{self.id}'
+        self.url = f'{HyperskillPlatform.BASE_URL}/tracks/{self.id}'
 
 
 @dataclass
-class TracksResponse(Response[Track]):
+class TracksResponse(ObjectResponse[Track]):
     tracks: List[Track]
 
     def get_objects(self) -> List[Track]:

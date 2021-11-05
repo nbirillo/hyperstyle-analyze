@@ -1,11 +1,12 @@
 from dataclasses import dataclass
 from typing import List, Optional
 
-from analysis.src.python.data_collection.api.platform_entities import RequestParams, Object, Response
+from analysis.src.python.data_collection.api.platform_objects import BaseRequestParams, Object, ObjectResponse
+from analysis.src.python.data_collection.hyperskill.hyperskill_platform import HyperskillPlatform
 
 
 @dataclass
-class TopicsRequestParams(RequestParams):
+class TopicsRequestParams(BaseRequestParams):
     pass
 
 
@@ -31,11 +32,11 @@ class Topic(Object):
     verification_step: Optional[int]
 
     def __post_init__(self):
-        self.url = f'https://hyperskill.org/topics/{self.id}'
+        self.url = f'{HyperskillPlatform.BASE_URL}/topics/{self.id}'
 
 
 @dataclass
-class TopicsResponse(Response[Topic]):
+class TopicsResponse(ObjectResponse[Topic]):
     topics: List[Topic]
 
     def get_objects(self) -> List[Topic]:

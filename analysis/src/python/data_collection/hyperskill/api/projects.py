@@ -1,11 +1,12 @@
 from dataclasses import dataclass, field
 from typing import List, Optional, Dict
 
-from analysis.src.python.data_collection.api.platform_entities import Object, RequestParams, Response
+from analysis.src.python.data_collection.api.platform_objects import Object, BaseRequestParams, ObjectResponse
+from analysis.src.python.data_collection.hyperskill.hyperskill_platform import HyperskillPlatform
 
 
 @dataclass
-class ProjectsRequestParams(RequestParams):
+class ProjectsRequestParams(BaseRequestParams):
     pass
 
 
@@ -34,11 +35,11 @@ class Project(Object):
     tracks: Dict[str, Dict[str, str]] = field(default_factory=dict)
 
     def __post_init__(self):
-        self.url = f'https://hyperskill.org/projects/{self.id}'
+        self.url = f'{HyperskillPlatform.BASE_URL}/projects/{self.id}'
 
 
 @dataclass
-class ProjectsResponse(Response[Project]):
+class ProjectsResponse(ObjectResponse[Project]):
     projects: List[Project]
 
     def get_objects(self) -> List[Project]:

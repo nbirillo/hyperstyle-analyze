@@ -1,9 +1,10 @@
 import csv
+import logging
 import os
 from dataclasses import asdict
 from typing import List, Type, TypeVar
 
-from analysis.src.python.data_collection.api.platform_entities import Object
+from analysis.src.python.data_collection.api.platform_objects import Object
 
 
 class CsvWriter:
@@ -26,7 +27,14 @@ class CsvWriter:
 T = TypeVar('T', bound=Object)
 
 
-def save_objects_to_csv(objects: List[T], obj_class: str, obj_type: Type[T]):
-    csv_writer = CsvWriter('result', f'{obj_class}s.csv', list(obj_type.__annotations__.keys()))
+def save_objects_to_csv(output_path: str, objects: List[T], obj_class: str):
+    if len(objects) == 0:
+        return
+
+    if not os.path.exists(output_path):
+        os.makedirs(output_path)
+
+    logging.info(f'Writing {len(objects)} of type {type(objects[0])} to csv: {output_path}/{obj_class}s.csv')
+    csv_writer = CsvWriter(output_path, f'{obj_class}s.csv', list(type(objects[0]).__annotations__.keys()))
     for obj in objects:
         csv_writer.write_csv(asdict(obj))

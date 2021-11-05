@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 from typing import List
 
-from analysis.src.python.data_collection.api.platform_entities import RequestParams, Object, Response, Meta
+from analysis.src.python.data_collection.api.platform_objects import BaseRequestParams, Object, ObjectResponse
 
 
 @dataclass
-class SearchResultsRequestParams(RequestParams):
+class SearchResultsRequestParams(BaseRequestParams):
     query: str = ""
     include_groups: bool = True
     include_projects: bool = True
@@ -20,9 +20,8 @@ class SearchResult(Object):
 
 
 @dataclass
-class SearchResultsResponse(Response[SearchResult]):
+class SearchResultsResponse(ObjectResponse[SearchResult]):
     search_results: List[SearchResult]
-    meta: Meta
 
     def get_objects(self) -> List[SearchResult]:
         return self.search_results

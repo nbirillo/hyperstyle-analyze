@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 from typing import List, Optional
 
-from analysis.src.python.data_collection.api.platform_entities import Response, Object, RequestParams
+from analysis.src.python.data_collection.api.platform_objects import ObjectResponse, Object, BaseRequestParams
 
 
 @dataclass
-class SearchResultsRequestParams(RequestParams):
+class SearchResultsRequestParams(BaseRequestParams):
     query: str = ""
     is_popular: bool = True
     type: str = "course"
@@ -26,7 +26,7 @@ class SearchResult(Object):
 
 
 @dataclass
-class SearchResultsResponse(Response[SearchResult]):
+class SearchResultsResponse(ObjectResponse[SearchResult]):
     search_results: List[SearchResult]
 
     def get_objects(self) -> List[SearchResult]:

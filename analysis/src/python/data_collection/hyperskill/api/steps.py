@@ -1,11 +1,13 @@
+import datetime
 from dataclasses import dataclass, field
 from typing import List, Optional
 
-from analysis.src.python.data_collection.api.platform_entities import RequestParams, Object, Response
+from analysis.src.python.data_collection.api.platform_objects import BaseRequestParams, Object, ObjectResponse
+from analysis.src.python.data_collection.hyperskill.hyperskill_platform import HyperskillPlatform
 
 
 @dataclass
-class StepsRequestParams(RequestParams):
+class StepsRequestParams(BaseRequestParams):
     topic: Optional[int] = None
 
 
@@ -40,43 +42,54 @@ class LikesStatistics:
 
 @dataclass
 class Step(Object):
-    id: int
-    title: str
-    project: Optional[int]
+    block: Block
     bloom_level: int
-    seconds_to_complete: float
     can_abandon: bool
-    success_rate: float
-    solved_by: int
-    topic: int
     can_skip: bool
     check_profile: str
-    block: Block
     comments_statistics: List[CommentStatistics]
-    content_created_at: str
-    last_completed_at: str
-    likes_statistics: List[LikesStatistics]
-    lesson_stepik_id: int
-    stepik_id: int
-    position: int
-    stage: Optional[int]
-    topic_theory: int
-    type: str
-    popular_ide: Optional[str]
+    content_created_at: Optional[datetime.datetime]
+    id: int
     is_abandoned: bool
     is_completed: bool
     is_cribbed: bool
     is_recommended: bool
     is_next: bool
     is_skipped: bool
+    last_completed_at: Optional[datetime.datetime]
+    likes_statistics: List[LikesStatistics]
+    lesson_stepik_id: int
+    position: int
+    seconds_to_complete: Optional[float]
+    solved_by: int
+    stage: Optional[int]
+    stepik_id: int
+    success_rate: Optional[float]
+    title: str
+    topic: Optional[int]
+    topic_theory: Optional[int]
+    type: str
+    updated_at: datetime.datetime
+    content_updated_at: Optional[datetime.datetime]
+    progress_updated_at: Optional[datetime.datetime]
+    popular_ide: Optional[str]
+    project: Optional[int]
+    is_beta: bool
+    is_deprecated: bool
+    is_ide_compatible: bool
+    is_remote_tested: bool
+    error_issues_count: Optional[int]
+    warning_issues_count: Optional[int]
+    can_see_admin_toolbar: bool
+
     url: str = field(init=False)
 
     def __post_init__(self):
-        self.url = f'https://hyperskill.org/learn/step/{self.id}'
+        self.url = f'{HyperskillPlatform.BASE_URL}/learn/step/{self.id}'
 
 
 @dataclass
-class StepsResponse(Response[Step]):
+class StepsResponse(ObjectResponse[Step]):
     steps: List[Step]
 
     def get_objects(self) -> List[Step]:

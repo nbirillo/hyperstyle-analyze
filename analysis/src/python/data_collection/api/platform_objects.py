@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List, TypeVar, Generic
+from typing import List, TypeVar, Generic, Optional
 
 
 @dataclass
@@ -8,9 +8,10 @@ class Object:
 
 
 @dataclass
-class RequestParams:
+class BaseRequestParams:
     page: int = 1
-    page_size: int = 10
+    page_size: int = 100
+    ids: Optional[List[int]] = None
 
 
 @dataclass
@@ -24,7 +25,7 @@ T = TypeVar('T', bound='Object')
 
 
 @dataclass
-class Response(Generic[T]):
+class ObjectResponse(Generic[T]):
     meta: Meta
 
     def get_objects(self) -> List[T]:
