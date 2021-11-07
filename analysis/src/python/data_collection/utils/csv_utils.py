@@ -9,13 +9,13 @@ from analysis.src.python.data_collection.api.platform_objects import Object
 
 class CsvWriter:
 
-    def __init__(self, result_dir: str, csv_file: str, fieldnames: List[str]):
+    def __init__(self, result_dir: str, csv_file: str, field_names: List[str]):
         os.makedirs(result_dir, exist_ok=True)
         self.csv_path = os.path.join(result_dir, csv_file)
-        self.fieldnames = fieldnames
+        self.fieldnames = field_names
 
         with open(self.csv_path, 'w+', newline='') as f:
-            writer = csv.DictWriter(f, fieldnames=fieldnames)
+            writer = csv.DictWriter(f, fieldnames=field_names)
             writer.writeheader()
 
     def write_csv(self, data: dict):
