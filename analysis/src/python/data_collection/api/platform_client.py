@@ -33,19 +33,19 @@ class PlatformClient:
             exit(1)
         return token
 
-    def get_objects(self,
-                    obj_class: str,
-                    obj_response_type: Type[ObjectResponse[T]],
-                    params: BaseRequestParams = BaseRequestParams(),
-                    obj_id: Optional[int] = None,
-                    start_page=1, end_page=None) -> List[T]:
+    def _get_objects(self,
+                     obj_class: str,
+                     obj_response_type: Type[ObjectResponse[T]],
+                     params: BaseRequestParams = BaseRequestParams(),
+                     obj_id: Optional[int] = None,
+                     count: Optional[int] = None) -> List[T]:
         """
         Get objects (steps, topics, ect.) from platform by given `obj_class` and `params`.
         To parse response of platform `obj_response_type` parametrized with `obj_type` is used.
         """
         objects = []
-        page = start_page
-        while end_page is None or page <= end_page:
+        page = 1
+        while count is None or len(objects) < count:
             logging.info(f'Getting {obj_class} page={page} params={params}')
             try:
                 params.page = page
@@ -53,26 +53,35 @@ class PlatformClient:
                 if response is None:
                     break
                 objects += response.get_objects()
+
+                if count is not None and len(objects) >= count:
+                    return objects[:count]
+
                 if response.meta.has_next:
                     page += 1
                 else:
                     break
             except Exception as e:
                 logging.error(f'Unable to get {obj_class} page={page} params={params}: {e}')
+
         return objects
 
-    def get_objects_by_ids(self,
-                           obj_class: str,
-                           obj_ids: List[int],
-                           obj_response_type: Type[ObjectResponse[T]],
-                           params: BaseRequestParams = BaseRequestParams()) -> List[T]:
+    def _get_objects_by_ids(self,
+                            obj_class: str,
+                            obj_ids: List[int],
+                            obj_response_type: Type[ObjectResponse[T]],
+                            params: BaseRequestParams = BaseRequestParams(),
+                            count: Optional[int] = None) -> List[T]:
         """
         Get objects (steps, topics, ect.) from platform by given `obj_class`, `obj_ids` and `params`.
         To parse response of platform `obj_response_type` parametrized with `obj_type` is used.
         """
         objects = []
         for obj_id in obj_ids:
-            objects += self.get_objects(obj_class, obj_response_type, params, obj_id)
+            objects += self._get_objects(obj_class, obj_response_type, params, obj_id)
+            if count is not None and len(objects) >= count:
+                return objects[:count]
+
         return objects
 
     def _fetch(self,

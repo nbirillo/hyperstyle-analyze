@@ -3,7 +3,7 @@ from typing import Optional
 
 
 def str_to_datetime(date_string: Optional[str]) -> Optional[datetime.datetime]:
-    """ Transform time string from platfrom in format `2013-07-12T07:00:00Z` to datetime. """
+    """ Transform time string from platform in format `2013-07-12T07:00:00Z` to datetime. """
     if date_string is None:
         return None
     try:

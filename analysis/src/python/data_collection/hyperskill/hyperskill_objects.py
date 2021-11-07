@@ -10,6 +10,10 @@ class ObjectClass(str, Enum):
     USER = 'user'
     SUBMISSION = 'submission'
 
+    @classmethod
+    def values(cls):
+        return list(map(lambda c: c.value, cls))
+
 
 class HyperskillPlatform:
     BASE_URL = 'https://hyperskill.org'

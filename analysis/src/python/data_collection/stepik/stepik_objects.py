@@ -9,6 +9,10 @@ class ObjectClass(str, Enum):
     USER = 'user'
     SUBMISSION = 'submission'
 
+    @classmethod
+    def values(cls):
+        return list(map(lambda c: c.value, cls))
+
 
 class StepikPlatform:
     BASE_URL = 'https://stepik.org'
