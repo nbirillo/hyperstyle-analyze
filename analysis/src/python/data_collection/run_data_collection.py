@@ -3,6 +3,8 @@ import logging
 import sys
 from enum import Enum
 
+import pandas as pd
+
 from analysis.src.python.data_collection.hyperskill.hyperskill_client import HyperskillClient
 from analysis.src.python.data_collection.stepik.stepik_client import StepikClient
 from analysis.src.python.data_collection.utils.csv_utils import save_objects_to_csv
@@ -40,5 +42,9 @@ if __name__ == '__main__':
 
     platform = Platform(args.platform)
     client = platform_client[platform]()
-    objects = client.get_objects(args.object, args.ids, args.count)
+    if args.ids is not None:
+        ids = args.ids
+    else:
+        ids = list(pd.read_csv(args.ids_from_file)[args.ids_from_column].unique().values)
+    objects = client.get_objects(args.object, ids, args.count)
     save_objects_to_csv(args.output, objects, args.object)
