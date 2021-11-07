@@ -1,7 +1,4 @@
-import argparse
-import logging
 import os
-import sys
 from typing import List, Dict, Callable, Optional, Type, TypeVar
 
 from analysis.src.python.data_collection.api.platform_client import PlatformClient
@@ -15,13 +12,10 @@ from analysis.src.python.data_collection.stepik.api.submissions import Submissio
 from analysis.src.python.data_collection.stepik.api.users import UsersResponse, User
 from analysis.src.python.data_collection.stepik.stepik_objects import StepikPlatform, ObjectClass
 
-log = logging.getLogger()
-log.setLevel(logging.DEBUG)
-
 T = TypeVar('T', bound=Object)
 
 
-class StepicClient(PlatformClient):
+class StepikClient(PlatformClient):
 
     def __init__(self):
         client_id = os.environ.get('STEPIK_CLIENT_ID')
@@ -37,9 +31,11 @@ class StepicClient(PlatformClient):
             ObjectClass.SUBMISSION: self.get_submissions
         }
 
-    def get_objects(self, obj_class: ObjectClass,
-                    ids: Optional[List[int]] = None, count: Optional[int] = None) -> List[Object]:
-        return self._get_objects_by_class[obj_class](ids, count)
+    def get_objects(self, object: str, ids: Optional[List[int]] = None, count: Optional[int] = None) -> List[Object]:
+        if object not in ObjectClass.values():
+            return self.get_search_result(object, count)
+        else:
+            return self._get_objects_by_class[ObjectClass(object)](ids, count)
 
     def get_search_result(self, query: str, count: Optional[int] = None) -> List[SearchResult]:
         return self._get_objects(ObjectClass.SEARCH_RESULT, SearchResultsResponse,
@@ -68,26 +64,3 @@ class StepicClient(PlatformClient):
                              params: BaseRequestParams = BaseRequestParams()) -> List[T]:
         return self._get_objects_by_ids(obj_class, ids, obj_response_type, params, count=count) if ids is not None \
             else self._get_objects(obj_class, obj_response_type, params, count=count)
-
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-
-    parser.add_argument('--object', type=str,
-                        help='objects to request from stepik platform '
-                             '(can be defaults like `step`, `user` of custom like `java`)',
-                        required=True)
-    parser.add_argument('--ids', nargs='*', type=int, default=None, help='ids of requested objects')
-    parser.add_argument('--count', type=int, default=None, help='count of requested objects')
-    parser.add_argument('--output', type=str, default='results', help='path to directory where to save the results')
-
-    args = parser.parse_args(sys.argv[1:])
-
-    client = StepicClient()
-
-    if args.object not in ObjectClass.values():
-        object_class = ObjectClass.SEARCH_RESULT
-        client.get_search_result(args.object, args.count)
-    else:
-        object_class = ObjectClass(args.object)
-        client.get_objects(object_class, args.ids, args.count)

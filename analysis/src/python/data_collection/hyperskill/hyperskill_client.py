@@ -1,7 +1,4 @@
-import argparse
-import logging
 import os
-import sys
 from typing import List, Optional, Callable, Dict
 
 from analysis.src.python.data_collection.api.platform_client import PlatformClient
@@ -16,10 +13,6 @@ from analysis.src.python.data_collection.hyperskill.api.topics import TopicsResp
 from analysis.src.python.data_collection.hyperskill.api.tracks import TracksResponse, Track
 from analysis.src.python.data_collection.hyperskill.api.users import UserResponse, User
 from analysis.src.python.data_collection.hyperskill.hyperskill_objects import HyperskillPlatform, ObjectClass
-from analysis.src.python.data_collection.utils.csv_utils import save_objects_to_csv
-
-log = logging.getLogger()
-log.setLevel(logging.DEBUG)
 
 
 class HyperskillClient(PlatformClient):
@@ -39,13 +32,15 @@ class HyperskillClient(PlatformClient):
             ObjectClass.SUBMISSION: self.get_submissions
         }
 
+    def get_objects(self, object: str, ids: Optional[List[int]] = None, count: Optional[int] = None) -> List[Object]:
+        if object not in ObjectClass.values():
+            return self.get_search_result(object, count)
+        else:
+            return self._get_objects_by_class[ObjectClass(object)](ids, count)
+
     def get_search_result(self, query: str, count: Optional[int] = None) -> List[SearchResult]:
         return self._get_objects(ObjectClass.SEARCH_RESULT, SearchResultsResponse,
                                  SearchResultsRequestParams(query=query), count=count)
-
-    def get_objects(self, obj_class: ObjectClass,
-                    ids: Optional[List[int]] = None, count: Optional[int] = None) -> List[Object]:
-        return self._get_objects_by_class[obj_class](ids, count)
 
     def get_steps(self, ids: Optional[List[int]] = None,
                   count: Optional[int] = None,
@@ -88,25 +83,3 @@ class HyperskillClient(PlatformClient):
             if count is not None and len(submissions) >= count:
                 return submissions[:count]
         return submissions
-
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-
-    parser.add_argument('--object', type=str, help='object name or query to get from hyperskill', required=True)
-    parser.add_argument('--ids', nargs='*', type=int, default=None, help='ids of requested objects')
-    parser.add_argument('--count', type=int, default=None, help='count of requested objects')
-    parser.add_argument('--output', type=str, default='results', help='path to directory where to save the results')
-
-    args = parser.parse_args(sys.argv[1:])
-
-    api = HyperskillClient()
-
-    if args.object not in ObjectClass.values():
-        obj_class = ObjectClass.SEARCH_RESULT
-        objects = api.get_search_result(args.object, args.count)
-    else:
-        obj_class = ObjectClass(args.object)
-        objects = api.get_objects(obj_class, args.ids, args.count)
-
-    save_objects_to_csv(args.output, objects, obj_class)
