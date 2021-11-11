@@ -1,16 +1,16 @@
 import os
-from typing import List, Dict, Callable, Optional, Type, TypeVar
+from typing import Callable, Dict, List, Optional, Type, TypeVar
 
 from analysis.src.python.data_collection.api.platform_client import PlatformClient
-from analysis.src.python.data_collection.api.platform_objects import Object, ObjectResponse, BaseRequestParams
-from analysis.src.python.data_collection.stepik.api.courses import CoursesResponse, Course
-from analysis.src.python.data_collection.stepik.api.lessons import LessonsResponse, Lesson
+from analysis.src.python.data_collection.api.platform_objects import BaseRequestParams, Object, ObjectResponse
+from analysis.src.python.data_collection.stepik.api.courses import Course, CoursesResponse
+from analysis.src.python.data_collection.stepik.api.lessons import Lesson, LessonsResponse
 from analysis.src.python.data_collection.stepik.api.search_results import SearchResult, SearchResultsRequestParams, \
     SearchResultsResponse
-from analysis.src.python.data_collection.stepik.api.steps import StepsResponse, Step
-from analysis.src.python.data_collection.stepik.api.submissions import SubmissionsResponse, Submission
-from analysis.src.python.data_collection.stepik.api.users import UsersResponse, User
-from analysis.src.python.data_collection.stepik.stepik_objects import StepikPlatform, ObjectClass
+from analysis.src.python.data_collection.stepik.api.steps import Step, StepsResponse
+from analysis.src.python.data_collection.stepik.api.submissions import Submission, SubmissionsResponse
+from analysis.src.python.data_collection.stepik.api.users import User, UsersResponse
+from analysis.src.python.data_collection.stepik.stepik_objects import ObjectClass, StepikPlatform
 
 T = TypeVar('T', bound=Object)
 
@@ -28,7 +28,7 @@ class StepikClient(PlatformClient):
             ObjectClass.LESSON: self.get_lessons,
             ObjectClass.STEP: self.get_steps,
             ObjectClass.USER: self.get_users,
-            ObjectClass.SUBMISSION: self.get_submissions
+            ObjectClass.SUBMISSION: self.get_submissions,
         }
 
     def get_objects(self, object: str, ids: Optional[List[int]] = None, count: Optional[int] = None) -> List[Object]:

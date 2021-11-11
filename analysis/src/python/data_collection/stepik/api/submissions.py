@@ -2,7 +2,7 @@ import datetime
 from dataclasses import dataclass
 from typing import List, Optional
 
-from analysis.src.python.data_collection.api.platform_objects import ObjectResponse, BaseRequestParams, Object
+from analysis.src.python.data_collection.api.platform_objects import BaseRequestParams, Object, ObjectResponse
 
 
 @dataclass

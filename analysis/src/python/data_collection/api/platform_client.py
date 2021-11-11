@@ -2,10 +2,10 @@ import datetime
 import logging
 import urllib
 from dataclasses import asdict
-from typing import List, Type, Optional, TypeVar
+from typing import List, Optional, Type, TypeVar
 
 import requests
-from dacite import from_dict, Config
+from dacite import Config, from_dict
 
 from analysis.src.python.data_collection.api.platform_objects import BaseRequestParams, Object, ObjectResponse
 from analysis.src.python.data_collection.api.utils import str_to_datetime

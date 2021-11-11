@@ -1,7 +1,7 @@
 ## Stepik and Hyperskill data collection
 
 This module contains client for Stepik and Hyperskill. This educational platforms provides open APIs with information
-about platforms' objects such as steps, courses, tracks, projects, etc. 
+about platforms' objects such as steps, courses, tracks, projects, etc.
 
 ```shell
 usage: run_data_collection.py [-h] --platform PLATFORM --object OBJECT [--ids [IDS ...]] [--ids_from_file IDS_FROM_FILE] [--ids_from_column IDS_FROM_COLUMN]

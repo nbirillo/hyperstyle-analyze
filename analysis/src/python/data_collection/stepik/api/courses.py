@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import List, Optional
 
-from analysis.src.python.data_collection.api.platform_objects import ObjectResponse, BaseRequestParams, Object
+from analysis.src.python.data_collection.api.platform_objects import BaseRequestParams, Object, ObjectResponse
 from analysis.src.python.data_collection.stepik.stepik_objects import StepikPlatform
 
 
