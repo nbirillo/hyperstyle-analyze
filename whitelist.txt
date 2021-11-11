@@ -40,6 +40,7 @@ csv
 ctor
 cuda
 cyclomatic
+dacite
 dataflow
 dataframe
 dataframes
@@ -148,6 +149,7 @@ noqa
 nrows
 num
 numpy
+onboarding
 oop
 openpyxl
 pandarallel

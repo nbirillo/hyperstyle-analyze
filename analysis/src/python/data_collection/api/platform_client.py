@@ -24,7 +24,7 @@ class PlatformClient:
     @staticmethod
     def _get_token(host: str, client_id: str, client_secret: str) -> str:
         auth = requests.auth.HTTPBasicAuth(client_id, client_secret)
-        response = requests.post('{}/oauth2/token/'.format(host),
+        response = requests.post('{host}/oauth2/token/'.format(host=host),
                                  data={'grant_type': 'client_credentials'},
                                  auth=auth)
         token = response.json().get('access_token', None)
@@ -90,12 +90,12 @@ class PlatformClient:
                obj_response_type: Type[ObjectResponse[T]],
                obj_id: Optional[int] = None) -> Optional[ObjectResponse[T]]:
 
-        api_url = '{}/api/{}s'.format(self.host, obj_class)
+        api_url = '{host}/api/{obj_class}s'.format(host=self.host, obj_class=obj_class)
         if obj_id is not None:
-            api_url = '{}/{}'.format(api_url, obj_id)
+            api_url = '{url}/{obj_id}'.format(url=api_url, obj_id=obj_id)
         if params is not None:
             dict_params = {k: v for k, v in asdict(params).items() if v is not None}
-            api_url = '{}?{}'.format(api_url, urllib.parse.urlencode(dict_params))
+            api_url = '{url}?{params}'.format(url=api_url, params=urllib.parse.urlencode(dict_params))
         if self.token is not None:
             raw_response = requests.get(api_url, headers={'Authorization': 'Token ' + self.token}, timeout=None)
         else:
