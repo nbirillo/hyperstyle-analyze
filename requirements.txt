@@ -20,5 +20,5 @@ openpyxl==3.0.7
 torch==1.8.1
 scikit-learn==0.24.2
 transformers==4.6.1
-pandarallel==1.5.4
+pandarallel==1.5.2
 pytest==6.2.3
