@@ -1,5 +1,4 @@
 import argparse
-import logging
 import sys
 from enum import Enum
 
@@ -14,19 +13,22 @@ class Platform(str, Enum):
     HYPERSKILL = 'hyperskill'
     STEPIK = 'stepik'
 
+    @classmethod
+    def values(cls):
+        return list(map(lambda c: c.value, cls))
+
 
 platform_client = {
     Platform.HYPERSKILL: HyperskillClient,
     Platform.STEPIK: StepikClient,
 }
 
-if __name__ == '__main__':
-    log = logging.getLogger()
-    log.setLevel(logging.DEBUG)
 
+def configure_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--platform', '-p', type=str, help='platform to collect data from', required=True)
+    parser.add_argument('--platform', '-p', type=str, help='platform to collect data from',
+                        choices=Platform.values(), required=True)
 
     parser.add_argument('--object', '-o', type=str,
                         help='objects to request from platform (can be defaults like `step`, '
@@ -37,7 +39,12 @@ if __name__ == '__main__':
     parser.add_argument('--count', '-cnt', type=int, default=None, help='count of requested objects')
     parser.add_argument('--output', '-out', type=str, default='results',
                         help='path to directory where to save the results')
+    return parser
 
+
+if __name__ == '__main__':
+
+    parser = configure_parser()
     args = parser.parse_args(sys.argv[1:])
 
     platform = Platform(args.platform)

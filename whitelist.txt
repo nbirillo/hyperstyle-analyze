@@ -2,12 +2,16 @@ D3
 DARK2
 DARK24
 G10
+Gamification
+HYPERSKILL
+Hyperskill
 LIGHT24
 PASTEL2
 Pastel1
 SET1
 SET2
 SET3
+STEPIK
 T10
 abstractmethod
 arange
@@ -66,13 +70,16 @@ exc
 expr
 exprs
 f1
+fieldnames
 file
 filemode
 fillna
 formatter
 fs
 fullmatch
+fullname
 func
+gamification
 getitem
 getline
 getroot
@@ -81,6 +88,7 @@ gradle
 groupby
 hashtable
 hline
+hyperskill
 hyperstyle
 idx
 ignorecase
@@ -111,9 +119,11 @@ linecolor
 lineno
 linesep
 linewidth
+linkedin
 listdir
 loc
 logits
+lti
 maintainabilities
 matcher
 mccabe
@@ -153,6 +163,7 @@ png
 popen
 pred
 preprocess
+preprocessed
 preprocessing
 pretrained
 println
@@ -163,6 +174,7 @@ pylint
 qodana
 qodanadataset
 readouterr
+reddit
 reindex
 removeprefix
 rfind
@@ -177,6 +189,7 @@ slf4j
 splitext
 spotbugs
 springlint
+stepik
 sqrt
 src
 stmts
@@ -209,7 +222,9 @@ warmup
 webp
 wmc
 wps
+writeheader
 writelines
+writerow
 xanchor
 xaxes
 xaxis

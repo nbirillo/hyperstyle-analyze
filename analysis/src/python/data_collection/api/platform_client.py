@@ -8,7 +8,7 @@ import requests
 from dacite import from_dict, Config
 
 from analysis.src.python.data_collection.api.platform_objects import BaseRequestParams, Object, ObjectResponse
-from analysis.src.python.data_collection.api.utlis import str_to_datetime
+from analysis.src.python.data_collection.api.utils import str_to_datetime
 from analysis.src.python.data_collection.utils.json_utils import kebab_to_snake_case
 
 T = TypeVar('T', bound=Object)
@@ -29,7 +29,7 @@ class PlatformClient:
                                  auth=auth)
         token = response.json().get('access_token', None)
         if not token:
-            print('Unable to authorize with provided credentials')
+            logging.error('Unable to authorize with provided credentials')
             exit(1)
         return token
 
