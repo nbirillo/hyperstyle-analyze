@@ -191,9 +191,9 @@ slf4j
 splitext
 spotbugs
 springlint
-stepik
 sqrt
 src
+stepik
 stmts
 subdir
 subdirs
