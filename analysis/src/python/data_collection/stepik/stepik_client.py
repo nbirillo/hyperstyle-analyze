@@ -60,9 +60,7 @@ class StepikClient(PlatformClient):
                              ids: Optional[List[int]],
                              count: Optional[int],
                              obj_class: ObjectClass,
-                             obj_response_type: Type[ObjectResponse[T]],
-                             params: BaseRequestParams = BaseRequestParams()) -> List[T]:
-        return self._get_objects_by_ids(obj_class, ids, obj_response_type, params,
-                                        count=count) if ids is not None else self._get_objects(obj_class,
-                                                                                               obj_response_type,
-                                                                                               params, count=count)
+                             obj_response_type: Type[ObjectResponse[T]]) -> List[T]:
+        params = BaseRequestParams()
+        return self._get_objects_by_ids(obj_class, ids, obj_response_type, params, count=count) if ids is not None \
+            else self._get_objects(obj_class, obj_response_type, params, count=count)

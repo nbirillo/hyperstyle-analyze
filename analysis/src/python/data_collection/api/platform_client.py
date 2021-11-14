@@ -36,7 +36,7 @@ class PlatformClient:
     def _get_objects(self,
                      obj_class: str,
                      obj_response_type: Type[ObjectResponse[T]],
-                     params: BaseRequestParams = BaseRequestParams(),
+                     params: BaseRequestParams,
                      obj_id: Optional[int] = None,
                      count: Optional[int] = None) -> List[T]:
         """
@@ -70,7 +70,7 @@ class PlatformClient:
                             obj_class: str,
                             obj_ids: List[int],
                             obj_response_type: Type[ObjectResponse[T]],
-                            params: BaseRequestParams = BaseRequestParams(),
+                            params: BaseRequestParams,
                             count: Optional[int] = None) -> List[T]:
         """
         Get objects (steps, topics, ect.) from platform by given `obj_class`, `obj_ids` and `params`.
