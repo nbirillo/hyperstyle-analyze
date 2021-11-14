@@ -81,7 +81,8 @@ ignore =
 #Found backslash that is used for line breaking
   N400,
 #Additional newline in a group of imports
-  I202
+  I202,
+
 exclude = .git, */data, env/, venv/
 
 max-line-length = 100

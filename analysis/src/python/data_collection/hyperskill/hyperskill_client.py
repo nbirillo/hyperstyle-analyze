@@ -32,11 +32,11 @@ class HyperskillClient(PlatformClient):
             ObjectClass.SUBMISSION: self.get_submissions,
         }
 
-    def get_objects(self, object: str, ids: Optional[List[int]] = None, count: Optional[int] = None) -> List[Object]:
-        if object not in ObjectClass.values():
-            return self.get_search_result(object, count)
+    def get_objects(self, obj: str, ids: Optional[List[int]] = None, count: Optional[int] = None) -> List[Object]:
+        if obj not in ObjectClass.values():
+            return self.get_search_result(obj, count)
         else:
-            return self._get_objects_by_class[ObjectClass(object)](ids, count)
+            return self._get_objects_by_class[ObjectClass(obj)](ids, count)
 
     def get_search_result(self, query: str, count: Optional[int] = None) -> List[SearchResult]:
         return self._get_objects(ObjectClass.SEARCH_RESULT, SearchResultsResponse,
