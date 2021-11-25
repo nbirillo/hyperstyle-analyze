@@ -1,7 +1,7 @@
 import sys
 from pathlib import Path
 
-from src.python import MAIN_FOLDER
+from hyperstyle.src.python import MAIN_FOLDER
 
 ANALYSIS_MAIN_FOLDER = Path(__file__)
 HYPERSTYLE_PATH = f'{MAIN_FOLDER.parent.parent}/main/venv/src'
