@@ -9,7 +9,6 @@ from hyperstyle.src.python.review.inspectors.issue import (
     BoolExprLenIssue,
     CodeIssue,
     CohesionIssue,
-    CyclomaticComplexityIssue,
     FuncLenIssue,
     IssueDifficulty,
     IssueType,
