@@ -127,32 +127,6 @@ ISSUE_AND_JSON_ISSUE = [
         """,
     ),
     (
-        CyclomaticComplexityIssue(
-            origin_class='SomeCyclomaticComplexityIssueClass',
-            type=IssueType.CYCLOMATIC_COMPLEXITY,
-            description=DESCRIPTION,
-            file_path=Path(FILE_PATH),
-            line_no=670,
-            column_no=78,
-            inspector_type=InspectorType.INTELLIJ,
-            cc_value=229,
-            difficulty=IssueDifficulty.HARD,
-        ),
-        f"""
-        {{
-            "origin_class": "SomeCyclomaticComplexityIssueClass",
-            "type": "CYCLOMATIC_COMPLEXITY",
-            "description": "{DESCRIPTION}",
-            "file_path": "{FILE_PATH}",
-            "line_no": 670,
-            "column_no": 78,
-            "inspector_type": "INTELLIJ",
-            "difficulty": "HARD",
-            "measure": 229
-        }}
-        """,
-    ),
-    (
         CohesionIssue(
             origin_class='SomeCohesionIssueClass',
             type=IssueType.COHESION,
