@@ -3,8 +3,8 @@ from dataclasses import dataclass
 from statistics import median
 from typing import Dict, List, Tuple
 
-from src.python.review.inspectors.issue import IssueType, ShortIssue
-from src.python.review.quality.penalty import PenaltyIssue
+from hyperstyle.src.python.review.inspectors.issue import IssueType, ShortIssue
+from hyperstyle.src.python.review.quality.penalty import PenaltyIssue
 
 
 @dataclass(frozen=True)

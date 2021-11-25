@@ -1,6 +1,6 @@
 import argparse
 
-from src.python.review.common.file_system import Extension
+from hyperstyle.src.python.review.common.file_system import Extension
 from analysis.src.python.evaluation.qodana.imitation_model.common.util import ModelCommonArgument
 from evaluation.common.util import AnalysisExtension
 

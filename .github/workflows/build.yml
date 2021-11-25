@@ -7,40 +7,29 @@ jobs:
   build:
     runs-on: ubuntu-latest
     # Consistent with base image in Dockerfile
-    container: stepik/hyperstyle-base:py3.8.11-java11.0.11-node14.17.3
+    container: nastyabirillo/hyperstyle:1.2.1
 
     steps:
-      - name: Install git
+      - name: Check env variables
         run: |
-          apt-get update
-          apt-get -y install git
+          echo $DETEKT_DIRECTORY && echo $DETEKT_VERSION
+          echo $CHECKSTYLE_DIRECTORY && echo $CHECKSTYLE_VERSION
+          echo $PMD_DIRECTORY && echo $PMD_VERSION
     
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Setup venv
-        run: |
-          python -m venv ./main/venv
-
       - name: Install requirements
         run: |
-          ./main/venv/bin/pip install -e git+https://github.com/hyperskill/hyperstyle.git@develop#egg=hyperstyle
-          ./main/venv/bin/pip install --no-cache-dir -r requirements-test.txt -r requirements.txt -r requirements-roberta.txt
-
-      - name: Check if hyperstyle runs successfully
-        run: |
-          cd /__w/hyperstyle-analyze/hyperstyle-analyze/main/venv/src/hyperstyle
-          pip install -r requirements.txt
-          npm install eslint@7.5.0 -g && eslint --init
-          python src/python/review/run_tool.py /__w/hyperstyle-analyze/hyperstyle-analyze/main/venv/src/hyperstyle/setup.py
+          pip install --no-cache-dir -r requirements-test.txt -r requirements.txt -r requirements-roberta.txt
 
       - name: Lint with flake8
         run: |
           # stop the build if there are Python syntax errors or undefined names
-          ./main/venv/bin/flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,venv,analysis/test/resources,.eggs,review.egg-info,.pytest_cache,node_modules
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,venv,analysis/test/resources,.eggs,review.egg-info,.pytest_cache,node_modules
           # TODO: change max-complexity into 10 after refactoring
-          # TODO: remove R504, A003, E800, E402, WPS1, WPS2, WPS3, WPS4, WPS5, WPS6, H601
-          ./main/venv/bin/flake8 . --count --max-complexity=11 --max-line-length=120 --max-doc-length=120 --ignore=R504,A003,E800,E402,W503,WPS1,WPS2,WPS3,WPS4,WPS5,WPS6,H601,I100 --statistics --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,venv,analysis/test/resources,.eggs,review.egg-info,.pytest_cache,node_modules
+          # TODO: remove R504, A003, E800, E402, WPS1, WPS2, WPS3, WPS4, WPS5, WPS6, H601, N400
+          flake8 . --count --max-complexity=11 --max-line-length=120 --max-doc-length=120 --ignore=R504,A003,E800,E402,W503,WPS1,WPS2,WPS3,WPS4,WPS5,WPS6,H601,I100,N400,I202 --statistics --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,venv,analysis/test/resources,.eggs,review.egg-info,.pytest_cache,node_modules
 
       - name: Sort whitelists
         run: |
@@ -57,4 +46,4 @@ jobs:
 
       - name: Test with pytest
         run: |
-          ./main/venv/bin/pytest
+          pytest

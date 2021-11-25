@@ -3,8 +3,8 @@ from pathlib import Path
 from typing import List, Set
 
 import pandas as pd
-from src.python.review.inspectors.issue import BaseIssue
-from src.python.review.quality.penalty import PenaltyIssue
+from hyperstyle.src.python.review.inspectors.issue import BaseIssue
+from hyperstyle.src.python.review.quality.penalty import PenaltyIssue
 from analysis.src.python.evaluation.common.pandas_util import get_issues_from_json, get_solutions_df_by_file_path
 from analysis.src.python.evaluation.common.tool_arguments import EvaluationRunToolArgument
 from analysis.src.python.evaluation.common.util import (

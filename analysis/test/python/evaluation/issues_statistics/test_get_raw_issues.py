@@ -3,8 +3,8 @@ from typing import List, Optional
 
 import pandas as pd
 import pytest
-from src.python.review.inspectors.inspector_type import InspectorType
-from src.python.review.inspectors.issue import (
+from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
+from hyperstyle.src.python.review.inspectors.issue import (
     BaseIssue,
     CodeIssue,
     IssueDifficulty,

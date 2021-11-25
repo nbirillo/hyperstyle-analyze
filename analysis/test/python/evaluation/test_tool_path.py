@@ -1,5 +1,5 @@
 import pytest
-from src.python import MAIN_FOLDER
+from hyperstyle.src.python import MAIN_FOLDER
 from analysis.test.python.evaluation import XLSX_DATA_FOLDER
 from analysis.test.python.evaluation.testing_config import get_testing_arguments
 from analysis.src.python.evaluation.evaluation_config import EvaluationConfig

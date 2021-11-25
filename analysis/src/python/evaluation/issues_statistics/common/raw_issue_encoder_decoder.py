@@ -1,8 +1,8 @@
 import json
 from pathlib import Path
 
-from src.python.review.inspectors.inspector_type import InspectorType
-from src.python.review.inspectors.issue import (
+from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
+from hyperstyle.src.python.review.inspectors.issue import (
     BaseIssue,
     CodeIssue,
     get_issue_class_by_issue_type,

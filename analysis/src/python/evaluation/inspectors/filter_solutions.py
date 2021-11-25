@@ -3,7 +3,7 @@ import logging
 from pathlib import Path
 from typing import Set
 
-from src.python.review.application_config import LanguageVersion
+from hyperstyle.src.python.review.application_config import LanguageVersion
 from analysis.src.python.evaluation.common.pandas_util import (
     drop_duplicates,
     filter_df_by_language,

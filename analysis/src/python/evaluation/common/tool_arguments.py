@@ -1,7 +1,7 @@
 from enum import Enum, unique
 
-from src.python.common.tool_arguments import ArgumentsInfo
-from src.python.review.application_config import LanguageVersion
+from hyperstyle.src.python.common.tool_arguments import ArgumentsInfo
+from hyperstyle.src.python.review.application_config import LanguageVersion
 from analysis.src.python.evaluation.common.util import ColumnName
 
 

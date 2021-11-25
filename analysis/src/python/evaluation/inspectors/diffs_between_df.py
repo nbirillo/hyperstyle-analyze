@@ -2,7 +2,7 @@ import argparse
 from pathlib import Path
 
 import pandas as pd
-from src.python.review.quality.model import QualityType
+from hyperstyle.src.python.review.quality.model import QualityType
 from analysis.src.python.evaluation.common.pandas_util import (
     get_inconsistent_positions, get_issues_by_row, get_solutions_df, get_solutions_df_by_file_path,
 )

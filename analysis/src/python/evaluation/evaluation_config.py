@@ -4,8 +4,8 @@ from argparse import Namespace
 from pathlib import Path
 from typing import List, Optional, Union
 
-from src.python.common.tool_arguments import RunToolArgument
-from src.python.review.application_config import LanguageVersion
+from hyperstyle.src.python.common.tool_arguments import RunToolArgument
+from hyperstyle.src.python.review.application_config import LanguageVersion
 from analysis.src.python.evaluation.common.util import (
     AnalysisExtension, EvaluationArgument, get_parent_folder, get_restricted_extension,
 )

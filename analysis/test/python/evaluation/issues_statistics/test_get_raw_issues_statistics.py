@@ -3,7 +3,7 @@ from typing import Optional
 
 import pandas as pd
 import pytest
-from src.python.review.common.language import Language
+from hyperstyle.src.python.review.common.language import Language
 from analysis.src.python.evaluation.common.pandas_util import equal_df, get_solutions_df_by_file_path
 from analysis.src.python.evaluation.issues_statistics.get_raw_issues_statistics import (
     _convert_language_code_to_language,

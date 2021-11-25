@@ -1,6 +1,6 @@
 from argparse import Namespace
 
-from src.python.review.reviewers.perform_review import OutputFormat
+from hyperstyle.src.python.review.reviewers.perform_review import OutputFormat
 from analysis import HYPERSTYLE_RUNNER_PATH
 from analysis.src.python.evaluation.common.util import EvaluationArgument
 
