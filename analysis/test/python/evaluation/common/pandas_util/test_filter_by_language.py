@@ -1,7 +1,7 @@
 from pathlib import Path
 
 import pytest
-from src.python.review.application_config import LanguageVersion
+from hyperstyle.src.python.review.application_config import LanguageVersion
 from analysis.src.python.evaluation.common.pandas_util import (
     equal_df, filter_df_by_language, get_solutions_df_by_file_path,
 )

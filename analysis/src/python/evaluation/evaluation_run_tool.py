@@ -19,9 +19,9 @@ from analysis.src.python.evaluation.common.util import (
 )
 from analysis.src.python.evaluation.common.tool_arguments import EvaluationRunToolArgument
 from analysis.src.python.evaluation.evaluation_config import EvaluationConfig
-from src.python.common.tool_arguments import RunToolArgument
-from src.python.review.application_config import LanguageVersion
-from src.python.review.reviewers.perform_review import OutputFormat
+from hyperstyle.src.python.common.tool_arguments import RunToolArgument
+from hyperstyle.src.python.review.application_config import LanguageVersion
+from hyperstyle.src.python.review.reviewers.perform_review import OutputFormat
 
 logger = logging.getLogger(__name__)
 

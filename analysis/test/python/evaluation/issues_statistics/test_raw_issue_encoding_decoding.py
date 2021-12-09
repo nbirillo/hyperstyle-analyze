@@ -3,13 +3,12 @@ import textwrap
 from pathlib import Path
 
 import pytest
-from src.python.review.inspectors.inspector_type import InspectorType
-from src.python.review.inspectors.issue import (
+from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
+from hyperstyle.src.python.review.inspectors.issue import (
     BaseIssue,
     BoolExprLenIssue,
     CodeIssue,
     CohesionIssue,
-    CyclomaticComplexityIssue,
     FuncLenIssue,
     IssueDifficulty,
     IssueType,
@@ -123,32 +122,6 @@ ISSUE_AND_JSON_ISSUE = [
             "inspector_type": "PMD",
             "difficulty": "EASY",
             "measure": 383
-        }}
-        """,
-    ),
-    (
-        CyclomaticComplexityIssue(
-            origin_class='SomeCyclomaticComplexityIssueClass',
-            type=IssueType.CYCLOMATIC_COMPLEXITY,
-            description=DESCRIPTION,
-            file_path=Path(FILE_PATH),
-            line_no=670,
-            column_no=78,
-            inspector_type=InspectorType.INTELLIJ,
-            cc_value=229,
-            difficulty=IssueDifficulty.HARD,
-        ),
-        f"""
-        {{
-            "origin_class": "SomeCyclomaticComplexityIssueClass",
-            "type": "CYCLOMATIC_COMPLEXITY",
-            "description": "{DESCRIPTION}",
-            "file_path": "{FILE_PATH}",
-            "line_no": 670,
-            "column_no": 78,
-            "inspector_type": "INTELLIJ",
-            "difficulty": "HARD",
-            "measure": 229
         }}
         """,
     ),

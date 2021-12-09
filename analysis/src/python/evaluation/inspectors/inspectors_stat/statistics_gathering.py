@@ -1,22 +1,22 @@
 import argparse
 from typing import Callable, Dict, List, Set, Tuple
 
-from src.python.review.common.language import Language
-from src.python.review.inspectors.checkstyle.checkstyle import CheckstyleInspector
-from src.python.review.inspectors.checkstyle.issue_types import CHECK_CLASS_NAME_TO_ISSUE_TYPE
-from src.python.review.inspectors.detekt.detekt import DetektInspector
-from src.python.review.inspectors.detekt.issue_types import DETECT_CLASS_NAME_TO_ISSUE_TYPE
-from src.python.review.inspectors.eslint.eslint import ESLintInspector
-from src.python.review.inspectors.eslint.issue_types import ESLINT_CLASS_NAME_TO_ISSUE_TYPE
-from src.python.review.inspectors.flake8.flake8 import Flake8Inspector
-from src.python.review.inspectors.issue import (
+from hyperstyle.src.python.review.common.language import Language
+from hyperstyle.src.python.review.inspectors.checkstyle.checkstyle import CheckstyleInspector
+from hyperstyle.src.python.review.inspectors.checkstyle.issue_types import CHECK_CLASS_NAME_TO_ISSUE_TYPE
+from hyperstyle.src.python.review.inspectors.detekt.detekt import DetektInspector
+from hyperstyle.src.python.review.inspectors.detekt.issue_types import DETECT_CLASS_NAME_TO_ISSUE_TYPE
+from hyperstyle.src.python.review.inspectors.eslint.eslint import ESLintInspector
+from hyperstyle.src.python.review.inspectors.eslint.issue_types import ESLINT_CLASS_NAME_TO_ISSUE_TYPE
+from hyperstyle.src.python.review.inspectors.flake8.flake8 import Flake8Inspector
+from hyperstyle.src.python.review.inspectors.issue import (
     get_default_issue_stat, get_main_category_by_issue_type, IssuesStat, IssueType,
 )
-from src.python.review.inspectors.pmd.issue_types import PMD_RULE_TO_ISSUE_TYPE
-from src.python.review.inspectors.pmd.pmd import PMDInspector
-from src.python.review.inspectors.pyast.python_ast import PythonAstInspector
-from src.python.review.inspectors.pylint.pylint import PylintInspector
-from src.python.review.inspectors.radon.radon import RadonInspector
+from hyperstyle.src.python.review.inspectors.pmd.issue_types import PMD_RULE_TO_ISSUE_TYPE
+from hyperstyle.src.python.review.inspectors.pmd.pmd import PMDInspector
+from hyperstyle.src.python.review.inspectors.pyast.python_ast import PythonAstInspector
+from hyperstyle.src.python.review.inspectors.pylint.pylint import PylintInspector
+from hyperstyle.src.python.review.inspectors.radon.radon import RadonInspector
 from analysis.src.python.evaluation.inspectors.inspectors_stat.issues.flake8_all_issues import (
     ALL_BUGBEAR_ISSUES, ALL_BUILTINS_ISSUES, ALL_COMPREHENSIONS_ISSUES, ALL_FORMAT_STRING_ISSUES,
     ALL_IMPORT_ORDER_ISSUES, ALL_RETURN_ISSUES, ALL_SPELLCHECK_ISSUES, ALL_STANDARD_ISSUES, ALL_WPS_ISSUES,

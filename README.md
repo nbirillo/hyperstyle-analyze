@@ -10,20 +10,18 @@ A set of analysis utilities for the [Hyperstyle](https://github.com/hyperskill/h
 
 Simply clone the repository and run the following commands:
 
-1. `pip install -e git+https://github.com/hyperskill/hyperstyle.git@develop#egg=hyperstyle`
-2. `pip install -r requirements.txt`
-3. `pip install -r requirements-test.txt` for tests
-4. `pip install -r requirements-roberta.txt` for roberta model
+1`pip install -r requirements.txt`
+2`pip install -r requirements-test.txt` for tests
+3`pip install -r requirements-roberta.txt` for roberta model
 
-**Note**: if you use PyCharm and have an ModuleNotFound error for hyperstyle module, 
-please add the path to the module manually:
-
-1. Open the interpreter settings
-2. Click `Show all` and highlight the interpreter for this project
-3. Click `Show paths for the selected interpreter`
-4. Add two paths: 
-   - `<path_to_this_project>/main/venv/src`
-   - `<path_to_this_project>/main/venv/src/hyperstyle`
+**Note**: you should set up the set of environment variables to `Hyperstyle` work correctly.
+Please, follow the [Dockerfile](https://github.com/hyperskill/hyperstyle/blob/bf3c6e2dc42290ad27f2d30ce42d84a53241544b/Dockerfile#L14-L40) 
+from the `Hyperstyle` repository.
+To check the environment is set up correctly you can output the variables in the terminal, e.g.
+```bash
+echo $DETEKT_DIRECTORY && echo $DETEKT_VERSION
+```
+They should not be empty.
 
 ## Usage
 
@@ -34,10 +32,6 @@ please add the path to the module manually:
 ## Tests running
 
 We use [`pytest`](https://docs.pytest.org/en/latest/contents.html) library for tests.
-
-__Note__: If you have `ModuleNotFoundError` while you try to run tests, please call `pip install -e .`
- before using the test system. Also, you should add `hyperstyle` into `PYTHONPATH`: 
-`export PYTHONPATH=$PYTHONPATH:$(pwd)/main/venv/src/hyperstyle`.
 
 Use `pytest` from the root directory to run __ALL__ tests.
 

@@ -4,7 +4,7 @@ from collections import Counter
 from pathlib import Path
 
 import pandas as pd
-from src.python.review.common.language import Language
+from hyperstyle.src.python.review.common.language import Language
 from pandarallel import pandarallel
 from analysis.src.python.evaluation.common.pandas_util import (
     get_issues_from_json,

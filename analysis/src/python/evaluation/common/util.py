@@ -8,8 +8,8 @@ from pathlib import Path
 from typing import Any, List, Optional, Set, Tuple, Union
 
 import yaml
-from src.python.review.application_config import LanguageVersion
-from src.python.review.common.file_system import (
+from hyperstyle.src.python.review.application_config import LanguageVersion
+from hyperstyle.src.python.review.common.file_system import (
     Extension, get_all_file_system_items, ItemCondition,
 )
 

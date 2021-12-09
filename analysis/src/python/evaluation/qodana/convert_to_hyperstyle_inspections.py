@@ -4,9 +4,9 @@ from pathlib import Path
 from typing import Iterable, Set
 
 import pandas as pd
-from src.python.review.inspectors.inspector_type import InspectorType
-from src.python.review.inspectors.issue import BaseIssue, IssueType
-from src.python.review.reviewers.utils.print_review import convert_issue_to_json
+from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
+from hyperstyle.src.python.review.inspectors.issue import BaseIssue, IssueType
+from hyperstyle.src.python.review.reviewers.utils.print_review import convert_issue_to_json
 from analysis.src.python.evaluation.common.pandas_util import (
     drop_duplicates, filter_df_by_iterable_value, get_solutions_df_by_file_path, write_df_to_file,
 )

@@ -3,8 +3,8 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Dict, List
 
-from src.python.review.inspectors.issue import ShortIssue
-from src.python.review.quality.penalty import PenaltyIssue
+from hyperstyle.src.python.review.inspectors.issue import ShortIssue
+from hyperstyle.src.python.review.quality.penalty import PenaltyIssue
 from analysis.src.python.evaluation.common.tool_arguments import EvaluationRunToolArgument
 from analysis.src.python.evaluation.common.util import ColumnName, deserialize_data_from_file
 from analysis.src.python.evaluation.inspectors.common.statistics import (

@@ -20,13 +20,13 @@ from analysis.src.python.evaluation.common.util import (
 )
 from analysis.src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue
 from analysis.src.python.evaluation.qodana.util.util import to_json
-from src.python.review.application_config import LanguageVersion
-from src.python.review.common.file_system import (
+from hyperstyle.src.python.review.application_config import LanguageVersion
+from hyperstyle.src.python.review.common.file_system import (
     Extension,
     get_all_file_system_items,
     get_content_from_file,
 )
-from src.python.review.run_tool import positive_int
+from hyperstyle.src.python.review.run_tool import positive_int
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
