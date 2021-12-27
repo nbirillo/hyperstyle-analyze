@@ -20,7 +20,8 @@ from hyperstyle.src.python.review.quality.rules.code_style_scoring import CodeSt
 from hyperstyle.src.python.review.quality.rules.line_len_scoring import LineLengthRule
 from hyperstyle.src.python.review.reviewers.utils.code_statistics import get_code_style_lines
 from analysis.src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path, write_df_to_file
-from analysis.src.python.evaluation.common.util import ColumnName, get_parent_folder
+from analysis.src.python.evaluation.common.csv_util import ColumnName
+from analysis.src.python.evaluation.common.file_util import get_parent_folder
 from analysis.src.python.evaluation.issues_statistics.common.raw_issue_encoder_decoder import RawIssueDecoder
 from analysis.src.python.evaluation.issues_statistics.get_raw_issues import RAW_ISSUES
 

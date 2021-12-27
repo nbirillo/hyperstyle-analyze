@@ -7,9 +7,9 @@ from typing import Dict, List, Optional
 import pandas as pd
 from analysis.src.python.evaluation.common.csv_util import write_dataframe_to_csv
 from analysis.src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path
-from analysis.src.python.evaluation.common.tool_arguments import EvaluationRunToolArgument
+from analysis.src.python.evaluation.common.args_util import EvaluationRunToolArgument
 from analysis.src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue
-from analysis.src.python.evaluation.common.util import AnalysisExtension, get_parent_folder
+from analysis.src.python.evaluation.common.file_util import AnalysisExtension, get_parent_folder
 
 INSPECTION_ID = QodanaColumnName.INSPECTION_ID.value
 INSPECTIONS = QodanaColumnName.INSPECTIONS.value

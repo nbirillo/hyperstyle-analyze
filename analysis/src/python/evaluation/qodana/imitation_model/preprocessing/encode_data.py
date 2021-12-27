@@ -8,8 +8,8 @@ from typing import List
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MultiLabelBinarizer
-from analysis.src.python.evaluation.common.csv_util import write_dataframe_to_csv
-from analysis.src.python.evaluation.common.util import AnalysisExtension, ColumnName
+from analysis.src.python.evaluation.common.csv_util import ColumnName, write_dataframe_to_csv
+from analysis.src.python.evaluation.common.file_util import AnalysisExtension
 from analysis.src.python.evaluation.qodana.imitation_model.common.util import CustomTokens, DatasetColumnArgument
 
 logger = logging.getLogger(__name__)

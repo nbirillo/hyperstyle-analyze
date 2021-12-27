@@ -22,7 +22,8 @@ from analysis.src.python.evaluation.plots.plotters.diffs_plotters import (
     get_penalty_influence_distribution,
     get_unique_issues_by_category,
 )
-from analysis.src.python.evaluation.common.util import AnalysisExtension, deserialize_data_from_file, parse_yaml
+from analysis.src.python.evaluation.common.file_util import AnalysisExtension, deserialize_data_from_file
+from analysis.src.python.evaluation.common.yaml_util import parse_yaml
 
 
 @unique

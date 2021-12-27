@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Dict, List
 
 import pandas as pd
-from analysis.src.python.evaluation.common.tool_arguments import EvaluationRunToolArgument
+from analysis.src.python.evaluation.common.args_util import EvaluationRunToolArgument
 from analysis.src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue, QodanaJsonField
 
 

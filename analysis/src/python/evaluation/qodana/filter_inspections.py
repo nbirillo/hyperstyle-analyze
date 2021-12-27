@@ -6,7 +6,8 @@ import pandas as pd
 from hyperstyle.src.python.review.common.file_system import get_all_file_system_items
 from analysis.src.python.evaluation.common.csv_util import write_dataframe_to_csv
 from analysis.src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path
-from analysis.src.python.evaluation.common.util import AnalysisExtension, extension_file_condition, parse_set_arg
+from analysis.src.python.evaluation.common.args_util import parse_set_arg
+from analysis.src.python.evaluation.common.file_util import AnalysisExtension, extension_file_condition
 from analysis.src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue
 from analysis.src.python.evaluation.qodana.util.util import to_json
 

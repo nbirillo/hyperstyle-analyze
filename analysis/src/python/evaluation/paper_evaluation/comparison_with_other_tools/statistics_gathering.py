@@ -4,12 +4,12 @@ import sys
 from pathlib import Path
 
 from analysis.src.python.evaluation.common.pandas_util import get_solutions_df
-from analysis.src.python.evaluation.common.tool_arguments import EvaluationRunToolArgument
+from analysis.src.python.evaluation.common.args_util import EvaluationRunToolArgument
 from analysis.src.python.evaluation.paper_evaluation.comparison_with_other_tools.tutor_statistics import (
     IssuesStatistics, TutorStatistics,
 )
 from analysis.src.python.evaluation.paper_evaluation.comparison_with_other_tools.util import ComparisonColumnName
-from analysis.src.python.evaluation.common.util import AnalysisExtension, get_restricted_extension
+from analysis.src.python.evaluation.common.file_util import AnalysisExtension, get_restricted_extension
 
 sys.path.append('')
 sys.path.append('../../..')
