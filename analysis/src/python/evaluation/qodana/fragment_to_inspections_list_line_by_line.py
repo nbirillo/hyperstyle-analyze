@@ -21,7 +21,7 @@ CODE = ColumnName.CODE.value
 def __replace_inspections_to_its_ids_in_row(row: pd.Series, inspections_dict: Dict[str, int],
                                             to_remove_duplicates: bool) -> pd.DataFrame:
     row_df = pd.DataFrame(row).transpose()
-    fragment_lines = row_df.iloc[0][CODE].split(os.linesep)
+    fragment_lines = row_df.iloc[0][CODE].split_to_batches(os.linesep)
     fragment_df = row_df.loc[row_df.index.repeat(len(fragment_lines))].reset_index(drop=True)
 
     issues_list = QodanaIssue.parse_list_issues_from_json(row_df.iloc[0][INSPECTIONS])

@@ -64,7 +64,7 @@ def __one_hot_encoding(df: pd.DataFrame) -> pd.DataFrame:
             '3'                         0  0  1
     """
     target = df[DatasetColumnArgument.INSPECTIONS.value].to_numpy().astype(str)
-    target_list_int = [np.unique(tuple(map(int, label.split(',')))) for label in target]
+    target_list_int = [np.unique(tuple(map(int, label.split_to_batches(',')))) for label in target]
     try:
         mlb = MultiLabelBinarizer()
         encoded_target = mlb.fit_transform(target_list_int)

@@ -25,14 +25,14 @@ class BatchConfig:
         config = parse_yaml(yaml_path)
         script_args = []
         script_flags = []
-        if BatchConfigFields.SCRIPT_ARGS in config and config[BatchConfigFields.SCRIPT_ARGS] is not None:
-            for script_arg in config[BatchConfigFields.SCRIPT_ARGS]:
+        if BatchConfigFields.SCRIPT_ARGS.value in config and config[BatchConfigFields.SCRIPT_ARGS.value] is not None:
+            for script_arg in config[BatchConfigFields.SCRIPT_ARGS.value]:
                 script_args.append(script_arg)
-        if BatchConfigFields.SCRIPT_FLAGS in config and config[BatchConfigFields.SCRIPT_FLAGS] is not None:
-            for flag_key, flag_value in config[BatchConfigFields.SCRIPT_FLAGS].items():
+        if BatchConfigFields.SCRIPT_FLAGS.value in config and config[BatchConfigFields.SCRIPT_FLAGS.value] is not None:
+            for flag_key, flag_value in config[BatchConfigFields.SCRIPT_FLAGS.value].items():
                 script_flags.append(f"-{flag_key}={flag_value}")
 
-        return BatchConfig(project_path=config[BatchConfigFields.PROJECT_PATH],
-                           script_path=config[BatchConfigFields.SCRIPT_PATH],
+        return BatchConfig(project_path=config[BatchConfigFields.PROJECT_PATH.value],
+                           script_path=config[BatchConfigFields.SCRIPT_PATH.value],
                            script_args=script_args,
                            script_flags=script_flags)

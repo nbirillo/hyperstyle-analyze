@@ -34,7 +34,7 @@ class TutorStatistics:
         for task in TutorTask:
             task_df = filter_df_by_single_value(solutions_df, ComparisonColumnName.TASK_KEY.value, task.value)
             self.task_to_freq[task] = task_df.shape[0]
-            errors_list = list(map(lambda e_l: e_l.split(';'),
+            errors_list = list(map(lambda e_l: e_l.split_to_batches(';'),
                                    task_df[ComparisonColumnName.TUTOR_ERROR.value].dropna().values))
             for cell_errors in errors_list:
                 for error in cell_errors:

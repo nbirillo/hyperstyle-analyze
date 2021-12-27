@@ -9,6 +9,7 @@ from collections import defaultdict
 from math import ceil
 from pathlib import Path
 from typing import Dict, List, Optional
+
 sys.path.append('')
 
 import numpy as np
@@ -35,7 +36,7 @@ TEMPLATE_FOLDER = Path(__file__).parents[3] / 'resources' / 'evaluation' / 'qoda
 
 def configure_arguments(parser: ArgumentParser) -> None:
     parser.add_argument(
-        'dataset_path',
+        '-i', '--input_path',
         type=lambda value: Path(value).absolute(),
         help=f"Dataset path. The dataset must contain at least three columns: '{ColumnName.ID.value}', "
              f"'{ColumnName.CODE.value}' and '{ColumnName.LANG.value}', where '{ColumnName.ID.value}' is a unique "
@@ -64,7 +65,7 @@ def configure_arguments(parser: ArgumentParser) -> None:
 
     parser.add_argument(
         '-o',
-        '--output-path',
+        '--output',
         type=lambda value: Path(value).absolute(),
         help='The path where the labeled dataset will be saved. '
              'If not specified, the labeled dataset will be saved next to the original one.',
@@ -85,16 +86,18 @@ class DatasetLabel:
     output_path: Path
 
     def __init__(self, args: Namespace):
-        self.dataset_path = args.dataset_path
+        self.dataset_path = args.input_path
         self.config = args.config
         self.limit = args.limit
         self.chunk_size = args.chunk_size
 
-        self.output_path = args.output_path
-        if self.output_path is None:
+        dataset_name = get_name_from_path(self.dataset_path)
+        output_dataset_name = f'labeled_{dataset_name}'
+        if args.output is None:
             output_dir = get_parent_folder(self.dataset_path)
-            dataset_name = get_name_from_path(self.dataset_path)
-            self.output_path = output_dir / f'labeled_{dataset_name}'
+            self.output_path = output_dir / output_dataset_name
+        else:
+            self.output_path = args.output / output_dataset_name
 
     def label(self) -> None:
         """
@@ -129,7 +132,7 @@ class DatasetLabel:
 
         dataset = pd.concat(groups)
 
-        logger.info('Writing the dataset to a file.')
+        logger.info(f'Writing the dataset to a file: {self.output_path}.')
         write_dataframe_to_csv(self.output_path, dataset)
 
     def _label_language(self, df: pd.DataFrame, language: LanguageVersion) -> pd.DataFrame:
@@ -164,19 +167,22 @@ class DatasetLabel:
     def _parse_inspections_files(cls, inspections_files: List[Path]) -> Dict[int, List[QodanaIssue]]:
         id_to_issues: Dict[int, List[QodanaIssue]] = defaultdict(list)
         for file in inspections_files:
-            issues = json.loads(get_content_from_file(file))['problems']
-            for issue in issues:
-                fragment_id = int(cls._get_fragment_id_from_fragment_file_path(issue['file']))
-                qodana_issue = QodanaIssue(
-                    line=issue['line'],
-                    offset=issue['offset'],
-                    length=issue['length'],
-                    highlighted_element=issue['highlighted_element'],
-                    description=issue['description'],
-                    fragment_id=fragment_id,
-                    problem_id=issue['problem_class']['id'],
-                )
-                id_to_issues[fragment_id].append(qodana_issue)
+            try:
+                issues = json.loads(get_content_from_file(file))['problems']
+                for issue in issues:
+                    fragment_id = int(cls._get_fragment_id_from_fragment_file_path(issue['file']))
+                    qodana_issue = QodanaIssue(
+                        line=issue['line'],
+                        offset=issue['offset'],
+                        length=issue['length'],
+                        highlighted_element=issue['highlighted_element'],
+                        description=issue['description'],
+                        fragment_id=fragment_id,
+                        problem_id=issue['problem_class']['id'],
+                    )
+                    id_to_issues[fragment_id].append(qodana_issue)
+            except Exception as e:
+                logging.error(f"Exception occurred while processing file {file}: {e}")
         return id_to_issues
 
     def _label_chunk(self, chunk: pd.DataFrame, language: LanguageVersion, chunk_id: int) -> pd.DataFrame:
@@ -201,6 +207,7 @@ class DatasetLabel:
 
         logger.info('Getting inspections')
         inspections_files = self._get_inspections_files(results_dir)
+        logger.info(f'Got {len(inspections_files)} files with inspections')
         inspections = self._parse_inspections_files(inspections_files)
 
         logger.info('Write inspections')
@@ -237,7 +244,7 @@ class DatasetLabel:
 
     @staticmethod
     def _run_qodana(project_dir: Path, results_dir: Path) -> None:
-        results_dir.mkdir()
+        results_dir.mkdir(exist_ok=True)
         command = [
             'docker', 'run',
             '-u', str(os.getuid()),
@@ -250,7 +257,7 @@ class DatasetLabel:
 
     @staticmethod
     def _get_inspections_files(results_dir: Path) -> List[Path]:
-        condition = match_condition(r'\w*.json')
+        condition = extension_file_condition(AnalysisExtension.JSON)
         return get_all_file_system_items(results_dir, condition, without_subdirs=True)
 
 

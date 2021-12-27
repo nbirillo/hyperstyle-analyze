@@ -16,6 +16,7 @@ class AnalysisExtension(Enum):
     PICKLE = '.pickle'
     JSON = '.json'
     HTML = '.html'
+    TXT = '.txt'
 
     # Image extensions
     PNG = '.png'

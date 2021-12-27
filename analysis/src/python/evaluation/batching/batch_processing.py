@@ -33,7 +33,7 @@ def run_batching():
     configure_arguments(parser)
 
     args = parser.parse_args()
-    batch_paths = split(args.input, args.output, args.batch_size)
+    batch_paths = split_to_batches(args.input, args.output, args.batch_size)
     config = BatchConfig.from_yaml(args.config)
 
     for index, input_file_path, logs_path, output_path in batch_paths[args.start_from:]:
@@ -56,7 +56,7 @@ def run_batching():
     merge_batch_results(batch_paths, args.output)
 
 
-def split(input: str, output: str, batch_size: int) -> List[Tuple[int, str, str, str]]:
+def split_to_batches(input: str, output: str, batch_size: int) -> List[Tuple[int, str, str, str]]:
     input_path = os.path.join(output, 'input')
     logs_path = os.path.join(output, 'logs')
     output_path = os.path.join(output, 'output')
