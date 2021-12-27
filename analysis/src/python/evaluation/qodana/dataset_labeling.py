@@ -17,7 +17,7 @@ import pandas as pd
 from analysis.src.python.evaluation.common.csv_util import ColumnName, write_dataframe_to_csv
 from analysis.src.python.evaluation.common.parallel_util import run_and_wait
 from analysis.src.python.evaluation.common.file_util import copy_directory, copy_file, create_file, get_name_from_path, \
-    get_parent_folder, match_condition, remove_directory
+    get_parent_folder, remove_directory
 from analysis.src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue
 from analysis.src.python.evaluation.qodana.util.util import to_json
 from hyperstyle.src.python.review.application_config import LanguageVersion
