@@ -10,7 +10,7 @@ usage: run_data_collection.py [-h] --platform PLATFORM --object OBJECT [--ids [I
 optional arguments:
   -h, --help            show this help message and exit
   --platform PLATFORM, -p PLATFORM
-                        platform to collect data from
+                        platform to collect data from (`hyperskill` or `stepik`)
   --object OBJECT, -o OBJECT
                         objects to request from platform (can be defaults like `step`, `user` of custom like `java`)
   --ids [IDS ...], -i [IDS ...]

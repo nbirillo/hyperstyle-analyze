@@ -1,5 +1,15 @@
 from dataclasses import dataclass
+from enum import Enum
 from typing import Generic, List, Optional, TypeVar
+
+
+class Platform(str, Enum):
+    HYPERSKILL = 'hyperskill'
+    STEPIK = 'stepik'
+
+    @classmethod
+    def values(cls):
+        return list(map(lambda c: c.value, cls))
 
 
 @dataclass

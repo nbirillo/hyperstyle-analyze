@@ -1,8 +1,7 @@
 import datetime
 import logging
-import urllib
 from dataclasses import asdict
-from typing import List, Optional, Type, TypeVar
+from typing import Dict, List, Optional, Type, TypeVar
 
 import requests
 from dacite import Config, from_dict
@@ -84,22 +83,32 @@ class PlatformClient:
 
         return objects
 
+    def _prepare_params(self, params: BaseRequestParams) -> Dict:
+        dict_params = {}
+        for key, value in asdict(params).items():
+            if value is None:
+                continue
+            if isinstance(value, list):
+                value = ','.join(map(str, value))
+            dict_params[key] = value
+        return dict_params
+
     def _fetch(self,
                obj_class: str,
                params: BaseRequestParams,
                obj_response_type: Type[ObjectResponse[T]],
                obj_id: Optional[int] = None) -> Optional[ObjectResponse[T]]:
 
+        dict_params = self._prepare_params(params)
         api_url = '{host}/api/{obj_class}s'.format(host=self.host, obj_class=obj_class)
+
         if obj_id is not None:
             api_url = '{url}/{obj_id}'.format(url=api_url, obj_id=obj_id)
-        if params is not None:
-            dict_params = {k: v for k, v in asdict(params).items() if v is not None}
-            api_url = '{url}?{params}'.format(url=api_url, params=urllib.parse.urlencode(dict_params))
         if self.token is not None:
-            raw_response = requests.get(api_url, headers={'Authorization': 'Token ' + self.token}, timeout=None)
+            raw_response = requests.get(api_url, headers={'Authorization': 'Token {token}'.format(token=self.token)},
+                                        data=dict_params, timeout=None)
         else:
-            raw_response = requests.get(api_url, timeout=None)
+            raw_response = requests.get(api_url, data=dict_params, timeout=None)
 
         if raw_response is None or raw_response.status_code != 200:
             logging.warning(f"Failed to fetch {api_url}: {raw_response}")

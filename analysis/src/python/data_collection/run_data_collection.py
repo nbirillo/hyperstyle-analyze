@@ -1,21 +1,12 @@
 import argparse
 import sys
-from enum import Enum
 
 import pandas as pd
+
+from analysis.src.python.data_collection.api.platform_objects import Platform
 from analysis.src.python.data_collection.hyperskill.hyperskill_client import HyperskillClient
 from analysis.src.python.data_collection.stepik.stepik_client import StepikClient
 from analysis.src.python.data_collection.utils.csv_utils import save_objects_to_csv
-
-
-class Platform(str, Enum):
-    HYPERSKILL = 'hyperskill'
-    STEPIK = 'stepik'
-
-    @classmethod
-    def values(cls):
-        return list(map(lambda c: c.value, cls))
-
 
 platform_client = {
     Platform.HYPERSKILL: HyperskillClient,
