@@ -226,13 +226,10 @@ class DatasetLabel:
 
     def _get_main_file_path(self, row: pd.Series, project_dir: Path, language: LanguageVersion):
         if language.is_java():
-            return (project_dir / 'src' / 'main' / 'java' /
-                    f'solution{row[ColumnName.ID.value]}' /
-                    f'Main{Extension.JAVA.value}')
+            working_dir = project_dir / 'src' / 'main' / 'java'
+            return working_dir / f'solution{row[ColumnName.ID.value]}' / f'Main{Extension.JAVA.value}'
         elif language == LanguageVersion.PYTHON_3:
-            return (project_dir /
-                    f'solution{row[ColumnName.ID.value]}' /
-                    f'main{Extension.PY.value}')
+            return project_dir / f'solution{row[ColumnName.ID.value]}' / f'main{Extension.PY.value}'
         else:
             raise NotImplementedError(f'{language} needs implementation.')
 
