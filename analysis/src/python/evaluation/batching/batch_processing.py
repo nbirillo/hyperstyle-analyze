@@ -18,11 +18,11 @@ logger = logging.getLogger(__name__)
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument("input", help="Path to the csv file with data to process",
+    parser.add_argument("input_path", help="Path to the csv file with data to process",
                         type=lambda value: Path(value).absolute())
-    parser.add_argument("output", help="Path to the output directory",
+    parser.add_argument("output_path", help="Path to the output directory",
                         type=lambda value: Path(value).absolute())
-    parser.add_argument("config", help="Path to the script config to run under batching",
+    parser.add_argument("config_path", help="Path to the script config to run under batching",
                         type=lambda value: Path(value).absolute())
     parser.add_argument("--batch-size", help="Batch size for data", nargs='?', default=1000, type=int)
     parser.add_argument("--start-from", help="Index of batch to start processing from", nargs='?', default=0, type=int)
@@ -33,39 +33,38 @@ def run_batching():
     configure_arguments(parser)
 
     args = parser.parse_args()
-    batch_paths = split_to_batches(args.input, args.output, args.batch_size)
-    config = BatchConfig.from_yaml(args.config)
+    batch_paths = split_to_batches(args.input_path, args.output_path, args.batch_size)
+    config = BatchConfig.from_yaml(args.config_path)
 
     for index, input_file_path, logs_path, output_path in batch_paths[args.start_from:]:
         logs_file_path = os.path.join(logs_path, f"log{AnalysisExtension.TXT.value}")
 
-        with open(logs_file_path, "w+") as fout:
+        with open(logs_file_path, 'w+') as logs_file:
             command = ['python3', config.script_path] + \
-                      config.script_args + \
-                      config.script_flags + \
+                      config.script_args + config.script_flags + \
                       [f'-i={input_file_path}', f'-o={output_path}']
 
-            logging.info(f'Command to execute batch {index}: {command}')
+            logging.info(f"Command to execute batch {index}: {command}")
 
             logging.info(f'Start batch {index} processing')
             start_time = time.time()
-            run_and_wait(command, stdout=fout, stderr=fout, cwd=config.project_path)
+            run_and_wait(command, stdout=logs_file, stderr=logs_file, cwd=config.project_path)
             end_time = time.time()
             logging.info(f'Finish batch {index} processing in {end_time - start_time}')
 
     merge_batch_results(batch_paths, args.output)
 
 
-def split_to_batches(input: str, output: str, batch_size: int) -> List[Tuple[int, str, str, str]]:
-    input_path = os.path.join(output, 'input')
-    logs_path = os.path.join(output, 'logs')
-    output_path = os.path.join(output, 'output')
+def split_to_batches(dataset_path: str, output_dir_path: str, batch_size: int) -> List[Tuple[int, str, str, str]]:
+    input_path = os.path.join(output_dir_path, 'input')
+    logs_path = os.path.join(output_dir_path, 'logs')
+    output_path = os.path.join(output_dir_path, 'output')
 
     create_directory(input_path)
     create_directory(logs_path)
     create_directory(output_path)
 
-    df_name = get_name_from_path(input)
+    df_name = get_name_from_path(dataset_path)
 
     batch_paths = []
     index = 0
@@ -76,7 +75,7 @@ def split_to_batches(input: str, output: str, batch_size: int) -> List[Tuple[int
         batch_logs_path = os.path.join(logs_path, batch_name)
         batch_output_path = os.path.join(output_path, batch_name)
 
-        logging.info(f'Creating batch {index}')
+        logging.info(f"Creating batch {index}")
         create_directory(batch_input_path)
         create_directory(batch_logs_path)
         create_directory(batch_output_path)
@@ -97,7 +96,7 @@ def merge_batch_results(batch_paths: List[Tuple[int, str, str, str]], output: st
         output_files = os.listdir(output_path)
         for output_file in output_files:
             if AnalysisExtension.get_extension_from_file(output_file) == AnalysisExtension.CSV:
-                output_file_id = re.sub(r"\.*batch_[0-9]+\.*", "", get_name_from_path(output_file))
+                output_file_id = re.sub(r'\.*batch_[0-9]+\.*', '', get_name_from_path(output_file))
                 output_files_by_name[output_file_id].append(os.path.join(output_path, output_file))
     for output_file_name, output_files in output_files_by_name.items():
         for i, output_file in enumerate(output_files):

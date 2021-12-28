@@ -23,6 +23,7 @@ case34
 cbo
 changelog
 checkstyle
+chunksize
 cloneable
 concat
 config
