@@ -6,11 +6,8 @@ from pathlib import Path
 import pandas as pd
 from hyperstyle.src.python.review.common.language import Language
 from pandarallel import pandarallel
-from analysis.src.python.evaluation.common.pandas_util import (
-    get_issues_from_json,
-    get_solutions_df_by_file_path,
+from analysis.src.python.evaluation.common.pandas_util import get_issues_from_json, get_solutions_df_by_file_path, \
     write_df_to_file
-)
 from analysis.src.python.evaluation.common.args_util import EvaluationArgument, EvaluationRunToolArgument
 from analysis.src.python.evaluation.common.csv_util import ColumnName
 from analysis.src.python.evaluation.common.file_util import AnalysisExtension, get_name_from_path, get_parent_folder, \
