@@ -30,6 +30,8 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 TEMPLATE_FOLDER = Path(__file__).parents[3] / 'resources' / 'evaluation' / 'qodana' / 'project_templates'
+JAVA_QODANA_IMAGE_PATH = 'jetbrains/qodana'
+PYTHON_QODANA_IMAGE_PATH = 'jetbrains/qodana-python'
 
 
 def configure_arguments(parser: ArgumentParser) -> None:
@@ -196,7 +198,7 @@ class DatasetLabel:
         self._create_main_files(project_dir, chunk, language)
 
         logger.info('Running qodana')
-        self._run_qodana(project_dir, results_dir)
+        self._run_qodana(project_dir, results_dir, language)
 
         logger.info('Getting inspections')
         inspections_files = self._get_inspections_files(results_dir)
@@ -216,35 +218,53 @@ class DatasetLabel:
         if language.is_java():
             java_template = TEMPLATE_FOLDER / "java"
             copy_directory(java_template, project_dir)
+            copy_directory(TEMPLATE_FOLDER / "java", project_dir)
+        elif language == LanguageVersion.PYTHON_3:
+            copy_directory(TEMPLATE_FOLDER / "python", project_dir)
+        else:
+            raise NotImplementedError(f'{language} needs implementation.')
+
+    def _get_main_file_path(self, row: pd.Series, project_dir: Path, language: LanguageVersion):
+        if language.is_java():
+            return (project_dir / 'src' / 'main' / 'java' /
+                    f'solution{row[ColumnName.ID.value]}' /
+                    f'Main{Extension.JAVA.value}')
+        elif language == LanguageVersion.PYTHON_3:
+            return (project_dir /
+                    f'solution{row[ColumnName.ID.value]}' /
+                    f'main{Extension.PY.value}')
         else:
             raise NotImplementedError(f'{language} needs implementation.')
 
     def _create_main_files(self, project_dir: Path, chunk: pd.DataFrame, language: LanguageVersion) -> None:
-        if language.is_java():
-            working_dir = project_dir / 'src' / 'main' / 'java'
-
-            chunk.apply(
-                lambda row: next(
-                    create_file(
-                        file_path=(working_dir / f'solution{row[ColumnName.ID.value]}' / f'Main{Extension.JAVA.value}'),
-                        content=row[ColumnName.CODE.value],
-                    ),
+        chunk.apply(
+            lambda row: next(
+                create_file(
+                    file_path=self._get_main_file_path(row, project_dir, language),
+                    content=row[ColumnName.CODE.value],
                 ),
-                axis=1,
-            )
+            ),
+            axis=1,
+        )
+
+    @staticmethod
+    def _run_qodana(project_dir: Path, results_dir: Path, language: LanguageVersion) -> None:
+        if language.is_java():
+            qodana_image_path = JAVA_QODANA_IMAGE_PATH
+        elif language == LanguageVersion.PYTHON_3:
+            qodana_image_path = PYTHON_QODANA_IMAGE_PATH
         else:
             raise NotImplementedError(f'{language} needs implementation.')
 
-    @staticmethod
-    def _run_qodana(project_dir: Path, results_dir: Path) -> None:
         results_dir.mkdir(exist_ok=True)
+
         command = [
             'docker', 'run',
             '-u', str(os.getuid()),
             '--rm',
             '-v', f'{project_dir}/:/data/project/',
             '-v', f'{results_dir}/:/data/results/',
-            'jetbrains/qodana',
+            f'{qodana_image_path}',
         ]
         run_and_wait(command)
 
