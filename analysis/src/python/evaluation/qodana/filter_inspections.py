@@ -4,24 +4,27 @@ from typing import List
 
 import pandas as pd
 from hyperstyle.src.python.review.common.file_system import get_all_file_system_items
+
+from analysis.src.python.evaluation.common.args_util import EvaluationRunToolArgument, parse_set_arg
 from analysis.src.python.evaluation.common.csv_util import write_dataframe_to_csv
-from analysis.src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path
-from analysis.src.python.evaluation.common.args_util import parse_set_arg
 from analysis.src.python.evaluation.common.file_util import AnalysisExtension, extension_file_condition
+from analysis.src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path
 from analysis.src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue
 from analysis.src.python.evaluation.qodana.util.util import to_json
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument('dataset_folder',
-                        type=lambda value: Path(value).absolute(),
-                        help='Path to a folder with csv files graded by Qodana. '
-                             'Each file must have "inspections" column.')
+    parser.add_argument(
+        EvaluationRunToolArgument.SOLUTIONS_FILE_PATH.value.long_name,
+        type=lambda value: Path(value).absolute(),
+        help=EvaluationRunToolArgument.SOLUTIONS_FILE_PATH.value.description,
+    )
 
-    parser.add_argument('-i', '--inspections',
-                        help='Set of inspections ids to exclude from the dataset',
-                        type=str,
-                        default='')
+    parser.add_argument(
+        EvaluationRunToolArgument.INSPECTIONS_PATH.value.long_name,
+        type=lambda value: Path(value).absolute(),
+        help=EvaluationRunToolArgument.INSPECTIONS_PATH.value.description,
+    )
 
 
 def __get_qodana_dataset(root: Path) -> pd.DataFrame:
@@ -45,9 +48,9 @@ def main() -> None:
     configure_arguments(parser)
     args = parser.parse_args()
 
-    dataset_folder = args.dataset_folder
+    dataset_folder = args.solutions_file_path
     full_dataset = __get_qodana_dataset(dataset_folder)
-    inspections_to_keep = parse_set_arg(args.inspections)
+    inspections_to_keep = parse_set_arg(args.inspections_path)
 
     full_dataset[QodanaColumnName.INSPECTIONS.value] = full_dataset.apply(
         lambda row: __filter_inspections(row[QodanaColumnName.INSPECTIONS.value], inspections_to_keep), axis=1)

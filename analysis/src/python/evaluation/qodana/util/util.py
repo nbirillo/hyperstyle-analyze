@@ -38,14 +38,14 @@ def replace_inspections_on_its_ids(issues_list: List[QodanaIssue], inspections_d
 
 
 def configure_model_converter_arguments(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument(EvaluationRunToolArgument.QODANA_SOLUTIONS_FILE_PATH.value.long_name,
+    parser.add_argument(EvaluationRunToolArgument.SOLUTIONS_FILE_PATH.value.long_name,
                         type=lambda value: Path(value).absolute(),
-                        help=EvaluationRunToolArgument.QODANA_SOLUTIONS_FILE_PATH.value.description)
+                        help=EvaluationRunToolArgument.SOLUTIONS_FILE_PATH.value.description)
 
-    parser.add_argument(EvaluationRunToolArgument.QODANA_INSPECTIONS_PATH.value.long_name,
+    parser.add_argument(EvaluationRunToolArgument.INSPECTIONS_PATH.value.long_name,
                         type=lambda value: Path(value).absolute(),
-                        help=EvaluationRunToolArgument.QODANA_INSPECTIONS_PATH.value.description)
+                        help=EvaluationRunToolArgument.INSPECTIONS_PATH.value.description)
 
-    parser.add_argument(EvaluationRunToolArgument.QODANA_DUPLICATES.value.long_name,
-                        help=EvaluationRunToolArgument.QODANA_DUPLICATES.value.description,
+    parser.add_argument(EvaluationRunToolArgument.DUPLICATES.value.long_name,
+                        help=EvaluationRunToolArgument.DUPLICATES.value.description,
                         action='store_true')

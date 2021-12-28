@@ -10,6 +10,8 @@ from math import ceil
 from pathlib import Path
 from typing import Dict, List, Optional
 
+from analysis.src.python.evaluation.common.args_util import EvaluationRunToolArgument
+
 sys.path.append('')
 
 import numpy as np
@@ -17,16 +19,11 @@ import pandas as pd
 from analysis.src.python.evaluation.common.csv_util import ColumnName, write_dataframe_to_csv
 from analysis.src.python.evaluation.common.parallel_util import run_and_wait
 from analysis.src.python.evaluation.common.file_util import AnalysisExtension, copy_directory, copy_file, create_file, \
-    extension_file_condition, get_name_from_path, \
-    get_parent_folder, remove_directory
+    extension_file_condition, get_name_from_path, get_parent_folder, remove_directory
 from analysis.src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue
 from analysis.src.python.evaluation.qodana.util.util import to_json
 from hyperstyle.src.python.review.application_config import LanguageVersion
-from hyperstyle.src.python.review.common.file_system import (
-    Extension,
-    get_all_file_system_items,
-    get_content_from_file,
-)
+from hyperstyle.src.python.review.common.file_system import Extension, get_all_file_system_items, get_content_from_file
 from hyperstyle.src.python.review.run_tool import positive_int
 
 logger = logging.getLogger(__name__)
@@ -37,14 +34,9 @@ TEMPLATE_FOLDER = Path(__file__).parents[3] / 'resources' / 'evaluation' / 'qoda
 
 def configure_arguments(parser: ArgumentParser) -> None:
     parser.add_argument(
-        '-i', '--input_path',
+        EvaluationRunToolArgument.SOLUTIONS_FILE_PATH.value.long_name,
         type=lambda value: Path(value).absolute(),
-        help=f"Dataset path. The dataset must contain at least three columns: '{ColumnName.ID.value}', "
-             f"'{ColumnName.CODE.value}' and '{ColumnName.LANG.value}', where '{ColumnName.ID.value}' is a unique "
-             f"solution number, '{ColumnName.LANG.value}' is the language in which the code is written in the "
-             f"'{ColumnName.CODE.value}' column. The '{ColumnName.LANG.value}' must belong to one of the following "
-             f"values: {', '.join(LanguageVersion.values())}. "
-             f"If '{ColumnName.LANG.value}' is not equal to any of the values, the row will be skipped.",
+        help=EvaluationRunToolArgument.SOLUTIONS_FILE_PATH.value.description,
     )
 
     parser.add_argument('-c', '--config', type=lambda value: Path(value).absolute(), help='Path to qodana.yaml')
@@ -87,7 +79,7 @@ class DatasetLabel:
     output_path: Path
 
     def __init__(self, args: Namespace):
-        self.dataset_path = args.input_path
+        self.dataset_path = args.solutions_file_path
         self.config = args.config
         self.limit = args.limit
         self.chunk_size = args.chunk_size

@@ -41,11 +41,11 @@ def run_batching():
 
         with open(logs_file_path, 'w+') as logs_file:
             # create run script with python3
-            command = ['python3', config.script_path]
+            command = ['python3', config.script_path, input_file_path]
             # add script args and flags
             command += config.script_args + config.script_flags
-            # add script input and output flags
-            command += [f'-i={input_file_path}', f'-o={output_path}']
+            # add script output flag
+            command += [f'-o={output_path}']
 
             logging.info(f"Command to execute batch {index}: {command}")
 

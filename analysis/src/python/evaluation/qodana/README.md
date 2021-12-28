@@ -18,7 +18,7 @@ Run the [dataset_labeling.py](dataset_labeling.py) with the arguments from comma
 
 |Argument | Description |
 |---|---|
-| **-c**, **&#8209;&#8209;config** | Path to dataset. |
+| **solutions_file_path** | Path to dataset. |
 
 ### Optional arguments
 

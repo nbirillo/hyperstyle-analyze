@@ -5,11 +5,12 @@ from pathlib import Path
 from typing import Dict, List, Optional
 
 import pandas as pd
-from analysis.src.python.evaluation.common.csv_util import write_dataframe_to_csv
-from analysis.src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path
+
 from analysis.src.python.evaluation.common.args_util import EvaluationRunToolArgument
-from analysis.src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue
+from analysis.src.python.evaluation.common.csv_util import write_dataframe_to_csv
 from analysis.src.python.evaluation.common.file_util import AnalysisExtension, get_parent_folder
+from analysis.src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path
+from analysis.src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue
 
 INSPECTION_ID = QodanaColumnName.INSPECTION_ID.value
 INSPECTIONS = QodanaColumnName.INSPECTIONS.value
@@ -19,9 +20,9 @@ ID = QodanaColumnName.ID.value
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument(EvaluationRunToolArgument.QODANA_SOLUTIONS_FILE_PATH.value.long_name,
+    parser.add_argument(EvaluationRunToolArgument.SOLUTIONS_FILE_PATH.value.long_name,
                         type=lambda value: Path(value).absolute(),
-                        help=EvaluationRunToolArgument.QODANA_SOLUTIONS_FILE_PATH.value.description)
+                        help=EvaluationRunToolArgument.SOLUTIONS_FILE_PATH.value.description)
 
     parser.add_argument('--uniq',
                         help='If True, count fragments for eash inspection in which this inspection was.',
