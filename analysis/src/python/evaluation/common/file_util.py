@@ -64,8 +64,10 @@ def get_restricted_extension(file_path: Optional[Union[str, Path]] = None,
 
 def extension_file_condition(extension: Union[Extension, AnalysisExtension]) -> ItemCondition:
     def has_this_extension(name: str) -> bool:
-        return Extension.get_extension_from_file(name) == extension or AnalysisExtension.get_extension_from_file(
-            name) == extension
+        try:
+            return AnalysisExtension.get_extension_from_file(name) == extension
+        except ValueError:
+            return False
 
     return has_this_extension
 
