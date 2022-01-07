@@ -17,3 +17,5 @@ class ObjectClass(str, Enum):
 
 class HyperskillPlatform:
     BASE_URL = 'https://hyperskill.org'
+    CLIENT_ID = 'HYPERSKILL_CLIENT_ID'
+    CLIENT_SECRET = 'HYPERSKILL_CLIENT_SECRET'

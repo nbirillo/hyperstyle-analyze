@@ -8,7 +8,7 @@ from analysis.src.python.data_collection.hyperskill.hyperskill_objects import Hy
 
 @dataclass
 class SubmissionRequestParams(BaseRequestParams):
-    step: Optional[int] = None
+    step: Optional[List[int]] = None
     user: Optional[int] = None
 
 

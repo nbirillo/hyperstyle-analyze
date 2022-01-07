@@ -1,5 +1,6 @@
 import argparse
 import sys
+from typing import List
 
 import pandas as pd
 
@@ -32,6 +33,14 @@ def configure_parser() -> argparse.ArgumentParser:
     return parser
 
 
+def get_object_ids_from_file(scv_file_path: str, column_name: str) -> List[int]:
+    """
+    Get ids from scv file column. Method is useful when extra information is required for some subset of objects,
+    which are already used in existing dataset (e.x. dataset of solutions).
+    """
+    return list(pd.read_csv(scv_file_path)[column_name].unique().values)
+
+
 if __name__ == '__main__':
 
     parser = configure_parser()
@@ -39,9 +48,11 @@ if __name__ == '__main__':
 
     platform = Platform(args.platform)
     client = platform_client[platform]()
+
     if args.ids is not None:
         ids = args.ids
     else:
-        ids = list(pd.read_csv(args.ids_from_file)[args.ids_from_column].unique().values)
+        ids = get_object_ids_from_file(args.ids_from_file, args.ids_from_column)
+
     objects = client.get_objects(args.object, ids, args.count)
     save_objects_to_csv(args.output, objects, args.object)
