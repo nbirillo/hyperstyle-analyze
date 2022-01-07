@@ -17,10 +17,10 @@ platform_client = {
 def configure_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--platform', '-p', type=str, help='platform to collect data from',
+    parser.add_argument('platform', type=str, help='platform to collect data from',
                         choices=Platform.values(), required=True)
 
-    parser.add_argument('--object', '-o', type=str,
+    parser.add_argument('object', type=str,
                         help='objects to request from platform (can be defaults like `step`, '
                              '`user` of custom like `java`)', required=True)
     parser.add_argument('--ids', '-i', nargs='*', type=int, default=None, help='ids of requested objects')
