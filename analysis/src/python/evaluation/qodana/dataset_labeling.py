@@ -30,6 +30,7 @@ logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 TEMPLATE_FOLDER = Path(__file__).parents[3] / 'resources' / 'evaluation' / 'qodana' / 'project_templates'
+PROFILE_FOLDER = Path(__file__).parents[3] / 'resources' / 'evaluation' / 'qodana' / 'inspection_profiles'
 JAVA_QODANA_IMAGE_PATH = 'jetbrains/qodana'
 PYTHON_QODANA_IMAGE_PATH = 'jetbrains/qodana-python'
 
@@ -248,8 +249,10 @@ class DatasetLabel:
     def _run_qodana(project_dir: Path, results_dir: Path, language: LanguageVersion) -> None:
         if language.is_java():
             qodana_image_path = JAVA_QODANA_IMAGE_PATH
+            profile_path = PROFILE_FOLDER / 'java_profile.xml'
         elif language == LanguageVersion.PYTHON_3:
             qodana_image_path = PYTHON_QODANA_IMAGE_PATH
+            profile_path = PROFILE_FOLDER / 'python_profile.xml'
         else:
             raise NotImplementedError(f'{language} needs implementation.')
 
@@ -261,6 +264,7 @@ class DatasetLabel:
             '--rm',
             '-v', f'{project_dir}/:/data/project/',
             '-v', f'{results_dir}/:/data/results/',
+            '-v', f'{profile_path}:/data/profile.xml',
             f'{qodana_image_path}',
         ]
         run_and_wait(command)
