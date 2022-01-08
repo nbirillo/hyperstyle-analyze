@@ -20,21 +20,19 @@ To batch hyperstyle run you need to:
       flag1: value1
       flag2: value2
     ```
-2. Run batch_processing.py 
-   ```shell
-   python3 batch_processing.py [-h] [--batch-size [BATCH_SIZE]] [--start-from [START_FROM]] input output config
+2. Run [batch_processing.py](batch_processing.py) with arguments
    
-   positional arguments:
-     input                 path to the csv file with data to process
-     output                path to the output directory
-     config                path to the script config to run under batching
+   Positional arguments:
    
-   optional arguments:
-     -h, --help            show this help message and exit
-     --batch-size [BATCH_SIZE]
-                           batch size for data
-     --start-from [START_FROM]
-                           index of batch to start processing from
+   | Argument | Description |
+   |--- | --- |
+   |**input**| Path to the csv file with data to process. |
+   |**output**| Path to the output directory. |
+   |**config**| Path to the script config to run under batching. |
+
+   Optional arguments:
    
-   ```
-         
+   | Argument | Description |
+   |--- | --- |
+   |**&#8209;&#8209;batch-size**| Batch size for data processing (1000 by default). |
+   |**&#8209;&#8209;start-from**| Index of batch to start processing from (0 by default). |
