@@ -13,12 +13,13 @@ Steps are available by API requests, described at
     https://stepic.org/api/docs/#!/steps
 """
 
+
 @dataclass
 class StepRequestParams(BaseRequestParams):
     pass
 
 
-@dataclass
+@dataclass(frozen=True)
 class Block:
     name: Optional[str]
     text: Optional[str]
@@ -26,7 +27,7 @@ class Block:
     subtitle_files: Optional[List[str]]
 
 
-@dataclass
+@dataclass(frozen=True)
 class Step(Object):
     id: int
     lesson: str
@@ -60,10 +61,10 @@ class Step(Object):
     url: str = field(init=False)
 
     def __post_init__(self):
-        self.url = f'{StepikPlatform.BASE_URL}/lesson/{self.lesson}/step/{self.id}'
+        object.__setattr__(self, 'url', f'{StepikPlatform.BASE_URL}/lesson/{self.lesson}/step/{self.id}')
 
 
-@dataclass
+@dataclass(frozen=True)
 class StepsResponse(ObjectResponse[Step]):
     steps: List[Step]
 

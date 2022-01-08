@@ -20,7 +20,7 @@ class TracksRequestParams(BaseRequestParams):
     pass
 
 
-@dataclass
+@dataclass(frozen=True)
 class ProjectsByLevel:
     easy: List[int] = field(default_factory=list)
     medium: List[int] = field(default_factory=list)
@@ -28,7 +28,7 @@ class ProjectsByLevel:
     nightmare: List[int] = field(default_factory=list)
 
 
-@dataclass
+@dataclass(frozen=True)
 class Track(Object):
     id: int
     title: str
@@ -47,13 +47,14 @@ class Track(Object):
     careers: str
     root_topic_id: Optional[int]
     type: Optional[str]
+
     url: str = field(init=False)
 
     def __post_init__(self):
-        self.url = f'{HyperskillPlatform.BASE_URL}/tracks/{self.id}'
+        object.__setattr__(self, 'url', f'{HyperskillPlatform.BASE_URL}/tracks/{self.id}')
 
 
-@dataclass
+@dataclass(frozen=True)
 class TracksResponse(ObjectResponse[Track]):
     tracks: List[Track]
 

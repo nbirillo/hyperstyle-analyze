@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List, Optional
 
 from analysis.src.python.data_collection.api.platform_objects import BaseRequestParams, Object, ObjectResponse
@@ -20,7 +20,7 @@ class TopicsRequestParams(BaseRequestParams):
     pass
 
 
-@dataclass
+@dataclass(frozen=True)
 class Topic(Object):
     id: int
     children: List[int]
@@ -41,11 +41,13 @@ class Topic(Object):
     parent_id: Optional[int]
     verification_step: Optional[int]
 
+    url: str = field(init=False)
+
     def __post_init__(self):
-        self.url = f'{HyperskillPlatform.BASE_URL}/topics/{self.id}'
+        object.__setattr__(self, 'url', f'{HyperskillPlatform.BASE_URL}/topics/{self.id}')
 
 
-@dataclass
+@dataclass(frozen=True)
 class TopicsResponse(ObjectResponse[Topic]):
     topics: List[Topic]
 

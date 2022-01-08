@@ -18,7 +18,7 @@ class UserRequestParams(BaseRequestParams):
     pass
 
 
-@dataclass
+@dataclass(frozen=True)
 class User(Object):
     id: int
     profile: str
@@ -50,10 +50,10 @@ class User(Object):
     url: str = field(init=False)
 
     def __post_init__(self):
-        self.url = f'{StepikPlatform.BASE_URL}/users/{self.id}'
+        object.__setattr__(self, 'url', f'{StepikPlatform.BASE_URL}/users/{self.id}')
 
 
-@dataclass
+@dataclass(frozen=True)
 class UsersResponse(ObjectResponse[User]):
     users: List[User]
 

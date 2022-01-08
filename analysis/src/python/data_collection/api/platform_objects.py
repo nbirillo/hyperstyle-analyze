@@ -13,7 +13,7 @@ class Platform(str, Enum):
         return list(map(lambda c: c.value, cls))
 
 
-@dataclass
+@dataclass(frozen=True)
 class Object:
     pass
 
@@ -25,7 +25,7 @@ class BaseRequestParams:
     ids: Optional[List[int]] = None
 
 
-@dataclass
+@dataclass(frozen=True)
 class Meta:
     page: int
     has_next: bool
@@ -35,7 +35,7 @@ class Meta:
 T = TypeVar('T', bound='Object')
 
 
-@dataclass
+@dataclass(frozen=True)
 class ObjectResponse(Generic[T]):
     meta: Meta
 

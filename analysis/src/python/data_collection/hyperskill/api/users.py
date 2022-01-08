@@ -1,5 +1,5 @@
 import datetime
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import List, Optional
 
 from analysis.src.python.data_collection.api.platform_objects import BaseRequestParams, Object, ObjectResponse
@@ -19,7 +19,7 @@ class UserRequestParams(BaseRequestParams):
     pass
 
 
-@dataclass
+@dataclass(frozen=True)
 class Gamification:
     active_days: int
     daily_step_completed_count: int
@@ -29,7 +29,7 @@ class Gamification:
     progress_updated_at: Optional[datetime.datetime]
 
 
-@dataclass
+@dataclass(frozen=True)
 class CommentsPosted:
     comment: Optional[int]
     hint: Optional[int]
@@ -37,7 +37,7 @@ class CommentsPosted:
     solutions: Optional[int]
 
 
-@dataclass
+@dataclass(frozen=True)
 class User(Object):
     id: int
     avatar: str
@@ -60,11 +60,13 @@ class User(Object):
     facebook_username: Optional[str]
     discord_id: Optional[str]
 
+    url: str = field(init=False)
+
     def __post_init__(self):
-        self.url = f'{HyperskillPlatform.BASE_URL}/profile/{self.id}'
+        object.__setattr__(self, 'url', f'{HyperskillPlatform.BASE_URL}/profile/{self.id}')
 
 
-@dataclass
+@dataclass(frozen=True)
 class UserResponse(ObjectResponse[User]):
     users: List[User]
 

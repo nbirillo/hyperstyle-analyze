@@ -18,7 +18,7 @@ class SubmissionRequestParams(BaseRequestParams):
     pass
 
 
-@dataclass
+@dataclass(frozen=True)
 class Submission(Object):
     id: int
     status: str
@@ -33,7 +33,7 @@ class Submission(Object):
     eta: int
 
 
-@dataclass
+@dataclass(frozen=True)
 class SubmissionsResponse(ObjectResponse[Submission]):
     submissions: List[Submission]
 

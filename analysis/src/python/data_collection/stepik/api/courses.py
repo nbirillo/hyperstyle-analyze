@@ -17,7 +17,7 @@ class CourseRequestParams(BaseRequestParams):
     pass
 
 
-@dataclass
+@dataclass(frozen=True)
 class Course(Object):
     id: int
     summary: str
@@ -43,13 +43,14 @@ class Course(Object):
     videos_duration: int
     time_to_complete: Optional[int]
     language: str
+
     url: str = field(init=False)
 
     def __post_init__(self):
-        self.url = f'{StepikPlatform.BASE_URL}/course/{self.id}/promo'
+        object.__setattr__(self, 'url', f'{StepikPlatform.BASE_URL}/course/{self.id}/promo')
 
 
-@dataclass
+@dataclass(frozen=True)
 class CoursesResponse(ObjectResponse[Course]):
     courses: List[Course]
 

@@ -20,7 +20,7 @@ class StepsRequestParams(BaseRequestParams):
     topic: Optional[int] = None
 
 
-@dataclass
+@dataclass(frozen=True)
 class Options:
     task_type: Optional[str]
     lesson_type: Optional[str]
@@ -29,27 +29,27 @@ class Options:
     description_format: Optional[str]
 
 
-@dataclass
+@dataclass(frozen=True)
 class Block:
     name: str
     text: str
     options: Options
 
 
-@dataclass
+@dataclass(frozen=True)
 class CommentStatistics:
     thread: str
     total_count: int
 
 
-@dataclass
+@dataclass(frozen=True)
 class LikesStatistics:
     subject: str
     value: int
     total_count: int
 
 
-@dataclass
+@dataclass(frozen=True)
 class Step(Object):
     block: Block
     bloom_level: int
@@ -94,10 +94,10 @@ class Step(Object):
     url: str = field(init=False)
 
     def __post_init__(self):
-        self.url = f'{HyperskillPlatform.BASE_URL}/learn/step/{self.id}'
+        object.__setattr__(self, 'url', f'{HyperskillPlatform.BASE_URL}/learn/step/{self.id}')
 
 
-@dataclass
+@dataclass(frozen=True)
 class StepsResponse(ObjectResponse[Step]):
     steps: List[Step]
 

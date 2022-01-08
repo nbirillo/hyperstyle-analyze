@@ -19,7 +19,7 @@ class ProjectsRequestParams(BaseRequestParams):
     pass
 
 
-@dataclass
+@dataclass(frozen=True)
 class Project(Object):
     id: int
     title: str
@@ -44,10 +44,10 @@ class Project(Object):
     tracks: Dict[str, Dict[str, str]] = field(default_factory=dict)
 
     def __post_init__(self):
-        self.url = f'{HyperskillPlatform.BASE_URL}/projects/{self.id}'
+        object.__setattr__(self, 'url', f'{HyperskillPlatform.BASE_URL}/projects/{self.id}')
 
 
-@dataclass
+@dataclass(frozen=True)
 class ProjectsResponse(ObjectResponse[Project]):
     projects: List[Project]
 

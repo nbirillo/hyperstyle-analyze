@@ -12,12 +12,13 @@ Lessons are available by API requests, described at
     https://stepic.org/api/docs/#!/lessons
 """
 
+
 @dataclass
 class LessonRequestParams(BaseRequestParams):
     pass
 
 
-@dataclass
+@dataclass(frozen=True)
 class Lesson(Object):
     id: int
     steps: List[int]
@@ -63,10 +64,10 @@ class Lesson(Object):
     url: str = field(init=False)
 
     def __post_init__(self):
-        self.url = f'{StepikPlatform.BASE_URL}/lesson/{self.id}'
+        object.__setattr__(self, 'url', f'{StepikPlatform.BASE_URL}/lesson/{self.id}')
 
 
-@dataclass
+@dataclass(frozen=True)
 class LessonsResponse(ObjectResponse[Lesson]):
     lessons: List[Lesson]
 

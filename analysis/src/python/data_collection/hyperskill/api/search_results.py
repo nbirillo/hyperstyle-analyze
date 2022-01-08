@@ -19,7 +19,7 @@ class SearchResultsRequestParams(BaseRequestParams):
     include_projects: bool = True
 
 
-@dataclass
+@dataclass(frozen=True)
 class SearchResult(Object):
     target_id: int
     target_type: str
@@ -27,7 +27,7 @@ class SearchResult(Object):
     score: float
 
 
-@dataclass
+@dataclass(frozen=True)
 class SearchResultsResponse(ObjectResponse[SearchResult]):
     search_results: List[SearchResult]
 

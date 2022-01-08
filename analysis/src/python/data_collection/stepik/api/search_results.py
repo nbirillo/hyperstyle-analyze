@@ -11,6 +11,7 @@ Search can be done using API request, described at
     https://stepic.org/api/docs/#!/search-results
 """
 
+
 @dataclass
 class SearchResultsRequestParams(BaseRequestParams):
     query: str = ""
@@ -18,7 +19,7 @@ class SearchResultsRequestParams(BaseRequestParams):
     type: str = "course"
 
 
-@dataclass
+@dataclass(frozen=True)
 class SearchResult(Object):
     course: int
     course_title: str
@@ -32,7 +33,7 @@ class SearchResult(Object):
     course_cover: Optional[str]
 
 
-@dataclass
+@dataclass(frozen=True)
 class SearchResultsResponse(ObjectResponse[SearchResult]):
     search_results: List[SearchResult]
 

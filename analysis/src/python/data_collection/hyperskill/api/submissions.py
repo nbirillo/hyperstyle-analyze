@@ -1,6 +1,6 @@
 import datetime
-from dataclasses import dataclass
-from typing import List, Optional
+from dataclasses import dataclass, field
+from typing import List, Optional, Union
 
 from analysis.src.python.data_collection.api.platform_objects import BaseRequestParams, Object, ObjectResponse
 from analysis.src.python.data_collection.hyperskill.hyperskill_objects import HyperskillPlatform
@@ -21,19 +21,19 @@ class SubmissionRequestParams(BaseRequestParams):
     user: Optional[int] = None
 
 
-@dataclass
+@dataclass(frozen=True)
 class Reply:
     language: str
     code: str
 
 
-@dataclass
+@dataclass(frozen=True)
 class Quality:
     code: str
     text: str
 
 
-@dataclass
+@dataclass(frozen=True)
 class Error:
     code: str
     text: str
@@ -45,24 +45,24 @@ class Error:
     influence_on_penalty: int
 
 
-@dataclass
+@dataclass(frozen=True)
 class CodeStyle:
     quality: Quality
     errors: List[Error]
 
 
-@dataclass
+@dataclass(frozen=True)
 class Feedback:
     message: str
     code_style: CodeStyle
 
 
-@dataclass
+@dataclass(frozen=True)
 class Submission(Object):
     id: int
     attempt: int
     eta: int
-    feedback: Optional[Feedback]
+    feedback: Optional[Union[str, Feedback]]
     hint: str
     reply: Optional[Reply]
     initial_status: str
@@ -79,11 +79,13 @@ class Submission(Object):
     solving_context: str
     is_published: bool
 
+    url: str = field(init=False)
+
     def __post_init__(self):
-        self.url = f'{HyperskillPlatform.BASE_URL}/submissions/{self.id}'
+        object.__setattr__(self, 'url', f'{HyperskillPlatform.BASE_URL}/submissions/{self.id}')
 
 
-@dataclass
+@dataclass(frozen=True)
 class SubmissionResponse(ObjectResponse[Submission]):
     submissions: List[Submission]
 
