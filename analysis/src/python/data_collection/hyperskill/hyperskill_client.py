@@ -22,10 +22,10 @@ class HyperskillClient(PlatformClient):
     for data exchange.
     """
 
-    def __init__(self):
+    def __init__(self, port: int = 8000):
         client_id = os.environ.get(HyperskillPlatform.CLIENT_ID)
         client_secret = os.environ.get(HyperskillPlatform.CLIENT_SECRET)
-        super().__init__(HyperskillPlatform.BASE_URL, client_id, client_secret)
+        super().__init__(HyperskillPlatform.BASE_URL, client_id, client_secret, port)
 
         self._get_objects_by_class: Dict[
             ObjectClass, Callable[[Optional[List[int]], Optional[int]], List[Object]]] = {

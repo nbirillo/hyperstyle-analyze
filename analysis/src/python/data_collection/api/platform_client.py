@@ -17,17 +17,18 @@ T = TypeVar('T', bound=Object)
 class PlatformClient:
     """ Base class for Hyperskill and Stepik clients which wraps data exchange process according to open APIs. """
 
-    def __init__(self, host: str, client_id: str, client_secret: str):
+    def __init__(self, host: str, client_id: str, client_secret: str, port: int):
         self.host = host
         self.client_id = client_id
         self.client_secret = client_secret
+        self.port = port
         self.token = self._get_authentication_code_token()
 
     def _get_authentication_code_token(self):
         """ Runs authorization process using authentication-code grant type and
         gets session token for data exchange. """
 
-        server = OauthServer(self.host, self.client_id, self.client_secret)
+        server = OauthServer(self.host, self.client_id, self.client_secret, self.port)
         server.open_oauth_page()
         return server.get_token()
 

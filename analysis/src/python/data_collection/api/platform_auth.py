@@ -24,7 +24,7 @@ class OauthHandler(BaseHTTPRequestHandler):
             data={
                 'grant_type': 'authorization_code',
                 'code': code,
-                'redirect_uri': 'http://localhost:8000'
+                'redirect_uri': 'http://localhost:{port}'.format(port=self.server.port)
             },
             auth=auth
         )
@@ -40,12 +40,13 @@ class OauthServer(HTTPServer):
     """ Server initiate authorization process by opening authorization page
     and handling authorization request using OauthHandler."""
 
-    def __init__(self, platform_host: str, client_id: str, client_secret: str):
+    def __init__(self, platform_host: str, client_id: str, client_secret: str, port: int):
         self.platform_host = platform_host
         self.platform_token = None
         self.client_id = client_id
         self.client_secret = client_secret
-        super().__init__(('', 8000), OauthHandler)
+        self.port = port
+        super().__init__(('', port), OauthHandler)
 
     def open_oauth_page(self):
         """ Open authorization page. """

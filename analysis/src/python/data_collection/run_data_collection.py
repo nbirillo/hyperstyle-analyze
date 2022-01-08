@@ -29,6 +29,7 @@ def configure_parser() -> argparse.ArgumentParser:
     parser.add_argument('--count', '-cnt', type=int, default=None, help='count of requested objects')
     parser.add_argument('--output', '-out', type=str, default='results',
                         help='path to directory where to save the results')
+    parser.add_argument('--port', '-p', type=int, default=8000, help='port to run authorization server at')
     return parser
 
 
