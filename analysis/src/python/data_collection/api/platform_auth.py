@@ -24,9 +24,9 @@ class OauthHandler(BaseHTTPRequestHandler):
             data={
                 'grant_type': 'authorization_code',
                 'code': code,
-                'redirect_uri': 'http://localhost:{port}'.format(port=self.server.port)
+                'redirect_uri': 'http://localhost:{port}'.format(port=self.server.port),
             },
-            auth=auth
+            auth=auth,
         )
 
         self.send_response(200)
