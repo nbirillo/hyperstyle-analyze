@@ -1,7 +1,29 @@
 ## Stepik and Hyperskill data collection
 
 This module contains client for Stepik and Hyperskill. This educational platforms provides open APIs with information
-about platforms' objects such as steps, courses, tracks, projects, etc.
+about platforms' objects.
+This module use platforms' APIs to extract information about following entities from educational platforms:
+
+[Hyperskill](https://hyperskill.org/api/docs/): 
+
+| Entity | Description |
+|----------|-------------|
+| step | Task where user needs to solve a problem or answer a question. |
+| topic | Theme or knowledge area of steps. Several steps can be related to one topic. Topics have hierarchy (every topic have several prerequisite topics) and form the topics tree. |
+| track | Series of steps to get knowledge on some specific theme (programming language, data analysis, ect.). |
+| project | Big task with supportive steps to reach the final result and learn how to implement it. |  
+| user | Registered people on platform. |
+| submission | User's attempt to solve the step's task and platform's feedback on this solution. |
+
+[Stepik](https://stepik.org/api/docs/):
+
+| Entity | Description |
+|----------|-------------|
+| step | Task where user needs to solve a problem or answer a question. |
+| lesson | Series os steps grouped in one section. |
+| course | Series os lessons. | 
+| user | Registered people on platform. |
+| submission | User's attempt to solve the step's task and platform's feedback on this solution. |
 
 To get data from the education platforms, configure and run [run_data_collection.py](run_data_collection.py) 
 from command line with following arguments:

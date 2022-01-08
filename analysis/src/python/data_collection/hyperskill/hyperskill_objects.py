@@ -1,6 +1,7 @@
-from enum import Enum
+from enum import Enum, unique
 
 
+@unique
 class ObjectClass(str, Enum):
     STEP = 'step'
     SEARCH_RESULT = 'search-result'
