@@ -9,7 +9,7 @@ import requests
 class OauthHandler(BaseHTTPRequestHandler):
     """ Handler process authorization code request and ask platform for access token."""
 
-    def do_GET(self):
+    def do_GET(self):  # noqa: N802
         path = urlparse(self.path)
         query = parse_qs(path.query)
 

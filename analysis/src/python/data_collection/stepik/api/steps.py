@@ -8,7 +8,7 @@ from analysis.src.python.data_collection.stepik.stepik_objects import StepikPlat
 """
 This file contains classes, which describe step entity from Stepik platform. 
 Step is a task where user needs to solve a problem or answer a question.
-Steps are available by API requests, described at  
+Steps are available by API requests, described at
     https://stepic.org/api/docs/#!/steps
 """
 

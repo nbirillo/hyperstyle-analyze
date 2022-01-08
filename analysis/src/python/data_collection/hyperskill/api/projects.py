@@ -5,9 +5,9 @@ from analysis.src.python.data_collection.api.platform_objects import BaseRequest
 from analysis.src.python.data_collection.hyperskill.hyperskill_objects import HyperskillPlatform
 
 """
-This file contains classes, which describe project entity from Hyperskill platform. Project contains of big task with 
+This file contains classes, which describe project entity from Hyperskill platform. Project contains of big task with
 supportive steps to reach the final result and learn how to implement it.
-Projects are available by API requests, described at  
+Projects are available by API requests, described at
     https://hyperskill.org/api/docs/#projects-list
     https://hyperskill.org/api/docs/#projects-read
 """

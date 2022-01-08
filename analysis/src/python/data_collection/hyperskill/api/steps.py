@@ -6,9 +6,9 @@ from analysis.src.python.data_collection.api.platform_objects import BaseRequest
 from analysis.src.python.data_collection.hyperskill.hyperskill_objects import HyperskillPlatform
 
 """
-This file contains classes, which describe step entity from Hyperskill platform. 
+This file contains classes, which describe step entity from Hyperskill platform.
 Step is a task where user needs to solve a problem or answer a question.
-Steps are available by API requests, described at  
+Steps are available by API requests, described at
     https://hyperskill.org/api/docs/#steps-list
     https://hyperskill.org/api/docs/#steps-read
 """

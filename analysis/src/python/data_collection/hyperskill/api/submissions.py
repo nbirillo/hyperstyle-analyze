@@ -6,9 +6,9 @@ from analysis.src.python.data_collection.api.platform_objects import BaseRequest
 from analysis.src.python.data_collection.hyperskill.hyperskill_objects import HyperskillPlatform
 
 """
-This file contains classes, which describe submission entity from Hyperskill platform. 
+This file contains classes, which describe submission entity from Hyperskill platform.
 Submission is a user's attempt to solve the step's task and platform's feedback on this solution.
-Steps are available by API requests, described at  
+Steps are available by API requests, described at
     https://hyperskill.org/api/docs/#submissions-list
     https://hyperskill.org/api/docs/#submissions-read
 """

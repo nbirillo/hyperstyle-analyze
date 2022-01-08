@@ -7,7 +7,7 @@ from analysis.src.python.data_collection.stepik.stepik_objects import StepikPlat
 
 """
 This file contains classes, which describe lesson entity from Stepik platform. Lesson is a group of steps.
-Lessons are available by API requests, described at  
+Lessons are available by API requests, described at
     https://stepic.org/api/docs/#!/lessons
 """
 
