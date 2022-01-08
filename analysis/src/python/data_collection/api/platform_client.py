@@ -6,6 +6,7 @@ from typing import Dict, List, Optional, Type, TypeVar
 import requests
 from dacite import Config, from_dict
 
+from analysis.src.python.data_collection.api.platform_auth import OauthServer
 from analysis.src.python.data_collection.api.platform_objects import BaseRequestParams, Object, ObjectResponse
 from analysis.src.python.data_collection.api.utils import str_to_datetime
 from analysis.src.python.data_collection.utils.json_utils import kebab_to_snake_case
@@ -14,22 +15,35 @@ T = TypeVar('T', bound=Object)
 
 
 class PlatformClient:
-    """ Base class for hyperskill and stepik clients which wraps data exchange process according to open APIs. """
+    """ Base class for Hyperskill and Stepik clients which wraps data exchange process according to open APIs. """
 
     def __init__(self, host: str, client_id: str, client_secret: str):
         self.host = host
-        self.token = self._get_token(host, client_id, client_secret)
+        self.client_id = client_id
+        self.client_secret = client_secret
+        self.token = self._get_authentication_code_token()
 
-    @staticmethod
-    def _get_token(host: str, client_id: str, client_secret: str) -> str:
-        auth = requests.auth.HTTPBasicAuth(client_id, client_secret)
-        response = requests.post('{host}/oauth2/token/'.format(host=host),
+    def _get_authentication_code_token(self):
+        """ Runs authorization process using authentication-code grant type and
+        gets session token for data exchange. """
+
+        server = OauthServer(self.host, self.client_id, self.client_secret)
+        server.open_oauth_page()
+        return server.get_token()
+
+    def _get_client_credential_token(self) -> str:
+        """ Runs authorization process using client-credential grant type and
+        gets session token for data exchange. """
+
+        auth = requests.auth.HTTPBasicAuth(self.client_id, self.client_secret)
+        response = requests.post('{host}/oauth2/token/'.format(host=self.host),
                                  data={'grant_type': 'client_credentials'},
                                  auth=auth)
         token = response.json().get('access_token', None)
         if not token:
             logging.error('Unable to authorize with provided credentials')
             exit(1)
+        logging.info(f'Got token: {token}')
         return token
 
     def _get_objects(self,
@@ -38,10 +52,8 @@ class PlatformClient:
                      params: BaseRequestParams,
                      obj_id: Optional[int] = None,
                      count: Optional[int] = None) -> List[T]:
-        """
-        Get objects (steps, topics, ect.) from platform by given `obj_class` and `params`.
-        To parse response of platform `obj_response_type` parametrized with `obj_type` is used.
-        """
+        """ Get objects (steps, topics, ect.) from platform by given `obj_class`, `params` and `obj_id`."""
+
         objects = []
         page = 1
         while count is None or len(objects) < count:
@@ -71,10 +83,8 @@ class PlatformClient:
                             obj_response_type: Type[ObjectResponse[T]],
                             params: BaseRequestParams,
                             count: Optional[int] = None) -> List[T]:
-        """
-        Get objects (steps, topics, ect.) from platform by given `obj_class`, `obj_ids` and `params`.
-        To parse response of platform `obj_response_type` parametrized with `obj_type` is used.
-        """
+        """ Get objects (steps, topics, ect.) from platform by given `obj_class`, `params` and `obj_ids`."""
+
         objects = []
         for obj_id in obj_ids:
             objects += self._get_objects(obj_class, obj_response_type, params, obj_id)
@@ -83,7 +93,11 @@ class PlatformClient:
 
         return objects
 
-    def _prepare_params(self, params: BaseRequestParams) -> Dict:
+    @staticmethod
+    def _prepare_params(params: BaseRequestParams) -> Dict[str, str]:
+        """ Prepare request params. Remove None params and convert list request values to string objects,
+        separated by comma. """
+
         dict_params = {}
         for key, value in asdict(params).items():
             if value is None:
@@ -98,6 +112,8 @@ class PlatformClient:
                params: BaseRequestParams,
                obj_response_type: Type[ObjectResponse[T]],
                obj_id: Optional[int] = None) -> Optional[ObjectResponse[T]]:
+        """ Builds, executed and processes request to educational platform.
+        Response is parsed to `obj_response_type`."""
 
         dict_params = self._prepare_params(params)
         api_url = '{host}/api/{obj_class}s'.format(host=self.host, obj_class=obj_class)
@@ -105,7 +121,7 @@ class PlatformClient:
         if obj_id is not None:
             api_url = '{url}/{obj_id}'.format(url=api_url, obj_id=obj_id)
         if self.token is not None:
-            raw_response = requests.get(api_url, headers={'Authorization': 'Token {token}'.format(token=self.token)},
+            raw_response = requests.get(api_url, headers={'Authorization': 'Bearer {token}'.format(token=self.token)},
                                         data=dict_params, timeout=None)
         else:
             raw_response = requests.get(api_url, data=dict_params, timeout=None)

@@ -8,9 +8,12 @@ from command line with following arguments:
 ### Configure:
 
 1. For platforms api usage you need to create authorize. Create an application in [https://hyperskill.org/oauth2/applications/](https://hyperskill.org/oauth2/applications/) for 
-   hyperskill client usage and in [https://stepik.org/oauth2/applications/](https://stepik.org/oauth2/applications/) for stepik.
-2. After application created you will get your client id and client secret. Set them to environment variables 
-   `HYPERSKILL_CLIENT_ID` and `HYPERSKILL_CLIENT_SECRET`.
+   hyperskill client usage and in [https://stepik.org/oauth2/applications/](https://stepik.org/oauth2/applications/) for stepik:
+   * `Client type` --`Confidentional`
+   * `Authorization grant type` --`Authorization Code`
+   * `Authorization grant type` --`http://localhost:8000`
+2. After application created you will see your `Client id` and `Client secret`. Set them to environment variables 
+   `HYPERSKILL_CLIENT_ID` and `HYPERSKILL_CLIENT_SECRET` for hyperskill or `STEPIK_CLIENT_ID` and `STEPIK_CLIENT_SECRET`.
    
 For more information about api go to [hyperskill api documentation](https://hyperskill.org/api/docs/) or [stepik api documentation](https://stepik.org/api/docs/).
    
@@ -32,3 +35,6 @@ For more information about api go to [hyperskill api documentation](https://hype
 | **&#8209;&#8209;ids_from_column** | Column in `.csv` file defined by **&#8209;&#8209;ids_from_file** to get ids from. |
 | **&#8209;&#8209;count** | Count of requested objects. |
 | **&#8209;o**, **&#8209;&#8209;output** | Path to directory where to save the results. |
+
+For using API you need to be authorized in Hyperskill/Stepik. When the information gathering will start, you will see the authorization page.
+Check your `name` and `user id` and press `Authorize` button. 

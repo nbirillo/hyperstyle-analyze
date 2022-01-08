@@ -45,7 +45,7 @@ class CodeStyle:
 @dataclass
 class Feedback:
     message: str
-    code_style: str
+    code_style: CodeStyle
 
 
 @dataclass

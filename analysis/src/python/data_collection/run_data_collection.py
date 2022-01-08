@@ -1,4 +1,5 @@
 import argparse
+import logging
 import sys
 from typing import List
 
@@ -18,12 +19,10 @@ platform_client = {
 def configure_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('platform', type=str, help='platform to collect data from',
-                        choices=Platform.values(), required=True)
+    parser.add_argument('platform', type=str, help='platform to collect data from', choices=Platform.values())
 
     parser.add_argument('object', type=str,
-                        help='objects to request from platform (can be defaults like `step`, '
-                             '`user` of custom like `java`)', required=True)
+                        help='objects to request from platform (can be defaults like `step`or custom like `java`'),
     parser.add_argument('--ids', '-i', nargs='*', type=int, default=None, help='ids of requested objects')
     parser.add_argument('--ids_from_file', '-f', type=str, default=None, help='csv file to get ids from')
     parser.add_argument('--ids_from_column', '-c', type=str, default=None, help='column in csv file to get ids from')
@@ -41,6 +40,8 @@ def get_object_ids_from_file(scv_file_path: str, column_name: str) -> List[int]:
     return list(pd.read_csv(scv_file_path)[column_name].unique().values)
 
 
+logging.basicConfig(level=logging.DEBUG)
+
 if __name__ == '__main__':
 
     parser = configure_parser()
@@ -51,8 +52,10 @@ if __name__ == '__main__':
 
     if args.ids is not None:
         ids = args.ids
-    else:
+    elif args.ids_from_file is not None and args.ids_from_column is not None:
         ids = get_object_ids_from_file(args.ids_from_file, args.ids_from_column)
+    else:
+        ids = None
 
     objects = client.get_objects(args.object, ids, args.count)
     save_objects_to_csv(args.output, objects, args.object)
