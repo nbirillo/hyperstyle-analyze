@@ -7,7 +7,6 @@ from analysis.src.python.data_collection.hyperskill.hyperskill_objects import Hy
 
 """
 This file contains classes, which describe user entity from Hyperskill platform. 
-
 Users information is available by API requests, described at  
     https://hyperskill.org/api/docs/#users-list
     https://hyperskill.org/api/docs/#users-read

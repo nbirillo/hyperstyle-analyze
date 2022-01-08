@@ -7,7 +7,6 @@ from analysis.src.python.data_collection.hyperskill.hyperskill_objects import Hy
 """
 This file contains classes, which describe project entity from Hyperskill platform. Project contains of big task with 
 supportive steps to reach the final result and learn how to implement it.
-
 Projects are available by API requests, described at  
     https://hyperskill.org/api/docs/#projects-list
     https://hyperskill.org/api/docs/#projects-read

@@ -7,8 +7,6 @@ from analysis.src.python.data_collection.hyperskill.hyperskill_objects import Hy
 """
 This file contains classes, which describe track entity from Hyperskill platform. 
 Track is a series of steps to get knowledge on some specific theme (programming language, data analysis, ect.). 
-
-
 Tracks are available by API requests, described at  
     https://hyperskill.org/api/docs/#tracks-list
     https://hyperskill.org/api/docs/#tracks-read

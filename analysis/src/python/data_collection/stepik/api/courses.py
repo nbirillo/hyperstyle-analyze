@@ -6,7 +6,6 @@ from analysis.src.python.data_collection.stepik.stepik_objects import StepikPlat
 
 """
 This file contains classes, which describe course entity from Stepik platform. Course is a group of lessons.
-
 Courses are available by API requests, described at  
     https://stepic.org/api/docs/#!/courses
 """

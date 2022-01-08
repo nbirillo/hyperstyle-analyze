@@ -8,7 +8,6 @@ from analysis.src.python.data_collection.hyperskill.hyperskill_objects import Hy
 This file contains classes, which describe topic entity from Hyperskill platform. 
 Topic is a theme of knowledge area of steps. Several steps can be related to one topic. Topics have hierarchy 
 (every topic have several prerequisite topics) and form the topics tree.
-
 Topics are available by API requests, described at  
     https://hyperskill.org/api/docs/#topics-list
     https://hyperskill.org/api/docs/#topics-read

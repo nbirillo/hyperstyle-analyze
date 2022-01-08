@@ -22,7 +22,7 @@ def configure_parser() -> argparse.ArgumentParser:
     parser.add_argument('platform', type=str, help='platform to collect data from', choices=Platform.values())
 
     parser.add_argument('object', type=str,
-                        help='objects to request from platform (can be defaults like `step`or custom like `java`'),
+                        help='objects to request from platform (can be defaults like `step`or custom like `java`')
     parser.add_argument('--ids', '-i', nargs='*', type=int, default=None, help='ids of requested objects')
     parser.add_argument('--ids_from_file', '-f', type=str, default=None, help='csv file to get ids from')
     parser.add_argument('--ids_from_column', '-c', type=str, default=None, help='column in csv file to get ids from')
@@ -33,12 +33,12 @@ def configure_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def get_object_ids_from_file(scv_file_path: str, column_name: str) -> List[int]:
+def get_object_ids_from_file(csv_file_path: str, column_name: str) -> List[int]:
     """
     Get ids from scv file column. Method is useful when extra information is required for some subset of objects,
     which are already used in existing dataset (e.x. dataset of solutions).
     """
-    return list(pd.read_csv(scv_file_path)[column_name].unique().values)
+    return list(pd.read_csv(csv_file_path)[column_name].unique().values)
 
 
 logging.basicConfig(level=logging.DEBUG)

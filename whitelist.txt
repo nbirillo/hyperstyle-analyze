@@ -149,6 +149,7 @@ noqa
 nrows
 num
 numpy
+oauth
 onboarding
 oop
 openpyxl
@@ -175,6 +176,7 @@ pyast
 pylint
 qodana
 qodanadataset
+qs
 readouterr
 reddit
 reindex
@@ -221,7 +223,9 @@ varargs
 vline
 wandb
 warmup
+webbrowser
 webp
+wfile
 wmc
 wps
 writeheader
