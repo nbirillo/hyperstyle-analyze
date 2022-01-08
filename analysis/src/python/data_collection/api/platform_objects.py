@@ -40,4 +40,4 @@ class ObjectResponse(Generic[T]):
     meta: Meta
 
     def get_objects(self) -> List[T]:
-        pass
+        raise NotImplementedError
