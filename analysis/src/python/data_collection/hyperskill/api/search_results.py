@@ -3,6 +3,14 @@ from typing import List
 
 from analysis.src.python.data_collection.api.platform_objects import BaseRequestParams, Object, ObjectResponse
 
+"""
+This file contains classes, which describe entities related to search result in Hyperskill platform. 
+In platform there is search system there users can find objects related to their request.
+
+Search can be done using API request, described at  
+    https://hyperskill.org/api/docs/#search-results-list
+"""
+
 
 @dataclass
 class SearchResultsRequestParams(BaseRequestParams):

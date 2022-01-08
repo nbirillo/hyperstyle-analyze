@@ -5,6 +5,12 @@ from typing import List, Optional
 from analysis.src.python.data_collection.api.platform_objects import BaseRequestParams, Object, ObjectResponse
 from analysis.src.python.data_collection.stepik.stepik_objects import StepikPlatform
 
+"""
+This file contains classes, which describe lesson entity from Stepik platform. Lesson is a group of steps.
+
+Lessons are available by API requests, described at  
+    https://stepic.org/api/docs/#!/lessons
+"""
 
 @dataclass
 class LessonRequestParams(BaseRequestParams):

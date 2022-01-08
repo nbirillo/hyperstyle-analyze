@@ -5,6 +5,14 @@ from typing import List, Optional
 from analysis.src.python.data_collection.api.platform_objects import BaseRequestParams, Object, ObjectResponse
 from analysis.src.python.data_collection.hyperskill.hyperskill_objects import HyperskillPlatform
 
+"""
+This file contains classes, which describe user entity from Hyperskill platform. 
+
+Users information is available by API requests, described at  
+    https://hyperskill.org/api/docs/#users-list
+    https://hyperskill.org/api/docs/#users-read
+"""
+
 
 @dataclass
 class UserRequestParams(BaseRequestParams):

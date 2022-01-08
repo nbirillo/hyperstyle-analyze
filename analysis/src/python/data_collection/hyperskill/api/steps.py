@@ -5,6 +5,15 @@ from typing import List, Optional
 from analysis.src.python.data_collection.api.platform_objects import BaseRequestParams, Object, ObjectResponse
 from analysis.src.python.data_collection.hyperskill.hyperskill_objects import HyperskillPlatform
 
+"""
+This file contains classes, which describe step entity from Hyperskill platform. 
+Step is a task where user needs to solve a problem or answer a question.
+
+Steps are available by API requests, described at  
+    https://hyperskill.org/api/docs/#steps-list
+    https://hyperskill.org/api/docs/#steps-read
+"""
+
 
 @dataclass
 class StepsRequestParams(BaseRequestParams):

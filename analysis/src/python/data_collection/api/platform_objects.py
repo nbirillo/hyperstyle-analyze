@@ -1,8 +1,9 @@
 from dataclasses import dataclass
-from enum import Enum
+from enum import Enum, unique
 from typing import Generic, List, Optional, TypeVar
 
 
+@unique
 class Platform(str, Enum):
     HYPERSKILL = 'hyperskill'
     STEPIK = 'stepik'
