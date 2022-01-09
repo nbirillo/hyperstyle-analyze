@@ -1,6 +1,7 @@
-from enum import Enum
+from enum import Enum, unique
 
 
+@unique
 class StepColumns(str, Enum):
     ID = 'id'
     COMMENTS = 'comments_statistics'
@@ -19,8 +20,36 @@ class StepColumns(str, Enum):
     POPULAR_IDE = 'popular_ide'
     PROJECT = 'project'
     IS_IDE_COMPATIBLE = 'is_ide_compatible'
+    OPTIONS = 'options'
+    DEPTH = 'depth'
+
+    BLOCK = 'block'
+    TEXT = 'text'
+
+    HEADER_LINES_COUNT = 'code_templates_header_lines_count'
+    FOOTER_LINES_COUNT = 'code_templates_footer_lines_count'
+    HAS_TEMPLATE = 'has_template'
+    HAS_CONSTANT = 'has_constant'
+
+    COMPLEXITY = 'complexity'
+    DIFFICULTY = 'difficulty'
 
 
+@unique
+class Complexity(Enum):
+    SHALLOW = 'shallow'
+    MIDDLE = 'middle'
+    DEEP = 'deep'
+
+
+@unique
+class Difficulty(Enum):
+    EASY = 'easy'
+    MEDIUM = 'medium'
+    HARD = 'hard'
+
+
+@unique
 class TopicColumns(str, Enum):
     ID = 'id'
     CHILDREN = 'children'
@@ -56,6 +85,7 @@ class SubmissionColumns(str, Enum):
     QODANA_ISSUE_TYPE = 'type'
 
 
+@unique
 class SubmissionColumnsStats(str, Enum):
     ATTEMPTS = 'attempts'
     RAW_ISSUE_COUNT = 'raw_issues_count'
@@ -67,20 +97,24 @@ class SubmissionColumnsStats(str, Enum):
     LAST_SUFFIX = '_last'
 
 
+@unique
 class IssuesColumns(str, Enum):
     CLASS = 'class'
     TYPE = 'type'
 
 
+@unique
 class Client(str, Enum):
     WEB = 'web'
     IDEA = 'idea'
 
 
+@unique
 class UserColumns(str, Enum):
     ID = 'id'
     COMMENTS = 'comments_posted'
     GAMIFICATION = 'gamification'
+    LEVEL = 'level'
     # gamification
     ACTIVE_DAYS = 'active_days'
     DAILY_STEP_COMPLETED_COUNT = 'daily_step_completed_count'
@@ -92,3 +126,10 @@ class UserColumns(str, Enum):
     HINT = 'hint'
     USEFUL_LINK = 'useful_link'
     SOLUTIONS = 'solutions'
+
+
+@unique
+class Level(Enum):
+    LOW = 'low'
+    AVERAGE = 'average'
+    HIGH = 'high'

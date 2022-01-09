@@ -40,13 +40,12 @@ def get_issues_classes(issue_column_name: str,
 
 
 if __name__ == '__main__':
-
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('issues-type', type=str, help='Type of issues to analyse (can be raw or qodana).',
+    parser.add_argument('issues_type', type=str, help='Type of issues to analyse (can be raw or qodana).',
                         choices=[SubmissionColumns.RAW_ISSUES, SubmissionColumns.QODANA_ISSUES])
-    parser.add_argument('submissions-path', type=str, help='Path to .csv file with submissions with issues.')
-    parser.add_argument('issues-path', type=str, help='Path to .csv file where issues info will be saved')
+    parser.add_argument('submissions_path', type=str, help='Path to .csv file with submissions with issues.')
+    parser.add_argument('issues_path', type=str, help='Path to .csv file where issues info will be saved')
 
     args = parser.parse_args(sys.argv[1:])
 

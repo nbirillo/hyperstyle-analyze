@@ -100,16 +100,13 @@ def build_submission_series(submissions_path: str, output_path: str, diff_ration
 
 
 if __name__ == '__main__':
-    log = logging.getLogger()
-    log.setLevel(logging.DEBUG)
-
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('submissions-path', type=str,
+    parser.add_argument('submissions_path', type=str,
                         help='Path to .csv file with submissions.')
-    parser.add_argument('submissions-series-path', type=str,
+    parser.add_argument('submissions_series_path', type=str,
                         help='Path to .csv file with filtered submissions with series info.')
-    parser.add_argument('--diff_ratio', '-r', type=float, default=30.0,
+    parser.add_argument('--diff-ratio', '-r', type=float, default=30.0,
                         help='Ration to remove submissions which has lines change more then in `diff_ratio` times.')
 
     args = parser.parse_args(sys.argv[1:])

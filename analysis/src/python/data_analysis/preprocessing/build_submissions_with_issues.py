@@ -12,6 +12,8 @@ from analysis.src.python.data_analysis.utils.parsing_utils import parse_qodana_i
 
 
 def merge_submissions_with_issues(df_submissions: pd.Dataframe, df_issues: pd.Dataframe, issue_columns: str):
+    """ Merges submissions with issues. """
+
     df_issues = df_issues[[SubmissionColumns.ID, SubmissionColumns.RAW_ISSUES, SubmissionColumns.CODE]]
     df_submissions = merge_dfs(df_submissions, df_issues, SubmissionColumns.CODE, SubmissionColumns.CODE, how='left')
     df_submissions[issue_columns] = df_submissions[issue_columns].fillna(value=json.dumps([]))
@@ -29,13 +31,14 @@ def build_submissions_dataframe(submissions_path: str,
     df_submissions = read_df(submissions_path)
     logging.info(f'Finish readings submissions dataframe [shape: {df_submissions.shape}]')
 
-    logging.info(f'Reading submissions to users from: {submissions_to_users_path}')
-    df_submissions_to_users = read_df(submissions_to_users_path)
-    logging.info(f'Finish readings submissions to users dataframe [shape: {df_submissions_to_users.shape}]')
+    if submissions_to_users_path is not None:
+        logging.info(f'Reading submissions to users from: {submissions_to_users_path}')
+        df_submissions_to_users = read_df(submissions_to_users_path)
+        logging.info(f'Finish readings submissions to users dataframe [shape: {df_submissions_to_users.shape}]')
 
-    logging.info(f'Merging submissions with submissions to users')
-    df_submissions = merge_dfs(df_submissions, df_submissions_to_users, SubmissionColumns.ID, SubmissionColumns.ID)
-    logging.info(f'Finish merging submissions with submissions to users [shape: {df_submissions.shape}]')
+        logging.info(f'Merging submissions with submissions to users')
+        df_submissions = merge_dfs(df_submissions, df_submissions_to_users, SubmissionColumns.ID, SubmissionColumns.ID)
+        logging.info(f'Finish merging submissions with submissions to users [shape: {df_submissions.shape}]')
 
     logging.info(f'Reading raw issues from: {raw_issues_path}')
     df_raw_issues = read_df(raw_issues_path)
@@ -63,12 +66,14 @@ def build_submissions_dataframe(submissions_path: str,
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('submissions-path', type=str, help='Path to file with submissions')
-    parser.add_argument('users-to-submissions-path', type=str, help='Path to file with user/submission relation.')
-    parser.add_argument('raw-issues-path', type=str, help='Path to file with raw issues/submission relation.')
-    parser.add_argument('qodana-issues-path', type=str, help='Path to file with qodana issues/submission relation.')
-    parser.add_argument('submissions-with-issues-path', type=str,
+    parser.add_argument('submissions_path', type=str, help='Path to file with submissions')
+    parser.add_argument('raw_issues_path', type=str, help='Path to file with raw issues/submission relation.')
+    parser.add_argument('qodana_issues_path', type=str, help='Path to file with qodana issues/submission relation.')
+    parser.add_argument('submissions_with_issues_path', type=str,
                         help='Path to output file with submissions with issues.')
+    parser.add_argument('--users-to-submissions-path', type=str, default=None,
+                        help='Path to file with user/submission relation '
+                             '(if data is not presented in submissions dataset or was anonymize).')
 
     args = parser.parse_args(sys.argv[1:])
 
