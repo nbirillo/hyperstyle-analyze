@@ -23,6 +23,8 @@ def build_submissions_dataframe(submissions_path: str,
                                 raw_issues_path: str,
                                 qodana_issues_path: str,
                                 submissions_with_issues_path: str):
+    """ Merges submissions dataset with users information and issues. """
+
     logging.info(f'Reading submissions from: {submissions_path}')
     df_submissions = read_df(submissions_path)
     logging.info(f'Finish readings submissions dataframe [shape: {df_submissions.shape}]')
@@ -61,12 +63,17 @@ def build_submissions_dataframe(submissions_path: str,
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--solutions', '-s', type=str, help='Path to file with solutions')
-    parser.add_argument('--user', '-u', type=str, help='Path to file with user/solution relation.')
-    parser.add_argument('--raw-issues', '-ri', type=str, help='Path to file with raw issues/solution relation.')
-    parser.add_argument('--qodana-issues', '-qi', type=str, help='Path to file with qodana issues/solution relation.')
-    parser.add_argument('--output', '-o', type=str, help='Path to output file with submissions with issues.')
+    parser.add_argument('submissions-path', type=str, help='Path to file with submissions')
+    parser.add_argument('users-to-submissions-path', type=str, help='Path to file with user/submission relation.')
+    parser.add_argument('raw-issues-path', type=str, help='Path to file with raw issues/submission relation.')
+    parser.add_argument('qodana-issues-path', type=str, help='Path to file with qodana issues/submission relation.')
+    parser.add_argument('submissions-with-issues-path', type=str,
+                        help='Path to output file with submissions with issues.')
 
     args = parser.parse_args(sys.argv[1:])
 
-    build_submissions_dataframe(args.submissions, args.user, args.raw_issues, args.qodana_issues, args.result)
+    build_submissions_dataframe(args.submissions_path,
+                                args.users_to_submissions_path,
+                                args.raw_issues_path,
+                                args.qodana_issues_path,
+                                args.submissions_with_issues_path)

@@ -105,11 +105,12 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('--submissions-path', '-s', type=str, required=True, help='Path to .csv file with submissions.')
+    parser.add_argument('submissions-path', type=str,
+                        help='Path to .csv file with submissions.')
+    parser.add_argument('submissions-series-path', type=str,
+                        help='Path to .csv file with filtered submissions with series info.')
     parser.add_argument('--diff_ratio', '-r', type=float, default=30.0,
                         help='Ration to remove submissions which has lines change more then in `diff_ratio` times.')
-    parser.add_argument('--output-path', '-o', type=str, required=True,
-                        help='Path to .csv file with filtered submissions.')
 
     args = parser.parse_args(sys.argv[1:])
-    build_submission_series(args.submissions_path, args.output_path, args.diff_coef)
+    build_submission_series(args.submissions_path, args.submissions_series_path, args.diff_coef)
