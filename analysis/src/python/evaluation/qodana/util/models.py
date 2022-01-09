@@ -62,5 +62,9 @@ class QodanaJsonField(Enum):
     HIGHLIGHTED_ELEMENT = 'highlighted_element'
     DESCRIPTION = 'description'
     PROBLEM_ID = 'problem_id'
+    PROBLEMS = 'problems'
+    PROBLEM_CLASS = 'problem_class'
+    PROBLEM_CLASS_ID = 'id'
+    FILE = 'file'
 
     ISSUES = 'issues'

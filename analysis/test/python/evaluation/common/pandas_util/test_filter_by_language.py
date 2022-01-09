@@ -6,7 +6,8 @@ from analysis.src.python.evaluation.common.pandas_util import (
     equal_df, filter_df_by_language, get_solutions_df_by_file_path,
 )
 from analysis.test.python.evaluation import PANDAS_UTIL_DIR_PATH
-from analysis.src.python.evaluation.common.util import get_in_and_out_list, get_name_from_path
+from analysis.src.python.evaluation.common.file_util import get_name_from_path
+from analysis.src.python.evaluation.common.args_util import get_in_and_out_list
 
 RESOURCES_PATH = PANDAS_UTIL_DIR_PATH / 'filter_by_language'
 

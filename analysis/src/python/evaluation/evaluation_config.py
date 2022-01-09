@@ -6,9 +6,9 @@ from typing import List, Optional, Union
 
 from hyperstyle.src.python.common.tool_arguments import RunToolArgument
 from hyperstyle.src.python.review.application_config import LanguageVersion
-from analysis.src.python.evaluation.common.util import (
-    AnalysisExtension, EvaluationArgument, get_parent_folder, get_restricted_extension,
-)
+from analysis.src.python.evaluation.common.args_util import EvaluationArgument
+from analysis.src.python.evaluation.common.file_util import AnalysisExtension, get_parent_folder, \
+    get_restricted_extension
 
 logger = logging.getLogger(__name__)
 

@@ -5,9 +5,9 @@ from pathlib import Path
 from typing import Dict, List
 
 import pandas as pd
-from analysis.src.python.evaluation.common.csv_util import write_dataframe_to_csv
+from analysis.src.python.evaluation.common.csv_util import ColumnName, write_dataframe_to_csv
 from analysis.src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path
-from analysis.src.python.evaluation.common.util import AnalysisExtension, ColumnName, get_parent_folder
+from analysis.src.python.evaluation.common.file_util import AnalysisExtension, get_parent_folder
 from analysis.src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue
 from analysis.src.python.evaluation.qodana.util.util import (
     configure_model_converter_arguments, get_inspections_dict, replace_inspections_on_its_ids,
@@ -21,7 +21,7 @@ CODE = ColumnName.CODE.value
 def __replace_inspections_to_its_ids_in_row(row: pd.Series, inspections_dict: Dict[str, int],
                                             to_remove_duplicates: bool) -> pd.DataFrame:
     row_df = pd.DataFrame(row).transpose()
-    fragment_lines = row_df.iloc[0][CODE].split(os.linesep)
+    fragment_lines = row_df.iloc[0][CODE].split_to_batches(os.linesep)
     fragment_df = row_df.loc[row_df.index.repeat(len(fragment_lines))].reset_index(drop=True)
 
     issues_list = QodanaIssue.parse_list_issues_from_json(row_df.iloc[0][INSPECTIONS])

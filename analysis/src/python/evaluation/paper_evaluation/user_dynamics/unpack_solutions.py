@@ -5,12 +5,11 @@ from pathlib import Path
 from typing import List
 
 import pandas as pd
-from analysis.src.python.evaluation.common.csv_util import write_dataframe_to_csv
+from analysis.src.python.evaluation.common.csv_util import ColumnName, write_dataframe_to_csv
 from analysis.src.python.evaluation.common.pandas_util import get_solutions_df, logger
-from analysis.src.python.evaluation.common.tool_arguments import EvaluationRunToolArgument
-from analysis.src.python.evaluation.common.util import (
-    AnalysisExtension, ColumnName, get_parent_folder, get_restricted_extension,
-)
+from analysis.src.python.evaluation.common.args_util import EvaluationRunToolArgument
+from analysis.src.python.evaluation.common.file_util import AnalysisExtension, get_parent_folder, \
+    get_restricted_extension
 
 '''
 This scripts allows unpacking solutions to the solutions dataframe.

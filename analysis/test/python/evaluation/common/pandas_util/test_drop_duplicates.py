@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 from analysis.src.python.evaluation.common.pandas_util import drop_duplicates, equal_df, get_solutions_df_by_file_path
 from analysis.test.python.evaluation import PANDAS_UTIL_DIR_PATH
-from analysis.src.python.evaluation.common.util import get_in_and_out_list
+from analysis.src.python.evaluation.common.args_util import get_in_and_out_list
 
 RESOURCES_PATH = PANDAS_UTIL_DIR_PATH / 'drop_duplicates'
 

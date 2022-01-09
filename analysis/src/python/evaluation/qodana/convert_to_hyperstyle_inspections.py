@@ -10,8 +10,9 @@ from hyperstyle.src.python.review.reviewers.utils.print_review import convert_is
 from analysis.src.python.evaluation.common.pandas_util import (
     drop_duplicates, filter_df_by_iterable_value, get_solutions_df_by_file_path, write_df_to_file,
 )
-from analysis.src.python.evaluation.common.tool_arguments import EvaluationRunToolArgument
-from analysis.src.python.evaluation.common.util import AnalysisExtension, ColumnName, get_parent_folder, parse_set_arg
+from analysis.src.python.evaluation.common.args_util import EvaluationRunToolArgument, parse_set_arg
+from analysis.src.python.evaluation.common.csv_util import ColumnName
+from analysis.src.python.evaluation.common.file_util import AnalysisExtension, get_parent_folder
 from analysis.src.python.evaluation.qodana.util.issue_types import QODANA_CLASS_NAME_TO_ISSUE_TYPE
 from analysis.src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue
 
