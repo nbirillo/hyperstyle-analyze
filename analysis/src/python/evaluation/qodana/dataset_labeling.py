@@ -9,41 +9,37 @@ from collections import defaultdict
 from math import ceil
 from pathlib import Path
 from typing import Dict, List, Optional
+
+from analysis.src.python.evaluation.common.args_util import EvaluationRunToolArgument
+
 sys.path.append('')
 
 import numpy as np
 import pandas as pd
-from analysis.src.python.evaluation.common.csv_util import write_dataframe_to_csv
-from analysis.src.python.evaluation.common.util import (
-    ColumnName, copy_directory, copy_file, create_file, get_name_from_path,
-    get_parent_folder, match_condition, remove_directory, run_and_wait,
-)
-from analysis.src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue
+from analysis.src.python.evaluation.common.csv_util import ColumnName, write_dataframe_to_csv
+from analysis.src.python.evaluation.common.parallel_util import run_and_wait
+from analysis.src.python.evaluation.common.file_util import AnalysisExtension, copy_directory, copy_file, create_file, \
+    extension_file_condition, get_name_from_path, get_parent_folder, remove_directory
+from analysis.src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue, QodanaJsonField
 from analysis.src.python.evaluation.qodana.util.util import to_json
 from hyperstyle.src.python.review.application_config import LanguageVersion
-from hyperstyle.src.python.review.common.file_system import (
-    Extension,
-    get_all_file_system_items,
-    get_content_from_file,
-)
+from hyperstyle.src.python.review.common.file_system import Extension, get_all_file_system_items, get_content_from_file
 from hyperstyle.src.python.review.run_tool import positive_int
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
 
 TEMPLATE_FOLDER = Path(__file__).parents[3] / 'resources' / 'evaluation' / 'qodana' / 'project_templates'
+PROFILE_FOLDER = Path(__file__).parents[3] / 'resources' / 'evaluation' / 'qodana' / 'inspection_profiles'
+JAVA_QODANA_IMAGE_PATH = 'jetbrains/qodana'
+PYTHON_QODANA_IMAGE_PATH = 'jetbrains/qodana-python'
 
 
 def configure_arguments(parser: ArgumentParser) -> None:
     parser.add_argument(
-        'dataset_path',
+        EvaluationRunToolArgument.SOLUTIONS_FILE_PATH.value.long_name,
         type=lambda value: Path(value).absolute(),
-        help=f"Dataset path. The dataset must contain at least three columns: '{ColumnName.ID.value}', "
-             f"'{ColumnName.CODE.value}' and '{ColumnName.LANG.value}', where '{ColumnName.ID.value}' is a unique "
-             f"solution number, '{ColumnName.LANG.value}' is the language in which the code is written in the "
-             f"'{ColumnName.CODE.value}' column. The '{ColumnName.LANG.value}' must belong to one of the following "
-             f"values: {', '.join(LanguageVersion.values())}. "
-             f"If '{ColumnName.LANG.value}' is not equal to any of the values, the row will be skipped.",
+        help=EvaluationRunToolArgument.SOLUTIONS_FILE_PATH.value.description,
     )
 
     parser.add_argument('-c', '--config', type=lambda value: Path(value).absolute(), help='Path to qodana.yaml')
@@ -65,7 +61,7 @@ def configure_arguments(parser: ArgumentParser) -> None:
 
     parser.add_argument(
         '-o',
-        '--output-path',
+        '--output',
         type=lambda value: Path(value).absolute(),
         help='The path where the labeled dataset will be saved. '
              'If not specified, the labeled dataset will be saved next to the original one.',
@@ -86,16 +82,18 @@ class DatasetLabel:
     output_path: Path
 
     def __init__(self, args: Namespace):
-        self.dataset_path = args.dataset_path
+        self.dataset_path = args.solutions_file_path
         self.config = args.config
         self.limit = args.limit
         self.chunk_size = args.chunk_size
 
-        self.output_path = args.output_path
-        if self.output_path is None:
+        dataset_name = get_name_from_path(self.dataset_path)
+        output_dataset_name = f'labeled_{dataset_name}'
+        if args.output is None:
             output_dir = get_parent_folder(self.dataset_path)
-            dataset_name = get_name_from_path(self.dataset_path)
-            self.output_path = output_dir / f'labeled_{dataset_name}'
+            self.output_path = output_dir / output_dataset_name
+        else:
+            self.output_path = args.output / output_dataset_name
 
     def label(self) -> None:
         """
@@ -130,7 +128,7 @@ class DatasetLabel:
 
         dataset = pd.concat(groups)
 
-        logger.info('Writing the dataset to a file.')
+        logger.info(f'Writing the dataset to a file: {self.output_path}.')
         write_dataframe_to_csv(self.output_path, dataset)
 
     def _label_language(self, df: pd.DataFrame, language: LanguageVersion) -> pd.DataFrame:
@@ -165,19 +163,22 @@ class DatasetLabel:
     def _parse_inspections_files(cls, inspections_files: List[Path]) -> Dict[int, List[QodanaIssue]]:
         id_to_issues: Dict[int, List[QodanaIssue]] = defaultdict(list)
         for file in inspections_files:
-            issues = json.loads(get_content_from_file(file))['problems']
-            for issue in issues:
-                fragment_id = int(cls._get_fragment_id_from_fragment_file_path(issue['file']))
-                qodana_issue = QodanaIssue(
-                    line=issue['line'],
-                    offset=issue['offset'],
-                    length=issue['length'],
-                    highlighted_element=issue['highlighted_element'],
-                    description=issue['description'],
-                    fragment_id=fragment_id,
-                    problem_id=issue['problem_class']['id'],
-                )
-                id_to_issues[fragment_id].append(qodana_issue)
+            try:
+                issues = json.loads(get_content_from_file(file))[QodanaJsonField.PROBLEMS.value]
+                for issue in issues:
+                    fragment_id = int(cls._get_fragment_id_from_fragment_file_path(issue[QodanaJsonField.FILE.value]))
+                    qodana_issue = QodanaIssue(
+                        line=issue[QodanaJsonField.LINE.value],
+                        offset=issue[QodanaJsonField.OFFSET.value],
+                        length=issue[QodanaJsonField.LENGTH.value],
+                        highlighted_element=issue[QodanaJsonField.HIGHLIGHTED_ELEMENT.value],
+                        description=issue[QodanaJsonField.DESCRIPTION.value],
+                        fragment_id=fragment_id,
+                        problem_id=issue[QodanaJsonField.PROBLEM_CLASS][QodanaJsonField.PROBLEM_CLASS_ID.value],
+                    )
+                    id_to_issues[fragment_id].append(qodana_issue)
+            except Exception as e:
+                logging.error(f"Exception occurred while processing file {file}: {e}")
         return id_to_issues
 
     def _label_chunk(self, chunk: pd.DataFrame, language: LanguageVersion, chunk_id: int) -> pd.DataFrame:
@@ -198,10 +199,11 @@ class DatasetLabel:
         self._create_main_files(project_dir, chunk, language)
 
         logger.info('Running qodana')
-        self._run_qodana(project_dir, results_dir)
+        self._run_qodana(project_dir, results_dir, language)
 
         logger.info('Getting inspections')
         inspections_files = self._get_inspections_files(results_dir)
+        logger.info(f'Got {len(inspections_files)} files with inspections')
         inspections = self._parse_inspections_files(inspections_files)
 
         logger.info('Write inspections')
@@ -217,41 +219,59 @@ class DatasetLabel:
         if language.is_java():
             java_template = TEMPLATE_FOLDER / "java"
             copy_directory(java_template, project_dir)
+            copy_directory(TEMPLATE_FOLDER / "java", project_dir)
+        elif language == LanguageVersion.PYTHON_3:
+            copy_directory(TEMPLATE_FOLDER / "python", project_dir)
+        else:
+            raise NotImplementedError(f'{language} needs implementation.')
+
+    def _get_main_file_path(self, row: pd.Series, project_dir: Path, language: LanguageVersion):
+        if language.is_java():
+            working_dir = project_dir / 'src' / 'main' / 'java'
+            return working_dir / f'solution{row[ColumnName.ID.value]}' / f'Main{Extension.JAVA.value}'
+        elif language == LanguageVersion.PYTHON_3:
+            return project_dir / f'solution{row[ColumnName.ID.value]}' / f'main{Extension.PY.value}'
         else:
             raise NotImplementedError(f'{language} needs implementation.')
 
     def _create_main_files(self, project_dir: Path, chunk: pd.DataFrame, language: LanguageVersion) -> None:
-        if language.is_java():
-            working_dir = project_dir / 'src' / 'main' / 'java'
-
-            chunk.apply(
-                lambda row: next(
-                    create_file(
-                        file_path=(working_dir / f'solution{row[ColumnName.ID.value]}' / f'Main{Extension.JAVA.value}'),
-                        content=row[ColumnName.CODE.value],
-                    ),
+        chunk.apply(
+            lambda row: next(
+                create_file(
+                    file_path=self._get_main_file_path(row, project_dir, language),
+                    content=row[ColumnName.CODE.value],
                 ),
-                axis=1,
-            )
+            ),
+            axis=1,
+        )
+
+    @staticmethod
+    def _run_qodana(project_dir: Path, results_dir: Path, language: LanguageVersion) -> None:
+        if language.is_java():
+            qodana_image_path = JAVA_QODANA_IMAGE_PATH
+            profile_path = PROFILE_FOLDER / 'java_profile.xml'
+        elif language == LanguageVersion.PYTHON_3:
+            qodana_image_path = PYTHON_QODANA_IMAGE_PATH
+            profile_path = PROFILE_FOLDER / 'python_profile.xml'
         else:
             raise NotImplementedError(f'{language} needs implementation.')
 
-    @staticmethod
-    def _run_qodana(project_dir: Path, results_dir: Path) -> None:
-        results_dir.mkdir()
+        results_dir.mkdir(exist_ok=True)
+
         command = [
             'docker', 'run',
             '-u', str(os.getuid()),
             '--rm',
             '-v', f'{project_dir}/:/data/project/',
             '-v', f'{results_dir}/:/data/results/',
-            'jetbrains/qodana',
+            '-v', f'{profile_path}:/data/profile.xml',
+            f'{qodana_image_path}',
         ]
         run_and_wait(command)
 
     @staticmethod
     def _get_inspections_files(results_dir: Path) -> List[Path]:
-        condition = match_condition(r'\w*.json')
+        condition = extension_file_condition(AnalysisExtension.JSON)
         return get_all_file_system_items(results_dir, condition, without_subdirs=True)
 
 

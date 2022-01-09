@@ -6,10 +6,10 @@ import pandas as pd
 from hyperstyle.src.python.review.inspectors.issue import BaseIssue
 from hyperstyle.src.python.review.quality.penalty import PenaltyIssue
 from analysis.src.python.evaluation.common.pandas_util import get_issues_from_json, get_solutions_df_by_file_path
-from analysis.src.python.evaluation.common.tool_arguments import EvaluationRunToolArgument
-from analysis.src.python.evaluation.common.util import (
-    AnalysisExtension, ColumnName, get_parent_folder, parse_set_arg, serialize_data_and_write_to_file,
-)
+from analysis.src.python.evaluation.common.args_util import EvaluationRunToolArgument, parse_set_arg
+from analysis.src.python.evaluation.common.csv_util import ColumnName
+from analysis.src.python.evaluation.common.file_util import AnalysisExtension, get_parent_folder, \
+    serialize_data_and_write_to_file
 
 TRACEBACK = ColumnName.TRACEBACK.value
 ID = ColumnName.ID.value

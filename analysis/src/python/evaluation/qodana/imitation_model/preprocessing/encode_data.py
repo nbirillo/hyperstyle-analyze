@@ -8,8 +8,8 @@ from typing import List
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MultiLabelBinarizer
-from analysis.src.python.evaluation.common.csv_util import write_dataframe_to_csv
-from analysis.src.python.evaluation.common.util import AnalysisExtension, ColumnName
+from analysis.src.python.evaluation.common.csv_util import ColumnName, write_dataframe_to_csv
+from analysis.src.python.evaluation.common.file_util import AnalysisExtension
 from analysis.src.python.evaluation.qodana.imitation_model.common.util import CustomTokens, DatasetColumnArgument
 
 logger = logging.getLogger(__name__)
@@ -64,7 +64,7 @@ def __one_hot_encoding(df: pd.DataFrame) -> pd.DataFrame:
             '3'                         0  0  1
     """
     target = df[DatasetColumnArgument.INSPECTIONS.value].to_numpy().astype(str)
-    target_list_int = [np.unique(tuple(map(int, label.split(',')))) for label in target]
+    target_list_int = [np.unique(tuple(map(int, label.split_to_batches(',')))) for label in target]
     try:
         mlb = MultiLabelBinarizer()
         encoded_target = mlb.fit_transform(target_list_int)

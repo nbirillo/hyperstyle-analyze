@@ -15,7 +15,8 @@ from analysis.src.python.evaluation.plots.common.utils import (
     save_plot,
 )
 from analysis.src.python.evaluation.plots.plotters.raw_issues_statistics_plotters import PlotConfig, PlotTypes
-from analysis.src.python.evaluation.common.util import AnalysisExtension, parse_yaml
+from analysis.src.python.evaluation.common.file_util import AnalysisExtension
+from analysis.src.python.evaluation.common.yaml_util import parse_yaml
 
 
 @unique

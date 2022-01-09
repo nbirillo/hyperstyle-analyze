@@ -6,10 +6,11 @@ from hyperstyle.src.python.review.quality.model import QualityType
 from analysis.src.python.evaluation.common.pandas_util import (
     get_inconsistent_positions, get_issues_by_row, get_solutions_df, get_solutions_df_by_file_path,
 )
-from analysis.src.python.evaluation.common.tool_arguments import EvaluationRunToolArgument
-from analysis.src.python.evaluation.common.util import (
-    AnalysisExtension, ColumnName, get_parent_folder, get_restricted_extension, serialize_data_and_write_to_file,
-)
+from analysis.src.python.evaluation.common.args_util import EvaluationRunToolArgument
+from analysis.src.python.evaluation.common.csv_util import ColumnName
+from analysis.src.python.evaluation.common.file_util import AnalysisExtension, get_parent_folder, \
+    get_restricted_extension, \
+    serialize_data_and_write_to_file
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:

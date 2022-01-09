@@ -9,8 +9,9 @@ from hyperstyle.src.python.review.application_config import LanguageVersion
 from hyperstyle.src.python.review.common.file_system import Extension
 from hyperstyle.src.python.review.quality.penalty import PenaltyIssue
 from hyperstyle.src.python.review.reviewers.utils.print_review import convert_json_to_issues
-from analysis.src.python.evaluation.common.csv_util import write_dataframe_to_csv
-from analysis.src.python.evaluation.common.util import AnalysisExtension, ColumnName, get_restricted_extension
+
+from analysis.src.python.evaluation.common.csv_util import ColumnName, write_dataframe_to_csv
+from analysis.src.python.evaluation.common.file_util import AnalysisExtension, get_restricted_extension
 from analysis.src.python.evaluation.common.xlsx_util import create_workbook, remove_sheet, write_dataframe_to_xlsx_sheet
 
 logger = logging.getLogger(__name__)
@@ -96,6 +97,15 @@ def write_df_to_file(df: pd.DataFrame, output_file_path: Path, extension: Union[
         write_dataframe_to_xlsx_sheet(output_file_path, df, 'inspection_results')
         # remove empty sheet that was initially created with the workbook
         remove_sheet(output_file_path, 'Sheet')
+
+
+def read_df_from_file(input_file_path: Path) -> pd.DataFrame:
+    ext = get_restricted_extension(input_file_path, [AnalysisExtension.XLSX, AnalysisExtension.CSV])
+    if ext == AnalysisExtension.XLSX:
+        df = pd.read_excel(input_file_path)
+    else:
+        df = pd.read_csv(input_file_path)
+    return df
 
 
 def get_issues_from_json(str_json: str) -> List[PenaltyIssue]:

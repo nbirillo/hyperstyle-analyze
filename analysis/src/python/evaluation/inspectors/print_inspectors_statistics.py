@@ -5,8 +5,9 @@ from typing import Dict, List
 
 from hyperstyle.src.python.review.inspectors.issue import ShortIssue
 from hyperstyle.src.python.review.quality.penalty import PenaltyIssue
-from analysis.src.python.evaluation.common.tool_arguments import EvaluationRunToolArgument
-from analysis.src.python.evaluation.common.util import ColumnName, deserialize_data_from_file
+from analysis.src.python.evaluation.common.args_util import EvaluationRunToolArgument
+from analysis.src.python.evaluation.common.csv_util import ColumnName
+from analysis.src.python.evaluation.common.file_util import deserialize_data_from_file
 from analysis.src.python.evaluation.inspectors.common.statistics import (
     GeneralInspectorsStatistics, IssuesStatistics, PenaltyInfluenceStatistics,
 )

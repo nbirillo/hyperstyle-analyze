@@ -1,0 +1,8 @@
+project_path:
+  /Users/tiginamaria1999/PycharmProjects/hyperstyle-analyze-2
+script_path:
+  analysis/src/python/evaluation/qodana/dataset_labeling.py
+script_args:
+
+script_flags:
+  s: 5000
