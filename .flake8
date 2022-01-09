@@ -78,6 +78,10 @@ ignore =
   T001,
 # Subprocess call
   S603,
+#Found backslash that is used for line breaking
+  N400,
+#Additional newline in a group of imports
+  I202,
 
 exclude = .git, */data, env/, venv/
 

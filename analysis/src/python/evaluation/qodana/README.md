@@ -22,6 +22,7 @@ Run the [dataset_labeling.py](dataset_labeling.py) with the arguments from comma
 
 ### Optional arguments
 
+
 |Argument | Description |
 |---|---|
 | **-c**, **&#8209;&#8209;config** | Path to qodana.yaml. If the path is not specified, Qodana will start without a configuration file. |
@@ -98,6 +99,7 @@ Optional arguments:
 |**
 &#8209;&#8209;uniq**| To count all fragments for each inspection where was this inspection (without duplicates). By default it disabled. |
 
+
 The resulting file will be stored in the same folder as the input file.
 
 An example of the output file:
@@ -141,8 +143,11 @@ Required arguments:
   by [get_unique_inspectors.py](get_unique_inspectors.py) script.
 
 Optional arguments:
-Argument | Description --- | --- |**&#8209;&#8209;remove&#8209;duplicates**| Remove duplicates around inspections in
-each row. Default value is `False`. |
+
+Argument | Description
+--- | ---
+|**&#8209;&#8209;remove&#8209;duplicates**| Remove duplicates around inspections in each row. Default value is `False`. |
+
 
 The resulting file will be stored in the same folder as the input file.
 
@@ -197,8 +202,11 @@ Required arguments:
   by [get_unique_inspectors.py](get_unique_inspectors.py) script.
 
 Optional arguments:
-Argument | Description --- | --- |**&#8209;&#8209;remove&#8209;duplicates**| Remove duplicates around inspections in
-each row. Default value is `False`. |
+
+Argument | Description
+--- | ---
+|**&#8209;&#8209;remove&#8209;duplicates**| Remove duplicates around inspections in each row. Default value is `False`. |
+
 
 The resulting file will be stored in the same folder as the input file.
 
