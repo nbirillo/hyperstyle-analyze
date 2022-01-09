@@ -33,6 +33,8 @@ def get_steps_difficulty_tag(success_rate: int, difficulty_borders: Tuple[int, i
 
 
 def count_template(step_block: str, position: str) -> int:
+    """ Count number of code lines in footer or header template. """
+
     block = ast.literal_eval(step_block)
     options = block[StepColumns.OPTIONS.value]
     if options[position] is None:
@@ -42,11 +44,14 @@ def count_template(step_block: str, position: str) -> int:
 
 def check_template(step: pd.Series) -> pd.Series:
     """ Check if there is header or footer in steps template. """
+
     return pd.Series(step[StepColumns.HEADER_LINES_COUNT.value] > 0 or
                      step[StepColumns.FOOTER_LINES_COUNT.value] > 0)
 
 
 def contains_constant_in_assignment(step_block: str) -> bool:
+    """ Check step's assignment contains constants [used to test hypothesis about MagicNumber issue]. """
+
     block = ast.literal_eval(step_block)
     html = block[StepColumns.TEXT.value]
     parsed_html = BeautifulSoup(html)
@@ -86,10 +91,8 @@ def preprocess_steps(steps_path: str, topics_path: str,
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('steps_path', type=str,
-                        help='Path to .csv file with steps.')
-    parser.add_argument('topics_path', type=str,
-                        help='Path to .csv file with topics.')
+    parser.add_argument('steps_path', type=str, help='Path to .csv file with steps.')
+    parser.add_argument('topics_path', type=str, help='Path to .csv file with topics.')
     parser.add_argument('--complexity-borders', '-sb', type=Tuple[int, int], default=(3, 7),
                         help='Topic depth to consider steps as shallow, middle or deep.')
     parser.add_argument('--difficulty-borders', '-db', type=Tuple[int, int], default=(1 / 3, 2 / 3),

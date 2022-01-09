@@ -53,11 +53,10 @@ class HyperskillClient(PlatformClient):
                   topic_ids: Optional[List[int]] = None):
         """ Returns steps data. If topic_ids are defined method returns steps only related to listed topics, otherwise
          return all steps. """
-        if ids is not None:
+        if topic_ids is None:
             return self._get_objects(ObjectClass.STEP, StepsResponse, StepsRequestParams(ids=ids), count=count)
         else:
             steps = []
-            topic_ids = topic_ids if topic_ids is not None else [topic.id for topic in self.get_topics()]
             for topic_id in topic_ids:
                 steps += self._get_objects(ObjectClass.STEP, StepsResponse,
                                            StepsRequestParams(topic=topic_id), count=count)
