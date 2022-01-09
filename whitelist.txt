@@ -11,8 +11,8 @@ Pastel1
 SET1
 SET2
 SET3
-STEPIK
 STEPIC
+STEPIK
 T10
 abstractmethod
 arange
@@ -142,10 +142,10 @@ multilabel
 multiline
 multithreading
 namespace
-ngroup
 nbins
 ncss
 ndarray
+ngroup
 nl
 nn
 noc
