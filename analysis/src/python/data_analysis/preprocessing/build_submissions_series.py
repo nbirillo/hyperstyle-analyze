@@ -110,4 +110,4 @@ if __name__ == '__main__':
                         help='Ration to remove submissions which has lines change more then in `diff_ratio` times.')
 
     args = parser.parse_args(sys.argv[1:])
-    build_submission_series(args.submissions_path, args.submissions_series_path, args.diff_coef)
+    build_submission_series(args.submissions_path, args.submissions_series_path, args.diff_ratio)

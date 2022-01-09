@@ -45,8 +45,7 @@ def count_template(step_block: str, position: str) -> int:
 def check_template(step: pd.Series) -> pd.Series:
     """ Check if there is header or footer in steps template. """
 
-    return pd.Series(step[StepColumns.HEADER_LINES_COUNT.value] > 0 or
-                     step[StepColumns.FOOTER_LINES_COUNT.value] > 0)
+    return pd.Series(step[StepColumns.HEADER_LINES_COUNT.value] > 0 or step[StepColumns.FOOTER_LINES_COUNT.value] > 0)
 
 
 def contains_constant_in_assignment(step_block: str) -> bool:

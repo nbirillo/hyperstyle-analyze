@@ -28,14 +28,14 @@ def get_issues_classes(issue_column_name: str,
     df_submissions_with_issues = read_df(submissions_with_issues_path)
     issues_types = {}
 
-    logging.info(f'Getting issues class and type from submissions with issues dataset')
+    logging.info('Getting issues class and type from submissions with issues dataset')
     df_submissions_with_issues[issue_column_name].apply(
         lambda d: get_issues(d, issue_class_column, issue_type_column, issues_types))
 
     logging.info(f'Saving issues classes and types to: {issues_path}')
     write_df(pd.DataFrame.from_dict({
         IssuesColumns.CLASS: issues_types.keys(),
-        IssuesColumns.TYPE: issues_types.values()
+        IssuesColumns.TYPE: issues_types.values(),
     }), issues_path)
 
 

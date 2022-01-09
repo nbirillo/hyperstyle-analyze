@@ -14,7 +14,7 @@ def build_topics_tree(df_topics: pd.DataFrame) -> Tuple[Dict[int, List[int]], Li
 
     topics_tree = {topic[TopicColumns.ID]: [] for i, topic in df_topics.iterrows()}
     roots = []
-    for i, topic in df_topics.iterrows():
+    for _, topic in df_topics.iterrows():
         prerequisites = ast.literal_eval((topic[TopicColumns.PREREQUISITES.value]))
         if len(prerequisites) == 0:
             roots.append(topic[TopicColumns.ID.value])

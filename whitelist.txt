@@ -12,6 +12,7 @@ SET1
 SET2
 SET3
 STEPIK
+STEPIC
 T10
 abstractmethod
 arange
@@ -21,6 +22,7 @@ barmode
 bce
 bgcolor
 binarizer
+bs4
 capsys
 case18
 case34
@@ -52,6 +54,7 @@ dedent
 desc
 detekt
 df
+dfs
 dicts
 dirname
 dirs
@@ -139,6 +142,7 @@ multilabel
 multiline
 multithreading
 namespace
+ngroup
 nbins
 ncss
 ndarray
@@ -208,6 +212,7 @@ textposition
 textwrap
 tmp
 tokenizer
+tolist
 uncommented
 uniformtext
 uniq

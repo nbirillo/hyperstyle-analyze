@@ -36,7 +36,7 @@ def build_submissions_dataframe(submissions_path: str,
         df_submissions_to_users = read_df(submissions_to_users_path)
         logging.info(f'Finish readings submissions to users dataframe [shape: {df_submissions_to_users.shape}]')
 
-        logging.info(f'Merging submissions with submissions to users')
+        logging.info('Merging submissions with submissions to users')
         df_submissions = merge_dfs(df_submissions, df_submissions_to_users, SubmissionColumns.ID, SubmissionColumns.ID)
         logging.info(f'Finish merging submissions with submissions to users [shape: {df_submissions.shape}]')
 
@@ -44,7 +44,7 @@ def build_submissions_dataframe(submissions_path: str,
     df_raw_issues = read_df(raw_issues_path)
     logging.info(f'Finish readings raw issues dataframe [shape: {df_raw_issues.shape}]')
 
-    logging.info(f'Merging submissions with raw issues')
+    logging.info('Merging submissions with raw issues')
     df_submissions = merge_submissions_with_issues(df_submissions, df_raw_issues, SubmissionColumns.RAW_ISSUES)
     logging.info(f'Finish merging submissions with raw issues [shape: {df_submissions.shape}]')
 
@@ -52,11 +52,11 @@ def build_submissions_dataframe(submissions_path: str,
     df_qodana_issues = read_df(qodana_issues_path)
     logging.info(f'Finish readings qodana issues dataframe [shape: {df_qodana_issues.shape}]')
 
-    logging.info(f'Preprocessing qodana issues')
+    logging.info('Preprocessing qodana issues')
     df_qodana_issues = rename_columns(df_qodana_issues, columns={'inspections': SubmissionColumns.QODANA_ISSUES})
     df_qodana_issues = parallel_apply(df_qodana_issues, SubmissionColumns.QODANA_ISSUES, parse_qodana_issues)
 
-    logging.info(f'Merging submissions with qodana issues')
+    logging.info('Merging submissions with qodana issues')
     df_submissions = merge_submissions_with_issues(df_submissions, df_qodana_issues, SubmissionColumns.QODANA_ISSUES)
     logging.info(f'Finish merging submissions with qodana issues [shape: {df_submissions.shape}]')
 
