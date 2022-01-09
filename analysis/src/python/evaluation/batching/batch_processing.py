@@ -73,7 +73,7 @@ def split_to_batches(dataset_path: str, output_dir_path: str, batch_size: int) -
 
     batch_paths = []
     index = 0
-    for batch in pd.read_csv(input, chunksize=batch_size):
+    for batch in pd.read_csv(dataset_path, chunksize=batch_size):
         batch_name = f'batch_{index}'
 
         logging.info(f"Creating batch {index}")
