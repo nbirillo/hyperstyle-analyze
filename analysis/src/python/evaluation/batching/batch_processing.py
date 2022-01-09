@@ -58,16 +58,16 @@ def run_batching():
     merge_batch_results(batch_paths, args.output)
 
 
-def create_subdirectory(base_path: str, directory_name: str) -> str:
+def create_sub_directory(base_path: str, directory_name: str) -> str:
     directory_path = os.path.join(base_path, directory_name)
     create_directory(directory_path)
     return directory_path
 
 
 def split_to_batches(dataset_path: str, output_dir_path: str, batch_size: int) -> List[Tuple[int, str, str, str]]:
-    input_path = create_subdirectory(output_dir_path, 'input')
-    logs_path = create_subdirectory(output_dir_path, 'logs')
-    output_path = create_subdirectory(output_dir_path, 'output')
+    input_path = create_sub_directory(output_dir_path, 'input')
+    logs_path = create_sub_directory(output_dir_path, 'logs')
+    output_path = create_sub_directory(output_dir_path, 'output')
 
     df_name = get_name_from_path(dataset_path)
 
@@ -77,9 +77,9 @@ def split_to_batches(dataset_path: str, output_dir_path: str, batch_size: int) -
         batch_name = f'batch_{index}'
 
         logging.info(f"Creating batch {index}")
-        batch_input_path = create_subdirectory(input_path, batch_name)
-        batch_logs_path = create_subdirectory(logs_path, batch_name)
-        batch_output_path = create_subdirectory(output_path, batch_name)
+        batch_input_path = create_sub_directory(input_path, batch_name)
+        batch_logs_path = create_sub_directory(logs_path, batch_name)
+        batch_output_path = create_sub_directory(output_path, batch_name)
 
         batch_input_file = os.path.join(batch_input_path, df_name)
         write_dataframe_to_csv(batch_input_file, batch)

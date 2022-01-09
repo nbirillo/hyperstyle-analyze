@@ -20,7 +20,7 @@ from analysis.src.python.evaluation.common.csv_util import ColumnName, write_dat
 from analysis.src.python.evaluation.common.parallel_util import run_and_wait
 from analysis.src.python.evaluation.common.file_util import AnalysisExtension, copy_directory, copy_file, create_file, \
     extension_file_condition, get_name_from_path, get_parent_folder, remove_directory
-from analysis.src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue
+from analysis.src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue, QodanaJsonField
 from analysis.src.python.evaluation.qodana.util.util import to_json
 from hyperstyle.src.python.review.application_config import LanguageVersion
 from hyperstyle.src.python.review.common.file_system import Extension, get_all_file_system_items, get_content_from_file
@@ -161,17 +161,17 @@ class DatasetLabel:
         id_to_issues: Dict[int, List[QodanaIssue]] = defaultdict(list)
         for file in inspections_files:
             try:
-                issues = json.loads(get_content_from_file(file))['problems']
+                issues = json.loads(get_content_from_file(file))[QodanaJsonField.PROBLEMS.value]
                 for issue in issues:
-                    fragment_id = int(cls._get_fragment_id_from_fragment_file_path(issue['file']))
+                    fragment_id = int(cls._get_fragment_id_from_fragment_file_path(issue[QodanaJsonField.FILE.value]))
                     qodana_issue = QodanaIssue(
-                        line=issue['line'],
-                        offset=issue['offset'],
-                        length=issue['length'],
-                        highlighted_element=issue['highlighted_element'],
-                        description=issue['description'],
+                        line=issue[QodanaJsonField.LINE.value],
+                        offset=issue[QodanaJsonField.OFFSET.value],
+                        length=issue[QodanaJsonField.LENGTH.value],
+                        highlighted_element=issue[QodanaJsonField.HIGHLIGHTED_ELEMENT.value],
+                        description=issue[QodanaJsonField.DESCRIPTION.value],
                         fragment_id=fragment_id,
-                        problem_id=issue['problem_class']['id'],
+                        problem_id=issue[QodanaJsonField.PROBLEM_CLASS][QodanaJsonField.PROBLEM_CLASS_ID.value],
                     )
                     id_to_issues[fragment_id].append(qodana_issue)
             except Exception as e:
