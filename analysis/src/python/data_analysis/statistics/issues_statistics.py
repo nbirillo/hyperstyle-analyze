@@ -35,7 +35,7 @@ def get_issues_statistics(
         issues_path: str,
         issue_column_name: str,
         issue_class_key: str,
-        submissions_issues_statistics_path: str,
+        issues_statistics_path: str,
         chunk_size: int):
     """ Calculate number of each issue class in all submissions. """
 
@@ -45,13 +45,12 @@ def get_issues_statistics(
     k = 0
     for df_submissions_with_issues in pd.read_csv(submissions_with_issues_path, chunksize=chunk_size):
         logging.info(f"Processing chunk: {k}")
-        df_submissions_issues_statistics = \
-            calculate_chunk_issues_statistics(df_submissions_with_issues, df_issues,
-                                              issue_column_name, issue_class_key)
+        df_issues_statistics = calculate_chunk_issues_statistics(df_submissions_with_issues, df_issues,
+                                                                 issue_column_name, issue_class_key)
         if k == 0:
-            write_df(df_submissions_issues_statistics, submissions_issues_statistics_path)
+            write_df(df_issues_statistics, issues_statistics_path)
         else:
-            append_df(df_submissions_issues_statistics, submissions_issues_statistics_path)
+            append_df(df_issues_statistics, issues_statistics_path)
         k += 1
 
 
@@ -66,7 +65,7 @@ if __name__ == '__main__':
     parser.add_argument('issues_type', type=str, help='Type of issue to analyse',
                         choices=[SubmissionColumns.RAW_ISSUES, SubmissionColumns.QODANA_ISSUES])
     parser.add_argument('issues_path', type=str, help='Path to .csv file with issues list (classes and types)')
-    parser.add_argument('submissions_issues_statistics_path', type=str,
+    parser.add_argument('issues_statistics_path', type=str,
                         help='Path to .csv file with submissions issues statistics')
     parser.add_argument('--chunk-size', '-c', default=50000, type=int,
                         help='Number of groups which will be processed simultaneously')
@@ -83,5 +82,5 @@ if __name__ == '__main__':
                           args.issues_path,
                           issues_type,
                           issue_class_key,
-                          args.submissions_issues_statistics_path,
+                          args.issues_statistics_path,
                           args.chunk_size)

@@ -22,7 +22,7 @@ def calculate_submissions_series_client_series(series: pd.DataFrame) -> pd.Serie
 
 
 def get_submissions_client_series(submissions_path: str,
-                                  submissions_client_series_path: str,
+                                  client_series_statistics_path: str,
                                   chunk_size: int):
     """ For each submissions series build client series (the sequence of clients). """
 
@@ -48,9 +48,9 @@ def get_submissions_client_series(submissions_path: str,
         df_client_series = df_client_series.reset_index(drop=True)
         logging.info('Finish aggregation')
         if i == 0:
-            write_df(df_client_series, submissions_client_series_path)
+            write_df(df_client_series, client_series_statistics_path)
         else:
-            append_df(df_client_series, submissions_client_series_path)
+            append_df(df_client_series, client_series_statistics_path)
 
 
 if __name__ == '__main__':
@@ -61,10 +61,10 @@ if __name__ == '__main__':
 
     parser.add_argument('submissions_path', type=str,
                         help='Path to .csv file with preprocessed submissions with issues')
-    parser.add_argument('submissions_client_series_path', type=str,
+    parser.add_argument('client_series_statistics_path', type=str,
                         help='Path to .csv file with submissions client series statistics')
     parser.add_argument('--chunk-size', '-c', default=5000, type=int,
                         help='Number of groups which will be processed simultaneously')
 
     args = parser.parse_args(sys.argv[1:])
-    get_submissions_client_series(args.submissions_path, args.submissions_client_series_path, args.chunk_size)
+    get_submissions_client_series(args.submissions_path, args.client_series_statistics_path, args.chunk_size)

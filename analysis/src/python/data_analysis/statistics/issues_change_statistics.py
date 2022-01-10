@@ -37,14 +37,14 @@ def calculate_issues_change_statistics(df_issues_statistics: pd.DataFrame,
 
 
 def get_submissions_issues_change_statistics(submissions_path: str,
-                                             submissions_issues_statistics_path: str,
-                                             submissions_issues_change_statistics_path: str,
+                                             issues_statistics_path: str,
+                                             issues_change_statistics_path: str,
                                              issues_path: str,
                                              chunk_size=20000):
     """ Calculate issues count diff between previous and current attempt in all submissions series. """
 
     df_submissions = pd.read_csv(submissions_path)
-    df_issues_statistics = pd.read_csv(submissions_issues_statistics_path)
+    df_issues_statistics = pd.read_csv(issues_statistics_path)
     df_issues = pd.read_csv(issues_path)[IssuesColumns.CLASS].values
 
     df_issues_statistics = merge_dfs(
@@ -78,9 +78,9 @@ def get_submissions_issues_change_statistics(submissions_path: str,
         df_issues_change_statistics = df_issues_change_statistics.reset_index(drop=True)
         logging.info('Finish aggregation')
         if i == 0:
-            write_df(df_issues_change_statistics, submissions_issues_change_statistics_path)
+            write_df(df_issues_change_statistics, issues_change_statistics_path)
         else:
-            append_df(df_issues_change_statistics, submissions_issues_change_statistics_path)
+            append_df(df_issues_change_statistics, issues_change_statistics_path)
 
 
 if __name__ == '__main__':
@@ -91,17 +91,17 @@ if __name__ == '__main__':
 
     parser.add_argument('submissions_path', type=str,
                         help='Path to .csv file with preprocessed submissions with issues')
-    parser.add_argument('submissions_issues_statistics_path', type=str,
+    parser.add_argument('issues_statistics_path', type=str,
                         help='Path to .csv file with submissions issues count statistics')
     parser.add_argument('issues_path', type=str, help='Path to .csv file with issues list (classes and types)')
-    parser.add_argument('submissions_issues_change_statistics_path', type=str,
+    parser.add_argument('issues_change_statistics_path', type=str,
                         help='Path to .csv file with submissions issues statistics')
     parser.add_argument('--chunk-size', '-c', default=5000, type=int,
                         help='Number of groups which will be processed simultaneously')
 
     args = parser.parse_args(sys.argv[1:])
     get_submissions_issues_change_statistics(args.submissions_path,
-                                             args.submissions_issues_statistics_path,
-                                             args.submissions_issues_change_statistics_path,
+                                             args.issues_statistics_path,
+                                             args.issues_change_statistics_path,
                                              args.issues_path,
                                              args.chunk_size)
