@@ -1,7 +1,7 @@
 import ast
 
 
-def calc_issues_count(issues: str) -> int:
+def calculate_issues_count(issues: str) -> int:
     """ Parse issues list and calculate number of issues. """
 
     return len(ast.literal_eval(issues))
