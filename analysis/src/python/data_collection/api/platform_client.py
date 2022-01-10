@@ -123,9 +123,9 @@ class PlatformClient:
             api_url = '{url}/{obj_id}'.format(url=api_url, obj_id=obj_id)
         if self.token is not None:
             raw_response = requests.get(api_url, headers={'Authorization': 'Bearer {token}'.format(token=self.token)},
-                                        data=dict_params, timeout=None)
+                                        params=dict_params, timeout=None)
         else:
-            raw_response = requests.get(api_url, data=dict_params, timeout=None)
+            raw_response = requests.get(api_url, params=dict_params, timeout=None)
 
         if raw_response is None or raw_response.status_code != 200:
             logging.warning(f"Failed to fetch {api_url}: {raw_response}")

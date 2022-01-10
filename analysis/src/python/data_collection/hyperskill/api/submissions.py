@@ -59,6 +59,7 @@ class Feedback:
 @dataclass(frozen=True)
 class Submission(Object):
     id: int
+    user_id: int
     attempt: int
     eta: int
     feedback: Optional[Union[str, Feedback]]

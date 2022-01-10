@@ -11,6 +11,7 @@ Pastel1
 SET1
 SET2
 SET3
+STEPIC
 STEPIK
 T10
 abstractmethod
@@ -21,6 +22,7 @@ barmode
 bce
 bgcolor
 binarizer
+bs4
 capsys
 case18
 case34
@@ -52,6 +54,7 @@ dedent
 desc
 detekt
 df
+dfs
 dicts
 dirname
 dirs
@@ -142,6 +145,7 @@ namespace
 nbins
 ncss
 ndarray
+ngroup
 nl
 nn
 noc
@@ -208,6 +212,7 @@ textposition
 textwrap
 tmp
 tokenizer
+tolist
 uncommented
 uniformtext
 uniq
