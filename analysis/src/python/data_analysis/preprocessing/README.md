@@ -104,7 +104,7 @@ To run data preprocessing, run following python scripts in stated order:
     |**steps_path**| Path to .csv file with steps. |
     |**topics_path**| Path to .csv file with topics. |
     |**users_path**| Path to .csv file with users. |
-    |**result_directory_path**| Path to directory with all preprocessed data for anasysis. |
+    |**result_directory_path**| Path to directory with all preprocessed data for analysis. |
 
     **Optional arguments:**
     

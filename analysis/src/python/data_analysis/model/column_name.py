@@ -92,7 +92,7 @@ class SubmissionColumnsStats(str, Enum):
     ATTEMPTS = 'attempts'
     RAW_ISSUE_COUNT = 'raw_issues_count'
     QODANA_ISSUE_COUNT = 'qodana_issues_count'
-    CODE_ROWS_COUNT = 'code_rows_count'
+    CODE_LINES_COUNT = 'code_lines_count'
     CODE_SYMBOLS_COUNT = 'code_symbols_count'
 
     FIRST_SUFFIX = '_first'
