@@ -61,14 +61,10 @@ if __name__ == '__main__':
 
     parser.add_argument('submissions_path', type=str,
                         help='Path to .csv file with preprocessed submissions with issues')
-    parser.add_argument('issues_type', type=str, help='Type of issue to analyse',
-                        choices=[SubmissionColumns.RAW_ISSUES, SubmissionColumns.QODANA_ISSUES])
-    parser.add_argument('issues_path', type=str, help='Path to .csv file with issues list (classes and types)')
-    parser.add_argument('submissions_issues_statistics_path', type=str,
-                        help='Path to .csv file with submissions issues statistics')
-    parser.add_argument('submissions_issues_diff_statistics_path', type=str,
-                        help='Path to .csv file with submissions issues statistics')
+    parser.add_argument('submissions_client_series_path', type=str,
+                        help='Path to .csv file with submissions client series statistics')
     parser.add_argument('--chunk-size', '-c', default=5000, type=int,
                         help='Number of groups which will be processed simultaneously')
 
     args = parser.parse_args(sys.argv[1:])
+    get_submissions_client_series(args.submissions_path, args.submissions_client_series_path, args.chunk_size)
