@@ -9,13 +9,13 @@ from analysis.src.python.data_analysis.model.column_name import SubmissionColumn
 from analysis.src.python.data_analysis.utils.df_utils import append_df, write_df
 
 
-def get_submissions_series_client_series(series: pd.DataFrame) -> pd.Series:
+def calculate_submissions_series_client_series(series: pd.DataFrame) -> pd.Series:
     """ For submissions series sort submissions by attempt number and build client series. """
 
     series = series.sort_values([SubmissionColumns.ATTEMPT])
     stats = {
         SubmissionColumns.GROUP: series[SubmissionColumns.GROUP].values[0],
-        SubmissionColumns.CLIENT: json.dumps(list(series[SubmissionColumns.CLIENT].values))
+        SubmissionColumns.CLIENT: json.dumps(list(series[SubmissionColumns.CLIENT].values)),
     }
 
     return pd.Series(stats)
@@ -42,7 +42,7 @@ def get_submissions_client_series(submissions_path: str,
         df_grouped_submission_series = df_groups_submission_series.groupby([SubmissionColumns.GROUP], as_index=False)
         logging.info('Finish grouping')
 
-        df_client_series = df_grouped_submission_series.apply(get_submissions_series_client_series)
+        df_client_series = df_grouped_submission_series.apply(calculate_submissions_series_client_series)
         logging.info('Finish filtering')
 
         df_client_series = df_client_series.reset_index(drop=True)

@@ -10,10 +10,10 @@ from analysis.src.python.data_analysis.model.column_name import IssuesColumns, S
 from analysis.src.python.data_analysis.utils.df_utils import append_df, read_df, write_df
 
 
-def calc_submissions_chunk_issues_statistics(df_submissions: pd.DataFrame,
-                                             issues_classes: List[str],
-                                             issue_column_name: str,
-                                             issue_class_key: str) -> pd.DataFrame:
+def calculate_chunk_issues_statistics(df_submissions: pd.DataFrame,
+                                      issues_classes: List[str],
+                                      issue_column_name: str,
+                                      issue_class_key: str) -> pd.DataFrame:
     """ Calculate number of each issue class in all submissions chunk. """
 
     issues_statistics = {
@@ -46,8 +46,8 @@ def get_issues_statistics(
     for df_submissions_with_issues in pd.read_csv(submissions_with_issues_path, chunksize=chunk_size):
         logging.info(f"Processing chunk: {k}")
         df_submissions_issues_statistics = \
-            calc_submissions_chunk_issues_statistics(df_submissions_with_issues, df_issues,
-                                                     issue_column_name, issue_class_key)
+            calculate_chunk_issues_statistics(df_submissions_with_issues, df_issues,
+                                              issue_column_name, issue_class_key)
         if k == 0:
             write_df(df_submissions_issues_statistics, submissions_issues_statistics_path)
         else:

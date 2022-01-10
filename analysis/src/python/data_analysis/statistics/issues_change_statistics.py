@@ -9,8 +9,8 @@ from analysis.src.python.data_analysis.model.column_name import IssuesColumns, S
 from analysis.src.python.data_analysis.utils.df_utils import append_df, merge_dfs, write_df
 
 
-def calc_submission_series_issues_change_statistics(df_issues_statistics: pd.DataFrame,
-                                                    issues_classes: List[str]):
+def calculate_issues_change_statistics(df_issues_statistics: pd.DataFrame,
+                                       issues_classes: List[str]):
     """ Calculate issues count diff between previous and current attempt in one submissions series. """
 
     df_issues_statistics = df_issues_statistics.sort_values(
@@ -23,14 +23,16 @@ def calc_submission_series_issues_change_statistics(df_issues_statistics: pd.Dat
     for issue_class in issues_classes:
         issues_change_statistics[issue_class] = []
 
+    previous_submission_issues_statistics = None
     for i, submission_issues_statistics in df_issues_statistics.iterrows():
         for issue_class in issues_classes:
-            if i == 0:
-                diff = issues_change_statistics[issue_class][i]
+            if previous_submission_issues_statistics is None:
+                diff = submission_issues_statistics[issue_class]
             else:
-                diff = issues_change_statistics[issue_class][i] - issues_change_statistics[issue_class][i - 1]
+                diff = submission_issues_statistics[issue_class] - previous_submission_issues_statistics[issue_class]
 
             issues_change_statistics[issue_class].append(diff)
+        previous_submission_issues_statistics = submission_issues_statistics
     return pd.DataFrame.from_dict(issues_change_statistics)
 
 
@@ -49,7 +51,7 @@ def get_submissions_issues_change_statistics(submissions_path: str,
         df_submissions[[SubmissionColumns.ID, SubmissionColumns.GROUP, SubmissionColumns.ATTEMPT]],
         df_issues_statistics,
         SubmissionColumns.ID,
-        SubmissionColumns.ID
+        SubmissionColumns.ID,
     )
 
     min_group = df_issues_statistics[SubmissionColumns.GROUP].min()
@@ -69,8 +71,8 @@ def get_submissions_issues_change_statistics(submissions_path: str,
         df_grouped_submission_series = df_groups_submission_series.groupby([SubmissionColumns.GROUP], as_index=False)
         logging.info('Finish grouping')
 
-        df_issues_change_statistics = df_grouped_submission_series.apply(
-            calc_submission_series_issues_change_statistics, issues_classes=df_issues)
+        df_issues_change_statistics = df_grouped_submission_series.apply(calculate_issues_change_statistics,
+                                                                         issues_classes=df_issues)
         logging.info('Finish filtering')
 
         df_issues_change_statistics = df_issues_change_statistics.reset_index(drop=True)

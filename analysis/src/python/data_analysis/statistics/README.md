@@ -14,7 +14,7 @@ To get statistics on collected and preprocessed data, run following python scrip
     |**submissions_path**| Path to .csv file with preprocessed submissions with issues. |
     |**submissions_statistics_path**| Path to .csv file where to save submissions statistics. |
 
-2. [submissions_client_statistics.py](submissions_client_statistics.py) - build .csv file with submissions series client
+2. [client_statistics.py](client_statistics.py) - build .csv file with submissions series client
    for clients change statistics analysis.
    
     **Required arguments:**
@@ -30,7 +30,7 @@ To get statistics on collected and preprocessed data, run following python scrip
     |----------|-------------|
     | **&#8209;&#8209;chunk-size** | Number of submission groups which will be processed simultaneously. |
 
-3. [submissions_issues_statistics.py](submissions_issues_statistics.py) - for each submission calculate number of 
+3. [issues_statistics.py](issues_statistics.py) - for each submission calculate number of 
    detected issues of each class.
 
     **Required arguments:**
@@ -49,7 +49,7 @@ To get statistics on collected and preprocessed data, run following python scrip
     | **&#8209;&#8209;chunk-size** | Number of submissions which will be processed simultaneously. |
 
 
-4. [submissions_issues_change_statistics.py](submissions_issues_change_statistics.py) - for each submission calculate 
+4. [issues_change_statistics.py](issues_change_statistics.py) - for each submission calculate 
    diff of number of detected issues of each class. Need for issues fixing patters analysis.
    
     **Required arguments:**
