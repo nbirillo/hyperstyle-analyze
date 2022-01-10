@@ -22,7 +22,7 @@ To get statistics on collected and preprocessed data, run following python scrip
     | Argument | Description |
     |----------|-------------|
     |**submissions_path**| Path to .csv file with `submissions`. |
-    |**submissions_client_series_path**| Path to .csv file with submissions client series statistics. |
+    |**client_series_path**| Path to .csv file where to save submissions client series statistics. |
 
     **Optional arguments:**
     
@@ -40,7 +40,7 @@ To get statistics on collected and preprocessed data, run following python scrip
     |**submissions_path**| Path to .csv file with `submissions`. |
     |**issues_type**| Type of issue to analyse (can be `raw_issue` or `qodana_issue`). |
     |**issues_path**| Path to .csv file with all issues list (classes and types). |
-    |**submissions_issues_statistics_path**| Path to .csv file with submissions issues statistics. |
+    |**issues_statistics_path**| Path to .csv file where to save submissions issues statistics. |
 
     **Optional arguments:**
     
@@ -53,13 +53,13 @@ To get statistics on collected and preprocessed data, run following python scrip
    diff of number of detected issues of each class. Need for issues fixing patters analysis.
    
     **Required arguments:**
-   
+
     | Argument | Description |
     |----------|-------------|
     |**submissions_path**| Path to .csv file with `submissions`. |
-    |**issues_type**| Type of issue to analyse (can be `raw_issue` or `qodana_issue`). |
+    |**issues_statistics_path**| Path to .csv file with submissions issues statistics. |
     |**issues_path**| Path to .csv file with all issues list (classes and types). |
-    |**submissions_issues_statistics_path**| Path to .csv file with submissions issues statistics. |
+    |**issues_change_statistics_path**| Path to .csv file where to save submissions issues change statistics. |
 
     **Optional arguments:**
     
@@ -75,9 +75,9 @@ To get statistics on collected and preprocessed data, run following python scrip
     | Argument | Description |
     |----------|-------------|
     |**submissions_path**| Path to .csv file with `submissions`. |
-    |**issues_type**| Type of issue to analyse (can be `raw_issue` or `qodana_issue`). |
+    |**issues_statistics_path**| Path to .csv file with submissions issues statistics. |
     |**issues_path**| Path to .csv file with all issues list (classes and types). |
-    |**submissions_issues_statistics_path**| Path to .csv file with submissions issues statistics. |
+    |**issues_steps_statistics_path**| Path to directory where to save issues steps statistics. |
 
     **Optional arguments:**
     
