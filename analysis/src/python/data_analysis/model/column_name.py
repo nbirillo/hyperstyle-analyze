@@ -63,6 +63,7 @@ class TopicColumns(str, Enum):
     PARENT_ID = 'parent_id'
 
 
+@unique
 class SubmissionColumns(str, Enum):
     ID = 'id'
     USER_ID = 'user_id'
@@ -79,10 +80,11 @@ class SubmissionColumns(str, Enum):
     # issues
     RAW_ISSUES = 'raw_issues'
     RAW_ISSUE_CLASS = 'origin_class'
-    RAW_ISSUE_TYPE = 'type'
+    ISSUE_TYPE = 'type'
     QODANA_ISSUES = 'qodana_issues'
     QODANA_ISSUE_CLASS = 'problem_id'
-    QODANA_ISSUE_TYPE = 'type'
+
+    STATUS = 'status'
 
 
 @unique

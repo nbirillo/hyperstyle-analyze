@@ -50,12 +50,11 @@ if __name__ == '__main__':
     args = parser.parse_args(sys.argv[1:])
 
     issues_type = SubmissionColumns(args.issues_type)
+    issue_type_column_name = SubmissionColumns.ISSUE_TYPE
     if issues_type == SubmissionColumns.QODANA_ISSUES:
         issue_class_column_name = SubmissionColumns.QODANA_ISSUE_CLASS
-        issue_type_column_name = SubmissionColumns.QODANA_ISSUE_TYPE
     else:
         issue_class_column_name = SubmissionColumns.RAW_ISSUE_CLASS
-        issue_type_column_name = SubmissionColumns.RAW_ISSUE_TYPE
 
     get_issues_classes(issues_type,
                        issue_class_column_name,
