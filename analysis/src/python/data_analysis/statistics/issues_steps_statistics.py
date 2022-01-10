@@ -5,7 +5,7 @@ import sys
 from typing import Optional
 
 from analysis.src.python.data_analysis.model.column_name import IssuesColumns, SubmissionColumns
-from analysis.src.python.data_analysis.utils.df_utils import merge_dfs, read_df, write_df
+from analysis.src.python.data_analysis.utils.df_utils import merge_dfs, read_df
 from analysis.src.python.evaluation.common.file_util import AnalysisExtension, create_directory
 
 

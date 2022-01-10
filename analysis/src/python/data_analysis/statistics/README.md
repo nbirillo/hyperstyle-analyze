@@ -67,5 +67,23 @@ To get statistics on collected and preprocessed data, run following python scrip
     |----------|-------------|
     | **&#8209;&#8209;chunk-size** | Number of submission groups which will be processed simultaneously. |
 
+4. [issues_steps_statistics.py](issues_steps_statistics.py) - for each issue type get rating of steps
+   by number of its detections.
+   
+    **Required arguments:**
+   
+    | Argument | Description |
+    |----------|-------------|
+    |**submissions_path**| Path to .csv file with `submissions`. |
+    |**issues_type**| Type of issue to analyse (can be `raw_issue` or `qodana_issue`). |
+    |**issues_path**| Path to .csv file with all issues list (classes and types). |
+    |**submissions_issues_statistics_path**| Path to .csv file with submissions issues statistics. |
+
+    **Optional arguments:**
+    
+    | Argument | Description |
+    |----------|-------------|
+    | **&#8209;&#8209;chunk-size** | Number of submission groups which will be processed simultaneously. |
+
 
 After all preprocessing stages you will get some .scv files which you need for feather analysis.

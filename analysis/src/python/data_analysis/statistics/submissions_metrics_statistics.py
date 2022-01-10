@@ -4,7 +4,7 @@ import sys
 
 from analysis.src.python.data_analysis.model.column_name import SubmissionColumns, SubmissionColumnsStats
 from analysis.src.python.data_analysis.utils.df_utils import read_df, write_df
-from analysis.src.python.data_analysis.utils.stats_utils import calc_code_lines_count, calc_code_symbols_count, \
+from analysis.src.python.data_analysis.utils.stats_utils import calculate_code_lines_count, calculate_code_symbols_count, \
     calc_issues_count
 
 
@@ -15,9 +15,9 @@ def get_submission_statistics(submissions_with_issues_path: str, submissions_sta
     df_stats = df_submissions[[SubmissionColumns.ID]].copy()
 
     df_stats[SubmissionColumnsStats.CODE_LINES_COUNT.value] = df_submissions[SubmissionColumns.CODE.value] \
-        .apply(calc_code_lines_count)
+        .apply(calculate_code_lines_count)
     df_stats[SubmissionColumnsStats.CODE_SYMBOLS_COUNT.value] = df_submissions[SubmissionColumns.CODE.value] \
-        .apply(calc_code_symbols_count)
+        .apply(calculate_code_symbols_count)
 
     df_stats[SubmissionColumnsStats.QODANA_ISSUE_COUNT.value] = df_submissions[SubmissionColumns.QODANA_ISSUES.value] \
         .apply(calc_issues_count)

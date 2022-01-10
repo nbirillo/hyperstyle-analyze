@@ -7,7 +7,7 @@ def calc_issues_count(issues: str) -> int:
     return len(ast.literal_eval(issues))
 
 
-def calc_code_lines_count(code: str) -> int:
+def calculate_code_lines_count(code: str) -> int:
     """ Calculate number of code lines. """
 
     if isinstance(code, str):
@@ -15,7 +15,7 @@ def calc_code_lines_count(code: str) -> int:
     return 0
 
 
-def calc_code_symbols_count(code: str) -> int:
+def calculate_code_symbols_count(code: str) -> int:
     """ Calculate number of symbols in code. """
 
     if isinstance(code, str):

@@ -24,7 +24,7 @@ def calculate_issues_change_statistics(df_issues_statistics: pd.DataFrame,
         issues_change_statistics[issue_class] = []
 
     previous_submission_issues_statistics = None
-    for i, submission_issues_statistics in df_issues_statistics.iterrows():
+    for _, submission_issues_statistics in df_issues_statistics.iterrows():
         for issue_class in issues_classes:
             if previous_submission_issues_statistics is None:
                 diff = submission_issues_statistics[issue_class]
