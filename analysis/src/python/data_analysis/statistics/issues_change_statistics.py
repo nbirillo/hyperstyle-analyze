@@ -6,15 +6,15 @@ from typing import List
 import pandas as pd
 
 from analysis.src.python.data_analysis.model.column_name import IssuesColumns, SubmissionColumns
-from analysis.src.python.data_analysis.utils.df_utils import append_df, merge_dfs, write_df
+from analysis.src.python.data_analysis.utils.df_utils import merge_dfs
+from analysis.src.python.data_analysis.utils.statistics_utils import get_statistics_by_group
 
 
 def calculate_issues_change_statistics(df_issues_statistics: pd.DataFrame,
                                        issues_classes: List[str]):
     """ Calculate issues count diff between previous and current attempt in one submissions series. """
 
-    df_issues_statistics = df_issues_statistics.sort_values(
-        [SubmissionColumns.ATTEMPT])
+    df_issues_statistics = df_issues_statistics.sort_values([SubmissionColumns.ATTEMPT])
 
     issues_change_statistics = {
         SubmissionColumns.ID: df_issues_statistics[SubmissionColumns.ID].values,
@@ -47,40 +47,16 @@ def get_submissions_issues_change_statistics(submissions_path: str,
     df_issues_statistics = pd.read_csv(issues_statistics_path)
     df_issues = pd.read_csv(issues_path)[IssuesColumns.CLASS].values
 
-    df_issues_statistics = merge_dfs(
+    df_submissions = merge_dfs(
         df_submissions[[SubmissionColumns.ID, SubmissionColumns.GROUP, SubmissionColumns.ATTEMPT]],
         df_issues_statistics,
         SubmissionColumns.ID,
         SubmissionColumns.ID,
     )
 
-    min_group = df_issues_statistics[SubmissionColumns.GROUP].min()
-    max_group = df_issues_statistics[SubmissionColumns.GROUP].max()
-
-    logging.info(f'Groups range: [{min_group}, {max_group}]')
-
-    for i in range(min_group, max_group + 1, chunk_size):
-        min_group_index, max_group_index = i, i + chunk_size - 1
-
-        logging.info(f'Processing groups: [{min_group_index}, {max_group_index})')
-
-        df_groups_submission_series = df_submissions[
-            df_submissions[SubmissionColumns.GROUP].between(min_group_index, max_group_index, inclusive=True)]
-        logging.info('Finish selection')
-
-        df_grouped_submission_series = df_groups_submission_series.groupby([SubmissionColumns.GROUP], as_index=False)
-        logging.info('Finish grouping')
-
-        df_issues_change_statistics = df_grouped_submission_series.apply(calculate_issues_change_statistics,
-                                                                         issues_classes=df_issues)
-        logging.info('Finish filtering')
-
-        df_issues_change_statistics = df_issues_change_statistics.reset_index(drop=True)
-        logging.info('Finish aggregation')
-        if i == 0:
-            write_df(df_issues_change_statistics, issues_change_statistics_path)
-        else:
-            append_df(df_issues_change_statistics, issues_change_statistics_path)
+    get_statistics_by_group(df_submissions, issues_change_statistics_path, chunk_size,
+                            lambda submission_series: submission_series.apply(calculate_issues_change_statistics,
+                                                                              issues_classes=df_issues))
 
 
 if __name__ == '__main__':

@@ -6,7 +6,7 @@ import sys
 import pandas as pd
 
 from analysis.src.python.data_analysis.model.column_name import SubmissionColumns
-from analysis.src.python.data_analysis.utils.df_utils import append_df, write_df
+from analysis.src.python.data_analysis.utils.statistics_utils import get_statistics_by_group
 
 
 def calculate_submissions_series_client_series(series: pd.DataFrame) -> pd.Series:
@@ -31,26 +31,8 @@ def get_submissions_client_series(submissions_path: str,
     min_group, max_group = df_submissions[SubmissionColumns.GROUP].min(), df_submissions[SubmissionColumns.GROUP].max()
     logging.info(f'Groups range: [{min_group}, {max_group}]')
 
-    for i in range(min_group, max_group + 1, chunk_size):
-        min_group_index, max_group_index = i, i + chunk_size - 1
-        logging.info(f'Processing groups: [{min_group_index}, {max_group_index})')
-
-        df_groups_submission_series = df_submissions[
-            df_submissions[SubmissionColumns.GROUP].between(min_group_index, max_group_index, inclusive=True)]
-        logging.info('Finish selection')
-
-        df_grouped_submission_series = df_groups_submission_series.groupby([SubmissionColumns.GROUP], as_index=False)
-        logging.info('Finish grouping')
-
-        df_client_series = df_grouped_submission_series.apply(calculate_submissions_series_client_series)
-        logging.info('Finish filtering')
-
-        df_client_series = df_client_series.reset_index(drop=True)
-        logging.info('Finish aggregation')
-        if i == 0:
-            write_df(df_client_series, client_series_statistics_path)
-        else:
-            append_df(df_client_series, client_series_statistics_path)
+    get_statistics_by_group(df_submissions, client_series_statistics_path, chunk_size,
+                            calculate_submissions_series_client_series)
 
 
 if __name__ == '__main__':

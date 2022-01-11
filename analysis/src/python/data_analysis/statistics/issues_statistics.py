@@ -7,7 +7,8 @@ from typing import List
 import pandas as pd
 
 from analysis.src.python.data_analysis.model.column_name import IssuesColumns, SubmissionColumns
-from analysis.src.python.data_analysis.utils.df_utils import append_df, read_df, write_df
+from analysis.src.python.data_analysis.utils.df_utils import read_df
+from analysis.src.python.data_analysis.utils.statistics_utils import save_chunk
 
 
 def calculate_chunk_issues_statistics(df_submissions: pd.DataFrame,
@@ -47,11 +48,8 @@ def get_issues_statistics(
         logging.info(f"Processing chunk: {k}")
         df_issues_statistics = calculate_chunk_issues_statistics(df_submissions_with_issues, df_issues,
                                                                  issue_column_name, issue_class_key)
-        if k == 0:
-            write_df(df_issues_statistics, issues_statistics_path)
-        else:
-            append_df(df_issues_statistics, issues_statistics_path)
-        k += 1
+
+        save_chunk(df_issues_statistics, issues_statistics_path, k)
 
 
 if __name__ == '__main__':
