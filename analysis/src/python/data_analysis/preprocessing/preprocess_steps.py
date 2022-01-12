@@ -3,11 +3,11 @@ import ast
 import sys
 from typing import Tuple
 
-import pandas as pd
 from bs4 import BeautifulSoup
 
 from analysis.src.python.data_analysis.model.column_name import Complexity, Difficulty, StepColumns, TopicColumns
 from analysis.src.python.data_analysis.utils.df_utils import merge_dfs, read_df, write_df
+from analysis.src.python.data_analysis.utils.stats_utils import calculate_code_lines_count
 
 
 def get_steps_complexity_tag(depth: int, complexity_borders: Tuple[int, int]) -> str:
@@ -32,20 +32,32 @@ def get_steps_difficulty_tag(success_rate: int, difficulty_borders: Tuple[int, i
     return Difficulty.MEDIUM.value
 
 
-def count_template(step_block: str, position: str) -> int:
-    """ Count number of code lines in footer or header template. """
+def check_header_footer(step_block: str) -> bool:
+    """ Check if there is header or footer in steps assignment template. """
 
     block = ast.literal_eval(step_block)
     options = block[StepColumns.OPTIONS.value]
-    if options[position] is None:
-        return 0
-    return sum(dict(options[position]).values())
+    header_footer_lines_count = 0
+
+    if options[StepColumns.HEADER_LINES_COUNT.value] is not None:
+        header_footer_lines_count += sum(dict(options[StepColumns.HEADER_LINES_COUNT.value]).values())
+    if options[StepColumns.FOOTER_LINES_COUNT.value] is not None:
+        header_footer_lines_count += sum(dict(options[StepColumns.FOOTER_LINES_COUNT.value]).values())
+
+    return header_footer_lines_count > 0
 
 
-def check_template(step: pd.Series) -> pd.Series:
-    """ Check if there is header or footer in steps template. """
+def check_template(step_block: str) -> bool:
+    """ Check if there is a template code in steps assignment. """
 
-    return pd.Series(step[StepColumns.HEADER_LINES_COUNT.value] > 0 or step[StepColumns.FOOTER_LINES_COUNT.value] > 0)
+    block = ast.literal_eval(step_block)
+    options = block[StepColumns.OPTIONS.value]
+    code_template_lines_count = 0
+
+    if options[StepColumns.CODE_TEMPLATES.value] is not None:
+        code_template_lines_count += sum(map(calculate_code_lines_count,
+                                             dict(options[StepColumns.CODE_TEMPLATES.value]).values()))
+    return code_template_lines_count > 0
 
 
 def contains_constant_in_assignment(step_block: str) -> bool:
@@ -74,14 +86,10 @@ def preprocess_steps(steps_path: str, topics_path: str,
     df_steps[StepColumns.DIFFICULTY.value] = df_steps[StepColumns.SUCCESS_RATE.value] \
         .apply(get_steps_difficulty_tag, difficulty_borders=difficulty_borders)
 
-    df_steps[StepColumns.HEADER_LINES_COUNT.value] = df_steps[StepColumns.BLOCK.value] \
-        .apply(count_template, position=StepColumns.HEADER_LINES_COUNT.value)
-    df_steps[StepColumns.FOOTER_LINES_COUNT.value] = df_steps[StepColumns.BLOCK.value] \
-        .apply(count_template, position=StepColumns.FOOTER_LINES_COUNT.value)
-
-    df_steps[StepColumns.HAS_TEMPLATE.value] = df_steps[[StepColumns.HEADER_LINES_COUNT.value,
-                                                         StepColumns.FOOTER_LINES_COUNT.value]] \
-        .apply(check_template, axis=1)
+    df_steps[StepColumns.HAS_HEADER_FOOTER.value] = df_steps[StepColumns.BLOCK.value] \
+        .apply(check_header_footer)
+    df_steps[StepColumns.HAS_TEMPLATE.value] = df_steps[StepColumns.BLOCK.value] \
+        .apply(check_template)
     df_steps[StepColumns.HAS_CONSTANT.value] = df_steps[StepColumns.BLOCK.value] \
         .apply(contains_constant_in_assignment)
     write_df(df_steps, steps_path)

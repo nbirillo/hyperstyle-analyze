@@ -24,8 +24,13 @@ class Options:
     task_type: Optional[str]
     lesson_type: Optional[str]
     title: Optional[str]
+    language: str
+    execution_time_limit: Optional[int]
+    execution_memory_limit: Optional[int]
+    limits: Optional[Dict]
     description_text: Optional[str]
     description_format: Optional[str]
+    code_templates: Optional[Dict]
     code_templates_header_lines_count: Optional[Dict]
     code_templates_footer_lines_count: Optional[Dict]
 
