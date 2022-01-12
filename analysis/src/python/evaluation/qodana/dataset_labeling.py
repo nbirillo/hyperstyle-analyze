@@ -264,9 +264,9 @@ class DatasetLabel:
             'docker', 'run',
             '-u', str(os.getuid()),
             '--rm',
-            '-v', f'{project_dir}/:/data/project/',
-            '-v', f'{results_dir}/:/data/results/',
-            '-v', f'/{profile_path}:/data/profile.xml',
+            '-v', f'{project_dir.resolve()}/:/data/project/',
+            '-v', f'{results_dir.resolve()}/:/data/results/',
+            '-v', f'{profile_path.resolve()}:/data/profile.xml',
             f'{qodana_image_path}',
         ]
         run_and_wait(command)
