@@ -266,7 +266,7 @@ class DatasetLabel:
             '--rm',
             '-v', f'{project_dir}/:/data/project/',
             '-v', f'{results_dir}/:/data/results/',
-            '-v', f'{profile_path}:/data/profile.xml',
+            '-v', f'/{profile_path}:/data/profile.xml',
             f'{qodana_image_path}',
         ]
         run_and_wait(command)
