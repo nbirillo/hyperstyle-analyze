@@ -256,6 +256,8 @@ class DatasetLabel:
         else:
             raise NotImplementedError(f'{language} needs implementation.')
 
+        logger.info(Path(__file__).parents[3])
+        logger.info(profile_path)
         results_dir.mkdir(exist_ok=True)
 
         command = [
