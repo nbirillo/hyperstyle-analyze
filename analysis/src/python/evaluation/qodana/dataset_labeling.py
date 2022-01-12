@@ -174,7 +174,7 @@ class DatasetLabel:
                         highlighted_element=issue[QodanaJsonField.HIGHLIGHTED_ELEMENT.value],
                         description=issue[QodanaJsonField.DESCRIPTION.value],
                         fragment_id=fragment_id,
-                        problem_id=issue[QodanaJsonField.PROBLEM_CLASS][QodanaJsonField.PROBLEM_CLASS_ID.value],
+                        problem_id=issue[QodanaJsonField.PROBLEM_CLASS.value][QodanaJsonField.PROBLEM_CLASS_ID.value],
                     )
                     id_to_issues[fragment_id].append(qodana_issue)
             except Exception as e:
