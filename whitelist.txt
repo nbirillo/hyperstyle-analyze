@@ -32,6 +32,8 @@ WPS223
 Arithm
 Oper
 Paren
+rq
+Elifs
 D3
 DARK2
 DARK24
