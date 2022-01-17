@@ -1,5 +1,7 @@
+# noqa: SC200, SC100
 import argparse
-from typing import Set, Dict, Any, List
+from typing import Any, Dict, List, Set
+
 import pandas as pd
 from pingouin import ttest
 from statsmodels.stats import multitest
