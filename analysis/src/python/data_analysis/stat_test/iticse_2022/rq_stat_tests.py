@@ -1,4 +1,3 @@
-# noqa: SC200, SC100
 import argparse
 from typing import Any, Dict, List, Set
 
