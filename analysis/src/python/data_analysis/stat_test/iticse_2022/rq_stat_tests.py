@@ -110,17 +110,17 @@ if __name__ == '__main__':
 
     parser.add_argument('dataset', type=str, help='Path to .csv file with Python dataset. '
                                                   'The dataset must have several obligatory columns:'
-                                                  
+
                                                   '- <total_attempts> with information about the '
                                                   'amount of consumption in this series; (RQ2)'
                                                   '- <attempt> with the attempt\'s number; (RQ2)'
                                                   '- <group> with the attempt chain\'s group number; (RQ2)'
                                                   '- <raw_issues_count> with the number of raw issues '
                                                   'in the submission; (RQ2)'
-                                                  
+
                                                   '- <client> with information where was solved the submission; (RQ3)'
                                                   '- <code_rows_count> with number of rows in the submission; (RQ3)'
-                                                  
+
                                                   '- columns for all issues, which are used '
                                                   'in the <-i> or <--issues> argument; (RQ1 and RQ3)')
     # Usage example: -i UnusedLocalVariable,MagicNumber
