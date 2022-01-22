@@ -82,7 +82,7 @@ def split_to_batches(dataset_path: str, output_dir_path: str, batch_size: int) -
         batch_logs_path = create_sub_directory(logs_path, batch_name)
         batch_output_path = create_sub_directory(output_path, batch_name)
 
-        logger.info(f"Coping data to batch")
+        logger.info(f"Coping data to batch {index}")
         batch_input_file = os.path.join(batch_input_path, df_name)
         write_dataframe_to_csv(batch_input_file, batch)
 
