@@ -54,7 +54,7 @@ def preprocess_topics(topics_path: str):
     df_topics = df_topics[
         [TopicColumns.ID.value, TopicColumns.PREREQUISITES.value, TopicColumns.CHILDREN.value,
          TopicColumns.HAS_STEPS.value, TopicColumns.HIERARCHY, TopicColumns.TOPOLOGICAL_INDEX.value,
-         TopicColumns.TITLE, TopicColumns.ROOT_ID.value, TopicColumns.ROOT_TITLE.value, TopicColumns.URL.value
+         TopicColumns.TITLE, TopicColumns.ROOT_ID.value, TopicColumns.ROOT_TITLE.value, TopicColumns.URL.value,
          ]]
 
     topics_depth = get_topics_depth(df_topics)

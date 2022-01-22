@@ -180,6 +180,7 @@ nn
 noc
 nom
 noqa
+notnull
 nrows
 num
 numpy

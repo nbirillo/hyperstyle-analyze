@@ -21,8 +21,8 @@ def get_issues_steps_statistics(submissions_path: str,
     # Select submission's attempt
     if attempt_number is not None:
         if attempt_number == -1:
-            df_submissions = df_submissions[df_submissions[SubmissionColumns.ATTEMPT] ==
-                                            SubmissionColumns.TOTAL_ATTEMPTS]
+            df_submissions = \
+                df_submissions[df_submissions[SubmissionColumns.ATTEMPT] == SubmissionColumns.TOTAL_ATTEMPTS]
         else:
             df_submissions = df_submissions[df_submissions[SubmissionColumns.ATTEMPT] == attempt_number]
 

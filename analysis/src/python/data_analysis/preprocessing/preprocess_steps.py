@@ -113,7 +113,7 @@ def get_block_info(step_block: str) -> pd.Series:
     blocks_info = {
         StepColumns.HAS_HEADER_FOOTER.value: check_header_footer(block[StepColumns.OPTIONS.value]),
         StepColumns.HAS_TEMPLATE.value: check_template(block[StepColumns.OPTIONS.value]),
-        StepColumns.HAS_CONSTANT.value: check_constant_in_assignment(block[StepColumns.TEXT.value])
+        StepColumns.HAS_CONSTANT.value: check_constant_in_assignment(block[StepColumns.TEXT.value]),
     }
 
     return pd.Series(blocks_info, dtype='bool')
@@ -131,7 +131,7 @@ def preprocess_steps(steps_path: str, topics_path: str,
         [StepColumns.ID.value, StepColumns.LIKES.value, StepColumns.COMMENTS.value, StepColumns.BLOCK.value,
          StepColumns.TOPIC.value, StepColumns.SECONDS_TO_COMPLETE.value, StepColumns.SOLVED_BY.value,
          StepColumns.SUCCESS_RATE, StepColumns.POPULAR_IDE.value, StepColumns.IS_IDE_COMPATIBLE.value,
-         StepColumns.TITLE.value, StepColumns.URL.value
+         StepColumns.TITLE.value, StepColumns.URL.value,
          ]]
 
     df_steps = df_steps[df_steps[StepColumns.TOPIC.value].notnull()]

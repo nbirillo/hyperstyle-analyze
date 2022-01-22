@@ -38,7 +38,7 @@ def filter_dataset(submissions_path: str, steps_path: str, topics_path: str, use
     logging.info(f'Select {df_submissions.shape[0]} submissions with <={max_attempts} attempts')
 
     # Filter steps which has header or footer
-    df_steps = df_steps[df_steps[StepColumns.HAS_HEADER_FOOTER.value] == False]
+    df_steps = df_steps[df_steps[StepColumns.HAS_HEADER_FOOTER.value] == False]  # noqa: E712
     logging.info(f'Select {df_steps.shape[0]} steps with has_header_footer = False')
 
     # Filter submissions on steps with header or footer
@@ -83,9 +83,6 @@ if __name__ == '__main__':
 
     args = parser.parse_args(sys.argv[1:])
     filter_dataset(args.submissions_path,
-                   args.client_stats_path,
-                   args.submissions_stats_path,
-                   args.issues_stats_path,
                    args.steps_path,
                    args.topics_path,
                    args.users_path,
