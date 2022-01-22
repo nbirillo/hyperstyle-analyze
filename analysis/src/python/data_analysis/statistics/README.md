@@ -11,7 +11,7 @@ To get statistics on collected and preprocessed data, run following python scrip
 
     | Argument | Description |
     |----------|-------------|
-    |**submissions_path**| Path to .csv file with preprocessed submissions with issues. |
+    |**submissions_path**| Path to .csv file with preprocessed submissions with series. |
     |**submissions_statistics_path**| Path to .csv file where to save submissions statistics. |
 
 2. [client_statistics.py](client_statistics.py) - build .csv file with submissions series client
@@ -21,7 +21,7 @@ To get statistics on collected and preprocessed data, run following python scrip
     
     | Argument | Description |
     |----------|-------------|
-    |**submissions_path**| Path to .csv file with `submissions`. |
+    |**submissions_path**| Path to .csv file with preprocessed submissions with series. |
     |**client_series_path**| Path to .csv file where to save submissions client series statistics. |
 
     **Optional arguments:**
@@ -37,7 +37,7 @@ To get statistics on collected and preprocessed data, run following python scrip
 
     | Argument | Description |
     |----------|-------------|
-    |**submissions_path**| Path to .csv file with `submissions`. |
+    |**submissions_path**| Path to .csv file with preprocessed submissions with series. |
     |**issues_type**| Type of issue to analyse (can be `raw_issue` or `qodana_issue`). |
     |**issues_path**| Path to .csv file with all issues list (classes and types). |
     |**issues_statistics_path**| Path to .csv file where to save submissions issues statistics. |
@@ -56,7 +56,7 @@ To get statistics on collected and preprocessed data, run following python scrip
 
     | Argument | Description |
     |----------|-------------|
-    |**submissions_path**| Path to .csv file with `submissions`. |
+    |**submissions_path**| Path to .csv file with preprocessed submissions with series. |
     |**issues_statistics_path**| Path to .csv file with submissions issues statistics. |
     |**issues_path**| Path to .csv file with all issues list (classes and types). |
     |**issues_change_statistics_path**| Path to .csv file where to save submissions issues change statistics. |
@@ -74,7 +74,7 @@ To get statistics on collected and preprocessed data, run following python scrip
    
     | Argument | Description |
     |----------|-------------|
-    |**submissions_path**| Path to .csv file with `submissions`. |
+    |**submissions_path**| Path to .csv file with preprocessed submissions with series. |
     |**issues_statistics_path**| Path to .csv file with submissions issues statistics. |
     |**issues_path**| Path to .csv file with all issues list (classes and types). |
     |**issues_steps_statistics_path**| Path to directory where to save issues steps statistics. |

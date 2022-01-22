@@ -59,7 +59,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     parser.add_argument('submissions_path', type=str,
-                        help='Path to .csv file with preprocessed submissions with issues')
+                        help='Path to .csv file with preprocessed submissions with series')
     parser.add_argument('issues_type', type=str, help='Type of issue to analyse',
                         choices=[SubmissionColumns.RAW_ISSUES, SubmissionColumns.QODANA_ISSUES])
     parser.add_argument('issues_path', type=str, help='Path to .csv file with issues list (classes and types)')

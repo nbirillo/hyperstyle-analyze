@@ -34,7 +34,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     parser.add_argument('submissions_path', type=str,
-                        help='Path to .csv file with preprocessed submissions with issues')
+                        help='Path to .csv file with preprocessed submissions with series')
     parser.add_argument('submissions_statistics_path', type=str,
                         help='Path to .csv file where to save submissions statistics')
     args = parser.parse_args(sys.argv[1:])

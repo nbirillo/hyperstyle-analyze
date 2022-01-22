@@ -21,7 +21,8 @@ def get_issues_steps_statistics(submissions_path: str,
     # Select submission's attempt
     if attempt_number is not None:
         if attempt_number == -1:
-            df_submissions = df_submissions[df_submissions[SubmissionColumns.ATTEMPT] == SubmissionColumns.LAST_ATTEMPT]
+            df_submissions = df_submissions[df_submissions[SubmissionColumns.ATTEMPT] ==
+                                            SubmissionColumns.TOTAL_ATTEMPTS]
         else:
             df_submissions = df_submissions[df_submissions[SubmissionColumns.ATTEMPT] == attempt_number]
 
@@ -50,7 +51,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     parser.add_argument('submissions_path', type=str,
-                        help='Path to .csv file with preprocessed submissions with issues')
+                        help='Path to .csv file with preprocessed submissions with series')
     parser.add_argument('issues_statistics_path', type=str,
                         help='Path to .csv file with submissions issues count statistics')
     parser.add_argument('issues_steps_statistics_directory_path', type=str,

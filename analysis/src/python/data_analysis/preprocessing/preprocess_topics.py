@@ -51,8 +51,15 @@ def preprocess_topics(topics_path: str):
     """ Build topic tree and calculate depth for each topics in tree. """
 
     df_topics = read_df(topics_path)
+    df_topics = df_topics[
+        [TopicColumns.ID.value, TopicColumns.PREREQUISITES.value, TopicColumns.CHILDREN.value,
+         TopicColumns.HAS_STEPS.value, TopicColumns.HIERARCHY, TopicColumns.TOPOLOGICAL_INDEX.value,
+         TopicColumns.TITLE, TopicColumns.ROOT_ID.value, TopicColumns.ROOT_TITLE.value, TopicColumns.URL.value
+         ]]
+
     topics_depth = get_topics_depth(df_topics)
-    df_topics[TopicColumns.DEPTH.value] = df_topics[TopicColumns.ID.value]\
+
+    df_topics[TopicColumns.DEPTH.value] = df_topics[TopicColumns.ID.value] \
         .apply(lambda topic_id: topics_depth.get(topic_id, 0))
 
     write_df(df_topics, topics_path)

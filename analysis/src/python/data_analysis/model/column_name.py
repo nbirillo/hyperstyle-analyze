@@ -22,6 +22,7 @@ class StepColumns(str, Enum):
     IS_IDE_COMPATIBLE = 'is_ide_compatible'
     OPTIONS = 'options'
     DEPTH = 'depth'
+    URL = 'url'
 
     BLOCK = 'block'
     TEXT = 'text'
@@ -35,6 +36,28 @@ class StepColumns(str, Enum):
 
     COMPLEXITY = 'complexity'
     DIFFICULTY = 'difficulty'
+
+    VALUE = 'value'
+    TOTAL_COUNT = 'total_count'
+
+    THREAD = 'thread'
+
+
+@unique
+class CommentsColumns(Enum):
+    COMMENT = 'comment'
+    HINT = 'hint'
+    USEFUL_LINK = 'useful link'
+    SOLUTIONS = 'solutions'
+
+
+@unique
+class LikesColumns(Enum):
+    LOVE = 'love'
+    HAPPY = 'happy'
+    NEUTRAL = 'neutral'
+    SAD = 'sad'
+    ANGRY = 'angry'
 
 
 @unique
@@ -59,10 +82,13 @@ class TopicColumns(str, Enum):
     HIERARCHY = 'hierarchy'
     PREREQUISITES = 'prerequisites'
     ROOT_ID = 'root_id'
+    ROOT_TITLE = 'root_title'
     TITLE = 'title'
     TOPOLOGICAL_INDEX = 'topological_index'
     THEORY = 'theory'
     PARENT_ID = 'parent_id'
+    HAS_STEPS = 'has_steps'
+    URL = 'url'
 
 
 @unique
@@ -71,7 +97,7 @@ class SubmissionColumns(str, Enum):
     USER_ID = 'user_id'
     GROUP = 'group'
     ATTEMPT = 'attempt'
-    LAST_ATTEMPT = 'last_attempt'
+    TOTAL_ATTEMPTS = 'total_attempts'
     BASE_CLIENT = 'base_client'
     CLIENT = 'client'
     STEP_ID = 'step_id'
@@ -125,11 +151,6 @@ class UserColumns(str, Enum):
     PASSED_PROBLEMS = 'passed_problems'
     PASSED_PROJECTS = 'passed_projects'
     PASSED_TOPICS = 'passed_topics'
-    # comments
-    COMMENT = 'comment'
-    HINT = 'hint'
-    USEFUL_LINK = 'useful_link'
-    SOLUTIONS = 'solutions'
 
 
 @unique

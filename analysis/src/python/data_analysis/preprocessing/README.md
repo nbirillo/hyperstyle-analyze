@@ -5,7 +5,7 @@ for further analysis.
 
 To run data preprocessing, run following python scripts in stated order:
 
-1. [build_submissions_with_issues.py](build_submissions_with_issues.py) - merges submissions with detected issues. 
+1. [preprocess_submissions.py](preprocess_submissions.py) - merges submissions with detected issues. 
 
     **Required arguments:**
     
@@ -14,7 +14,7 @@ To run data preprocessing, run following python scripts in stated order:
     |**submissions_path**| Path to .csv file with `submissions`. |
     |**raw_issues_path**| Path to .csv file with `raw issues` to submission relation. |
     |**qodana_issues_path**| Path to .csv file with qodana `issues` to submission relation. |
-    |**submissions_with_issues_path**| Path to .csv output file with submissions with issues. |
+    |**preprocessed_submissions_path**| Path to .csv output file with submissions with issues. |
 
     **Optional arguments:**
     
@@ -22,8 +22,7 @@ To run data preprocessing, run following python scripts in stated order:
     |----------|-------------|
     | **&#8209;&#8209;users-to-submissions-path** | Path to file with `user` to submission relation (if data is not presented in submissions dataset or was anonymized). |
 
-
-2. [build_submissions_series.py](build_submissions_series.py) - add information to submissions about submission's
+2. [build_submissions_with_series.py](build_submissions_with_series.py) - add information to submissions about submission's
    series (number of attempts, total number of attempts in series, series number). Submission series is the number of 
    attempts of one user to solve one step's problem.
 
@@ -31,7 +30,7 @@ To run data preprocessing, run following python scripts in stated order:
     
     | Argument | Description |
     |----------|-------------|
-    |**submissions_path**| Path to .csv file with `submissions`. |
+    |**submissions_path**| Path to .csv file with `preprocessed submissions`. |
     |**submissions_series_path**| Path to .csv file with filtered submissions with series info. |
 
     **Optional arguments:**
@@ -47,7 +46,7 @@ To run data preprocessing, run following python scripts in stated order:
     
     | Argument | Description |
     |----------|-------------|
-    |**submissions_path**| Path to .csv file with `submissions`. |
+    |**submissions_path**| Path to .csv file with `preprocessed submissions`. |
     |**issues_type**| Type of issues to analyse (can be raw or qodana). |
     |**issues_path**| Path to .csv file where issues info will be saved. |
 
@@ -92,25 +91,6 @@ To run data preprocessing, run following python scripts in stated order:
     |----------|-------------|
     | **&#8209;&#8209;complexity-borders** | Topic depth to consider steps as shallow, middle or deep (default is 3 for shallow 7 for deep). |
     | **&#8209;&#8209;difficulty-borders** | Steps success rate to consider steps as easy, medium or hard (default is 1/3 for easy 2/3 for hard). |
-
-7. [preprocess_submissions.py](preprocess_submissions.py) - add information about client, filter submissions with many 
-   attempts, select subset of steps, topics, and users, mentioned in submissions dataset.
-
-    **Required arguments:**
-    
-    | Argument | Description |
-    |----------|-------------|
-    |**submissions_path**| Path to .csv file with submissions. |
-    |**steps_path**| Path to .csv file with steps. |
-    |**topics_path**| Path to .csv file with topics. |
-    |**users_path**| Path to .csv file with users. |
-    |**result_directory_path**| Path to directory with all preprocessed data for analysis. |
-
-    **Optional arguments:**
-    
-    | Argument | Description |
-    |----------|-------------|
-    | **&#8209;&#8209;max-attempts** | Maximum number of attempts to leave in dataset (submissions with many attempts considered as noise). |
 
 After all preprocessing stages you will get directory with all preprocessed data, 
 which can be used for further analysis.

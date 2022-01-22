@@ -1,7 +1,7 @@
 import argparse
 import logging
 import sys
-from enum import Enum
+from enum import Enum, unique
 
 import pandas as pd
 
@@ -25,6 +25,7 @@ def check_different_code(submission_0: pd.Series, submission_1: pd.Series, diff_
     return not (1 / diff_ratio <= code_lines_diff <= diff_ratio)
 
 
+@unique
 class SubmissionsCheckStatus(Enum):
     OK = 'ok'
     SAME = 'same'
@@ -69,7 +70,7 @@ def filter_submissions_series(submissions_series: pd.DataFrame, diff_ratio: floa
     submissions_series = submissions_series.drop([SubmissionColumns.STATUS], axis=1)
     group_size = submissions_series.shape[0]
     submissions_series[SubmissionColumns.ATTEMPT.value] = list(range(1, group_size + 1))
-    submissions_series[SubmissionColumns.LAST_ATTEMPT.value] = [group_size] * group_size
+    submissions_series[SubmissionColumns.TOTAL_ATTEMPTS.value] = [group_size] * group_size
 
     return submissions_series
 
