@@ -21,7 +21,7 @@ def apply(df: pd.DataFrame, column: str, func: Callable) -> pd.DataFrame:
 def parallel_apply(df: pd.DataFrame, column: str, func: Callable) -> pd.DataFrame:
     """ Parallel apply `func` to  data in `column` of dataframe `df`. """
 
-    pandarallel.initialize(nb_workers=4, progress_bar=True)
+    pandarallel.initialize(nb_workers=4)
     return df.parallel_apply(lambda raw: _apply_to_row(raw, column, func), axis=1)
 
 

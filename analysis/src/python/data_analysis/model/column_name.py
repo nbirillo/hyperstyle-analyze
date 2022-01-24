@@ -44,7 +44,7 @@ class StepColumns(str, Enum):
 
 
 @unique
-class CommentsColumns(Enum):
+class CommentsColumns(str, Enum):
     COMMENT = 'comment'
     HINT = 'hint'
     USEFUL_LINK = 'useful link'
@@ -52,7 +52,7 @@ class CommentsColumns(Enum):
 
 
 @unique
-class LikesColumns(Enum):
+class LikesColumns(str, Enum):
     LOVE = 'love'
     HAPPY = 'happy'
     NEUTRAL = 'neutral'
@@ -61,14 +61,14 @@ class LikesColumns(Enum):
 
 
 @unique
-class Complexity(Enum):
+class Complexity(str, Enum):
     SHALLOW = 'shallow'
     MIDDLE = 'middle'
     DEEP = 'deep'
 
 
 @unique
-class Difficulty(Enum):
+class Difficulty(str, Enum):
     EASY = 'easy'
     MEDIUM = 'medium'
     HARD = 'hard'
@@ -154,7 +154,7 @@ class UserColumns(str, Enum):
 
 
 @unique
-class Level(Enum):
+class Level(str, Enum):
     LOW = 'low'
     AVERAGE = 'average'
     HIGH = 'high'

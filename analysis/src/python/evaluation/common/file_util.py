@@ -150,3 +150,9 @@ def remove_slash(path: str) -> str:
 def remove_directory(directory: Union[str, Path]) -> None:
     if os.path.isdir(directory):
         shutil.rmtree(directory, ignore_errors=True)
+
+
+def clean_file(path: str):
+    if os.path.isfile(path):
+        with open(path, 'r+') as f:
+            f.truncate(0)

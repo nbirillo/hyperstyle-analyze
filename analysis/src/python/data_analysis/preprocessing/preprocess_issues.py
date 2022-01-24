@@ -7,6 +7,7 @@ import pandas as pd
 
 from analysis.src.python.data_analysis.model.column_name import IssuesColumns, SubmissionColumns
 from analysis.src.python.data_analysis.utils.df_utils import read_df, write_df
+from analysis.src.python.data_analysis.utils.logging_utlis import configure_logger
 from analysis.src.python.data_analysis.utils.parsing_utils import str_to_dict
 
 
@@ -43,11 +44,12 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     parser.add_argument('issues_type', type=str, help='Type of issues to analyse (can be raw or qodana).',
-                        choices=[SubmissionColumns.RAW_ISSUES, SubmissionColumns.QODANA_ISSUES])
+                        choices=[SubmissionColumns.RAW_ISSUES.value, SubmissionColumns.QODANA_ISSUES.value])
     parser.add_argument('submissions_path', type=str, help='Path to .csv file with submissions with issues.')
     parser.add_argument('issues_path', type=str, help='Path to .csv file where issues info will be saved')
 
     args = parser.parse_args(sys.argv[1:])
+    configure_logger(args.issues_path, 'preprocess')
 
     issues_type = SubmissionColumns(args.issues_type)
     issue_type_column_name = SubmissionColumns.ISSUE_TYPE
