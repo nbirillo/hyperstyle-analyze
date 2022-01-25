@@ -70,7 +70,7 @@ if __name__ == '__main__':
                         choices=[SubmissionColumns.RAW_ISSUES.value, SubmissionColumns.QODANA_ISSUES.value])
     parser.add_argument('submissions_path', type=str,
                         help='Path to .csv file with preprocessed submissions with series')
-    parser.add_argument('issues_path', type=str, help='Path to .csv file with issues list (classes and types)')
+    parser.add_argument('issues_info_path', type=str, help='Path to .csv file with issues list (classes and types)')
     parser.add_argument('issues_statistics_path', type=str,
                         help='Path to .csv file with submissions issues statistics')
     parser.add_argument('--chunk-size', '-c', default=50000, type=int,

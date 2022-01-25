@@ -3,6 +3,7 @@ import sys
 
 from analysis.src.python.data_analysis.model.column_name import SubmissionColumns, SubmissionColumnsStats
 from analysis.src.python.data_analysis.utils.df_utils import read_df, write_df
+from analysis.src.python.data_analysis.utils.logging_utlis import configure_logger
 from analysis.src.python.data_analysis.utils.stats_utils import calculate_code_lines_count, \
     calculate_code_symbols_count, calculate_issues_count
 
@@ -33,6 +34,8 @@ if __name__ == '__main__':
                         help='Path to .csv file with preprocessed submissions with series')
     parser.add_argument('submissions_statistics_path', type=str,
                         help='Path to .csv file where to save submissions statistics')
+
     args = parser.parse_args(sys.argv[1:])
+    configure_logger(args.submissions_statistics_path, 'statistics')
 
     get_submission_statistics(args.submissions_path, args.submissions_statistics_path)

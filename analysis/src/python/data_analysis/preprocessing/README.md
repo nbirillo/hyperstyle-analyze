@@ -12,8 +12,6 @@ To run data preprocessing, run following python scripts in stated order:
     | Argument | Description |
     |----------|-------------|
     |**submissions_path**| Path to .csv file with `submissions`. |
-    |**raw_issues_path**| Path to .csv file with `raw issues` to submission relation. |
-    |**qodana_issues_path**| Path to .csv file with qodana `issues` to submission relation. |
     |**preprocessed_submissions_path**| Path to .csv output file with submissions with issues. If not provided `submissions_path` will be used. |
 
     **Optional arguments:**
@@ -22,7 +20,7 @@ To run data preprocessing, run following python scripts in stated order:
     |----------|-------------|
     | **&#8209;&#8209;users-to-submissions-path** | Path to file with `user` to submission relation (if data is not presented in submissions dataset or was anonymized). |
     | **&#8209;&#8209;diff-ratio** | Ration to remove submissions which has lines change more then in `diff-ratio` times. Default is 10.0. |
-    | **&#8209;&#8209;users-to-submissions-path** | Remove submissions series with more then `max-attempts` attempts. Default is 5. |
+    | **&#8209;&#8209;max-attempts** | Remove submissions series with more then `max-attempts` attempts. Default is 5. |
 
 2. [preprocess_issues.py](preprocess_issues.py) - collect information about issues, which are detected in all submissions. 
    Must be invoked twice (both for raw and qodana issues).
@@ -86,5 +84,15 @@ To run data preprocessing, run following python scripts in stated order:
     |----------|-------------|
     | **&#8209;&#8209;level-borders** | Passed topics count to consider user level as low, average or high. Default is 20 for low 150 for high. |
 
-After all preprocessing stages you will get directory with all preprocessed data, 
-which can be used for further analysis.
+After all preprocessing stages you need to synchronize and compile all dataset. 
+
+6. [compile_dataset.py](compile_dataset.py) - select subset of data which is presented in all datasets.
+
+    **Required arguments:**
+    
+    | Argument | Description |
+    |----------|-------------|
+    |**submissions_path**| Path to .csv file with `preprocesssed submissions`. |
+    |**steps_path**| Path to .csv file with `preprocesssed steps`. |
+    |**topics_path**| Path to .csv file with `preprocesssed topics`. |
+    |**users_path**| Path to .csv file with `preprocesssed users`. |

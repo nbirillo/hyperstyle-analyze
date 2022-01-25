@@ -1,5 +1,4 @@
 import argparse
-import logging
 import sys
 from typing import List
 
@@ -7,6 +6,7 @@ import pandas as pd
 
 from analysis.src.python.data_analysis.model.column_name import IssuesColumns, SubmissionColumns
 from analysis.src.python.data_analysis.utils.df_utils import merge_dfs
+from analysis.src.python.data_analysis.utils.logging_utlis import configure_logger
 from analysis.src.python.data_analysis.utils.statistics_utils import get_statistics_by_group
 
 
@@ -60,24 +60,24 @@ def get_submissions_issues_change_statistics(submissions_path: str,
 
 
 if __name__ == '__main__':
-    log = logging.getLogger()
-    log.setLevel(logging.DEBUG)
-
     parser = argparse.ArgumentParser()
 
     parser.add_argument('submissions_path', type=str,
                         help='Path to .csv file with preprocessed submissions with series')
     parser.add_argument('issues_statistics_path', type=str,
                         help='Path to .csv file with submissions issues count statistics')
-    parser.add_argument('issues_path', type=str, help='Path to .csv file with issues list (classes and types)')
+    parser.add_argument('issues_info_path', type=str, help='Path to .csv file with issues list (classes and types)')
     parser.add_argument('issues_change_statistics_path', type=str,
                         help='Path to .csv file with submissions issues statistics')
+
     parser.add_argument('--chunk-size', '-c', default=5000, type=int,
                         help='Number of groups which will be processed simultaneously')
 
     args = parser.parse_args(sys.argv[1:])
+    configure_logger(args.issues_change_statistics_path, 'statistics')
+
     get_submissions_issues_change_statistics(args.submissions_path,
                                              args.issues_statistics_path,
                                              args.issues_change_statistics_path,
-                                             args.issues_path,
+                                             args.issues_info_path,
                                              args.chunk_size)

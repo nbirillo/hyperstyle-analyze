@@ -6,6 +6,7 @@ import sys
 import pandas as pd
 
 from analysis.src.python.data_analysis.model.column_name import SubmissionColumns
+from analysis.src.python.data_analysis.utils.logging_utlis import configure_logger
 from analysis.src.python.data_analysis.utils.statistics_utils import get_statistics_by_group
 
 
@@ -40,10 +41,12 @@ if __name__ == '__main__':
 
     parser.add_argument('submissions_path', type=str,
                         help='Path to .csv file with preprocessed submissions with series')
-    parser.add_argument('client_series_statistics_path', type=str,
+    parser.add_argument('client_statistics_path', type=str,
                         help='Path to .csv file with submissions client series statistics')
     parser.add_argument('--chunk-size', '-c', default=5000, type=int,
                         help='Number of groups which will be processed simultaneously')
 
     args = parser.parse_args(sys.argv[1:])
-    get_submissions_client_series(args.submissions_path, args.client_series_statistics_path, args.chunk_size)
+    configure_logger(args.client_statistics_path, 'statistics')
+
+    get_submissions_client_series(args.submissions_path, args.client_statistics_path, args.chunk_size)

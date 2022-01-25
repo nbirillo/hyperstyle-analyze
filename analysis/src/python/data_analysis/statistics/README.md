@@ -11,7 +11,7 @@ To get statistics on collected and preprocessed data, run following python scrip
 
     | Argument | Description |
     |----------|-------------|
-    |**submissions_path**| Path to .csv file with preprocessed submissions with series. |
+    |**submissions_path**| Path to .csv file with `preprocessed submissions`. |
     |**submissions_statistics_path**| Path to .csv file where to save submissions statistics. |
 
 2. [client_statistics.py](client_statistics.py) - build .csv file with submissions series client
@@ -21,8 +21,8 @@ To get statistics on collected and preprocessed data, run following python scrip
     
     | Argument | Description |
     |----------|-------------|
-    |**submissions_path**| Path to .csv file with preprocessed submissions with series. |
-    |**client_series_path**| Path to .csv file where to save submissions client series statistics. |
+    |**submissions_path**| Path to .csv file with `preprocessed submissions`. |
+    |**client_statistics_path**| Path to .csv file where to save submissions client series statistics. |
 
     **Optional arguments:**
     
@@ -37,9 +37,9 @@ To get statistics on collected and preprocessed data, run following python scrip
 
     | Argument | Description |
     |----------|-------------|
-    |**submissions_path**| Path to .csv file with preprocessed submissions with series. |
     |**issues_type**| Type of issue to analyse (can be `raw_issue` or `qodana_issue`). |
-    |**issues_path**| Path to .csv file with all issues list (classes and types). |
+    |**submissions_path**| Path to .csv file with `preprocessed submissions`. |
+    |**issues_info_path**| Path to .csv file with all issues list (classes and types). |
     |**issues_statistics_path**| Path to .csv file where to save submissions issues statistics. |
 
     **Optional arguments:**
@@ -76,14 +76,14 @@ To get statistics on collected and preprocessed data, run following python scrip
     |----------|-------------|
     |**submissions_path**| Path to .csv file with preprocessed submissions with series. |
     |**issues_statistics_path**| Path to .csv file with submissions issues statistics. |
-    |**issues_path**| Path to .csv file with all issues list (classes and types). |
-    |**issues_steps_statistics_path**| Path to directory where to save issues steps statistics. |
+    |**issues_info_path**| Path to .csv file with all issues list (classes and types). |
+    |**issues_steps_statistics_directory_path**| Path to directory where to save issues steps statistics. |
 
     **Optional arguments:**
     
     | Argument | Description |
     |----------|-------------|
-    | **&#8209;&#8209;chunk-size** | Number of submission groups which will be processed simultaneously. |
+    | **&#8209;&#8209;attempt-number** | Number of attempt to analyze (None --all, 1 -- first, -1 --last, and other). |
 
 
 After all preprocessing stages you will get some .scv files which you need for feather analysis.

@@ -6,6 +6,7 @@ from typing import Optional
 
 from analysis.src.python.data_analysis.model.column_name import IssuesColumns, SubmissionColumns
 from analysis.src.python.data_analysis.utils.df_utils import merge_dfs, read_df
+from analysis.src.python.data_analysis.utils.logging_utlis import configure_logger
 from analysis.src.python.evaluation.common.file_util import AnalysisExtension, create_directory
 
 
@@ -54,16 +55,17 @@ if __name__ == '__main__':
                         help='Path to .csv file with preprocessed submissions with series')
     parser.add_argument('issues_statistics_path', type=str,
                         help='Path to .csv file with submissions issues count statistics')
+    parser.add_argument('issues_info_path', type=str, help='Path to .csv file with issues list (classes and types)')
     parser.add_argument('issues_steps_statistics_directory_path', type=str,
                         help='Path to directory where to save issues steps statistics for each issue class')
-    parser.add_argument('issues_path', type=str, help='Path to .csv file with issues list (classes and types)')
     parser.add_argument('--attempt-number', type=Optional[int], default=None,
                         help='Number of attempt to analyze (None --all, 1 -- first, -1 --last, and other)')
 
     args = parser.parse_args(sys.argv[1:])
+    configure_logger(args.issues_steps_statistics_directory_path, 'statistics')
 
     get_issues_steps_statistics(args.submissions_path,
                                 args.issues_statistics_path,
                                 args.issues_steps_statistics_directory_path,
-                                args.issues_path,
+                                args.issues_info_path,
                                 args.attempt_number)
