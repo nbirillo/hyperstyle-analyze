@@ -1,7 +1,8 @@
 import logging
 import os
 
-from analysis.src.python.evaluation.common.file_util import clean_file, get_name_from_path, get_parent_folder
+from analysis.src.python.evaluation.common.file_util import clean_file, create_file, get_name_from_path, \
+    get_parent_folder
 
 
 def configure_logger(processing_file_path: str, prefix: str):
@@ -11,6 +12,7 @@ def configure_logger(processing_file_path: str, prefix: str):
     log_directory_path = get_parent_folder(processing_file_path)
 
     log_file_path = os.path.join(log_directory_path, log_filename)
+    create_file(log_file_path, '')
     clean_file(log_file_path)
 
     logging.basicConfig(filename=os.path.join(log_directory_path, log_filename), level=logging.DEBUG)

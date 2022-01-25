@@ -36,9 +36,6 @@ def get_submissions_client_series(submissions_path: str,
 
 
 if __name__ == '__main__':
-    log = logging.getLogger()
-    log.setLevel(logging.DEBUG)
-
     parser = argparse.ArgumentParser()
 
     parser.add_argument('submissions_path', type=str,

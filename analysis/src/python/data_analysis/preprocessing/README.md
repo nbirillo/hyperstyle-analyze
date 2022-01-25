@@ -31,10 +31,17 @@ To run data preprocessing, run following python scripts in stated order:
     
     | Argument | Description |
     |----------|-------------|
-    |**submissions_path**| Path to .csv file with `preprocessed submissions`. |
     |**issues_type**| Type of issues to analyse (can be `raw` or `qodana`). |
-    |**issues_path**| Path to .csv file where `preprocessed issues` will be saved. |
+    |**submissions_path**| Path to .csv file with `preprocessed submissions`. |
+    |**issues_path**| Path to .csv file with submissions code and issues relation. |
+    |**issues_info_path**| Path to .csv file where `preprocessed issues` will be saved. |
 
+    **Optional arguments:**
+    
+    | Argument | Description |
+    |----------|-------------|
+    | **&#8209;&#8209;ignore-issue-classes** | List of issue classes to remove from issues list (for example 'CyclomaticComplexityCheck', 'JavaNCSSCheck' raw issues and 'JavaAnnotator', 'WrongPackageStatement' qodana issues). |
+   
 3. [preprocess_topics.py](preprocess_topics.py) - add information about topic depth in knowledge tree.
 
     **Required arguments:**

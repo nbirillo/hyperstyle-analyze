@@ -1,5 +1,4 @@
 import argparse
-import logging
 import sys
 
 from analysis.src.python.data_analysis.model.column_name import SubmissionColumns, SubmissionColumnsStats
@@ -28,9 +27,6 @@ def get_submission_statistics(submissions_with_issues_path: str, submissions_sta
 
 
 if __name__ == '__main__':
-    log = logging.getLogger()
-    log.setLevel(logging.DEBUG)
-
     parser = argparse.ArgumentParser()
 
     parser.add_argument('submissions_path', type=str,
