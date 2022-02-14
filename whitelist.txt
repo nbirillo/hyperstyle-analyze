@@ -132,6 +132,7 @@ intelli
 intellij
 interop
 isin
+isfile
 isna
 isnull
 issuetype

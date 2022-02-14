@@ -5,7 +5,7 @@ import sys
 from analysis.src.python.data_analysis.model.column_name import StepColumns, SubmissionColumns, TopicColumns, \
     UserColumns
 from analysis.src.python.data_analysis.utils.df_utils import merge_dfs, read_df, write_df
-from analysis.src.python.data_analysis.utils.logging_utlis import configure_logger
+from analysis.src.python.data_analysis.utils.logging_utils import configure_logger
 
 
 def compile_dataset(submissions_path: str, steps_path: str, topics_path: str, users_path: str):

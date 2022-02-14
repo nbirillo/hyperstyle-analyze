@@ -9,7 +9,7 @@ import pandas as pd
 
 from analysis.src.python.data_analysis.model.column_name import IssuesColumns, SubmissionColumns
 from analysis.src.python.data_analysis.utils.df_utils import merge_dfs, read_df, rename_columns, write_df
-from analysis.src.python.data_analysis.utils.logging_utlis import configure_logger
+from analysis.src.python.data_analysis.utils.logging_utils import configure_logger
 from analysis.src.python.data_analysis.utils.parsing_utils import list_to_str, parse_qodana_issues, str_to_dict
 
 
@@ -61,7 +61,7 @@ def merge_submissions_with_issues(df_submissions: pd.DataFrame, df_issues: pd.Da
                    ignore_issue_classes=ignore_issue_classes,
                    issue_class_column=issue_class_column)
 
-    logging.info(f'Merging submissions with issues')
+    logging.info('Merging submissions with issues')
     df_issues = df_issues[[SubmissionColumns.ID.value, issue_column, SubmissionColumns.CODE.value]]
     df_submissions = merge_dfs(df_submissions, df_issues, SubmissionColumns.CODE.value,
                                SubmissionColumns.CODE.value, how='left')
@@ -72,7 +72,7 @@ def merge_submissions_with_issues(df_submissions: pd.DataFrame, df_issues: pd.Da
 
 
 def preprocess_qodana_issues(df_issues: pd.DataFrame) -> pd.DataFrame:
-    logging.info(f'Preprocessing qodana issues')
+    logging.info('Preprocessing qodana issues')
 
     df_issues = rename_columns(df_issues, columns={'inspections': SubmissionColumns.QODANA_ISSUES.value})
     df_issues[SubmissionColumns.QODANA_ISSUES.value] = df_issues[SubmissionColumns.QODANA_ISSUES.value] \

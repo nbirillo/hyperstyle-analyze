@@ -8,7 +8,7 @@ import pandas as pd
 
 from analysis.src.python.data_analysis.model.column_name import Client, SubmissionColumns
 from analysis.src.python.data_analysis.utils.df_utils import merge_dfs, read_df, write_df
-from analysis.src.python.data_analysis.utils.logging_utlis import configure_logger
+from analysis.src.python.data_analysis.utils.logging_utils import configure_logger
 from analysis.src.python.data_analysis.utils.parsing_utils import str_to_datetime
 
 
@@ -48,7 +48,7 @@ def filter_submissions_series(submissions_series: pd.DataFrame, diff_ratio: floa
     prev_submission = None
     attempt = 0
 
-    for i, submission in submissions_series.iterrows():
+    for _, submission in submissions_series.iterrows():
         attempt += 1
 
         if prev_submission is not None:

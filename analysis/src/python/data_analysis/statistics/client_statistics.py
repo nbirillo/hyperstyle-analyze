@@ -6,7 +6,7 @@ import sys
 import pandas as pd
 
 from analysis.src.python.data_analysis.model.column_name import SubmissionColumns
-from analysis.src.python.data_analysis.utils.logging_utlis import configure_logger
+from analysis.src.python.data_analysis.utils.logging_utils import configure_logger
 from analysis.src.python.data_analysis.utils.statistics_utils import get_statistics_by_group
 
 
