@@ -131,8 +131,8 @@ instantiation
 intelli
 intellij
 interop
-isin
 isfile
+isin
 isna
 isnull
 issuetype
