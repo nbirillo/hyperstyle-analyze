@@ -14,10 +14,10 @@ def calculate_issues_change_statistics(df_issues_statistics: pd.DataFrame,
                                        issues_classes: List[str]):
     """ Calculate issues count diff between previous and current attempt in one submissions series. """
 
-    df_issues_statistics = df_issues_statistics.sort_values([SubmissionColumns.ATTEMPT])
+    df_issues_statistics = df_issues_statistics.sort_values([SubmissionColumns.ATTEMPT.value])
 
     issues_change_statistics = {
-        SubmissionColumns.ID: df_issues_statistics[SubmissionColumns.ID].values,
+        SubmissionColumns.ID.value: df_issues_statistics[SubmissionColumns.ID.value].values,
     }
 
     for issue_class in issues_classes:
@@ -45,18 +45,20 @@ def get_submissions_issues_change_statistics(submissions_path: str,
 
     df_submissions = pd.read_csv(submissions_path)
     df_issues_statistics = pd.read_csv(issues_statistics_path)
-    df_issues = pd.read_csv(issues_path)[IssuesColumns.CLASS].values
+    df_issues = pd.read_csv(issues_path)
+
+    issues_classes = df_issues[IssuesColumns.CLASS.value].values
 
     df_submissions = merge_dfs(
-        df_submissions[[SubmissionColumns.ID, SubmissionColumns.GROUP, SubmissionColumns.ATTEMPT]],
+        df_submissions[[SubmissionColumns.ID.value, SubmissionColumns.GROUP.value, SubmissionColumns.ATTEMPT.value]],
         df_issues_statistics,
-        SubmissionColumns.ID,
-        SubmissionColumns.ID,
+        SubmissionColumns.ID.value,
+        SubmissionColumns.ID.value,
     )
 
     get_statistics_by_group(df_submissions, issues_change_statistics_path, chunk_size,
-                            lambda submission_series: submission_series.apply(calculate_issues_change_statistics,
-                                                                              issues_classes=df_issues))
+                            lambda submission_series:
+                            calculate_issues_change_statistics(submission_series, issues_classes))
 
 
 if __name__ == '__main__':

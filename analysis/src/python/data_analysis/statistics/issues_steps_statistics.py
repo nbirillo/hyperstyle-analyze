@@ -22,27 +22,28 @@ def get_issues_steps_statistics(submissions_path: str,
     # Select submission's attempt
     if attempt_number is not None:
         if attempt_number == -1:
-            df_submissions = \
-                df_submissions[df_submissions[SubmissionColumns.ATTEMPT] == SubmissionColumns.TOTAL_ATTEMPTS]
+            df_submissions = df_submissions[
+                df_submissions[SubmissionColumns.ATTEMPT.value] == SubmissionColumns.TOTAL_ATTEMPTS.value]
         else:
-            df_submissions = df_submissions[df_submissions[SubmissionColumns.ATTEMPT] == attempt_number]
+            df_submissions = df_submissions[df_submissions[SubmissionColumns.ATTEMPT.value] == attempt_number]
 
     df_issues = read_df(issues_path)
 
     df_issues_statistics = read_df(issue_statistics_path)
 
     df_issues_statistics = merge_dfs(
-        df_submissions[[SubmissionColumns.ID, SubmissionColumns.STEP_ID]],
+        df_submissions[[SubmissionColumns.ID.value, SubmissionColumns.STEP_ID.value]],
         df_issues_statistics,
-        SubmissionColumns.ID,
-        SubmissionColumns.ID,
+        SubmissionColumns.ID.value,
+        SubmissionColumns.ID.value,
     )
 
     create_directory(issues_steps_statistics_directory_path)
-    for issue_class in df_issues[IssuesColumns.CLASS].values:
-        df_issues_statistics[[issue_class, SubmissionColumns.STEP_ID]][df_issues_statistics[issue_class] > 0][
-            [SubmissionColumns.STEP_ID]].value_counts().to_csv(os.path.join(issues_steps_statistics_directory_path,
-                                                                            f'{issue_class}{AnalysisExtension.CSV}'))
+
+    for issue_class in df_issues[IssuesColumns.CLASS.value].values:
+        issue_stats_path = os.path.join(issues_steps_statistics_directory_path, f'{issue_class}{AnalysisExtension.CSV}')
+        df_issues_statistics[[issue_class, SubmissionColumns.STEP_ID.value]][df_issues_statistics[issue_class] > 0][
+            [SubmissionColumns.STEP_ID.value]].value_counts().to_csv(issue_stats_path)
 
 
 if __name__ == '__main__':

@@ -26,9 +26,9 @@ def get_statistics_by_group(df: pd.DataFrame, df_statistics_path: str, chunk_siz
         logging.info(f'Processing {i}-th chunk with groups: [{min_group_index}, {max_group_index})')
 
         logging.info('Selecting dataframe chunk')
-        df_chunk = df[df[SubmissionColumns.GROUP].between(min_group_index, max_group_index, inclusive=True)]
+        df_chunk = df[df[SubmissionColumns.GROUP.value].between(min_group_index, max_group_index, inclusive=True)]
 
-        df_grouped_chunk = df_chunk.groupby([SubmissionColumns.GROUP], as_index=False)
+        df_grouped_chunk = df_chunk.groupby([SubmissionColumns.GROUP.value], as_index=False)
 
         logging.info('Applying function')
         df_chunk_statistics = df_grouped_chunk.apply(func)

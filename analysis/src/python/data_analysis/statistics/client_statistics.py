@@ -13,10 +13,10 @@ from analysis.src.python.data_analysis.utils.statistics_utils import get_statist
 def calculate_submissions_series_client_series(series: pd.DataFrame) -> pd.Series:
     """ For submissions series sort submissions by attempt number and build client series. """
 
-    series = series.sort_values([SubmissionColumns.ATTEMPT])
+    series = series.sort_values([SubmissionColumns.ATTEMPT.value])
     stats = {
-        SubmissionColumns.GROUP: series[SubmissionColumns.GROUP].values[0],
-        SubmissionColumns.CLIENT: json.dumps(list(series[SubmissionColumns.CLIENT].values)),
+        SubmissionColumns.GROUP.value: series[SubmissionColumns.GROUP.value].values[0],
+        SubmissionColumns.CLIENT.value: json.dumps(list(series[SubmissionColumns.CLIENT.value].values)),
     }
 
     return pd.Series(stats)
@@ -29,7 +29,9 @@ def get_submissions_client_series(submissions_path: str,
 
     df_submissions = pd.read_csv(submissions_path)
 
-    min_group, max_group = df_submissions[SubmissionColumns.GROUP].min(), df_submissions[SubmissionColumns.GROUP].max()
+    min_group = df_submissions[SubmissionColumns.GROUP.value].min()
+    max_group = df_submissions[SubmissionColumns.GROUP.value].max()
+
     logging.info(f'Groups range: [{min_group}, {max_group}]')
 
     get_statistics_by_group(df_submissions, client_series_statistics_path, chunk_size,

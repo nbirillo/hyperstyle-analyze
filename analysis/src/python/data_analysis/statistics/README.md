@@ -37,7 +37,7 @@ To get statistics on collected and preprocessed data, run following python scrip
 
     | Argument | Description |
     |----------|-------------|
-    |**issues_type**| Type of issue to analyse (can be `raw_issue` or `qodana_issue`). |
+    |**issues_type**| Type of issue to analyse (can be `raw_issues` or `qodana_issues`). |
     |**submissions_path**| Path to .csv file with `preprocessed submissions`. |
     |**issues_info_path**| Path to .csv file with all issues list (classes and types). |
     |**issues_statistics_path**| Path to .csv file where to save submissions issues statistics. |

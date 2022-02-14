@@ -12,7 +12,7 @@ def get_submission_statistics(submissions_with_issues_path: str, submissions_sta
     """ Calculate submissions metrics such number of code lines, symbols, issues. """
 
     df_submissions = read_df(submissions_with_issues_path)
-    df_stats = df_submissions[[SubmissionColumns.ID]].copy()
+    df_stats = df_submissions[[SubmissionColumns.ID.value]].copy()
 
     df_stats[SubmissionStatsColumns.CODE_LINES_COUNT.value] = df_submissions[SubmissionColumns.CODE.value] \
         .apply(calculate_code_lines_count)

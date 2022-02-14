@@ -18,10 +18,10 @@ def calculate_chunk_issues_statistics(df_submissions: pd.DataFrame,
     """ Calculate number of each issue class in all submissions chunk. """
 
     issues_statistics = {
-        SubmissionColumns.ID: df_submissions[SubmissionColumns.ID].values,
+        SubmissionColumns.ID.value: df_submissions[SubmissionColumns.ID.value].values,
     }
 
-    for issue_class in df_issues[IssuesColumns.CLASS].values:
+    for issue_class in df_issues[IssuesColumns.CLASS.value].values:
         issues_statistics[issue_class] = [0] * df_submissions.shape[0]
 
     k = 0
@@ -35,20 +35,20 @@ def calculate_chunk_issues_statistics(df_submissions: pd.DataFrame,
 
 def get_issues_statistics(
         submissions_with_issues_path: str,
-        issues_path: str,
+        issues_info_path: str,
         issues_type: str,
         issues_statistics_path: str,
         chunk_size: int):
     """ Calculate number of each issue class in all submissions. """
 
-    df_issues = read_df(issues_path)
+    df_issues = read_df(issues_info_path)
     logging.info(f"Processing dataframe chunk_size={chunk_size}")
 
-    issue_column = SubmissionColumns(issues_type)
-    if issue_column == SubmissionColumns.QODANA_ISSUES:
-        issue_class_key = SubmissionColumns.QODANA_ISSUE_CLASS
+    issue_column = SubmissionColumns(issues_type).value
+    if issue_column == SubmissionColumns.QODANA_ISSUES.value:
+        issue_class_key = SubmissionColumns.QODANA_ISSUE_CLASS.value
     else:
-        issue_class_key = SubmissionColumns.RAW_ISSUE_CLASS
+        issue_class_key = SubmissionColumns.RAW_ISSUE_CLASS.value
 
     k = 0
     for df_submissions_with_issues in pd.read_csv(submissions_with_issues_path, chunksize=chunk_size):
@@ -80,7 +80,7 @@ if __name__ == '__main__':
     configure_logger(args.issues_statistics_path, 'statistics')
 
     get_issues_statistics(args.submissions_path,
-                          args.issues_path,
+                          args.issues_info_path,
                           args.issues_type,
                           args.issues_statistics_path,
                           args.chunk_size)
