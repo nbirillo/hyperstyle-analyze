@@ -1,7 +1,7 @@
 import argparse
 import sys
 
-from analysis.src.python.data_analysis.model.column_name import SubmissionColumns, SubmissionColumnsStats
+from analysis.src.python.data_analysis.model.column_name import SubmissionColumns, SubmissionStatsColumns
 from analysis.src.python.data_analysis.utils.df_utils import read_df, write_df
 from analysis.src.python.data_analysis.utils.logging_utlis import configure_logger
 from analysis.src.python.data_analysis.utils.stats_utils import calculate_code_lines_count, \
@@ -14,14 +14,14 @@ def get_submission_statistics(submissions_with_issues_path: str, submissions_sta
     df_submissions = read_df(submissions_with_issues_path)
     df_stats = df_submissions[[SubmissionColumns.ID]].copy()
 
-    df_stats[SubmissionColumnsStats.CODE_LINES_COUNT.value] = df_submissions[SubmissionColumns.CODE.value] \
+    df_stats[SubmissionStatsColumns.CODE_LINES_COUNT.value] = df_submissions[SubmissionColumns.CODE.value] \
         .apply(calculate_code_lines_count)
-    df_stats[SubmissionColumnsStats.CODE_SYMBOLS_COUNT.value] = df_submissions[SubmissionColumns.CODE.value] \
+    df_stats[SubmissionStatsColumns.CODE_SYMBOLS_COUNT.value] = df_submissions[SubmissionColumns.CODE.value] \
         .apply(calculate_code_symbols_count)
 
-    df_stats[SubmissionColumnsStats.QODANA_ISSUE_COUNT.value] = df_submissions[SubmissionColumns.QODANA_ISSUES.value] \
+    df_stats[SubmissionStatsColumns.QODANA_ISSUE_COUNT.value] = df_submissions[SubmissionColumns.QODANA_ISSUES.value] \
         .apply(calculate_issues_count)
-    df_stats[SubmissionColumnsStats.RAW_ISSUE_COUNT.value] = df_submissions[SubmissionColumns.RAW_ISSUES.value] \
+    df_stats[SubmissionStatsColumns.RAW_ISSUE_COUNT.value] = df_submissions[SubmissionColumns.RAW_ISSUES.value] \
         .apply(calculate_issues_count)
 
     write_df(df_stats, submissions_statistics_path)

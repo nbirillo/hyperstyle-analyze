@@ -8,14 +8,14 @@ from analysis.src.python.data_analysis.utils.df_utils import read_df, write_df
 from analysis.src.python.data_analysis.utils.logging_utlis import configure_logger
 
 
-def get_user_level_tag(passed_problems: int, level_borders: Tuple[int, int]) -> Level:
+def get_user_level_tag(passed_problems: int, level_borders: Tuple[int, int]) -> str:
     """ Defines user's level. If < level_borders[0] -- low, > level_borders[1] -- high, otherwise average. """
 
     if passed_problems < level_borders[0]:
-        return Level.LOW
+        return Level.LOW.value
     if passed_problems > level_borders[1]:
-        return Level.HIGH
-    return Level.AVERAGE
+        return Level.HIGH.value
+    return Level.AVERAGE.value
 
 
 def preprocess_users(users_path: str, preprocessed_users_path: Optional[str], level_borders: Tuple[int, int]):
@@ -24,9 +24,9 @@ def preprocess_users(users_path: str, preprocessed_users_path: Optional[str], le
     df_users = read_df(users_path)
     logging.info(f"Users initial shape: {df_users.shape}")
 
-    df_users[UserColumns.LEVEL] = df_users[UserColumns.PASSED_PROBLEMS] \
+    df_users[UserColumns.LEVEL.value] = df_users[UserColumns.PASSED_PROBLEMS.value] \
         .apply(get_user_level_tag, level_borders=level_borders)
-    logging.info(f"Set users level:\n{df_users[UserColumns.LEVEL].value_counts()}")
+    logging.info(f"Set users level:\n{df_users[UserColumns.LEVEL.value].value_counts()}")
 
     logging.info(f"Users final shape: {df_users.shape}")
     logging.info(f"Saving users to {preprocessed_users_path}")

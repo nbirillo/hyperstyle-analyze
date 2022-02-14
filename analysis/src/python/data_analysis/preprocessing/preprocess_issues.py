@@ -33,8 +33,8 @@ def get_issues_info(df_submissions: pd.DataFrame, issues_column: str,
                                         issues_types=issues_info)
 
     return pd.DataFrame.from_dict({
-        IssuesColumns.CLASS: issues_info.keys(),
-        IssuesColumns.TYPE: issues_info.values(),
+        IssuesColumns.CLASS.value: issues_info.keys(),
+        IssuesColumns.TYPE.value: issues_info.values(),
     })
 
 
@@ -54,7 +54,7 @@ def merge_submissions_with_issues(df_submissions: pd.DataFrame, df_issues: pd.Da
 
     df_issues[issue_column] = df_issues[issue_column].fillna(value=json.dumps([]))
 
-    logging.info(f'Filter issues')
+    logging.info(f'Filter issues: {ignore_issue_classes}')
     if ignore_issue_classes is not None:
         df_issues[issue_column] = df_issues[issue_column] \
             .apply(filter_issues,
@@ -62,8 +62,9 @@ def merge_submissions_with_issues(df_submissions: pd.DataFrame, df_issues: pd.Da
                    issue_class_column=issue_class_column)
 
     logging.info(f'Merging submissions with issues')
-    df_issues = df_issues[[SubmissionColumns.ID, issue_column, SubmissionColumns.CODE]]
-    df_submissions = merge_dfs(df_submissions, df_issues, SubmissionColumns.CODE, SubmissionColumns.CODE, how='left')
+    df_issues = df_issues[[SubmissionColumns.ID.value, issue_column, SubmissionColumns.CODE.value]]
+    df_submissions = merge_dfs(df_submissions, df_issues, SubmissionColumns.CODE.value,
+                               SubmissionColumns.CODE.value, how='left')
     df_submissions[issue_column] = df_submissions[issue_column].fillna(value=json.dumps([]))
     logging.info(f'Finish merging. Submissions shape: {df_submissions.shape}')
 
@@ -92,14 +93,14 @@ def preprocess_issues(submissions_path: str,
     df_issues = read_df(issues_path)
     logging.info(f'Issues initial shape: {df_issues.shape}')
 
-    issues_column = SubmissionColumns(issues_type)
-    issue_type_column = SubmissionColumns.ISSUE_TYPE
+    issues_column = SubmissionColumns(issues_type).value
+    issue_type_column = SubmissionColumns.ISSUE_TYPE.value
 
     if issues_column == SubmissionColumns.QODANA_ISSUES.value:
         df_issues = preprocess_qodana_issues(df_issues)
-        issue_class_column = SubmissionColumns.QODANA_ISSUE_CLASS
+        issue_class_column = SubmissionColumns.QODANA_ISSUE_CLASS.value
     else:
-        issue_class_column = SubmissionColumns.RAW_ISSUE_CLASS
+        issue_class_column = SubmissionColumns.RAW_ISSUE_CLASS.value
 
     df_submissions = merge_submissions_with_issues(df_submissions, df_issues,
                                                    issues_column, issue_class_column, ignore_issue_classes)

@@ -15,20 +15,20 @@ from analysis.src.python.data_analysis.utils.parsing_utils import str_to_datetim
 def check_same_code(submission_0: pd.Series, submission_1: pd.Series) -> bool:
     """ Check if submission not the same as previous. """
 
-    return submission_0[SubmissionColumns.CODE].strip() == submission_1[SubmissionColumns.CODE].strip()
+    return submission_0[SubmissionColumns.CODE.value].strip() == submission_1[SubmissionColumns.CODE.value].strip()
 
 
 def check_different_code(submission_0: pd.Series, submission_1: pd.Series, diff_ratio: float) -> bool:
     """ Check if submission not so different with previous (lines number does not changed in `diff_ratio` times). """
 
-    code_0 = submission_0[SubmissionColumns.CODE]
-    code_1 = submission_1[SubmissionColumns.CODE]
+    code_0 = submission_0[SubmissionColumns.CODE.value]
+    code_1 = submission_1[SubmissionColumns.CODE.value]
     code_lines_diff = len(code_0) / len(code_1)
     return not (1 / diff_ratio <= code_lines_diff <= diff_ratio)
 
 
 @unique
-class SubmissionsCheckStatus(str, Enum):
+class SubmissionsCheckStatus(Enum):
     OK = 'ok'
     SAME = 'same'
     DIFFERENT = 'different'
@@ -37,43 +37,45 @@ class SubmissionsCheckStatus(str, Enum):
 def filter_submissions_series(submissions_series: pd.DataFrame, diff_ratio: float) -> pd.DataFrame:
     """ Filter submissions in submission series (group of submissions by one user on one step). """
 
-    logging.info(f'Processing submission series group {submissions_series.iloc[0][SubmissionColumns.GROUP]}')
+    logging.info(f'Processing submission series group {submissions_series.iloc[0][SubmissionColumns.GROUP.value]}')
     logging.info(f'Initial group shape {submissions_series.shape}')
 
     status = []
-    submissions_series[SubmissionColumns.TIME] = submissions_series[SubmissionColumns.TIME].apply(str_to_datetime)
-    submissions_series.sort_values([SubmissionColumns.TIME], inplace=True)
+    submissions_series[SubmissionColumns.TIME.value] = submissions_series[SubmissionColumns.TIME.value] \
+        .apply(str_to_datetime)
+    submissions_series.sort_values([SubmissionColumns.TIME.value], inplace=True)
 
     prev_submission = None
     attempt = 0
+
     for i, submission in submissions_series.iterrows():
         attempt += 1
 
         if prev_submission is not None:
             if check_same_code(prev_submission, submission):
                 logging.info(f'Drop submission: '
-                             f'user={submission[SubmissionColumns.USER_ID]} '
-                             f'step={submission[SubmissionColumns.STEP_ID]} '
+                             f'user={submission[SubmissionColumns.USER_ID.value]} '
+                             f'step={submission[SubmissionColumns.STEP_ID.value]} '
                              f'attempt={attempt + 1}: '
                              f'same submissions')
-                status.append(SubmissionsCheckStatus.SAME)
+                status.append(SubmissionsCheckStatus.SAME.value)
                 continue
             elif check_different_code(submission, submission, diff_ratio):
                 logging.info(f'Drop submission: '
-                             f'user={submission[SubmissionColumns.USER_ID]} '
-                             f'step={submission[SubmissionColumns.STEP_ID]} '
+                             f'user={submission[SubmissionColumns.USER_ID.value]} '
+                             f'step={submission[SubmissionColumns.STEP_ID.value]} '
                              f'attempt={attempt + 1}: '
                              f'different submissions')
-                status.append(SubmissionsCheckStatus.DIFFERENT)
+                status.append(SubmissionsCheckStatus.DIFFERENT.value)
                 continue
 
         prev_submission = submission
-        status.append(SubmissionsCheckStatus.OK)
+        status.append(SubmissionsCheckStatus.OK.value)
 
-    submissions_series = submissions_series[(pd.Series(status) == SubmissionsCheckStatus.OK).values].copy()
+    submissions_series = submissions_series[(pd.Series(status) == SubmissionsCheckStatus.OK.value).values].copy()
     group_size = submissions_series.shape[0]
-    submissions_series[SubmissionColumns.ATTEMPT] = list(range(1, group_size + 1))
-    submissions_series[SubmissionColumns.TOTAL_ATTEMPTS] = [group_size] * group_size
+    submissions_series[SubmissionColumns.ATTEMPT.value] = list(range(1, group_size + 1))
+    submissions_series[SubmissionColumns.TOTAL_ATTEMPTS.value] = [group_size] * group_size
 
     logging.info(f'Final group shape {submissions_series.shape}')
 
@@ -83,7 +85,7 @@ def filter_submissions_series(submissions_series: pd.DataFrame, diff_ratio: floa
 def filter_submissions_without_code(df_submissions: pd.DataFrame) -> pd.DataFrame:
     """ Filter submissions with integer answer instead of code string. """
 
-    df_submissions = df_submissions[df_submissions[SubmissionColumns.CODE].apply(lambda x: isinstance(x, str))]
+    df_submissions = df_submissions[df_submissions[SubmissionColumns.CODE.value].apply(lambda x: isinstance(x, str))]
     logging.info('Filter submissions without code (test cases or other)')
 
     return df_submissions
@@ -92,8 +94,9 @@ def filter_submissions_without_code(df_submissions: pd.DataFrame) -> pd.DataFram
 def filter_submissions_with_many_attempts(df_submissions: pd.DataFrame, max_attempts: int) -> pd.DataFrame:
     """ Filter submissions with more then max attempts. """
 
-    df_submissions = df_submissions[df_submissions[SubmissionColumns.TOTAL_ATTEMPTS] <= max_attempts]
     logging.info(f'Filter submissions with > {max_attempts} attempts. Submissions shape: {df_submissions.shape}')
+    df_submissions = df_submissions[df_submissions[SubmissionColumns.TOTAL_ATTEMPTS.value] <= max_attempts]
+    logging.info(f'Finish filtering. Submissions shape: {df_submissions.shape}')
 
     return df_submissions
 
@@ -105,13 +108,14 @@ def get_submissions_user(df_submissions: pd.DataFrame, submissions_to_users_path
     logging.info(f'Submissions to user shape: {df_submissions_to_users.shape}')
 
     logging.info('Merging submissions with submissions to users')
-    df_submissions = merge_dfs(df_submissions, df_submissions_to_users, SubmissionColumns.ID, SubmissionColumns.ID)
+    df_submissions = merge_dfs(df_submissions, df_submissions_to_users,
+                               SubmissionColumns.ID.value, SubmissionColumns.ID.value)
     logging.info(f'Finish merging. Submissions shape: {df_submissions.shape}')
 
     return df_submissions
 
 
-def get_client_tag(base_client: str):
+def get_client_tag(base_client: str) -> str:
     """ Get client tag (idea is universal tag of all ides). """
 
     if base_client == Client.WEB.value:
@@ -122,10 +126,11 @@ def get_client_tag(base_client: str):
 def get_submissions_client(df_submissions: pd.DataFrame) -> pd.DataFrame:
     """ Change client column name. """
 
-    df_submissions[SubmissionColumns.BASE_CLIENT] = df_submissions[SubmissionColumns.CLIENT]
-    logging.info(f"Set submissions base client:\n{df_submissions[SubmissionColumns.BASE_CLIENT].value_counts()}")
-    df_submissions[SubmissionColumns.CLIENT] = df_submissions[SubmissionColumns.CLIENT].apply(get_client_tag)
-    logging.info(f"Set submissions client:\n{df_submissions[SubmissionColumns.CLIENT].value_counts()}")
+    df_submissions[SubmissionColumns.BASE_CLIENT.value] = df_submissions[SubmissionColumns.CLIENT.value]
+    logging.info(f"Set submissions base client:\n{df_submissions[SubmissionColumns.BASE_CLIENT.value].value_counts()}")
+    df_submissions[SubmissionColumns.CLIENT.value] = df_submissions[SubmissionColumns.CLIENT.value] \
+        .apply(get_client_tag)
+    logging.info(f"Set submissions client:\n{df_submissions[SubmissionColumns.CLIENT.value].value_counts()}")
 
     return df_submissions
 
@@ -133,8 +138,8 @@ def get_submissions_client(df_submissions: pd.DataFrame) -> pd.DataFrame:
 def get_submissions_group(df_submissions: pd.DataFrame) -> pd.DataFrame:
     """ Group submissions by user and step and set submissions from one group same identifier. """
 
-    df_submissions[SubmissionColumns.GROUP] = df_submissions \
-        .groupby([SubmissionColumns.USER_ID, SubmissionColumns.STEP_ID]).ngroup()
+    df_submissions[SubmissionColumns.GROUP.value] = df_submissions \
+        .groupby([SubmissionColumns.USER_ID.value, SubmissionColumns.STEP_ID.value]).ngroup()
 
     return df_submissions
 
@@ -143,13 +148,13 @@ def get_submissions_attempt(df_submissions: pd.DataFrame, diff_ration: float) ->
     """ Group submissions by user and step and set submissions from one group same identifier. """
 
     df_submissions = df_submissions \
-        .groupby([SubmissionColumns.GROUP], as_index=False) \
+        .groupby([SubmissionColumns.GROUP.value], as_index=False) \
         .apply(lambda g: filter_submissions_series(g, diff_ration))
 
-    df_submissions_last_attempt = \
-        df_submissions[df_submissions[SubmissionColumns.ATTEMPT] == df_submissions[SubmissionColumns.TOTAL_ATTEMPTS]]
+    df_submissions_last_attempt = df_submissions[
+        df_submissions[SubmissionColumns.ATTEMPT.value] == df_submissions[SubmissionColumns.TOTAL_ATTEMPTS.value]]
     logging.info(f"Set submissions attempts:\n"
-                 f"{df_submissions_last_attempt[SubmissionColumns.TOTAL_ATTEMPTS].value_counts()}")
+                 f"{df_submissions_last_attempt[SubmissionColumns.TOTAL_ATTEMPTS.value].value_counts()}")
 
     return df_submissions
 
@@ -164,6 +169,9 @@ def preprocess_submissions(submissions_path: str,
 
     df_submissions = read_df(submissions_path)
     logging.info(f'Submissions initial shape: {df_submissions.shape}')
+
+    if SubmissionColumns.STEP in df_submissions.columns:
+        df_submissions.rename({SubmissionColumns.STEP: SubmissionColumns.STEP_ID}, inplace=True)
 
     # Change client to web/idea
     df_submissions = get_submissions_client(df_submissions)

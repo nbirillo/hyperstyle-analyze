@@ -16,7 +16,7 @@ def build_topics_tree(df_topics: pd.DataFrame) -> Tuple[Dict[int, List[int]], Li
 
     logging.info("Building topics tree")
 
-    topics_tree = {topic[TopicColumns.ID]: [] for i, topic in df_topics.iterrows()}
+    topics_tree = {topic[TopicColumns.ID.value]: [] for i, topic in df_topics.iterrows()}
     roots = []
     for _, topic in df_topics.iterrows():
         prerequisites = ast.literal_eval((topic[TopicColumns.PREREQUISITES.value]))
@@ -59,15 +59,16 @@ def preprocess_topics(topics_path: str, preprocessed_topics_path: Optional[str])
     logging.info(f"Topics initial shape: {df_topics.shape}")
 
     df_topics = df_topics[
-        [TopicColumns.ID, TopicColumns.PREREQUISITES, TopicColumns.CHILDREN,
-         TopicColumns.HAS_STEPS, TopicColumns.HIERARCHY, TopicColumns.TOPOLOGICAL_INDEX,
-         TopicColumns.TITLE, TopicColumns.ROOT_ID, TopicColumns.ROOT_TITLE, TopicColumns.URL,
+        [TopicColumns.ID.value, TopicColumns.PREREQUISITES.value, TopicColumns.CHILDREN.value,
+         TopicColumns.HAS_STEPS.value, TopicColumns.HIERARCHY.value, TopicColumns.TOPOLOGICAL_INDEX.value,
+         TopicColumns.TITLE.value, TopicColumns.ROOT_ID.value, TopicColumns.ROOT_TITLE.value, TopicColumns.URL.value,
          ]]
 
     topics_depth = get_topics_depth(df_topics)
 
-    df_topics[TopicColumns.DEPTH] = df_topics[TopicColumns.ID].apply(lambda topic_id: topics_depth.get(topic_id, 0))
-    logging.info(f"Set topics depth:\n{df_topics[TopicColumns.DEPTH].value_counts()}")
+    df_topics[TopicColumns.DEPTH.value] = df_topics[TopicColumns.ID.value] \
+        .apply(lambda topic_id: topics_depth.get(topic_id, None))
+    logging.info(f"Set topics depth:\n{df_topics[TopicColumns.DEPTH.value].value_counts()}")
 
     logging.info(f"Topics final shape: {df_topics.shape}")
     logging.info(f"Saving topics to {preprocessed_topics_path}")

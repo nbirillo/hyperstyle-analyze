@@ -31,4 +31,4 @@ def str_to_datetime(s) -> datetime:
 def parse_qodana_issues(s: str) -> str:
     """ Parse qodana issues from string and . """
 
-    return list_to_str(list(map(ast.literal_eval, str_to_dict(s)['issues'])))
+    return list_to_str(list(map(ast.literal_eval, ast.literal_eval(s)['issues'])))

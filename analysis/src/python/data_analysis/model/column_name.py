@@ -2,7 +2,7 @@ from enum import Enum, unique
 
 
 @unique
-class StepColumns(str, Enum):
+class StepColumns(Enum):
     ID = 'id'
     COMMENTS = 'comments_statistics'
     LIKES = 'likes_statistics'
@@ -14,6 +14,7 @@ class StepColumns(str, Enum):
     STEPIK_ID = 'stepik_id'
     SUCCESS_RATE = 'success_rate'
     TOPIC = 'topic'
+    TOPIC_ID = 'topic_id'
     TOPIC_THEORY = 'topic_theory'
     TYPE = 'type'
     TITLE = 'title'
@@ -44,7 +45,7 @@ class StepColumns(str, Enum):
 
 
 @unique
-class CommentsColumns(str, Enum):
+class CommentsColumns(Enum):
     COMMENT = 'comment'
     HINT = 'hint'
     USEFUL_LINK = 'useful link'
@@ -52,7 +53,7 @@ class CommentsColumns(str, Enum):
 
 
 @unique
-class LikesColumns(str, Enum):
+class LikesColumns(Enum):
     LOVE = 'love'
     HAPPY = 'happy'
     NEUTRAL = 'neutral'
@@ -61,21 +62,21 @@ class LikesColumns(str, Enum):
 
 
 @unique
-class Complexity(str, Enum):
+class Complexity(Enum):
     SHALLOW = 'shallow'
     MIDDLE = 'middle'
     DEEP = 'deep'
 
 
 @unique
-class Difficulty(str, Enum):
+class Difficulty(Enum):
     EASY = 'easy'
     MEDIUM = 'medium'
     HARD = 'hard'
 
 
 @unique
-class TopicColumns(str, Enum):
+class TopicColumns(Enum):
     ID = 'id'
     CHILDREN = 'children'
     DEPTH = 'depth'
@@ -92,7 +93,7 @@ class TopicColumns(str, Enum):
 
 
 @unique
-class SubmissionColumns(str, Enum):
+class SubmissionColumns(Enum):
     ID = 'id'
     USER_ID = 'user_id'
     GROUP = 'group'
@@ -100,6 +101,7 @@ class SubmissionColumns(str, Enum):
     TOTAL_ATTEMPTS = 'total_attempts'
     BASE_CLIENT = 'base_client'
     CLIENT = 'client'
+    STEP = 'step'
     STEP_ID = 'step_id'
     CODE = 'code'
     LANG = 'lang'
@@ -116,7 +118,7 @@ class SubmissionColumns(str, Enum):
 
 
 @unique
-class SubmissionColumnsStats(str, Enum):
+class SubmissionStatsColumns(Enum):
     ATTEMPTS = 'attempts'
     RAW_ISSUE_COUNT = 'raw_issues_count'
     QODANA_ISSUE_COUNT = 'qodana_issues_count'
@@ -128,19 +130,19 @@ class SubmissionColumnsStats(str, Enum):
 
 
 @unique
-class IssuesColumns(str, Enum):
+class IssuesColumns(Enum):
     CLASS = 'class'
     TYPE = 'type'
 
 
 @unique
-class Client(str, Enum):
+class Client(Enum):
     WEB = 'web'
     IDEA = 'idea'
 
 
 @unique
-class UserColumns(str, Enum):
+class UserColumns(Enum):
     ID = 'id'
     COMMENTS = 'comments_posted'
     GAMIFICATION = 'gamification'
@@ -154,7 +156,7 @@ class UserColumns(str, Enum):
 
 
 @unique
-class Level(str, Enum):
+class Level(Enum):
     LOW = 'low'
     AVERAGE = 'average'
     HIGH = 'high'

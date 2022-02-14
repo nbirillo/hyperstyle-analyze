@@ -4,12 +4,12 @@ import sys
 
 from analysis.src.python.data_analysis.model.column_name import StepColumns, SubmissionColumns, TopicColumns, \
     UserColumns
-from analysis.src.python.data_analysis.utils.df_utils import read_df, write_df
+from analysis.src.python.data_analysis.utils.df_utils import merge_dfs, read_df, write_df
 from analysis.src.python.data_analysis.utils.logging_utlis import configure_logger
 
 
-def filter_dataset(submissions_path: str, steps_path: str, topics_path: str, users_path: str):
-    """ Create directory with result dataset to analyse. Filter submissions with more then `max_attempts`. """
+def compile_dataset(submissions_path: str, steps_path: str, topics_path: str, users_path: str):
+    """ Create directory with result dataset to analyse: select data which present in all datasets. """
 
     df_submissions = read_df(submissions_path)
     logging.info(f'Submissions initial count: {df_submissions.shape[0]}')
@@ -20,18 +20,22 @@ def filter_dataset(submissions_path: str, steps_path: str, topics_path: str, use
     df_users = read_df(users_path)
     logging.info(f'Users initial size: {df_users.shape[0]}')
 
-    # Filter submissions on steps with header or footer
-    df_submissions = df_submissions[df_submissions[SubmissionColumns.STEP_ID].isin(df_steps[StepColumns.ID])]
-    logging.info(f'Select {df_submissions.shape[0]} submissions with has_header_footer = False')
+    df_compile = merge_dfs(df_submissions, df_steps, SubmissionColumns.STEP_ID.value, StepColumns.ID.value)
+    df_compile = merge_dfs(df_compile, df_topics, StepColumns.TOPIC_ID.value, TopicColumns.ID.value)
+    df_compile = merge_dfs(df_compile, df_users, SubmissionColumns.USER_ID.value, UserColumns.ID.value)
 
-    df_steps = df_steps[df_steps[StepColumns.ID].isin(df_submissions[SubmissionColumns.STEP_ID])]
-    logging.info(f'Select {df_steps.shape[0]} steps which presented in submissions dataset')
+    df_submissions = df_submissions[
+        df_submissions[SubmissionColumns.ID.value].isin(df_compile[SubmissionColumns.ID.value])]
+    logging.info(f'Select {df_submissions.shape[0]} submissions which presented in compile dataset')
 
-    df_topics = df_topics[df_topics[TopicColumns.ID].isin(df_steps[StepColumns.TOPIC])]
-    logging.info(f'Select {df_topics.shape[0]} topics which presented in submissions dataset')
+    df_steps = df_steps[df_steps[StepColumns.ID.value].isin(df_compile[SubmissionColumns.STEP_ID.value])]
+    logging.info(f'Select {df_steps.shape[0]} steps which presented in compile dataset')
 
-    df_users = df_users[df_users[UserColumns.ID].isin(df_submissions[SubmissionColumns.USER_ID])]
-    logging.info(f'Select {df_users.shape[0]} users which presented in submissions dataset')
+    df_topics = df_topics[df_topics[TopicColumns.ID.value].isin(df_compile[StepColumns.TOPIC_ID.value])]
+    logging.info(f'Select {df_topics.shape[0]} topics which presented in compile dataset')
+
+    df_users = df_users[df_users[UserColumns.ID.value].isin(df_compile[SubmissionColumns.USER_ID.value])]
+    logging.info(f'Select {df_users.shape[0]} users which presented in compile dataset')
 
     write_df(df_submissions, submissions_path)
     logging.info(f'Submissions final count: {df_submissions.shape[0]}')
@@ -54,7 +58,4 @@ if __name__ == '__main__':
     args = parser.parse_args(sys.argv[1:])
     configure_logger(args.submissions_path, 'compile')
 
-    filter_dataset(args.submissions_path,
-                   args.steps_path,
-                   args.topics_path,
-                   args.users_path)
+    compile_dataset(args.submissions_path, args.steps_path, args.topics_path, args.users_path)
