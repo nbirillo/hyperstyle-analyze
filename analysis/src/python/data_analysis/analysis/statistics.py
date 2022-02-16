@@ -103,6 +103,8 @@ def get_submissions_percent_by_issues(df: pd.DataFrame, df_issues: pd.DataFrame,
 
 
 def get_client_stats(df: pd.DataFrame) -> pd.DataFrame:
+    """ For each client series e.x. [web, idea, web] count number of submissions series. """
+
     df_client_stats = df[[SubmissionColumns.GROUP.value, SubmissionColumns.TOTAL_ATTEMPTS.value,
                           SubmissionColumns.CLIENT_SERIES.value]] \
         .groupby([SubmissionColumns.CLIENT_SERIES.value, SubmissionColumns.TOTAL_ATTEMPTS.value]) \
@@ -110,10 +112,6 @@ def get_client_stats(df: pd.DataFrame) -> pd.DataFrame:
     df_client_stats.columns = \
         [SubmissionColumns.CLIENT_SERIES.value, SubmissionColumns.TOTAL_ATTEMPTS.value, Stats.COUNT.value]
     df_client_stats.sort_values(Stats.COUNT.value, ascending=False, inplace=True)
-
-    # df_client_stats = df[[SubmissionColumns.GROUP.value, SubmissionColumns.CLIENT_SERIES.value]][
-    #     SubmissionColumns.CLIENT_SERIES.value].value_counts().to_frame().reset_index()
-    # df_client_stats.columns = [SubmissionColumns.CLIENT_SERIES.value, 'count']
 
     return df_client_stats
 
@@ -127,6 +125,12 @@ def filter_by_attempts(df: pd.DataFrame, max_attempts: int, exact_attempts: bool
 
 def get_submissions_series_dynamic_by_feature(df: pd.DataFrame, feature: str, attr: AttrType,
                                               max_attempts: int = 3, exact_attempts: bool = True, is_mean=True):
+    """
+    For attempt count feature value change is submissions which divided by attribute values.
+    Submissions can be filter to analyze submissions with less then `max_attempts` total attempts or
+    exact `max_attempts` if exact_attempts=True.
+    """
+
     series_stats_dict = {
         SubmissionColumns.ATTEMPT.value: [],
         Stats.COUNT.value: []
@@ -157,6 +161,20 @@ def get_issue_key_column(by_type: bool) -> str:
 
 def get_submissions_series_issues_dynamic(df: pd.DataFrame, df_issues: pd.DataFrame, max_attempts: int = 3,
                                           exact_attempts: bool = True, by_type=False, is_mean=True):
+    """
+    Form dataframe for issues count change analysis.
+    For each attempt and issue class/type count percent os submissions with this issue.
+    Submissions can be filter to analyze submissions with less then `max_attempts` total attempts or
+    exact `max_attempts` if exact_attempts=True.
+
+    The result dataframe:
+
+    | attempt |  WhitespaceAroundCheck |  MagicNumberCheck   | ... |
+    |    0    |         0.312          |       0.5324        | ... |
+    |    1    |         0.12           |       0.324         | ... |
+    |    2    |         0.02           |       0.24          | ... |
+    """
+
     series_stats_dict = {
         SubmissionColumns.ATTEMPT.value: [],
         Stats.COUNT.value: []
@@ -186,6 +204,18 @@ def get_submissions_series_issues_dynamic(df: pd.DataFrame, df_issues: pd.DataFr
 
 
 def get_submissions_series_client_dynamic(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Form dataframe for client change analysis.
+    For each attempt count number of submissions which change client (web->web, web->idea, idea->web, idea->idea).
+
+    The result dataframe:
+
+    | attempt |  from |  to   | count |
+    |    0    |  web  |  web  |  1001 |
+    |    0    |  web  |  idea |  202  |
+    |    0    |  idea |  web  |  102  |
+    |   ...   |  ...  |  ...  |  ...  |
+    """
     clients = get_attr('client').values
 
     attempt = np.max(df[SubmissionColumns.TOTAL_ATTEMPTS.value].unique())

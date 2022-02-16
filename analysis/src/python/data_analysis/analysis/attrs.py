@@ -9,6 +9,10 @@ AttrType = Union[str, Tuple[str, List[str]]]
 
 
 class Attr:
+    """
+    Attribute is class for categorical variables which contain information about it's name,
+    values and colors for each color
+    """
 
     def __init__(self, name: str, values: List[str], palette: Dict[str, Tuple[float, float, float]]):
         self.name = name
@@ -16,6 +20,7 @@ class Attr:
         self.palette = palette
 
 
+""" Dict for default variables. """
 ATTRS = {
     'difficulty':
         Attr('difficulty',
@@ -37,6 +42,8 @@ ATTRS = {
 
 
 def get_attr(attr: AttrType) -> Attr:
+    """ Get attribute from name or pair of name and values. """
+
     if isinstance(attr, str):
         if attr in ATTRS:
             return ATTRS[attr]
@@ -53,6 +60,10 @@ def get_attr(attr: AttrType) -> Attr:
 
 
 def draw_base_attrs():
+    """ Draw color pallets of default attributes. """
+
+    sns.set_theme(style='whitegrid', font_scale=2, rc={"lines.linewidth": 5, "lines.markersize": 15})
+
     for attr in ATTRS.values():
         print(attr.name, ' -> '.join(attr.values), sep='\n')
         sns.palplot(attr.palette.values())

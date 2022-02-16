@@ -15,12 +15,16 @@ sns.set_theme(style='whitegrid', font_scale=2, rc={"lines.linewidth": 5, "lines.
 
 
 def get_bins_count(data: List[Any]) -> int:
+    """ Count number of bins for histogram. """
+
     n = len(np.unique(data))
     bins = int(np.ceil(1 + 3.32 * np.log(n)))
     return bins
 
 
 def get_axis(ax, k: int, rows: int, cols: int):
+    """ For plot with subplots table gets subplot's axis by it's order number. """
+
     i, j = int(np.floor(k / cols)), k % cols
     if cols == 1 and rows == 1:
         return ax
@@ -28,6 +32,8 @@ def get_axis(ax, k: int, rows: int, cols: int):
 
 
 def draw_heatmap_compare(df: pd.DataFrame, attr_pairs: List[Tuple[AttrType, AttrType]], features: List[str]):
+    """ Draw heatmaps to compare statistics and correlation between attribute pairs. """
+
     rows, cols = len(attr_pairs), len(features)
     fig, ax = plt.subplots(figsize=(20, 6 * len(attr_pairs)), ncols=cols, nrows=rows, constrained_layout=True)
 
@@ -56,6 +62,8 @@ def draw_compare(df: pd.DataFrame, feature: str, attr: AttrType,
                  blur_ticks: Optional[List[str]] = None,
                  y_label: str = None,
                  title: str = None):
+    """ Draw line plots for feature values distribution for different attributes. """
+
     attr = get_attr(attr)
 
     fig, ax = plt.subplots(figsize=(20, 10), constrained_layout=True)
@@ -91,6 +99,8 @@ def draw_compare(df: pd.DataFrame, feature: str, attr: AttrType,
 def draw_hist_plots(df: pd.DataFrame, features: List[str],
                     q: int = 0.99, log_scale: bool = False, kde: bool = False, bins: int = None,
                     y_label: str = '', title: str = ''):
+    """ Draw hist plots table for given `features`. """
+
     n = len(features)
     rows, cols = int(np.ceil(n / 2)), min(2, n)
     fig, ax = plt.subplots(figsize=(cols * 12, rows * 7), nrows=rows, ncols=cols)
@@ -110,6 +120,8 @@ def draw_hist_plots(df: pd.DataFrame, features: List[str],
 
 def draw_count_plots(df: pd.DataFrame, attrs: List[AttrType],
                      y_label: str = '', title: str = ''):
+    """ Draw count plots table for given `attrs`. """
+
     n = len(attrs)
     rows, cols = int(np.ceil(n / 2)), min(2, n)
     fig, ax = plt.subplots(figsize=(cols * 12, rows * 7), nrows=rows, ncols=cols)
@@ -136,6 +148,8 @@ def draw_stat_plot(df: pd.DataFrame, feature: str):
 
 
 def draw_client_dynamic_graph(df: pd.DataFrame):
+    """ Plot client dynamic graph for dataframe got form [statistics.get_submissions_series_client_dynamic]. """
+
     graph = nx.DiGraph()
     sorted_counts = list(np.sort(np.unique(df[Stats.COUNT.value])))
 
