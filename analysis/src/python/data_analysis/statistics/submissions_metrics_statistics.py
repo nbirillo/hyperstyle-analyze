@@ -24,6 +24,14 @@ def get_submission_statistics(submissions_with_issues_path: str, submissions_sta
     df_stats[SubmissionStatsColumns.RAW_ISSUE_COUNT.value] = df_submissions[SubmissionColumns.RAW_ISSUES.value] \
         .apply(calculate_issues_count)
 
+    df_stats[SubmissionStatsColumns.RAW_ISSUE_BY_CODE_LINES.value] = \
+        df_stats[SubmissionStatsColumns.RAW_ISSUE_COUNT.value] / \
+        df_stats[SubmissionStatsColumns.CODE_LINES_COUNT.value]
+
+    df_stats[SubmissionStatsColumns.QODANA_ISSUE_BY_CODE_LINES.value] = \
+        df_stats[SubmissionStatsColumns.QODANA_ISSUE_COUNT.value] / \
+        df_stats[SubmissionStatsColumns.CODE_LINES_COUNT.value]
+
     write_df(df_stats, submissions_statistics_path)
 
 

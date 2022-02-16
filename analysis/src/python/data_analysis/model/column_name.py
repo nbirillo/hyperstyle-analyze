@@ -101,6 +101,7 @@ class SubmissionColumns(Enum):
     TOTAL_ATTEMPTS = 'total_attempts'
     BASE_CLIENT = 'base_client'
     CLIENT = 'client'
+    CLIENT_SERIES = 'client_series'
     STEP = 'step'
     STEP_ID = 'step_id'
     CODE = 'code'
@@ -124,6 +125,8 @@ class SubmissionStatsColumns(Enum):
     QODANA_ISSUE_COUNT = 'qodana_issues_count'
     CODE_LINES_COUNT = 'code_lines_count'
     CODE_SYMBOLS_COUNT = 'code_symbols_count'
+    RAW_ISSUE_BY_CODE_LINES = 'raw_issues_by_code_lines'
+    QODANA_ISSUE_BY_CODE_LINES = 'qodana_issues_by_code_lines'
 
     FIRST_SUFFIX = '_first'
     LAST_SUFFIX = '_last'

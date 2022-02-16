@@ -16,7 +16,7 @@ def calculate_submissions_series_client_series(series: pd.DataFrame) -> pd.Serie
     series = series.sort_values([SubmissionColumns.ATTEMPT.value])
     stats = {
         SubmissionColumns.GROUP.value: series[SubmissionColumns.GROUP.value].values[0],
-        SubmissionColumns.CLIENT.value: json.dumps(list(series[SubmissionColumns.CLIENT.value].values)),
+        SubmissionColumns.CLIENT_SERIES.value: json.dumps(list(series[SubmissionColumns.CLIENT.value].values)),
     }
 
     return pd.Series(stats)
