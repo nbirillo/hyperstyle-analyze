@@ -13,7 +13,7 @@ from analysis.src.python.data_analysis.utils.logging_utils import configure_logg
 from analysis.src.python.data_analysis.utils.parsing_utils import list_to_str, parse_qodana_issues, str_to_dict
 
 
-def get_issues(issues: str, issue_class_column: str, issue_type_column: str, issues_types: Dict[str, str]):
+def get_issues_from_row(issues: str, issue_class_column: str, issue_type_column: str, issues_types: Dict[str, str]):
     """ Extracts issues classes and types from list with issue reports. """
 
     for issue in str_to_dict(issues):
@@ -27,7 +27,7 @@ def get_issues_info(df_submissions: pd.DataFrame, issues_column: str,
     issues_info = {}
 
     logging.info(f'Getting issues class `{issue_class_column}` and type `{issue_type_column}` from submissions')
-    df_submissions[issues_column].apply(get_issues,
+    df_submissions[issues_column].apply(get_issues_from_row,
                                         issue_class_column=issue_class_column,
                                         issue_type_column=issue_type_column,
                                         issues_types=issues_info)
