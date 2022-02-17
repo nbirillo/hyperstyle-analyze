@@ -133,7 +133,7 @@ def get_submissions_series_dynamic_by_feature(df: pd.DataFrame, feature: str, at
 
     series_stats_dict = {
         SubmissionColumns.ATTEMPT.value: [],
-        Stats.COUNT.value: []
+        Stats.COUNT.value: [],
     }
 
     attr = get_attr(attr)
@@ -177,7 +177,7 @@ def get_submissions_series_issues_dynamic(df: pd.DataFrame, df_issues: pd.DataFr
 
     series_stats_dict = {
         SubmissionColumns.ATTEMPT.value: [],
-        Stats.COUNT.value: []
+        Stats.COUNT.value: [],
     }
 
     df = filter_by_attempts(df, max_attempts, exact_attempts)

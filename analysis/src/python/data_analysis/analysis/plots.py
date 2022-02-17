@@ -22,7 +22,7 @@ def get_bins_count(data: List[Any]) -> int:
     return bins
 
 
-def get_axis(ax, k: int, rows: int, cols: int):
+def get_sub_axis(ax, k: int, rows: int, cols: int):
     """ For plot with subplots table gets subplot's axis by it's order number. """
 
     i, j = int(np.floor(k / cols)), k % cols
@@ -39,23 +39,23 @@ def draw_heatmap_compare(df: pd.DataFrame, attr_pairs: List[Tuple[AttrType, Attr
 
     for i, attr_pair in enumerate(attr_pairs):
 
-        attr0, attr1 = get_attr(attr_pair[0]), get_attr(attr_pair[1])
+        attr_0, attr_1 = get_attr(attr_pair[0]), get_attr(attr_pair[1])
 
         for j, feature in enumerate(features):
-            ax_ij = get_axis(ax, i * cols + j, rows, cols)
+            ax_sub = get_sub_axis(ax, i * cols + j, rows, cols)
 
             if feature == 'id':
-                corr = df.pivot_table(feature, attr0.name, attr1.name, aggfunc='count')
-                ax_ij.set_title('Count')
+                corr = df.pivot_table(feature, attr_0.name, attr_1.name, aggfunc='count')
+                ax_sub.set_title('Count')
                 fmt = 'd'
             else:
-                corr = df.pivot_table(feature, attr0.name, attr1.name, aggfunc=np.mean)
-                ax_ij.set_title(f'Average {feature}')
+                corr = df.pivot_table(feature, attr_0.name, attr_1.name, aggfunc=np.mean)
+                ax_sub.set_title(f'Average {feature}')
                 fmt = '.2f'
 
-            corr = corr.reindex(attr0.values, axis=0)
-            corr = corr.reindex(attr1.values, axis=1)
-            sns.heatmap(corr, annot=True, fmt=fmt, ax=ax_ij, linewidths=.5, cmap=sns.color_palette('flare'))
+            corr = corr.reindex(attr_0.values, axis=0)
+            corr = corr.reindex(attr_1.values, axis=1)
+            sns.heatmap(corr, annot=True, fmt=fmt, ax=ax_sub, linewidths=.5, cmap=sns.color_palette('flare'))
 
 
 def draw_compare(df: pd.DataFrame, feature: str, attr: AttrType,
@@ -106,14 +106,14 @@ def draw_hist_plots(df: pd.DataFrame, features: List[str],
     fig, ax = plt.subplots(figsize=(cols * 12, rows * 7), nrows=rows, ncols=cols)
 
     for k, feature in enumerate(features):
-        ax_ij = get_axis(ax, k, rows, cols)
+        ax_sub = get_sub_axis(ax, k, rows, cols)
 
         df_filtered = df[(df[feature] < df[feature].quantile(q))]
         feature_bins = get_bins_count(df_filtered[feature].values) if bins is None else bins
-        sns.histplot(data=df_filtered, x=feature, ax=ax_ij, log_scale=log_scale, kde=kde, bins=feature_bins)
+        sns.histplot(data=df_filtered, x=feature, ax=ax_sub, log_scale=log_scale, kde=kde, bins=feature_bins)
 
-        ax_ij.set_xlabel(feature)
-        ax_ij.set_ylabel(y_label)
+        ax_sub.set_xlabel(feature)
+        ax_sub.set_ylabel(y_label)
     plt.suptitle(title)
     plt.show()
 
@@ -127,13 +127,13 @@ def draw_count_plots(df: pd.DataFrame, attrs: List[AttrType],
     fig, ax = plt.subplots(figsize=(cols * 12, rows * 7), nrows=rows, ncols=cols)
 
     for k, attr in enumerate(attrs):
-        ax_ij = get_axis(ax, k, rows, cols)
+        ax_sub = get_sub_axis(ax, k, rows, cols)
 
         attr = get_attr(attr)
-        sns.countplot(data=df, x=attr.name, ax=ax_ij, order=attr.values, palette=attr.palette)
+        sns.countplot(data=df, x=attr.name, ax=ax_sub, order=attr.values, palette=attr.palette)
 
-        ax_ij.set_xlabel(attr.name)
-        ax_ij.set_ylabel(y_label)
+        ax_sub.set_xlabel(attr.name)
+        ax_sub.set_ylabel(y_label)
     plt.suptitle(title)
     plt.show()
 
@@ -153,7 +153,7 @@ def draw_client_dynamic_graph(df: pd.DataFrame):
     graph = nx.DiGraph()
     sorted_counts = list(np.sort(np.unique(df[Stats.COUNT.value])))
 
-    for i, client_change in df.iterrows():
+    for _, client_change in df.iterrows():
         attempt = client_change[SubmissionColumns.ATTEMPT.value]
         client = client_change['from']
         node = f'{client}_{attempt}'

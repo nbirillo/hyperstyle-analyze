@@ -1,4 +1,4 @@
-from typing import Dict, List, Tuple, Union
+from typing import List, Tuple, Union
 
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -14,10 +14,10 @@ class Attr:
     values and colors for each color
     """
 
-    def __init__(self, name: str, values: List[str], palette: Dict[str, Tuple[float, float, float]]):
+    def __init__(self, name: str, values: List[str], colors: List[Tuple[float, float, float]]):
         self.name = name
         self.values = values
-        self.palette = palette
+        self.palette = {value: color for value, color in zip(values, colors)}
 
 
 """ Dict for default variables. """
@@ -25,19 +25,19 @@ ATTRS = {
     'difficulty':
         Attr('difficulty',
              ['easy', 'medium', 'hard'],
-             dict(easy=(0.98, 0.73, 0.62), medium=(0.98, 0.41, 0.28), hard=(0.79, 0.09, 0.11))),
+             [(0.98, 0.73, 0.62), (0.98, 0.41, 0.28), (0.79, 0.09, 0.11)]),
     'complexity':
         Attr('complexity',
              ['shallow', 'middle', 'deep'],
-             dict(shallow=(0.77, 0.85, 0.93), middle=(0.41, 0.68, 0.83), deep=(0.12, 0.44, 0.70))),
+             [(0.77, 0.85, 0.93), (0.41, 0.68, 0.83), (0.12, 0.44, 0.70)]),
     'level':
         Attr('level',
              ['low', 'average', 'high'],
-             dict(low=(0.77, 0.91, 0.75), average=(0.45, 0.76, 0.46), high=(0.13, 0.54, 0.26))),
+             [(0.77, 0.91, 0.75), (0.45, 0.76, 0.46), (0.13, 0.54, 0.26)]),
     'client':
         Attr('client',
              ['idea', 'web'],
-             dict(idea=(0.52, 0.18, 0.44), web=(0.44, 0.49, 0.69)))
+             [(0.52, 0.18, 0.44), (0.44, 0.49, 0.69)]),
 }
 
 
@@ -48,15 +48,11 @@ def get_attr(attr: AttrType) -> Attr:
         if attr in ATTRS:
             return ATTRS[attr]
         else:
-            name = attr
-            values = []
-            colors = []
-    else:
-        name, values = attr
-        colors = sns.color_palette(n_colors=len(values))
+            return Attr(attr, [], [])
 
-    palette = {value: color for value, color in zip(values, colors)}
-    return Attr(name, values, palette)
+    name, values = attr
+    colors = sns.color_palette(n_colors=len(values))
+    return Attr(name, values, colors)
 
 
 def draw_base_attrs():
