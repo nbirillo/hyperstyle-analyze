@@ -311,3 +311,7 @@ countplot
 yscale
 dx
 dy
+fmt
+annot
+linewidths
+pos

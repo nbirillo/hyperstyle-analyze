@@ -162,7 +162,7 @@ def draw_client_dynamic_graph(df: pd.DataFrame):
             dy = 0 if client == 'web' else 1
             graph.add_node(node, pos=(attempt + dx, dy))
 
-    for i, client_change in df.iterrows():
+    for _, client_change in df.iterrows():
         weight = client_change[Stats.COUNT.value]
         width = sorted_counts.index(weight)
         attempt = client_change[SubmissionColumns.ATTEMPT.value]
