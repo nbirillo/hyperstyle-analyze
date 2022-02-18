@@ -131,6 +131,7 @@ instantiation
 intelli
 intellij
 interop
+isfile
 isin
 isna
 isnull
@@ -180,6 +181,7 @@ nn
 noc
 nom
 noqa
+notnull
 nrows
 num
 numpy

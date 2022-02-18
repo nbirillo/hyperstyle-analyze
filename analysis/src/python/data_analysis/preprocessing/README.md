@@ -5,112 +5,94 @@ for further analysis.
 
 To run data preprocessing, run following python scripts in stated order:
 
-1. [build_submissions_with_issues.py](build_submissions_with_issues.py) - merges submissions with detected issues. 
+1. [preprocess_submissions.py](preprocess_submissions.py) - merges submissions with detected issues. 
 
     **Required arguments:**
     
     | Argument | Description |
     |----------|-------------|
     |**submissions_path**| Path to .csv file with `submissions`. |
-    |**raw_issues_path**| Path to .csv file with `raw issues` to submission relation. |
-    |**qodana_issues_path**| Path to .csv file with qodana `issues` to submission relation. |
-    |**submissions_with_issues_path**| Path to .csv output file with submissions with issues. |
+    |**preprocessed_submissions_path**| Path to .csv output file with submissions with issues. If not provided `submissions_path` will be used. |
 
     **Optional arguments:**
     
     | Argument | Description |
     |----------|-------------|
     | **&#8209;&#8209;users-to-submissions-path** | Path to file with `user` to submission relation (if data is not presented in submissions dataset or was anonymized). |
+    | **&#8209;&#8209;diff-ratio** | Ration to remove submissions which has lines change more then in `diff-ratio` times. Default is 10.0. |
+    | **&#8209;&#8209;max-attempts** | Remove submissions series with more then `max-attempts` attempts. Default is 5. |
 
-
-2. [build_submissions_series.py](build_submissions_series.py) - add information to submissions about submission's
-   series (number of attempts, total number of attempts in series, series number). Submission series is the number of 
-   attempts of one user to solve one step's problem.
-
-    **Required arguments:**
-    
-    | Argument | Description |
-    |----------|-------------|
-    |**submissions_path**| Path to .csv file with `submissions`. |
-    |**submissions_series_path**| Path to .csv file with filtered submissions with series info. |
-
-    **Optional arguments:**
-    
-    | Argument | Description |
-    |----------|-------------|
-    | **&#8209;&#8209;diff-ratio** | Ration to remove submissions which has lines change more than in `diff_ratio` times. |
-
-3. [build_issues.py](build_issues.py) - collect information about issues, which are detected in all submissions. 
+2. [preprocess_issues.py](preprocess_issues.py) - collect information about issues, which are detected in all submissions. 
    Must be invoked twice (both for raw and qodana issues).
    
     **Required arguments:**
     
     | Argument | Description |
     |----------|-------------|
-    |**submissions_path**| Path to .csv file with `submissions`. |
-    |**issues_type**| Type of issues to analyse (can be raw or qodana). |
-    |**issues_path**| Path to .csv file where issues info will be saved. |
+    |**issues_type**| Type of issues to analyse (can be `raw_issues` or `qodana_issues`). |
+    |**submissions_path**| Path to .csv file with `preprocessed submissions`. |
+    |**issues_path**| Path to .csv file with submissions to issues relation. |
+    |**issues_info_path**| Path to .csv file where `preprocessed issues info` will be saved. |
 
-4. [preprocess_steps.py](preprocess_steps.py) - add information about topic depth in knowledge tree.
+    **Optional arguments:**
+    
+    | Argument | Description |
+    |----------|-------------|
+    | **&#8209;&#8209;ignore-issue-classes** | List of issue classes to remove from issues list (for example 'CyclomaticComplexityCheck', 'JavaNCSSCheck' raw issues and 'JavaAnnotator', 'WrongPackageStatement' qodana issues). |
+   
+3. [preprocess_topics.py](preprocess_topics.py) - add information about topic depth in knowledge tree.
 
     **Required arguments:**
     
     | Argument | Description |
     |----------|-------------|
-    |**topics_path**| Path to .csv file with topics info. |
+    |**topics_path**| Path to .csv file with `topics` info. |
+    |**preprocessed_topics_path**| Path to .csv file where `preprocessed topics` will be saved. If not provided `topics_path` will be used. |
 
 
-5. [preprocess_topics.py](preprocess_topics.py) - add information about steps complexity, difficulty, 
+4. [preprocess_steps.py](preprocess_steps.py) - add information about steps complexity, difficulty, 
    template and assignment features.
 
     **Required arguments:**
-    
+   
     | Argument | Description |
     |----------|-------------|
-    |**steps_path**| Path to .csv file with steps. |
-    |**topics_path**| Path to .csv file with topics. |
+    |**steps_path**| Path to .csv file with `steps`. |
+    |**topics_path**| Path to .csv file with `preprocessed topics`. |
+    |**preprocessed_steps_path**| Path to .csv file where to save `preprocessed steps`. If not provided `steps_path` will be used. |
 
     **Optional arguments:**
     
     | Argument | Description |
     |----------|-------------|
-    | **&#8209;&#8209;complexity-borders** | Topic depth to consider steps as shallow, middle or deep (default is 3 for shallow 7 for deep). |
-    | **&#8209;&#8209;difficulty-borders** | Steps success rate to consider steps as easy, medium or hard (default is 1/3 for easy 2/3 for hard). |
+    | **&#8209;&#8209;complexity-borders** | Topic depth to consider steps as shallow, middle or deep. Default is 3 for shallow 7 for deep. |
+    | **&#8209;&#8209;difficulty-borders** | Steps success rate to consider steps as easy, medium or hard. Default is 1/3 for easy 2/3 for hard. |
+    | **&#8209;&#8209;filter-with-header-footer** | Filter steps with a header or footer. Default is True. |
 
-6. [preprocess_users.py](preprocess_users.py) - add information about users level.
+5. [preprocess_users.py](preprocess_users.py) - add information about users level.
 
     **Required arguments:**
     
     | Argument | Description |
     |----------|-------------|
-    |**steps_path**| Path to .csv file with steps. |
-    |**topics_path**| Path to .csv file with topics. |
+    |**users_path**| Path to .csv file with `users`. |
+    |**preprocessed_users_path**| Path to .csv file where to save `preprocessed users`. If not provided `users_path` will be used. |
 
     **Optional arguments:**
     
     | Argument | Description |
     |----------|-------------|
-    | **&#8209;&#8209;complexity-borders** | Topic depth to consider steps as shallow, middle or deep (default is 3 for shallow 7 for deep). |
-    | **&#8209;&#8209;difficulty-borders** | Steps success rate to consider steps as easy, medium or hard (default is 1/3 for easy 2/3 for hard). |
+    | **&#8209;&#8209;level-borders** | Passed topics count to consider user level as low, average or high. Default is 20 for low 150 for high. |
 
-7. [preprocess_submissions.py](preprocess_submissions.py) - add information about client, filter submissions with many 
-   attempts, select subset of steps, topics, and users, mentioned in submissions dataset.
+After all preprocessing stages you need to synchronize and compile all dataset. 
+
+6. [compile_dataset.py](compile_dataset.py) - select subset of data which is presented in all datasets.
 
     **Required arguments:**
     
     | Argument | Description |
     |----------|-------------|
-    |**submissions_path**| Path to .csv file with submissions. |
-    |**steps_path**| Path to .csv file with steps. |
-    |**topics_path**| Path to .csv file with topics. |
-    |**users_path**| Path to .csv file with users. |
-    |**result_directory_path**| Path to directory with all preprocessed data for analysis. |
-
-    **Optional arguments:**
-    
-    | Argument | Description |
-    |----------|-------------|
-    | **&#8209;&#8209;max-attempts** | Maximum number of attempts to leave in dataset (submissions with many attempts considered as noise). |
-
-After all preprocessing stages you will get directory with all preprocessed data, 
-which can be used for further analysis.
+    |**submissions_path**| Path to .csv file with `preprocesssed submissions`. |
+    |**steps_path**| Path to .csv file with `preprocesssed steps`. |
+    |**topics_path**| Path to .csv file with `preprocesssed topics`. |
+    |**users_path**| Path to .csv file with `preprocesssed users`. |

@@ -15,6 +15,7 @@ from analysis.src.python.evaluation.common.file_util import AnalysisExtension, c
 from analysis.src.python.evaluation.common.parallel_util import run_and_wait
 
 logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:
@@ -47,13 +48,13 @@ def run_batching():
             # add script output flag
             command += [f'-o={output_path}']
 
-            logging.info(f"Command to execute batch {index}: {command}")
+            logger.info(f"Command to execute batch {index}: {command}")
 
-            logging.info(f'Start batch {index} processing')
+            logger.info(f'Start batch {index} processing')
             start_time = time.time()
             run_and_wait(command, stdout=logs_file, stderr=logs_file, cwd=config.project_path)
             end_time = time.time()
-            logging.info(f'Finish batch {index} processing in {end_time - start_time}')
+            logger.info(f'Finish batch {index} processing in {end_time - start_time}')
 
     merge_batch_results(batch_paths, args.output)
 
@@ -76,11 +77,12 @@ def split_to_batches(dataset_path: str, output_dir_path: str, batch_size: int) -
     for batch in pd.read_csv(dataset_path, chunksize=batch_size):
         batch_name = f'batch_{index}'
 
-        logging.info(f"Creating batch {index}")
+        logger.info(f"Creating batch {index}")
         batch_input_path = create_sub_directory(input_path, batch_name)
         batch_logs_path = create_sub_directory(logs_path, batch_name)
         batch_output_path = create_sub_directory(output_path, batch_name)
 
+        logger.info(f"Coping data to batch {index}")
         batch_input_file = os.path.join(batch_input_path, df_name)
         write_dataframe_to_csv(batch_input_file, batch)
 

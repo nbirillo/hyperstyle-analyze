@@ -174,7 +174,7 @@ class DatasetLabel:
                         highlighted_element=issue[QodanaJsonField.HIGHLIGHTED_ELEMENT.value],
                         description=issue[QodanaJsonField.DESCRIPTION.value],
                         fragment_id=fragment_id,
-                        problem_id=issue[QodanaJsonField.PROBLEM_CLASS][QodanaJsonField.PROBLEM_CLASS_ID.value],
+                        problem_id=issue[QodanaJsonField.PROBLEM_CLASS.value][QodanaJsonField.PROBLEM_CLASS_ID.value],
                     )
                     id_to_issues[fragment_id].append(qodana_issue)
             except Exception as e:
@@ -217,8 +217,6 @@ class DatasetLabel:
     @staticmethod
     def _copy_template(project_dir: Path, language: LanguageVersion) -> None:
         if language.is_java():
-            java_template = TEMPLATE_FOLDER / "java"
-            copy_directory(java_template, project_dir)
             copy_directory(TEMPLATE_FOLDER / "java", project_dir)
         elif language == LanguageVersion.PYTHON_3:
             copy_directory(TEMPLATE_FOLDER / "python", project_dir)
@@ -256,15 +254,17 @@ class DatasetLabel:
         else:
             raise NotImplementedError(f'{language} needs implementation.')
 
+        logger.info(Path(__file__).parents[3])
+        logger.info(profile_path)
         results_dir.mkdir(exist_ok=True)
 
         command = [
             'docker', 'run',
             '-u', str(os.getuid()),
             '--rm',
-            '-v', f'{project_dir}/:/data/project/',
-            '-v', f'{results_dir}/:/data/results/',
-            '-v', f'{profile_path}:/data/profile.xml',
+            '-v', f'{project_dir.resolve()}/:/data/project/',
+            '-v', f'{results_dir.resolve()}/:/data/results/',
+            '-v', f'{profile_path.resolve()}:/data/profile.xml',
             f'{qodana_image_path}',
         ]
         run_and_wait(command)
