@@ -13,6 +13,9 @@ from analysis.src.python.data_analysis.model.column_name import SubmissionColumn
 
 sns.set_theme(style='whitegrid', font_scale=2, rc={"lines.linewidth": 5, "lines.markersize": 15})
 
+MAX_LABEL_LENGTH = 5
+MAX_LABELS_COUNT = 5
+
 
 def get_bins_count(data: List[Any]) -> int:
     """ Count number of bins for histogram. """
@@ -44,7 +47,7 @@ def draw_heatmap_compare(df: pd.DataFrame, attr_pairs: List[Tuple[AttrType, Attr
         for j, feature in enumerate(features):
             ax_sub = get_sub_axis(ax, i * cols + j, rows, cols)
 
-            if feature == 'id':
+            if feature == SubmissionColumns.ID.value:
                 corr = df.pivot_table(feature, attr_0.name, attr_1.name, aggfunc='count')
                 ax_sub.set_title('Count')
                 fmt = 'd'
@@ -79,10 +82,10 @@ def draw_compare(df: pd.DataFrame, feature: str, attr: AttrType,
             else:
                 tick.set_color('black')
 
-    if np.any(np.array(list(map(lambda t: len(str(t)), df[feature].values))) > 5):
+    if np.any(np.array(list(map(lambda t: len(str(t)), df[feature].values))) > MAX_LABEL_LENGTH):
         plt.xticks(rotation=45, ha="right", rotation_mode='anchor')
 
-    if len(attr.values) > 5:
+    if len(attr.values) > MAX_LABELS_COUNT:
         handles, labels = ax.get_legend_handles_labels()
         fig.legend(handles, labels, loc="lower center", bbox_to_anchor=[0.5, -0.3], ncol=3, shadow=True, fancybox=True)
         if ax.get_legend() is not None:

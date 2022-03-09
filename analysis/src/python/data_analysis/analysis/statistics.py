@@ -1,6 +1,6 @@
 import ast
 from enum import Enum
-from typing import List
+from typing import Any, Callable, Dict, List
 
 import numpy as np
 import pandas as pd
@@ -123,34 +123,46 @@ def filter_by_attempts(df: pd.DataFrame, max_attempts: int, exact_attempts: bool
         return df[df[SubmissionColumns.TOTAL_ATTEMPTS.value] <= max_attempts]
 
 
-def get_submissions_series_dynamic_by_feature(df: pd.DataFrame, feature: str, attr: AttrType,
-                                              max_attempts: int = 3, exact_attempts: bool = True, is_mean=True):
-    """
-    For attempt count feature value change is submissions which divided by attribute values.
-    Submissions can be filter to analyze submissions with less then `max_attempts` total attempts or
-    exact `max_attempts` if exact_attempts=True.
-    """
+def get_statistics_by_attempts(df: pd.DataFrame, statistics_function: Callable[[pd.DataFrame, Dict[str, Any]], None]) \
+        -> Dict[str, Any]:
 
     series_stats_dict = {
         SubmissionColumns.ATTEMPT.value: [],
         Stats.COUNT.value: [],
     }
 
-    attr = get_attr(attr)
-    df = filter_by_attempts(df, max_attempts, exact_attempts)
-
-    for value in attr.values:
-        series_stats_dict[value] = []
-
     for attempt in sorted(df[SubmissionColumns.ATTEMPT.value].unique()):
         df_attempt = df[df[SubmissionColumns.ATTEMPT.value] == attempt]
         series_stats_dict[SubmissionColumns.ATTEMPT.value].append(attempt)
         series_stats_dict[Stats.COUNT.value].append(df_attempt.shape[0])
 
+        statistics_function(df_attempt, series_stats_dict)
+
+    return series_stats_dict
+
+
+def get_submissions_series_dynamic_by_feature(df: pd.DataFrame, feature: str, attr: AttrType,
+                                              max_attempts: int = 3, exact_attempts: bool = True, is_mean=True):
+    """
+    For attempt count feature value change is submissions which divided by attribute values.
+    Submissions can be filtered to analyze submissions with less then `max_attempts` total attempts or
+    exact `max_attempts` if exact_attempts=True.
+    """
+
+    attr = get_attr(attr)
+    df = filter_by_attempts(df, max_attempts, exact_attempts)
+
+    def get_feature_change(df_attempt: pd.DataFrame, stats_dict: Dict[str, List]):
         for value in attr.values:
+
+            if value not in stats_dict:
+                stats_dict[value] = []
+
             df_value = df_attempt[df_attempt[attr.name] == value]
             feature_value = df_value[feature].mean() if is_mean else df_value[feature].median()
-            series_stats_dict[value].append(feature_value)
+            stats_dict[value].append(feature_value)
+
+    series_stats_dict = get_statistics_by_attempts(df, get_feature_change)
 
     return pd.DataFrame.from_dict(series_stats_dict)
 
@@ -175,27 +187,20 @@ def get_submissions_series_issues_dynamic(df: pd.DataFrame, df_issues: pd.DataFr
     |    2    |         0.02           |       0.24          | ... |
     """
 
-    series_stats_dict = {
-        SubmissionColumns.ATTEMPT.value: [],
-        Stats.COUNT.value: [],
-    }
-
     df = filter_by_attempts(df, max_attempts, exact_attempts)
 
-    for _, issue in df_issues.iterrows():
-        series_stats_dict[issue[get_issue_key_column(by_type)]] = []
-
-    for attempt in sorted(df[SubmissionColumns.ATTEMPT.value].unique()):
-        df_attempt = df[df[SubmissionColumns.ATTEMPT.value] == attempt]
-        series_stats_dict[SubmissionColumns.ATTEMPT.value].append(attempt)
-        series_stats_dict[Stats.COUNT.value].append(df_attempt.shape[0])
+    def get_issues_change(df_attempt: pd.DataFrame, stats_dict: Dict[str, List]):
+        for _, issue in df_issues.iterrows():
+            stats_dict[issue[get_issue_key_column(by_type)]] = []
 
         for issue_key in df_issues[get_issue_key_column(by_type)].unique():
-            series_stats_dict[issue_key].append(np.zeros(df_attempt.shape[0]))
+            stats_dict[issue_key].append(np.zeros(df_attempt.shape[0]))
 
         for _, issue in df_issues.iterrows():
             issue_key = issue[get_issue_key_column(by_type)]
-            series_stats_dict[issue_key][-1] += df_attempt[issue[IssuesColumns.CLASS.value]]
+            stats_dict[issue_key][-1] += df_attempt[issue[IssuesColumns.CLASS.value]]
+
+    series_stats_dict = get_statistics_by_attempts(df, get_issues_change)
 
     for issue_key in df_issues[get_issue_key_column(by_type)].unique():
         series_stats_dict[issue_key] = list(map(np.mean if is_mean else np.median, series_stats_dict[issue_key]))
