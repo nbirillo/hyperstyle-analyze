@@ -101,7 +101,7 @@ def run_qodana(language: str, code: str, repeat: int = 5):
 
 def time_evaluation(submissions_path: str, time_evaluation_path: str, submissions_ids: List[int], repeat: int):
     df_submissions = read_df(submissions_path)
-    df_submissions = df_submissions[df_submissions[SubmissionColumns.ID].isin(submissions_ids)]
+    df_submissions = df_submissions[df_submissions[SubmissionColumns.ID.value].isin(submissions_ids)]
 
     result = {
         'id': [],
@@ -110,11 +110,13 @@ def time_evaluation(submissions_path: str, time_evaluation_path: str, submission
     }
 
     for i, submissions in df_submissions.iterrows():
-        result['id'].append(submissions[SubmissionColumns.ID])
+        result['id'].append(submissions[SubmissionColumns.ID.value])
         result['hyperstyle'].append(
-            run_hyperstyle(submissions[SubmissionColumns.LANG], submissions[SubmissionColumns.CODE], repeat))
+            run_hyperstyle(submissions[SubmissionColumns.LANG.value],
+                           submissions[SubmissionColumns.CODE.value], repeat))
         result['qodana'].append(
-            run_qodana(submissions[SubmissionColumns.LANG], submissions[SubmissionColumns.CODE], repeat))
+            run_qodana(submissions[SubmissionColumns.LANG.value],
+                       submissions[SubmissionColumns.CODE.value], repeat))
 
     pd.DataFrame.from_dict(result).to_csv(time_evaluation_path, index=False)
 
