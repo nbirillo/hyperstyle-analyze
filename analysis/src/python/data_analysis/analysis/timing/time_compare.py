@@ -1,4 +1,5 @@
 import argparse
+import logging
 import os
 import sys
 import time
@@ -12,6 +13,7 @@ from hyperstyle.src.python.review.reviewers.common import LANGUAGE_TO_INSPECTORS
 
 from analysis.src.python.data_analysis.model.column_name import SubmissionColumns
 from analysis.src.python.data_analysis.utils.df_utils import read_df
+from analysis.src.python.data_analysis.utils.logging_utils import configure_logger
 from analysis.src.python.evaluation.common.file_util import create_file
 from analysis.src.python.evaluation.common.parallel_util import run_and_wait
 
@@ -63,6 +65,8 @@ def run_hyperstyle(language: str, code: str, repeat: int = 5):
     repeat_times = []
 
     for i in range(repeat):
+        logging.info(f'Hyperstyle qodana iteration {i}-th')
+
         start_time = time.time()
         for inspector in inspectors:
             inspector.inspect(main_path, inspectors_config)
@@ -91,6 +95,8 @@ def run_qodana(language: str, code: str, repeat: int = 5):
 
     repeat_times = []
     for i in range(repeat):
+        logging.info(f'Timing qodana iteration {i}-th')
+
         start_time = time.time()
         run_and_wait(command)
         end_time = time.time()
@@ -110,6 +116,8 @@ def time_evaluation(submissions_path: str, time_evaluation_path: str, submission
     }
 
     for i, submissions in df_submissions.iterrows():
+        logging.info(f'Timing iteration {i}-th submission with id={submissions[SubmissionColumns.ID.value]}')
+
         result['id'].append(submissions[SubmissionColumns.ID.value])
         result['hyperstyle'].append(
             run_hyperstyle(submissions[SubmissionColumns.LANG.value],
@@ -127,13 +135,15 @@ if __name__ == '__main__':
     parser.add_argument('submissions_path', type=str,
                         help='Path to .csv file with preprocessed submissions with series')
     parser.add_argument('time_evaluation_path', type=str,
-                        help='Path to .csv file with submissions client series statistics')
+                        help='Path to .csv file with linters timing statistics')
     parser.add_argument('--ids', nargs='+', type=int,
                         help='Ids of submissions to evaluate code quality analyzers time')
     parser.add_argument('--repeat', default=3, type=int,
                         help='Times to repeat time evaluation for averaging')
 
     args = parser.parse_args(sys.argv[1:])
+
+    configure_logger(args.time_evaluation_path, 'timing')
 
     time_evaluation(args.submissions_path,
                     args.time_evaluation_path,
