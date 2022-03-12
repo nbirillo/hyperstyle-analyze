@@ -2,13 +2,13 @@ import argparse
 import ast
 import logging
 import sys
-from typing import Dict, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 
 import pandas as pd
 from bs4 import BeautifulSoup
 
 from analysis.src.python.data_analysis.model.column_name import CommentsColumns, Complexity, Difficulty, LikesColumns, \
-    StepColumns, TopicColumns
+    Scope, StepColumns, TopicColumns
 from analysis.src.python.data_analysis.utils.df_utils import merge_dfs, read_df, write_df
 from analysis.src.python.data_analysis.utils.logging_utils import configure_logger
 from analysis.src.python.data_analysis.utils.stats_utils import calculate_code_lines_count
@@ -34,6 +34,17 @@ def get_steps_difficulty_tag(success_rate: int, difficulty_borders: Tuple[int, i
     if success_rate > difficulty_borders[1]:
         return Difficulty.HARD.value
     return Difficulty.MEDIUM.value
+
+
+def get_steps_scope_tag(prerequisites_count: int, scope_borders: Tuple[int, int]) -> str:
+    """ Defines step's scope.
+    If < scope_borders[0] -- small, > scope_borders[1] -- wide, otherwise medium. """
+
+    if prerequisites_count < scope_borders[0]:
+        return Scope.SMALL.value
+    if prerequisites_count > scope_borders[1]:
+        return Scope.WIDE.value
+    return Scope.MEDIUM.value
 
 
 def get_step_likes_tag(likes_value: int) -> Optional[str]:
@@ -100,6 +111,12 @@ def check_template(options: Dict) -> bool:
     return code_template_lines_count > 0
 
 
+def get_code_templates(options: Dict) -> Optional[List[Dict[str, str]]]:
+    """ Get code templates. """
+
+    return options[StepColumns.CODE_TEMPLATES.value]
+
+
 def check_constant_in_assignment(assignment: str) -> bool:
     """ Check step's assignment contains constants [used to test hypothesis about MagicNumber issue]. """
 
@@ -116,6 +133,7 @@ def get_block_info(step_block: str) -> pd.Series:
         StepColumns.HAS_HEADER_FOOTER.value: check_header_footer(block[StepColumns.OPTIONS.value]),
         StepColumns.HAS_TEMPLATE.value: check_template(block[StepColumns.OPTIONS.value]),
         StepColumns.HAS_CONSTANT.value: check_constant_in_assignment(block[StepColumns.TEXT.value]),
+        StepColumns.CODE_TEMPLATES.value: get_code_templates(block[StepColumns.OPTIONS.value]),
     }
 
     return pd.Series(blocks_info, dtype='bool')
@@ -124,6 +142,7 @@ def get_block_info(step_block: str) -> pd.Series:
 def preprocess_steps(steps_path: str, topics_path: str, preprocessed_steps_path: str,
                      complexity_borders: Tuple[int, int],
                      difficulty_borders: Tuple[int, int],
+                     scope_borders: Tuple[int, int],
                      filter_with_header_footer: bool):
     """ Add steps complexity, difficulty tags, related to topic depth, set has_template and has_constant parameters. """
 
@@ -135,29 +154,6 @@ def preprocess_steps(steps_path: str, topics_path: str, preprocessed_steps_path:
                          StepColumns.SOLVED_BY.value, StepColumns.SUCCESS_RATE.value, StepColumns.POPULAR_IDE.value,
                          StepColumns.IS_IDE_COMPATIBLE.value, StepColumns.TITLE.value, StepColumns.URL.value]]
     logging.info(f"Select steps columns subset. Steps shape: {df_steps.shape}")
-
-    df_topics = read_df(topics_path)
-
-    # Select steps with not null topic
-    df_steps = df_steps[df_steps[StepColumns.TOPIC.value].notnull()] \
-        .rename(columns={StepColumns.TOPIC.value: StepColumns.TOPIC_ID.value})
-    logging.info(f"Filter steps without topics. Steps shape: {df_steps.shape}")
-
-    # Add steps depth as related topic depth
-    df_steps[StepColumns.DEPTH.value] = \
-        merge_dfs(df_steps, df_topics, StepColumns.TOPIC_ID.value, TopicColumns.ID.value)[TopicColumns.DEPTH.value]
-    df_steps[StepColumns.DEPTH.value] = df_steps[StepColumns.DEPTH.value].fillna(0).astype('int32')
-    logging.info(f"Set steps depth:\n{df_steps[StepColumns.DEPTH.value].value_counts()}")
-
-    # Add steps complexity
-    df_steps[StepColumns.COMPLEXITY.value] = df_steps[StepColumns.DEPTH.value] \
-        .apply(get_steps_complexity_tag, complexity_borders=complexity_borders)
-    logging.info(f"Set steps complexity:\n{df_steps[StepColumns.COMPLEXITY.value].value_counts()}")
-
-    # Add steps difficulty
-    df_steps[StepColumns.DIFFICULTY.value] = df_steps[StepColumns.SUCCESS_RATE.value] \
-        .apply(get_steps_difficulty_tag, difficulty_borders=difficulty_borders)
-    logging.info(f"Set steps difficulty:\n{df_steps[StepColumns.DIFFICULTY.value].value_counts()}")
 
     # Extract information about step task, comments and likes
     df_block_info = df_steps[StepColumns.BLOCK.value].apply(get_block_info)
@@ -172,6 +168,44 @@ def preprocess_steps(steps_path: str, topics_path: str, preprocessed_steps_path:
         df_steps = df_steps[~df_steps[StepColumns.HAS_HEADER_FOOTER.value]]
         logging.info(f"Filter steps with header footer. Steps shape: {df_steps.shape}")
 
+    df_topics = read_df(topics_path)
+
+    # Select steps with not null topic
+    df_steps = df_steps[df_steps[StepColumns.TOPIC.value].notnull()] \
+        .rename(columns={StepColumns.TOPIC.value: StepColumns.TOPIC_ID.value})
+    logging.info(f"Filter steps without topics. Steps shape: {df_steps.shape}")
+
+    # Add steps depth as related topic depth
+    df_steps_topics = merge_dfs(df_steps, df_topics, StepColumns.TOPIC_ID.value, TopicColumns.ID.value)
+
+    df_steps[StepColumns.DEPTH.value] = df_steps_topics[TopicColumns.DEPTH.value]
+    df_steps[StepColumns.DEPTH.value] = df_steps[StepColumns.DEPTH.value].fillna(0).astype('int32')
+    logging.info(f"Set steps depth:\n{df_steps[StepColumns.DEPTH.value].value_counts()}")
+
+    # Add steps prerequisites count as related topic depth
+    df_steps[StepColumns.PREREQUISITES_COUNT.value] = df_steps_topics[TopicColumns.PREREQUISITES_COUNT.value]
+    df_steps[StepColumns.PREREQUISITES_COUNT.value] = df_steps[StepColumns.PREREQUISITES_COUNT.value] \
+        .fillna(0).astype('int32')
+    logging.info(f"Set steps prerequisites count:\n{df_steps[StepColumns.PREREQUISITES_COUNT.value].value_counts()}")
+
+    # Add steps complexity
+    df_steps[StepColumns.COMPLEXITY.value] = df_steps[StepColumns.DEPTH.value] \
+        .apply(get_steps_complexity_tag, complexity_borders=complexity_borders)
+    logging.info(f"Set steps complexity with borders {complexity_borders}:\n"
+                 f"{df_steps[StepColumns.COMPLEXITY.value].value_counts()}")
+
+    # Add steps difficulty
+    df_steps[StepColumns.DIFFICULTY.value] = df_steps[StepColumns.SUCCESS_RATE.value] \
+        .apply(get_steps_difficulty_tag, difficulty_borders=difficulty_borders)
+    logging.info(f"Set steps difficulty with borders {difficulty_borders}:\n"
+                 f"{df_steps[StepColumns.DIFFICULTY.value].value_counts()}")
+
+    # Add steps scope
+    df_steps[StepColumns.SCOPE.value] = df_steps[StepColumns.PREREQUISITES_COUNT.value] \
+        .apply(get_steps_scope_tag, scope_borders=scope_borders)
+    logging.info(f"Set steps scope with borders {scope_borders}:\n"
+                 f"{df_steps[StepColumns.SCOPE.value].value_counts()}")
+
     logging.info(f"Steps final shape: {df_steps.shape}")
     logging.info(f"Saving steps to {preprocessed_steps_path}")
     write_df(df_steps, preprocessed_steps_path)
@@ -183,21 +217,25 @@ if __name__ == '__main__':
     parser.add_argument('steps_path', type=str, help='Path to .csv file with steps.')
     parser.add_argument('topics_path', type=str, help='Path to .csv file with topics.')
     parser.add_argument('preprocessed_steps_path', type=str, nargs='?', default=None,
-                        help='Path to .csv file where preprocessed steps will be saved .')
+                        help='Path to .csv file where preprocessed steps will be saved.')
 
-    parser.add_argument('--complexity-borders', type=Tuple[int, int], default=(3, 7),
+    parser.add_argument('--complexity-borders', type=Tuple[int, int], default=(2, 5),
                         help='Topic depth to consider steps as shallow, middle or deep.')
+    parser.add_argument('--scope-borders', type=Tuple[int, int], default=(5, 50),
+                        help='Topic scope to consider steps as small, middle or wide.')
     parser.add_argument('--difficulty-borders', type=Tuple[int, int], default=(1 / 3, 2 / 3),
                         help='Steps success rate to consider steps as easy, medium or hard.')
     parser.add_argument('--filter-with-header-footer', type=bool, default=True,
                         help='Filter steps with header or footer.')
+    parser.add_argument('--log-path', type=str, default=None, help='Path to directory for log.')
 
     args = parser.parse_args(sys.argv[1:])
+
     if args.preprocessed_steps_path is None:
         args.preprocessed_steps_path = args.steps_path
 
-    configure_logger(args.preprocessed_steps_path, 'preprocess')
+    configure_logger(args.preprocessed_steps_path, 'preprocess', args.log_path)
 
     preprocess_steps(args.steps_path, args.topics_path, args.preprocessed_steps_path,
-                     args.complexity_borders, args.difficulty_borders,
+                     args.complexity_borders, args.difficulty_borders, args.scope_borders,
                      args.filter_with_header_footer)

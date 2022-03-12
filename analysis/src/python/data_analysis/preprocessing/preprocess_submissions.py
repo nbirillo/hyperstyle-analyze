@@ -207,12 +207,14 @@ if __name__ == '__main__':
                         help='Ration to remove submissions which has lines change more then in `diff_ratio` times.')
     parser.add_argument('--max-attempts', type=int, default=5,
                         help='Remove submissions series with more then `max-attempts` attempts.')
+    parser.add_argument('--log-path', type=str, default=None, help='Path to directory for log.')
 
     args = parser.parse_args(sys.argv[1:])
+
     if args.preprocessed_submissions_path is None:
         args.preprocessed_submissions_path = args.submissions_path
 
-    configure_logger(args.preprocessed_submissions_path, 'preprocess')
+    configure_logger(args.preprocessed_submissions_path, 'preprocess', args.log_path)
 
     preprocess_submissions(args.submissions_path,
                            args.users_to_submissions_path,
