@@ -74,9 +74,10 @@ if __name__ == '__main__':
 
     parser.add_argument('--chunk-size', '-c', default=5000, type=int,
                         help='Number of groups which will be processed simultaneously')
+    parser.add_argument('--log-path', type=str, default=None, help='Path to directory for log.')
 
     args = parser.parse_args(sys.argv[1:])
-    configure_logger(args.issues_change_statistics_path, 'statistics')
+    configure_logger(args.issues_change_statistics_path, 'statistics', args.log_path)
 
     get_submissions_issues_change_statistics(args.submissions_path,
                                              args.issues_statistics_path,

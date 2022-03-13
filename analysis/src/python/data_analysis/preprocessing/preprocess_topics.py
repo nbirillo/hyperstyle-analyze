@@ -147,5 +147,4 @@ if __name__ == '__main__':
 
     configure_logger(args.preprocessed_topics_path, 'preprocess', args.log_path)
 
-    print(args.topics_path, args.preprocessed_topics_path, args.log_path)
     preprocess_topics(args.topics_path, args.preprocessed_topics_path)
