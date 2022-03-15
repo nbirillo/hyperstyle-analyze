@@ -11,7 +11,7 @@ def get_random_submission_with_lines_count(submissions_path: str,
                                            lines_counts: List[int],
                                            n_samples: int,
                                            selected_submissions_path: str):
-    """ Select random `n_samples` submissions with `lines_counts` lines counts. """
+    """Select random `n_samples` submissions with `lines_counts` lines counts. """
 
     df_submissions = read_df(submissions_path)
     df_submissions_stats = read_df(submissions_stats_path)

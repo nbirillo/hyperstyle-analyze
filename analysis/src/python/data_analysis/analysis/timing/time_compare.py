@@ -84,7 +84,7 @@ def measure_hyperstyle_time(language: str, code: str, repeat: int = 5) -> float:
         for inspector in inspectors:
             inspector.inspect(main_path, inspectors_config)
 
-    logging.info(f'Measure hyperstyle time')
+    logging.info('Measure hyperstyle time')
     return measure_run_time(run_hyperstyle, repeat)
 
 
@@ -108,7 +108,7 @@ def measure_qodana_time(language: str, code: str, repeat: int = 5) -> float:
     def run_qodana():
         run_and_wait(command)
 
-    logging.info(f'Measure hyperstyle time')
+    logging.info('Measure qodana time')
     return measure_run_time(run_qodana, repeat)
 
 
