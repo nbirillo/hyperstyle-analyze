@@ -4,11 +4,12 @@ import os
 import sys
 import time
 from pathlib import Path
-from typing import List
+from typing import Any, Callable
 
 import numpy as np
 import pandas as pd
 from hyperstyle.src.python.review.application_config import LanguageVersion
+from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.reviewers.common import LANGUAGE_TO_INSPECTORS
 
 from analysis.src.python.data_analysis.model.column_name import SubmissionColumns
@@ -17,8 +18,9 @@ from analysis.src.python.data_analysis.utils.logging_utils import configure_logg
 from analysis.src.python.evaluation.common.file_util import create_file
 from analysis.src.python.evaluation.common.parallel_util import run_and_wait
 
-TEMPLATE_FOLDER = Path(__file__).parents[4] / 'resources' / 'evaluation' / 'qodana' / 'project_templates'
-PROFILE_FOLDER = Path(__file__).parents[4] / 'resources' / 'evaluation' / 'qodana' / 'inspection_profiles'
+SRC_FOLDER = Path(__file__).parents[4] / 'resources' / 'evaluation' / 'qodana'
+TEMPLATE_FOLDER = SRC_FOLDER / 'project_templates'
+PROFILE_FOLDER = SRC_FOLDER / 'inspection_profiles'
 JAVA_QODANA_IMAGE_PATH = 'jetbrains/qodana'
 PYTHON_QODANA_IMAGE_PATH = 'jetbrains/qodana-python'
 
@@ -50,10 +52,25 @@ def get_qodana_configuration(language: LanguageVersion):
     return qodana_image_path, profile_path
 
 
-def run_hyperstyle(language: str, code: str, repeat: int = 5):
+def measure_run_time(f: Callable[[], Any], repeat: int) -> float:
+    repeat_times = []
+
+    for i in range(repeat):
+        logging.info(f'Time measuring attempt={i}')
+
+        start_time = time.time()
+        f()
+        end_time = time.time()
+
+        repeat_times.append(end_time - start_time)
+
+    return np.array(repeat_times).mean()
+
+
+def measure_hyperstyle_time(language: str, code: str, repeat: int = 5) -> float:
     language_version = LanguageVersion.from_value(language)
 
-    language = LanguageVersion.from_value(language)
+    language = Language.from_language_version(language_version)
     inspectors = LANGUAGE_TO_INSPECTORS.get(language, [])
 
     inspectors_config = {
@@ -62,21 +79,16 @@ def run_hyperstyle(language: str, code: str, repeat: int = 5):
     }
 
     project_dir, main_path = write_code_to_template(language_version, code)
-    repeat_times = []
 
-    for i in range(repeat):
-        logging.info(f'Hyperstyle qodana iteration {i}-th')
-
-        start_time = time.time()
+    def run_hyperstyle():
         for inspector in inspectors:
             inspector.inspect(main_path, inspectors_config)
-        end_time = time.time()
-        repeat_times.append(end_time - start_time)
 
-    return np.array(repeat_times).mean()
+    logging.info(f'Measure hyperstyle time')
+    return measure_run_time(run_hyperstyle, repeat)
 
 
-def run_qodana(language: str, code: str, repeat: int = 5):
+def measure_qodana_time(language: str, code: str, repeat: int = 5) -> float:
     language_version = LanguageVersion.from_value(language)
 
     results_dir = 'result'
@@ -93,21 +105,17 @@ def run_qodana(language: str, code: str, repeat: int = 5):
         f'{qodana_image_path}',
     ]
 
-    repeat_times = []
-    for i in range(repeat):
-        logging.info(f'Timing qodana iteration {i}-th')
-
-        start_time = time.time()
+    def run_qodana():
         run_and_wait(command)
-        end_time = time.time()
-        repeat_times.append(end_time - start_time)
 
-    return np.array(repeat_times).mean()
+    logging.info(f'Measure hyperstyle time')
+    return measure_run_time(run_qodana, repeat)
 
 
-def time_evaluation(submissions_path: str, time_evaluation_path: str, submissions_ids: List[int], repeat: int):
+def time_evaluation(submissions_path: str, time_evaluation_path: str, repeat: int):
+    """ Runs qode quality analyzers on """
+
     df_submissions = read_df(submissions_path)
-    df_submissions = df_submissions[df_submissions[SubmissionColumns.ID.value].isin(submissions_ids)]
 
     result = {
         'id': [],
@@ -120,32 +128,28 @@ def time_evaluation(submissions_path: str, time_evaluation_path: str, submission
 
         result['id'].append(submissions[SubmissionColumns.ID.value])
         result['hyperstyle'].append(
-            run_hyperstyle(submissions[SubmissionColumns.LANG.value],
-                           submissions[SubmissionColumns.CODE.value], repeat))
+            measure_hyperstyle_time(submissions[SubmissionColumns.LANG.value],
+                                    submissions[SubmissionColumns.CODE.value], repeat))
         result['qodana'].append(
-            run_qodana(submissions[SubmissionColumns.LANG.value],
-                       submissions[SubmissionColumns.CODE.value], repeat))
+            measure_qodana_time(submissions[SubmissionColumns.LANG.value],
+                                submissions[SubmissionColumns.CODE.value], repeat))
 
     pd.DataFrame.from_dict(result).to_csv(time_evaluation_path, index=False)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-
     parser.add_argument('submissions_path', type=str,
-                        help='Path to .csv file with preprocessed submissions with series')
-    parser.add_argument('time_evaluation_path', type=str,
+                        help='Path to .csv file with preprocessed submissions samples')
+    parser.add_argument('time_stats_path', type=str,
                         help='Path to .csv file with linters timing statistics')
-    parser.add_argument('--ids', nargs='+', type=int,
-                        help='Ids of submissions to evaluate code quality analyzers time')
     parser.add_argument('--repeat', default=3, type=int,
                         help='Times to repeat time evaluation for averaging')
 
     args = parser.parse_args(sys.argv[1:])
 
-    configure_logger(args.time_evaluation_path, 'timing')
+    configure_logger(args.time_stats_path, 'timing')
 
     time_evaluation(args.submissions_path,
-                    args.time_evaluation_path,
-                    args.ids,
+                    args.time_stats_path,
                     args.repeat)
