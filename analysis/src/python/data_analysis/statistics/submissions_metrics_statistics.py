@@ -27,8 +27,8 @@ def get_submission_statistics(submissions_with_issues_path: str, submissions_sta
         df_stats[SubmissionStatsColumns.CODE_LINES_COUNT.value]
 
     if SubmissionStatsColumns.QODANA_ISSUE_COUNT.value in df_stats.columns:
-        df_stats[SubmissionStatsColumns.QODANA_ISSUE_COUNT.value] = df_submissions[SubmissionColumns.QODANA_ISSUES.value] \
-            .apply(calculate_issues_count)
+        df_stats[SubmissionStatsColumns.QODANA_ISSUE_COUNT.value] = \
+            df_submissions[SubmissionColumns.QODANA_ISSUES.value].apply(calculate_issues_count)
 
         df_stats[SubmissionStatsColumns.QODANA_ISSUE_BY_CODE_LINES.value] = \
             df_stats[SubmissionStatsColumns.QODANA_ISSUE_COUNT.value] / \
