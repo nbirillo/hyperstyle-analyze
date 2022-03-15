@@ -1,4 +1,5 @@
-from typing import Callable, Dict, List
+from pathlib import Path
+from typing import Callable, Dict, List, Union
 
 import pandas as pd
 from pandarallel import pandarallel
@@ -45,19 +46,19 @@ def merge_dfs(df_left: pd.DataFrame, df_right: pd.DataFrame, left_on: str, right
     return df_merged
 
 
-def read_df(path: str) -> pd.DataFrame:
+def read_df(path: Union[str, Path]) -> pd.DataFrame:
     """ Read dataframe from given .csv file. """
 
     return pd.read_csv(path)
 
 
-def write_df(df: pd.DataFrame, path: str):
+def write_df(df: pd.DataFrame, path: Union[str, Path]):
     """ Write dataframe to given .csv file. """
 
     df.to_csv(path, index=False)
 
 
-def append_df(df: pd.DataFrame, path: str):
+def append_df(df: pd.DataFrame, path: Union[str, Path]):
     """ Append data to dataframe by given .csv file. """
 
     df.to_csv(path, index=False, mode='a', header=False)

@@ -124,6 +124,7 @@ class SubmissionColumns(Enum):
     ISSUE_TYPE = 'type'
     QODANA_ISSUES = 'qodana_issues'
     QODANA_ISSUE_CLASS = 'problem_id'
+    QODANA_ISSUES_IDS = 'qodana_issues_ids'
 
     STATUS = 'status'
 
@@ -146,6 +147,7 @@ class SubmissionStatsColumns(Enum):
 class IssuesColumns(Enum):
     CLASS = 'class'
     TYPE = 'type'
+    ID = 'id'
 
 
 @unique

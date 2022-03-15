@@ -1,16 +1,17 @@
 import argparse
 
 import torch
+from transformers import Trainer, TrainingArguments
+
 from analysis.src.python.evaluation.qodana.imitation_model.common.util import (
     DatasetColumnArgument,
     ModelCommonArgument,
     SeedArgument,
 )
-from transformers import Trainer, TrainingArguments
 
 
 class MultilabelTrainer(Trainer):
-    """ By default RobertaForSequence classification does not support
+    """ By default, RobertaForSequence classification does not support
         multi-label classification.
 
         Target and logits tensors should be represented as torch.FloatTensor of shape (1,).
@@ -91,6 +92,11 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                         type=int,
                         default=1,
                         help='Total amount of checkpoints limit. Default is 1.')
+
+    parser.add_argument('-vs', '--val_step',
+                        type=int,
+                        default=5,
+                        help='Validate each n-th step')
 
 
 class TrainingArgs:

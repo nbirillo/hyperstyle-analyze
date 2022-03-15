@@ -8,6 +8,9 @@ from typing import List
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MultiLabelBinarizer
+
+from analysis.src.python.data_analysis.model.column_name import SubmissionColumns
+from analysis.src.python.data_analysis.utils.df_utils import read_df, write_df
 from analysis.src.python.evaluation.common.csv_util import ColumnName, write_dataframe_to_csv
 from analysis.src.python.evaluation.common.file_util import AnalysisExtension
 from analysis.src.python.evaluation.qodana.imitation_model.common.util import CustomTokens, DatasetColumnArgument
@@ -63,8 +66,8 @@ def __one_hot_encoding(df: pd.DataFrame) -> pd.DataFrame:
             '1, 2'                      1  1  0
             '3'                         0  0  1
     """
-    target = df[DatasetColumnArgument.INSPECTIONS.value].to_numpy().astype(str)
-    target_list_int = [np.unique(tuple(map(int, label.split_to_batches(',')))) for label in target]
+    target = df[SubmissionColumns.QODANA_ISSUES_IDS.value].to_numpy().astype(str)
+    target_list_int = [np.unique(tuple(map(int, label.split(',')))) for label in target]
     try:
         mlb = MultiLabelBinarizer()
         encoded_target = mlb.fit_transform(target_list_int)
@@ -136,24 +139,20 @@ def main() -> None:
     configure_arguments(parser)
     args = parser.parse_args()
 
-    dataset_path = args.dataset_path
-    output_file_path = args.output_file_path
-
-    if output_file_path == 'input_file_directory':
-        output_file_path = Path(dataset_path).parent / f'encoded_dataset{AnalysisExtension.CSV.value}'
+    output_file_path = Path(args.dataset_path).parent / f'encoded_ids{AnalysisExtension.CSV.value}'
 
     # nan -> \n (empty rows)
-    df = pd.read_csv(dataset_path)
-    df[ColumnName.CODE.value].fillna('\n', inplace=True)
+    df = read_df(args.dataset_path)
+    df[SubmissionColumns.CODE.value].fillna('\n', inplace=True)
 
     if args.one_hot_encoding:
         target = __one_hot_encoding(df)
-        df = pd.concat([df[[ColumnName.ID.value, ColumnName.CODE.value]], target], axis=1)
+        df = pd.concat([df[[SubmissionColumns.ID.value, SubmissionColumns.CODE.value]], target], axis=1)
 
     if args.add_context:
         df = Context(df, args.n_lines_to_add).add_context_to_lines()
 
-    write_dataframe_to_csv(output_file_path, df)
+    write_df(df, output_file_path)
 
 
 if __name__ == '__main__':
