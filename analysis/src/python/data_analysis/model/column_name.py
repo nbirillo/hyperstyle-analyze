@@ -23,6 +23,7 @@ class StepColumns(Enum):
     IS_IDE_COMPATIBLE = 'is_ide_compatible'
     OPTIONS = 'options'
     DEPTH = 'depth'
+    PREREQUISITES_COUNT = 'prerequisites_count'
     URL = 'url'
 
     BLOCK = 'block'
@@ -37,6 +38,7 @@ class StepColumns(Enum):
 
     COMPLEXITY = 'complexity'
     DIFFICULTY = 'difficulty'
+    SCOPE = 'scope'
 
     VALUE = 'value'
     TOTAL_COUNT = 'total_count'
@@ -76,10 +78,18 @@ class Difficulty(Enum):
 
 
 @unique
+class Scope(Enum):
+    SMALL = 'small'
+    MEDIUM = 'medium'
+    WIDE = 'wide'
+
+
+@unique
 class TopicColumns(Enum):
     ID = 'id'
     CHILDREN = 'children'
     DEPTH = 'depth'
+    PREREQUISITES_COUNT = 'prerequisites_count'
     HIERARCHY = 'hierarchy'
     PREREQUISITES = 'prerequisites'
     ROOT_ID = 'root_id'

@@ -176,7 +176,7 @@ def get_submissions_series_issues_dynamic(df: pd.DataFrame, df_issues: pd.DataFr
     """
     Form dataframe for issues count change analysis.
     For each attempt and issue class/type count percent os submissions with this issue.
-    Submissions can be filter to analyze submissions with less then `max_attempts` total attempts or
+    Submissions can be filtered to analyze submissions with less then `max_attempts` total attempts or
     exact `max_attempts` if exact_attempts=True.
 
     The result dataframe:
@@ -191,7 +191,9 @@ def get_submissions_series_issues_dynamic(df: pd.DataFrame, df_issues: pd.DataFr
 
     def get_issues_change(df_attempt: pd.DataFrame, stats_dict: Dict[str, List]):
         for _, issue in df_issues.iterrows():
-            stats_dict[issue[get_issue_key_column(by_type)]] = []
+            issue_key = issue[get_issue_key_column(by_type)]
+            if issue_key not in stats_dict:
+                stats_dict[issue_key] = []
 
         for issue_key in df_issues[get_issue_key_column(by_type)].unique():
             stats_dict[issue_key].append(np.zeros(df_attempt.shape[0]))

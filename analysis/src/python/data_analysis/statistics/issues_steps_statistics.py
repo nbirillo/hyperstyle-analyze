@@ -61,9 +61,10 @@ if __name__ == '__main__':
                         help='Path to directory where to save issues steps statistics for each issue class')
     parser.add_argument('--attempt-number', type=Optional[int], default=None,
                         help='Number of attempt to analyze (None --all, 1 -- first, -1 --last, and other)')
+    parser.add_argument('--log-path', type=str, default=None, help='Path to directory for log.')
 
     args = parser.parse_args(sys.argv[1:])
-    configure_logger(args.issues_steps_statistics_directory_path, 'statistics')
+    configure_logger(args.issues_steps_statistics_directory_path, 'statistics', args.log_path)
 
     get_issues_steps_statistics(args.submissions_path,
                                 args.issues_statistics_path,

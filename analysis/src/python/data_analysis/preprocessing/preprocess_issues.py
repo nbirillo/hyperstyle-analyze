@@ -118,12 +118,13 @@ if __name__ == '__main__':
     parser.add_argument('submissions_path', type=str, help='Path to .csv file with submissions with issues.')
     parser.add_argument('issues_path', type=str, help='Path to .csv file with submissions to issues relation.')
     parser.add_argument('issues_info_path', type=str, help='Path to .csv file where issues info will be saved')
-
     parser.add_argument('--ignore-issue-classes', nargs='*', default=None,
                         help='Issues class name to ignore')
+    parser.add_argument('--log-path', type=str, default=None, help='Path to directory for log.')
 
     args = parser.parse_args(sys.argv[1:])
-    configure_logger(args.issues_info_path, 'preprocess')
+
+    configure_logger(args.issues_info_path, 'preprocess', args.log_path)
 
     preprocess_issues(args.submissions_path,
                       args.issues_path,

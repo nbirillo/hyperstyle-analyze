@@ -2,7 +2,7 @@ import argparse
 import ast
 import logging
 import sys
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Set, Tuple
 
 import pandas as pd
 
@@ -52,6 +52,57 @@ def get_topics_depth(df_topics: pd.DataFrame) -> Dict[int, int]:
     return topics_tree_depth
 
 
+def get_topics_prerequisites_tree(df_topics: pd.DataFrame) -> Dict[int, Set[int]]:
+    """ Build topic thee for given dataset of topics, setting topic as a parent if it is mentioned in prerequisites. """
+
+    logging.info("Building topics tree")
+
+    prerequisites = {topic[TopicColumns.ID.value]: [] for i, topic in df_topics.iterrows()}
+
+    for _, topic in df_topics.iterrows():
+        topic_id = topic[TopicColumns.ID.value]
+        prerequisites[topic_id] = set(ast.literal_eval((topic[TopicColumns.PREREQUISITES.value])))
+
+        for prerequisite in prerequisites[topic_id]:
+            if prerequisite not in prerequisites:
+                logging.info(f'Have no information about topic {prerequisite}')
+                exit(0)
+
+    return prerequisites
+
+
+def get_topics_prerequisites_count_recursive(topic_id: int,
+                                             topics_prerequisites_tree: Dict[int, Set[int]],
+                                             topics_prerequisites: Dict[int, Set[int]]) -> int:
+    """ Lazy recursive algorithm to calculate number of unique prerequisites for each topic. """
+
+    if topic_id not in topics_prerequisites:
+
+        topics_prerequisites[topic_id] = set(topics_prerequisites_tree[topic_id])
+
+        for prerequisite in topics_prerequisites_tree[topic_id]:
+            if prerequisite not in topics_prerequisites:
+                get_topics_prerequisites_count_recursive(prerequisite, topics_prerequisites_tree, topics_prerequisites)
+            topics_prerequisites[topic_id].update(topics_prerequisites[prerequisite])
+
+    return len(topics_prerequisites[topic_id])
+
+
+def get_topics_prerequisites_count(df_topics: pd.DataFrame) -> Dict[int, int]:
+    """ Apply lazy recursive algorithm to calculate number of unique prerequisites for each topic. """
+
+    logging.info("Calculating topics prerequisites count")
+    topics_prerequisites_tree = get_topics_prerequisites_tree(df_topics)
+    topics_topics_prerequisites_count = {}
+    topics_prerequisites = {}
+
+    for topic_id in df_topics[TopicColumns.ID.value]:
+        topics_topics_prerequisites_count[topic_id] = \
+            get_topics_prerequisites_count_recursive(topic_id, topics_prerequisites_tree, topics_prerequisites)
+
+    return topics_topics_prerequisites_count
+
+
 def preprocess_topics(topics_path: str, preprocessed_topics_path: Optional[str]):
     """ Build topic tree and calculate depth for each topics in tree. """
 
@@ -65,10 +116,16 @@ def preprocess_topics(topics_path: str, preprocessed_topics_path: Optional[str])
          ]]
 
     topics_depth = get_topics_depth(df_topics)
-
     df_topics[TopicColumns.DEPTH.value] = df_topics[TopicColumns.ID.value] \
         .apply(lambda topic_id: topics_depth.get(topic_id, None))
+
     logging.info(f"Set topics depth:\n{df_topics[TopicColumns.DEPTH.value].value_counts()}")
+
+    topics_prerequisites_count = get_topics_prerequisites_count(df_topics)
+    df_topics[TopicColumns.PREREQUISITES_COUNT.value] = df_topics[TopicColumns.ID.value] \
+        .apply(lambda topic_id: topics_prerequisites_count.get(topic_id, None))
+
+    logging.info(f"Set topics prerequisites count:\n{df_topics[TopicColumns.PREREQUISITES_COUNT.value].value_counts()}")
 
     logging.info(f"Topics final shape: {df_topics.shape}")
     logging.info(f"Saving topics to {preprocessed_topics_path}")
@@ -81,11 +138,13 @@ if __name__ == '__main__':
     parser.add_argument('topics_path', type=str, help='Path to .csv file with topics info.')
     parser.add_argument('preprocessed_topics_path', type=str, nargs='?', default=None,
                         help='Path to .csv file where preprocessed users will be saved.')
+    parser.add_argument('--log-path', type=str, default=None, help='Path to directory for log.')
 
     args = parser.parse_args(sys.argv[1:])
+
     if args.preprocessed_topics_path is None:
         args.preprocessed_topics_path = args.topics_path
 
-    configure_logger(args.preprocessed_topics_path, 'preprocess')
+    configure_logger(args.preprocessed_topics_path, 'preprocess', args.log_path)
 
     preprocess_topics(args.topics_path, args.preprocessed_topics_path)

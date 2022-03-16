@@ -54,8 +54,10 @@ if __name__ == '__main__':
     parser.add_argument('steps_path', type=str, help='Path to .csv file with steps.')
     parser.add_argument('topics_path', type=str, help='Path to .csv file with topics.')
     parser.add_argument('users_path', type=str, help='Path to .csv file with users.')
+    parser.add_argument('--log-path', type=str, default=None, help='Path to directory for log.')
 
     args = parser.parse_args(sys.argv[1:])
-    configure_logger(args.submissions_path, 'compile')
+
+    configure_logger(args.submissions_path, 'compile', args.log_path)
 
     compile_dataset(args.submissions_path, args.steps_path, args.topics_path, args.users_path)

@@ -26,7 +26,8 @@ def preprocess_users(users_path: str, preprocessed_users_path: Optional[str], le
 
     df_users[UserColumns.LEVEL.value] = df_users[UserColumns.PASSED_PROBLEMS.value] \
         .apply(get_user_level_tag, level_borders=level_borders)
-    logging.info(f"Set users level:\n{df_users[UserColumns.LEVEL.value].value_counts()}")
+    logging.info(f"Set users level with borders {level_borders}:\n"
+                 f"{df_users[UserColumns.LEVEL.value].value_counts()}")
 
     logging.info(f"Users final shape: {df_users.shape}")
     logging.info(f"Saving users to {preprocessed_users_path}")
@@ -41,11 +42,13 @@ if __name__ == '__main__':
                         help='Path to .csv file where preprocessed users will be saved.')
     parser.add_argument('--level-borders', '-lb', type=Tuple[int, int], default=(20, 150),
                         help='Passed topics count to consider user level as low, average or high.')
+    parser.add_argument('--log-path', type=str, default=None, help='Path to directory for log.')
 
     args = parser.parse_args(sys.argv[1:])
+
     if args.preprocessed_users_path is None:
         args.preprocessed_users_path = args.users_path
 
-    configure_logger(args.preprocessed_users_path, 'preprocess')
+    configure_logger(args.preprocessed_users_path, 'preprocess', args.log_path)
 
     preprocess_users(args.users_path, args.preprocessed_users_path, args.level_borders)
