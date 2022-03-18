@@ -3,16 +3,17 @@ import logging
 import pandas as pd
 import torch
 from analysis.src.python.evaluation.common.csv_util import ColumnName
-from analysis.src.python.evaluation.qodana.imitation_model.common.util import DatasetColumnArgument
 from torch.utils.data import Dataset
 from transformers import RobertaTokenizer
+
+from analysis.src.python.evaluation.qodana.imitation_model.roberta.util import DatasetColumnArgument
 
 logger = logging.getLogger(__name__)
 
 
 class QodanaDataset(Dataset):
-    """ MarkingArgument.ID.value is a an id of the solution that corresponds to the line
-        MarkingArgument.INSPECTIONS.value is a is a target column name in dataset
+    """ MarkingArgument.ID.value is an id of the solution that corresponds to the line
+        MarkingArgument.INSPECTIONS.value is a target column name in dataset
         ColumnName.CODE.value is an observation column name in dataset where lines of code are stored
     """
 

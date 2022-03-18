@@ -62,3 +62,14 @@ def append_df(df: pd.DataFrame, path: Union[str, Path]):
     """ Append data to dataframe by given .csv file. """
 
     df.to_csv(path, index=False, mode='a', header=False)
+
+
+def flat_apply(df: pd.DataFrame, func: Callable, **kwargs):
+    """ Apply function and flat map the results. """
+
+    rows_records = []
+    for _, row in df.iterrows():
+        rows = func(row, **kwargs)
+        rows_records.append(rows)
+
+    return pd.concat(rows_records)

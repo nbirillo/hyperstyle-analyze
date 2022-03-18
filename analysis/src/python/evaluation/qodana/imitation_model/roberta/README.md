@@ -48,7 +48,7 @@ code | inspections
 
 ## Data preprocessing
 
-Please address to the [`following documentation`](src/python/evaluation/qodana) for labeling dataset and to the [`following documentation`](preprocessing) to preprocess data for model training and evaluation afterwards. 
+Please address to the [`following documentation`](src/python/evaluation/qodana) for labeling dataset and to the [`following documentation`](../preprocessing) to preprocess data for model training and evaluation afterwards. 
 
 After completing the 3d preprocessing step you should have 3 folders:
 `train`, `val`, `test` with `train.csv`, `val.csv` and `test.csv` respectively.
@@ -73,7 +73,7 @@ that model will use for training.
 - `val_dataset_path` &#8209; path to the `val.csv` – file that consists of samples
 that model will use for evaluation during training.
   
-Both files are received by running [`split_dataset.py`](preprocessing/split_dataset.py) script and has the structure as described above.
+Both files are received by running [`split_dataset.py`](../preprocessing/split_dataset.py) script and has the structure as described above.
 
 Optional arguments:
 
@@ -97,7 +97,7 @@ Run [`evaluation.py`](evaluation.py) script from the command line with the follo
 
 Required arguments:
 
-`test_dataset_path` &#8209; path to the `test.csv` received by running [`split_dataset.py`](preprocessing/split_dataset.py) script.
+`test_dataset_path` &#8209; path to the `test.csv` received by running [`split_dataset.py`](../preprocessing/split_dataset.py) script.
 
 `model_weights_directory_path` &#8209; path to the folder where trained model weights are saved.
 

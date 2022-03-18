@@ -1,19 +1,18 @@
 import argparse
+import ast
 import logging
 import sys
 from itertools import chain
 from pathlib import Path
 from typing import List
 
-import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MultiLabelBinarizer
 
 from analysis.src.python.data_analysis.model.column_name import SubmissionColumns
 from analysis.src.python.data_analysis.utils.df_utils import read_df, write_df
-from analysis.src.python.evaluation.common.csv_util import ColumnName, write_dataframe_to_csv
-from analysis.src.python.evaluation.common.file_util import AnalysisExtension
-from analysis.src.python.evaluation.qodana.imitation_model.common.util import CustomTokens, DatasetColumnArgument
+from analysis.src.python.evaluation.common.csv_util import ColumnName
+from analysis.src.python.evaluation.qodana.imitation_model.roberta.util import CustomTokens
 
 logger = logging.getLogger(__name__)
 sys.path.append('')
@@ -25,26 +24,25 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                         type=lambda value: Path(value).absolute(),
                         help='Path to the dataset with the values to be encoded. ')
 
-    parser.add_argument('-o', '--output_file_path',
+    parser.add_argument('target_dataset_path',
                         help='Output file path. If not set, file will be saved to '
                              'the input file parent directory.',
-                        type=str,
-                        default='input_file_directory')
+                        type=str)
 
-    parser.add_argument('-c', '--add_context',
+    parser.add_argument('-c', '--add-context',
                         help='Use for the datasets with code lines only, if set to True, '
                              'n lines before and n lines after target line will be added to each sample.'
                              ' Default is False.',
                         action='store_true')
 
-    parser.add_argument('-n', '--n_lines_to_add',
+    parser.add_argument('-n', '--n-lines-to-add',
                         help='Use only if add_context is enabled. Allows to add n-lines from the same piece of code, '
                              'before and after each line in the dataset. If there are no lines before or after a line'
                              'from the same code-sample, special token will be added. Default is 2.',
                         default=2,
                         type=int)
 
-    parser.add_argument('-ohe', '--one_hot_encoding',
+    parser.add_argument('-ohe', '--one-hot-encoding',
                         help='If True, target column will be represented as one-hot-encoded vector. '
                              'The length of each vector is equal to the unique number of classes. '
                              'Default is True.',
@@ -52,22 +50,18 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
 
 
 def __one_hot_encoding(df: pd.DataFrame) -> pd.DataFrame:
-    """ Transforms strings in 'inspections' column,
-        denoting inspection ids into n columns
-        with binary values:
-
+    """ Transforms strings in 'qodana_issues' column, denoting inspection ids into n columns with binary values:
         1 x n_rows -> n_unique_classes x n_rows
-
-        Where n_unique_classes is equal to the number
-        of unique inspections in the dataset.
+        Where n_unique_classes is equal to the number of unique inspections in the dataset.
 
         Example:
             inspections        ->       1, 2, 3
             '1, 2'                      1  1  0
             '3'                         0  0  1
     """
+
     target = df[SubmissionColumns.QODANA_ISSUES_IDS.value].to_numpy().astype(str)
-    target_list_int = [np.unique(tuple(map(int, label.split(',')))) for label in target]
+    target_list_int = [ast.literal_eval(label) for label in target]
     try:
         mlb = MultiLabelBinarizer()
         encoded_target = mlb.fit_transform(target_list_int)
@@ -80,33 +74,34 @@ def __one_hot_encoding(df: pd.DataFrame) -> pd.DataFrame:
 
 
 class Context:
-    """ To each line of code add context from the same solution:
-        'n_lines_before' line 'n_lines_after'.
-        If there are no lines before or / and after a piece of code,
-        special tokens are added.
+    """ To each line of code add context from the same solution: 'n_lines_before' line 'n_lines_after'.
+        If there are no lines before or / and after a piece of code, special tokens are added.
     """
+
     def __init__(self, df: pd.DataFrame, n_lines: int):
-        self.indices = df[DatasetColumnArgument.ID.value].to_numpy()
-        self.lines = df[ColumnName.CODE.value]
+        self.indices = df[SubmissionColumns.ID.value].to_numpy()
+        self.lines = df[SubmissionColumns.CODE.value]
         self.n_lines: int = n_lines
         self.df = df
 
     def add_context_to_lines(self) -> pd.DataFrame:
         lines_with_context = []
         for current_line_index, current_line in enumerate(self.lines):
-            context = self.add_context_before(current_line_index, current_line)
+            context = ['']
+            context = self.add_context_before(context, current_line_index)
+            context = [context[0] + current_line]
             context = self.add_context_after(context, current_line_index)
             lines_with_context.append(context[0])
         lines_with_context = pd.Series(lines_with_context)
         self.df[ColumnName.CODE.value] = lines_with_context
+
         return self.df
 
-    def add_context_before(self, current_line_index: int, current_line: str) -> List[str]:
+    def add_context_before(self, context: List, current_line_index: int) -> List[str]:
         """ Add n_lines lines before the target line from the same piece of code,
-            If there are less than n lines above the target line will add
-            a special token.
+            If there are less than n lines above the target line will add a special token.
         """
-        context = ['']
+
         for n_line_index in range(current_line_index - self.n_lines, self.n_lines):
             if n_line_index >= len(self.lines):
                 return context
@@ -116,14 +111,14 @@ class Context:
                 context = [context[0] + self.lines.iloc[n_line_index]]
             if n_line_index != self.n_lines - 1:
                 context = [context[0] + '\n']
-        context = [context[0] + current_line]
+
         return context
 
     def add_context_after(self, context: List, current_line_index: int) -> List[str]:
         """ Add n_lines lines after the target line from the same piece of code,
-            If there are less than n lines after the target line will add
-            a special token.
+            If there are less than n lines after the target line will add a special token.
         """
+
         for n_line_index in range(current_line_index + 1, self.n_lines + current_line_index + 1):
             if n_line_index >= len(self.lines) or self.indices[n_line_index] != self.indices[current_line_index]:
                 context = [context[0] + CustomTokens.NOC.value]
@@ -131,15 +126,14 @@ class Context:
                 context = [context[0] + self.lines.iloc[n_line_index]]
             if n_line_index != self.n_lines - 1:
                 context = [context[0] + '\n']
+
         return context
 
 
-def main() -> None:
+if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     configure_arguments(parser)
     args = parser.parse_args()
-
-    output_file_path = Path(args.dataset_path).parent / f'encoded_ids{AnalysisExtension.CSV.value}'
 
     # nan -> \n (empty rows)
     df = read_df(args.dataset_path)
@@ -152,8 +146,4 @@ def main() -> None:
     if args.add_context:
         df = Context(df, args.n_lines_to_add).add_context_to_lines()
 
-    write_df(df, output_file_path)
-
-
-if __name__ == '__main__':
-    main()
+    write_df(df, args.encoded_dataset_path)

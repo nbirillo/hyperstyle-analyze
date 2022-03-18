@@ -6,11 +6,11 @@ from pathlib import Path
 import torch
 from transformers import RobertaForSequenceClassification
 
-from analysis.src.python.evaluation.qodana.imitation_model.common.metric import Measurer
-from analysis.src.python.evaluation.qodana.imitation_model.common.train_config import (MultilabelTrainer, TrainingArgs,
-                                                                                       configure_arguments)
-from analysis.src.python.evaluation.qodana.imitation_model.common.util import DatasetColumnArgument
-from analysis.src.python.evaluation.qodana.imitation_model.dataset.dataset import QodanaDataset
+from analysis.src.python.evaluation.qodana.imitation_model.roberta.dataset import QodanaDataset
+from analysis.src.python.evaluation.qodana.imitation_model.roberta.metric import Measurer
+from analysis.src.python.evaluation.qodana.imitation_model.roberta.train_config import MultilabelTrainer, TrainingArgs, \
+    configure_arguments
+from analysis.src.python.evaluation.qodana.imitation_model.roberta.util import DatasetColumnArgument
 
 
 def train_model(train_dataset_path: str,

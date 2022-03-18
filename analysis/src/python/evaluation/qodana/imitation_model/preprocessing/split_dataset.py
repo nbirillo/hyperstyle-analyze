@@ -3,23 +3,24 @@ import os
 from pathlib import Path
 
 import pandas as pd
-from hyperstyle.src.python.review.common.file_system import Extension
 from sklearn.model_selection import train_test_split
-from analysis.src.python.evaluation.common.csv_util import ColumnName, write_dataframe_to_csv
+
+from analysis.src.python.evaluation.common.csv_util import write_dataframe_to_csv
 from analysis.src.python.evaluation.common.file_util import AnalysisExtension
-from analysis.src.python.evaluation.qodana.imitation_model.common.util import SeedArgument
+from analysis.src.python.evaluation.qodana.imitation_model.roberta.util import SeedArgument
 
 
 def configure_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
-    parser.add_argument('dataset_path',
+    parser.add_argument('code_dataset_path',
                         type=str,
-                        help=f'Path to the dataset received by either'
-                             f' src.python.evaluation.qodana.fragment_to_inspections_list{Extension.PY.value}'
-                             f'or src.python.evaluation.qodana.fragment_to_inspections_list_line_by_line'
-                             f'{Extension.PY.value}script.')
+                        help=f'Path to the file with code representation data')
 
-    parser.add_argument('-d', '--output_directory_path',
+    parser.add_argument('target_dataset_path',
+                        type=str,
+                        help=f'Path to the file with targets')
+
+    parser.add_argument('output_directory_path',
                         type=str,
                         default=None,
                         help='Path to the directory where folders for train, test and validation datasets will be '
@@ -43,10 +44,12 @@ def configure_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def split_dataset(dataset_path: str, output_directory_path: str, val_size: float, test_size: float, shuffle: bool):
-    df = pd.read_csv(dataset_path)
-    target = df.iloc[:, 2:]
-    code_bank = df[ColumnName.CODE.value]
+def split_dataset(code_dataset_path: str, target_dataset_path: str, output_directory_path: str,
+                  val_size: float, test_size: float, shuffle: bool):
+    code_bank = pd.read_csv(code_dataset_path)
+    target = pd.read_csv(target_dataset_path)
+
+    assert target.shape[0] == code_bank.shape[0]
 
     code_train, code_test, target_train, target_test = train_test_split(code_bank,
                                                                         target,
@@ -59,20 +62,20 @@ def split_dataset(dataset_path: str, output_directory_path: str, val_size: float
                                                                       test_size=val_size,
                                                                       random_state=SeedArgument.SEED.value,
                                                                       shuffle=shuffle)
-    if output_directory_path is None:
-        output_directory_path = Path(dataset_path).parent
 
-    for holdout in [("train", code_train, target_train),
-                    ("val", code_val, target_val),
-                    ("test", code_test, target_test)]:
-        df = pd.concat([holdout[1], holdout[2]], axis=1)
-        os.makedirs(os.path.join(output_directory_path, holdout[0]), exist_ok=True)
-        write_dataframe_to_csv(Path(output_directory_path) / holdout[0] / f'{holdout[0]}{AnalysisExtension.CSV.value}',
-                               df)
+    for part, code_data, target_data in [("train", code_train, target_train),
+                                         ("val", code_val, target_val),
+                                         ("test", code_test, target_test)]:
+        output_path = Path(output_directory_path) / part
+        os.makedirs(output_path, exist_ok=True)
+        write_dataframe_to_csv(output_path / f'code{AnalysisExtension.CSV.value}', code_data)
+        write_dataframe_to_csv(output_path / f'target{AnalysisExtension.CSV.value}', target_data)
 
 
 if __name__ == "__main__":
     parser = configure_parser()
     args = parser.parse_args()
 
-    split_dataset(args.dataset_path, args.output_directory_path, args.val_size, args.test_size, args.shuffle)
+    split_dataset(args.code_dataset_path,
+                  args.target_dataset_path,
+                  args.output_directory_path, args.val_size, args.test_size, args.shuffle)
