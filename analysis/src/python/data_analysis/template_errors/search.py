@@ -1,12 +1,12 @@
 import argparse
 import json
 import sys
-from typing import List, Callable, Tuple
+from typing import Callable, List, Tuple
 
 import pandas as pd
 
 from analysis.src.python.data_analysis.model.column_name import SubmissionColumns
-from analysis.src.python.data_analysis.utils.df_utils import read_df, write_df, rename_columns
+from analysis.src.python.data_analysis.utils.df_utils import read_df
 from analysis.src.python.evaluation.issues_statistics.common.raw_issue_encoder_decoder import RawIssueDecoder
 
 
@@ -51,16 +51,16 @@ def get_candidate_issues(df_submissions: pd.DataFrame) -> pd.Series:
     Rank issues by frequency of occurrence in all attempts of the series.
     """
     candidate_issues = []
-    n = df_submissions[SubmissionColumns.GROUP.value].nunique()
+    groups = df_submissions[SubmissionColumns.GROUP.value].unique()
 
-    for group_no in df_submissions[SubmissionColumns.GROUP.value].unique():
+    for group_no in groups:
         df_issues = df_submissions[df_submissions[SubmissionColumns.GROUP.value] == group_no] \
             .sort_values(by=SubmissionColumns.ATTEMPT.value) \
-            .agg(lambda x: submission_to_issue_code_pairs(x), axis=1)
+            .apply(lambda x: submission_to_issue_code_pairs(x), axis=1)
         candidate_issues += get_repetitive_issues(df_issues.to_list())
 
     ranking = pd.DataFrame(candidate_issues).value_counts()
-    ranking /= n
+    ranking /= len(groups)
     return ranking
 
 
