@@ -1,5 +1,6 @@
 import argparse
 import json
+import os
 import sys
 from typing import Callable, List, Tuple
 
@@ -32,16 +33,12 @@ def get_repetitive_issues(issues_by_attempt: List[List[Tuple[str, str]]]) -> Lis
 
     def is_in_previous_issues(issue_line: Tuple[str, str],
                               previous_issues_lines: List[Tuple[str, str]]) -> bool:
-        for pr_issue_line in previous_issues_lines:
-            if equal_issues(issue_line, pr_issue_line):
-                return True
-        return False
+        return any(map(lambda x: equal_lines(issue_line, x), previous_issues_lines))
 
-    prev_issues = issues_by_attempt[0]
+    prev_issues = issues_by_attempt.pop(0) if len(issues_by_attempt) > 0 else []
 
-    for attempt in range(1, len(issues_by_attempt)):
-        issues = issues_by_attempt[attempt]
-        prev_issues = [issue for issue in issues if is_in_previous_issues(issue, prev_issues)]
+    for issues in issues_by_attempt:
+        prev_issues = list(filter(lambda x: is_in_previous_issues(x, prev_issues), issues))
 
     return prev_issues
 
@@ -82,7 +79,7 @@ def search(submissions_path: str, result_path: str, n: int):
         df_submissions[SubmissionColumns.RAW_ISSUES.value].map(lambda x: json.loads(x, cls=RawIssueDecoder))
     # Splitting code to lines
     df_submissions[SubmissionColumns.CODE.value] = \
-        df_submissions[SubmissionColumns.CODE.value].map(lambda x: x.split('\n'))
+        df_submissions[SubmissionColumns.CODE.value].map(lambda x: x.split(os.linesep))
 
     df_issues_ranking = pd.DataFrame()
 
