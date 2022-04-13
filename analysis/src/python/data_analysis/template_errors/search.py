@@ -1,13 +1,14 @@
 import argparse
+import ast
 import json
 import os
 import sys
-from typing import Callable, List, Tuple
+from typing import Callable, List, Tuple, Union
 
 import pandas as pd
 
-from analysis.src.python.data_analysis.model.column_name import SubmissionColumns
-from analysis.src.python.data_analysis.utils.df_utils import read_df
+from analysis.src.python.data_analysis.model.column_name import StepColumns, SubmissionColumns
+from analysis.src.python.data_analysis.utils.df_utils import read_df, drop_columns, write_df
 from analysis.src.python.evaluation.issues_statistics.common.raw_issue_encoder_decoder import RawIssueDecoder
 
 
@@ -61,11 +62,34 @@ def get_candidate_issues(df_submissions: pd.DataFrame) -> pd.Series:
     return ranking
 
 
-def search(submissions_path: str, result_path: str, n: int):
+def get_position_in_template(issue: pd.Series, df_steps: pd.DataFrame) -> Union[None, int]:
+    """
+    Get line number of issue line in corresponding template if exists.
+    """
+    step_id = issue[SubmissionColumns.STEP_ID.value]
+    line = issue['line']
+    line_stripped = line.strip()
+    if step_id not in df_steps[StepColumns.ID.value].values:
+        return None
+    template = df_steps[df_steps[StepColumns.ID.value] == step_id].iloc[0][StepColumns.CODE_TEMPLATES.value]
+
+    for i, template_line in enumerate(template):
+        if equal_lines(template_line.strip(), line_stripped):
+            return i + 1
+    return None
+
+
+def search(submissions_path: str, steps_path: str, result_path: str, n: int):
     """
     Get n most frequently uncorrected issues for every step_id in submissions_path and write them to result_path.
     """
     df_submissions = read_df(submissions_path)
+
+    LANG = 'java17'
+    df_steps = read_df(steps_path)
+    # Parsing code templates
+    df_steps[StepColumns.CODE_TEMPLATES.value] = \
+        df_steps[StepColumns.CODE_TEMPLATES.value].map(lambda x: ast.literal_eval(x)[LANG].split(os.linesep))
 
     df_submissions = df_submissions[[SubmissionColumns.ID.value,
                                      SubmissionColumns.STEP_ID.value,
@@ -91,20 +115,23 @@ def search(submissions_path: str, result_path: str, n: int):
                                             SubmissionColumns.RAW_ISSUE_CLASS.value: df_candidate_issues[0],
                                             'line': df_candidate_issues[1],
                                             'frequency': df_candidate_issues['frequency']})
-        df_candidate_issues['line'] = df_candidate_issues['line'].map(lambda x: x.strip())
+        df_candidate_issues['pos_in_template'] = \
+            df_candidate_issues.apply(lambda x: get_position_in_template(x, df_steps), axis=1).astype(pd.Int32Dtype())
         df_issues_ranking = pd.concat([df_issues_ranking, df_candidate_issues], axis=0, ignore_index=True)
 
-    df_issues_ranking.to_csv(result_path, sep='`', index=False)
+    df_issues_ranking = drop_columns(df_issues_ranking, ['line'])
+    write_df(df_issues_ranking, result_path)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
     parser.add_argument('submissions_path', type=str, help='Path to .csv file with submissions.')
+    parser.add_argument('steps_path', type=str, help='Path to .csv file with steps.')
     parser.add_argument('result_path', type=str, help='Path to resulting .csv file with issues ranking.')
     parser.add_argument('--N', type=int, default=5,
                         help='Number of top issues for every step.')
 
     args = parser.parse_args(sys.argv[1:])
 
-    search(args.submissions_path, args.result_path, args.N)
+    search(args.submissions_path, args.steps_path, args.result_path, args.N)
