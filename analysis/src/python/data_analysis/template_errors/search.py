@@ -8,7 +8,7 @@ from typing import Callable, List, Tuple, Union
 import pandas as pd
 
 from analysis.src.python.data_analysis.model.column_name import StepColumns, SubmissionColumns
-from analysis.src.python.data_analysis.utils.df_utils import read_df, drop_columns, write_df
+from analysis.src.python.data_analysis.utils.df_utils import drop_columns, read_df, write_df
 from analysis.src.python.evaluation.issues_statistics.common.raw_issue_encoder_decoder import RawIssueDecoder
 
 
@@ -85,11 +85,11 @@ def search(submissions_path: str, steps_path: str, result_path: str, n: int):
     """
     df_submissions = read_df(submissions_path)
 
-    LANG = 'java17'
+    lang = 'java17'
     df_steps = read_df(steps_path)
     # Parsing code templates
     df_steps[StepColumns.CODE_TEMPLATES.value] = \
-        df_steps[StepColumns.CODE_TEMPLATES.value].map(lambda x: ast.literal_eval(x)[LANG].split(os.linesep))
+        df_steps[StepColumns.CODE_TEMPLATES.value].map(lambda x: ast.literal_eval(x)[lang].split(os.linesep))
 
     df_submissions = df_submissions[[SubmissionColumns.ID.value,
                                      SubmissionColumns.STEP_ID.value,
