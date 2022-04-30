@@ -68,13 +68,12 @@ def get_position_in_template(issue: pd.Series, df_steps: pd.DataFrame) -> Union[
     """
     step_id = issue[SubmissionColumns.STEP_ID.value]
     line = issue['line']
-    line_stripped = line.strip()
     if step_id not in df_steps[StepColumns.ID.value].values:
         return None
     template = df_steps[df_steps[StepColumns.ID.value] == step_id].iloc[0][StepColumns.CODE_TEMPLATES.value]
 
     for i, template_line in enumerate(template):
-        if equal_lines(template_line.strip(), line_stripped):
+        if equal_lines(template_line, line):
             return i + 1
     return None
 
@@ -103,7 +102,7 @@ def search(submissions_path: str, steps_path: str, result_path: str, n: int):
         df_submissions[SubmissionColumns.RAW_ISSUES.value].map(lambda x: json.loads(x, cls=RawIssueDecoder))
     # Splitting code to lines
     df_submissions[SubmissionColumns.CODE.value] = \
-        df_submissions[SubmissionColumns.CODE.value].map(lambda x: x.split(os.linesep))
+        df_submissions[SubmissionColumns.CODE.value].map(lambda x: [line.rstrip('\r') for line in x.split(os.linesep)])
 
     df_issues_ranking = pd.DataFrame()
 
@@ -129,8 +128,7 @@ if __name__ == '__main__':
     parser.add_argument('submissions_path', type=str, help='Path to .csv file with submissions.')
     parser.add_argument('steps_path', type=str, help='Path to .csv file with steps.')
     parser.add_argument('result_path', type=str, help='Path to resulting .csv file with issues ranking.')
-    parser.add_argument('--N', type=int, default=5,
-                        help='Number of top issues for every step.')
+    parser.add_argument('--N', type=int, default=5, help='Number of top issues for every step.')
 
     args = parser.parse_args(sys.argv[1:])
 
