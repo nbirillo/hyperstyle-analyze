@@ -1,0 +1,4 @@
+model: knn
+parameters:
+  n_neighbors: 10
+  algorithm: 'kd_tree'

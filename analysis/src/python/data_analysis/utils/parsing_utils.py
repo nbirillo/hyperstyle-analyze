@@ -3,6 +3,9 @@ import json
 from datetime import datetime
 from typing import Dict, List
 
+from hyperstyle.src.python.review.inspectors.issue import BaseIssue
+
+from analysis.src.python.evaluation.issues_statistics.common.raw_issue_encoder_decoder import RawIssueDecoder
 from analysis.src.python.evaluation.qodana.util.models import QodanaIssue
 
 
@@ -38,6 +41,10 @@ def parse_qodana_issues(s: str) -> str:
 
 def parse_qodana_issues_to_objects(s: str) -> List[QodanaIssue]:
     return list(map(lambda issue: QodanaIssue.from_json(json.dumps(issue)), ast.literal_eval(s)))
+
+
+def parse_raw_issues_to_objects(s: str) -> List[BaseIssue]:
+    return json.loads(s, cls=RawIssueDecoder)
 
 
 def dump_qodana_issues_to_str(issues: List[QodanaIssue]) -> str:

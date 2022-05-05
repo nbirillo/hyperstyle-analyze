@@ -136,7 +136,7 @@ def get_block_info(step_block: str) -> pd.Series:
         StepColumns.CODE_TEMPLATES.value: get_code_templates(block[StepColumns.OPTIONS.value]),
     }
 
-    return pd.Series(blocks_info, dtype='bool')
+    return pd.Series(blocks_info)
 
 
 def preprocess_steps(steps_path: str, topics_path: str, preprocessed_steps_path: str,

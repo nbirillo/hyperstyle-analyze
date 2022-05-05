@@ -5,7 +5,7 @@ import sys
 from typing import Optional
 
 from analysis.src.python.data_analysis.model.column_name import IssuesColumns, SubmissionColumns
-from analysis.src.python.data_analysis.utils.df_utils import merge_dfs, read_df
+from analysis.src.python.data_analysis.utils.df_utils import merge_dfs, read_df, write_df
 from analysis.src.python.data_analysis.utils.logging_utils import configure_logger
 from analysis.src.python.evaluation.common.file_util import AnalysisExtension, create_directory
 
@@ -28,6 +28,8 @@ def get_issues_steps_statistics(submissions_path: str,
             df_submissions = df_submissions[df_submissions[SubmissionColumns.ATTEMPT.value] == attempt_number]
 
     df_issues = read_df(issues_path)
+    steps_count = df_submissions[SubmissionColumns.STEP_ID.value].value_counts().reset_index()
+    steps_count.columns = [SubmissionColumns.STEP_ID.value, 'total_count']
 
     df_issues_statistics = read_df(issue_statistics_path)
 
@@ -40,10 +42,21 @@ def get_issues_steps_statistics(submissions_path: str,
 
     create_directory(issues_steps_statistics_directory_path)
 
+    write_df(steps_count, os.path.join(issues_steps_statistics_directory_path, 'steps_count.csv'))
+
     for issue_class in df_issues[IssuesColumns.CLASS.value].values:
         issue_stats_path = os.path.join(issues_steps_statistics_directory_path, f'{issue_class}{AnalysisExtension.CSV}')
-        df_issues_statistics[[issue_class, SubmissionColumns.STEP_ID.value]][df_issues_statistics[issue_class] > 0][
-            [SubmissionColumns.STEP_ID.value]].value_counts().to_csv(issue_stats_path)
+        df_issue_stats = df_issues_statistics[[issue_class, SubmissionColumns.STEP_ID.value]]
+        df_issue_stats = df_issue_stats[df_issues_statistics[issue_class] > 0]
+        df_issue_steps_stats = df_issue_stats[SubmissionColumns.STEP_ID.value].value_counts().reset_index()
+        df_issue_steps_stats.columns = [SubmissionColumns.STEP_ID.value, 'with_issue_count']
+        df_issue_steps_stats = merge_dfs(df_issue_steps_stats, steps_count,
+                                         left_on=SubmissionColumns.STEP_ID.value,
+                                         right_on=SubmissionColumns.STEP_ID.value)
+        df_issue_steps_stats['ratio'] = df_issue_steps_stats['with_issue_count'] / df_issue_steps_stats['total_count']
+        df_issue_steps_stats['ratio'] = df_issue_steps_stats['ratio'].round(2)
+        df_issue_steps_stats.sort_values(by='ratio', inplace=True, ascending=False)
+        write_df(df_issue_steps_stats, issue_stats_path)
 
 
 if __name__ == '__main__':
