@@ -41,6 +41,7 @@ abstractmethod
 aggfunc
 annot
 anova
+applymap
 arange
 astype
 atclause

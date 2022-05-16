@@ -22,7 +22,7 @@ def write_submissions_to_files(df_submissions: pd.DataFrame, output_dir: str):
     output_file = os.path.join(output_dir, f'submissions{AnalysisExtension.CSV.value}')
     write_df(df_submissions, output_file)
 
-    for i, submission in df_submissions.iterrows():
+    for _, submission in df_submissions.iterrows():
         file_path = os.path.join(output_dir, f'{submission[SubmissionColumns.ID.value]}{Extension.JAVA.value}')
         with open(file_path, 'w+') as f:
             f.write(submission[SubmissionColumns.CODE.value])
@@ -94,8 +94,8 @@ def search_submissions_by_step_issue(df_submissions: pd.DataFrame, issues_type: 
         .head(count)
 
     step_issue_output_dir = os.path.join(output_dir, f'{issue}_{step}_{count}')
-    write_submissions_to_files(df_submissions_with_issue, os.path.join(step_issue_output_dir, f'with_issue'))
-    write_submissions_to_files(df_submissions_without_issue, os.path.join(step_issue_output_dir, f'without_issue'))
+    write_submissions_to_files(df_submissions_with_issue, os.path.join(step_issue_output_dir, 'with_issue'))
+    write_submissions_to_files(df_submissions_without_issue, os.path.join(step_issue_output_dir, 'without_issue'))
 
 
 def search_submissions(submissions_path: str, issues_type: str, steps_issues_path: str, step: int, issue: str,
