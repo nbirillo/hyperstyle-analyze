@@ -143,6 +143,14 @@ class SubmissionStatsColumns(Enum):
 
 
 @unique
+class StepsStatsColumns(Enum):
+    TOTAL_COUNT = 'total_count'
+    WITH_ISSUE_COUNT = 'with_issue_count'
+    RATIO = 'ratio'
+    ISSUE = 'issue'
+
+
+@unique
 class IssuesColumns(Enum):
     CLASS = 'class'
     TYPE = 'type'

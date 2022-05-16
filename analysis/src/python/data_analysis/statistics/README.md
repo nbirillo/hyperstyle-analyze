@@ -14,7 +14,7 @@ To get statistics on collected and preprocessed data, run following python scrip
     |**submissions_path**| Path to .csv file with `preprocessed submissions`. |
     |**submissions_statistics_path**| Path to .csv file where to save submissions statistics. |
 
-2. [client_statistics.py](client_statistics.py) - build .csv file with submissions series client
+4. [client_statistics.py](client_statistics.py) - build .csv file with submissions series client
    for clients change statistics analysis.
    
     **Required arguments:**
@@ -30,7 +30,7 @@ To get statistics on collected and preprocessed data, run following python scrip
     |----------|-------------|
     | **&#8209;&#8209;chunk-size** | Number of submission groups which will be processed simultaneously. |
 
-3. [issues_statistics.py](issues_statistics.py) - for each submission calculate number of 
+5. [issues_statistics.py](issues_statistics.py) - for each submission calculate number of 
    detected issues of each class.
 
     **Required arguments:**
@@ -67,8 +67,8 @@ To get statistics on collected and preprocessed data, run following python scrip
     |----------|-------------|
     | **&#8209;&#8209;chunk-size** | Number of submission groups which will be processed simultaneously. |
 
-4. [issues_steps_statistics.py](issues_steps_statistics.py) - for each issue type get rating of steps
-   by number of its detections.
+5. [issues_steps_statistics.py](issues_steps_statistics.py) - for each issue type get rating of steps
+   by number of its detections and visa versa for each step get rating of issue types.
    
     **Required arguments:**
    
@@ -81,9 +81,10 @@ To get statistics on collected and preprocessed data, run following python scrip
 
     **Optional arguments:**
     
-    | Argument | Description |
-    |----------|-------------|
+    | Argument                        | Description                                                                  |
+    |----------------------------------|------------------------------------------------------------------------------|
     | **&#8209;&#8209;attempt-number** | Number of attempt to analyze (None --all, 1 -- first, -1 --last, and other). |
+    | **&#8209;&#8209;ignore-issues** | List of issue types to ignore |                                              |
 
 
 After all preprocessing stages you will get some .scv files which you need for feather analysis.
