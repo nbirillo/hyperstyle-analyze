@@ -71,8 +71,8 @@ def merge_template_errors(df_ranking: pd.DataFrame) -> pd.DataFrame:
     Merge same template issues in ranking for single step.
     """
 
-    def get_unique_pairs(df, col1, col2):
-        return df.loc[:, [col1, col2]].drop_duplicates().values
+    def get_unique_pairs(df: pd.DataFrame, first_col: str, second_col: str):
+        return df.loc[:, [first_col, second_col]].drop_duplicates().values
 
     df_template_errors = df_ranking[df_ranking['pos_in_template'] != -1]
     df_other_errors = df_ranking[df_ranking['pos_in_template'] == -1]
@@ -96,15 +96,17 @@ def merge_template_errors(df_ranking: pd.DataFrame) -> pd.DataFrame:
         .sort_values(by='frequency', ascending=False)
 
 
-def count_groups(df_submissions, df_steps):
+def count_groups(df_submissions: pd.DataFrame, df_steps: pd.DataFrame):
     """
     Count number of groups in df_submissions for every step_id in df_steps
     """
-    groups_cnt = df_steps[StepColumns.ID.value].map(
-        lambda x: len(df_submissions[df_submissions[SubmissionColumns.STEP_ID.value] == x][
-                          SubmissionColumns.GROUP.value].unique())
-    ).rename('groups_cnt')
-    df_steps = pd.concat([df_steps, groups_cnt], axis=1)
+
+    def count(step_id: int):
+        return len(df_submissions[df_submissions[SubmissionColumns.STEP_ID.value] == step_id][
+                       SubmissionColumns.GROUP.value].unique())
+
+    groups_count = df_steps[StepColumns.ID.value].map(count).rename('groups_cnt')
+    df_steps = pd.concat([df_steps, groups_count], axis=1)
     return df_steps
 
 
