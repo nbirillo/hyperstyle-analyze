@@ -5,6 +5,7 @@ from pathlib import Path
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
+from analysis.src.python.data_analysis.utils.df_utils import read_df
 from analysis.src.python.evaluation.common.csv_util import write_dataframe_to_csv
 from analysis.src.python.evaluation.common.file_util import AnalysisExtension
 from analysis.src.python.evaluation.qodana.imitation_model.roberta.util import SeedArgument
@@ -46,8 +47,8 @@ def configure_parser() -> argparse.ArgumentParser:
 
 def split_dataset(code_dataset_path: str, target_dataset_path: str, output_directory_path: str,
                   val_size: float, test_size: float, shuffle: bool):
-    code_bank = pd.read_csv(code_dataset_path)
-    target = pd.read_csv(target_dataset_path)
+    code_bank = read_df(code_dataset_path)
+    target = read_df(target_dataset_path)
 
     assert target.shape[0] == code_bank.shape[0]
 
