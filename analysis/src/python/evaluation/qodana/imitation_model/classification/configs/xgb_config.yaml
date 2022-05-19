@@ -1,2 +1,7 @@
 model: xgb
 parameters:
+  max_depth: 10
+  seed: 777
+  eval_metric: 'logloss'
+  objective: 'binary:logistic'
+  use_label_encoder: False

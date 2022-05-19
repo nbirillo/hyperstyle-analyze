@@ -91,6 +91,7 @@ dirs
 dit
 dont
 dotall
+downsampling
 dropna
 dtype
 dv
