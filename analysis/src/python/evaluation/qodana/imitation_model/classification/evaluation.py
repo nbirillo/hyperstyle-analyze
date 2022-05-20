@@ -8,7 +8,7 @@ from analysis.src.python.data_analysis.model.column_name import IssuesColumns, S
 from analysis.src.python.data_analysis.utils.df_utils import read_df, write_df
 from analysis.src.python.data_analysis.utils.logging_utils import configure_logger
 from analysis.src.python.evaluation.common.file_util import AnalysisExtension, create_directory
-from analysis.src.python.evaluation.qodana.imitation_model.classification.model_configuration import get_model, \
+from analysis.src.python.evaluation.qodana.imitation_model.classification.model import get_model, \
     get_model_config
 from analysis.src.python.evaluation.qodana.imitation_model.preprocessing.sampling import down_sample
 from analysis.src.python.evaluation.qodana.imitation_model.utils.evaluation_metrics import get_evaluation_metrics

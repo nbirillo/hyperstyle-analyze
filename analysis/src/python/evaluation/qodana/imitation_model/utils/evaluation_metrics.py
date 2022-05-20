@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict
 
 import numpy as np
 from sklearn.metrics import accuracy_score, f1_score, precision_recall_fscore_support

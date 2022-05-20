@@ -12,6 +12,7 @@ from transformers import RobertaForSequenceClassification
 from analysis.src.python.evaluation.common.csv_util import write_dataframe_to_csv
 from analysis.src.python.evaluation.common.file_util import AnalysisExtension
 from analysis.src.python.evaluation.qodana.imitation_model.roberta.dataset import QodanaDataset
+from analysis.src.python.evaluation.qodana.imitation_model.roberta.evaluation_config import configure_arguments
 from analysis.src.python.evaluation.qodana.imitation_model.roberta.metric import Measurer
 from analysis.src.python.evaluation.qodana.imitation_model.roberta.util import DatasetColumnArgument, MeasurerArgument
 

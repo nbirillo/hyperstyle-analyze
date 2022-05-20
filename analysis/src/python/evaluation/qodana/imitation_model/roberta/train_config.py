@@ -3,11 +3,8 @@ import argparse
 import torch
 from transformers import Trainer, TrainingArguments
 
-from analysis.src.python.evaluation.qodana.imitation_model.common.util import (
-    DatasetColumnArgument,
-    ModelCommonArgument,
-    SeedArgument,
-)
+from analysis.src.python.evaluation.qodana.imitation_model.roberta.util import DatasetColumnArgument, \
+    ModelCommonArgument, SeedArgument
 
 
 class MultilabelTrainer(Trainer):
