@@ -5,18 +5,23 @@ import pandas as pd
 from pandas import read_csv
 
 from analysis.src.python.data_analysis.model.column_name import IssuesColumns, SubmissionColumns
+from analysis.src.python.data_analysis.utils.code_utils import split_code_to_lines
 from analysis.src.python.data_analysis.utils.df_utils import flat_apply, write_df
-from analysis.src.python.data_analysis.utils.parsing_utils import dump_qodana_issues_to_str, \
-    list_to_str, parse_qodana_issues_to_objects
+from analysis.src.python.data_analysis.utils.parsing_utils import dump_qodana_issues_to_str, list_to_str, \
+    parse_qodana_issues_to_objects
 from analysis.src.python.evaluation.qodana.util.models import QodanaIssue
 
 
 def get_issues_to_ids_dict(df_issues: pd.DataFrame) -> Dict[str, int]:
+    """ Creates dict with each issue class is connected with unique id. """
+
     df_issues[IssuesColumns.ID.value] = list(range(1, df_issues.shape[0] + 1))
     return {issue[IssuesColumns.CLASS.value]: issue[IssuesColumns.ID.value] for _, issue in df_issues.iterrows()}
 
 
 def map_issue_to_ids(issues: List[QodanaIssue], issues_dict: Dict[str, int]) -> str:
+    """ Map list of issues to list of their ids according to map `issues_dict`. """
+
     if len(issues) == 0:
         issue_ids = [0]
     else:
@@ -25,7 +30,9 @@ def map_issue_to_ids(issues: List[QodanaIssue], issues_dict: Dict[str, int]) -> 
     return list_to_str(issue_ids)
 
 
-def get_code_to_issues(submission: pd.Series):
+def preprocess_qodana_issues(submission: pd.Series) -> pd.Series:
+    """ Parses list of issues to list of qodana issues objects. """
+
     issues = parse_qodana_issues_to_objects(submission[SubmissionColumns.QODANA_ISSUES.value])
 
     submission_by_lines_dict = {
@@ -37,9 +44,11 @@ def get_code_to_issues(submission: pd.Series):
     return pd.Series(submission_by_lines_dict)
 
 
-def get_code_lines_to_issues(submission: pd.Series):
+def get_code_lines_to_issues(submission: pd.DataFrame) -> pd.DataFrame:
+    """ Split submission to lines and divide issues to related line. """
+
     issues = parse_qodana_issues_to_objects(submission[SubmissionColumns.QODANA_ISSUES.value])
-    code_lines = submission[SubmissionColumns.CODE.value].split('\n')
+    code_lines = split_code_to_lines(submission)
     n_code_lines = len(code_lines)
 
     submission_by_lines_dict = {
@@ -62,6 +71,11 @@ def map_submissions_issues_to_ids(submissions_path: str,
                                   mapped_issues_path: str,
                                   by_line: bool = False,
                                   unique: bool = True):
+    """
+    Map list of issues in issues column to list of their ids.
+    If `by_line` is True also split submission code to lines and distribute issues ids to lines.
+    """
+
     df_submissions = read_csv(submissions_path)
     df_issues = read_csv(issues_path)
 
@@ -71,7 +85,7 @@ def map_submissions_issues_to_ids(submissions_path: str,
     if by_line:
         df_submissions = flat_apply(df_submissions, get_code_lines_to_issues)
     else:
-        df_submissions = df_submissions.apply(get_code_to_issues, axis=1)
+        df_submissions = df_submissions.apply(preprocess_qodana_issues, axis=1)
 
     df_submissions[SubmissionColumns.QODANA_ISSUES_IDS.value] = \
         df_submissions[SubmissionColumns.QODANA_ISSUES.value].apply(map_issue_to_ids, issues_dict=issues_dict)
@@ -95,8 +109,10 @@ if __name__ == '__main__':
     parser.add_argument('mapped_submissions_path', type=str,
                         help='Path to .csv file with submissions with mapped issues')
     parser.add_argument('mapped_issues_path', type=str, help='Path to .csv file with issues mapped to ids')
-    parser.add_argument('--by-line', action=argparse.BooleanOptionalAction, help='Map issues by code line or whole code')
-    parser.add_argument('--unique', action=argparse.BooleanOptionalAction, help='Leave only unique pieces of code/lines')
+    parser.add_argument('--by-line', action=argparse.BooleanOptionalAction,
+                        help='Map issues by code line or whole code')
+    parser.add_argument('--unique', action=argparse.BooleanOptionalAction,
+                        help='Leave only unique pieces of code/lines')
 
     args = parser.parse_args()
 

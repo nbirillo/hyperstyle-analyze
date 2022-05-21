@@ -9,6 +9,8 @@ from analysis.src.python.data_analysis.utils.df_utils import read_df, write_df
 
 
 def extract_code_tfidfs(code: List[str], n_features: int) -> pd.DataFrame:
+    """ For given list of code samples builds tf-idf matrix with `n_features` words. """
+
     vectorizer_tfidf = TfidfVectorizer(max_features=n_features)
     tfidfs = vectorizer_tfidf.fit_transform(code)
     tfidfs = pd.DataFrame(tfidfs.toarray(), columns=vectorizer_tfidf.get_feature_names())
@@ -17,6 +19,8 @@ def extract_code_tfidfs(code: List[str], n_features: int) -> pd.DataFrame:
 
 
 def get_submissions_tfidfs(submissions_path: str, submissions_tf_idf_path: str, n_features: int):
+    """ Builds tf-idf matrix for all submissions. """
+
     df_submissions = read_df(submissions_path)
     df_submissions_tf_idf = extract_code_tfidfs(df_submissions[SubmissionColumns.CODE.value], n_features)
     write_df(df_submissions_tf_idf, submissions_tf_idf_path)

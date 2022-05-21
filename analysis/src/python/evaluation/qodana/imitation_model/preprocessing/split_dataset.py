@@ -45,8 +45,12 @@ def configure_parser() -> argparse.ArgumentParser:
     return parser
 
 
-def split_dataset(code_dataset_path: str, target_dataset_path: str, output_directory_path: str,
+def split_dataset(code_dataset_path: str,
+                  target_dataset_path: str,
+                  output_directory_path: str,
                   val_size: float, test_size: float, shuffle: bool):
+    """ Split dataset to train/test/validate according to `val_size` `test_size`. """
+
     code_bank = read_df(code_dataset_path)
     target = read_df(target_dataset_path)
 

@@ -8,22 +8,23 @@ from analysis.src.python.data_analysis.model.column_name import IssuesColumns, S
 from analysis.src.python.data_analysis.utils.df_utils import read_df, write_df
 from analysis.src.python.data_analysis.utils.logging_utils import configure_logger
 from analysis.src.python.evaluation.common.file_util import AnalysisExtension, create_directory
-from analysis.src.python.evaluation.qodana.imitation_model.classification.model import get_model, \
-    get_model_config
+from analysis.src.python.evaluation.qodana.imitation_model.classification.model import get_model, get_model_config
 from analysis.src.python.evaluation.qodana.imitation_model.preprocessing.sampling import down_sample
 from analysis.src.python.evaluation.qodana.imitation_model.utils.evaluation_metrics import get_evaluation_metrics
 from analysis.src.python.evaluation.qodana.imitation_model.utils.metrics import EvaluationMetricsColumns
 
 
-def evaluate_submissions_classification(issues_path: str,
-                                        train_code_path: str,
-                                        train_target_path: str,
-                                        test_code_path: str,
-                                        test_target_path: str,
-                                        output_path: str,
-                                        model_config_path: str,
-                                        down_sampling: bool,
-                                        issues_count: int):
+def run_classification(issues_path: str,
+                       train_code_path: str,
+                       train_target_path: str,
+                       test_code_path: str,
+                       test_target_path: str,
+                       output_path: str,
+                       model_config_path: str,
+                       down_sampling: bool,
+                       issues_count: int):
+    """ Fit and run submissions classification if code contains each qodana issue or not. """
+
     df_issues = read_df(issues_path)
 
     df_train_code = read_df(train_code_path)
@@ -114,12 +115,12 @@ if __name__ == '__main__':
 
     configure_logger(args.classification_results_path, 'classification', args.log_path)
 
-    evaluate_submissions_classification(args.issues_path,
-                                        args.train_code_path,
-                                        args.train_target_path,
-                                        args.test_code_path,
-                                        args.test_target_path,
-                                        args.classification_results_path,
-                                        args.model_config_path,
-                                        args.down_sampling,
-                                        args.issues_count)
+    run_classification(args.issues_path,
+                       args.train_code_path,
+                       args.train_target_path,
+                       args.test_code_path,
+                       args.test_target_path,
+                       args.classification_results_path,
+                       args.model_config_path,
+                       args.down_sampling,
+                       args.issues_count)

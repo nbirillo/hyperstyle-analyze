@@ -16,6 +16,8 @@ class ModelConfigField(Enum):
 
 @dataclass(frozen=True)
 class ModelConfig:
+    """ Model name and parameters. """
+
     model: str
     parameters: Optional[Dict[Any, Any]]
 
@@ -35,6 +37,8 @@ class ModelConfig:
 
 
 def get_model_config(config_path: str) -> ModelConfig:
+    """ Parse model config from yaml file provided in `config_path`. """
+
     return ModelConfig.from_yalm(config_path)
 
 
@@ -45,6 +49,8 @@ model_to_class = {
 
 
 def get_model(config: ModelConfig):
+    """ Build model according to model name and parameters in `config`. """
+
     model = model_to_class.get(config.model)
     if model is None:
         raise Exception(f'Model {config.model} not implemented')
