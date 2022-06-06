@@ -75,6 +75,7 @@ def add_issue_info_comment_to_code(submission: pd.DataFrame, issue_type: str, is
 
 def get_raw_issue_infos(submission: pd.DataFrame) -> List[IssueInfo]:
     """ Get issue info from raw issue. """
+
     issue_infos = []
 
     for issue in parse_raw_issues_to_objects(submission[SubmissionColumns.RAW_ISSUES.value]):

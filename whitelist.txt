@@ -138,6 +138,7 @@ idx
 ignorecase
 iloc
 inerop
+infos
 initializer
 inplace
 instantiation
