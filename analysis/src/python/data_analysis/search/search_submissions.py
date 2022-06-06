@@ -2,6 +2,7 @@ import argparse
 import logging
 import os
 import sys
+from dataclasses import dataclass
 from typing import List
 
 import pandas as pd
@@ -40,38 +41,57 @@ def merge_lines_to_code(code_lines: List[str]) -> str:
     return '\n'.join(code_lines)
 
 
-def get_comment_to_code_line(issue: str, line: int, col: int) -> str:
+@dataclass
+class IssueInfo:
+    name: str
+    line: int
+    offset: int
+
+
+def get_comment_to_code_line(issue_info: IssueInfo) -> str:
     """ Add comment to given code line. """
 
-    return f' // {issue} line={line} col={col}'
+    return f' // {issue_info.name} line={issue_info.line} offset={issue_info.offset}'
 
 
-def add_raw_issue_info_comment_to_code(submission: pd.DataFrame, issue: str) -> pd.DataFrame:
-    """ Add comment to row where specific raw issue appears in solution. """
+def add_issue_info_comment_to_code(submission: pd.DataFrame, issue_type: str, issue_name: str) -> pd.DataFrame:
+    """ Add comment to row where specific issue appears in solution. """
 
     code_lines = split_code_to_lines(submission)
-    raw_issues = parse_raw_issues_to_objects(submission[SubmissionColumns.RAW_ISSUES.value])
-    for raw_issue in raw_issues:
-        if raw_issue.origin_class == issue:
-            code_lines[raw_issue.line_no - 1] += get_comment_to_code_line(raw_issue.origin_class,
-                                                                          raw_issue.line_no,
-                                                                          raw_issue.column_no)
+
+    if issue_type == SubmissionColumns.QODANA_ISSUES.value:
+        issue_infos = get_qodana_issue_infos(submission)
+    else:
+        issue_infos = get_raw_issue_infos(submission)
+
+    for issue_info in issue_infos:
+        if issue_info.name == issue_name:
+            code_lines[issue_info.line - 1] += get_comment_to_code_line(issue_info)
+
     submission[SubmissionColumns.CODE.value] = merge_lines_to_code(code_lines)
+
     return submission
 
 
-def add_qodana_issue_info_comment_to_code(submission: pd.DataFrame, issue: str) -> pd.DataFrame:
-    """ Add comment to row where specific qodana issue appears in solution. """
+def get_raw_issue_infos(submission: pd.DataFrame) -> List[IssueInfo]:
+    """ Get issue info from raw issue. """
+    issue_infos = []
 
-    code_lines = split_code_to_lines(submission)
-    qodana_issues = parse_qodana_issues_to_objects(submission[SubmissionColumns.QODANA_ISSUES.value])
-    for qodana_issue in qodana_issues:
-        if qodana_issue.problem_id == issue:
-            code_lines[qodana_issue.line - 1] += get_comment_to_code_line(qodana_issue.problem_id,
-                                                                          qodana_issue.line,
-                                                                          qodana_issue.offset)
-    submission[SubmissionColumns.CODE.value] = merge_lines_to_code(code_lines)
-    return submission
+    for issue in parse_raw_issues_to_objects(submission[SubmissionColumns.RAW_ISSUES.value]):
+        issue_infos.append(IssueInfo(issue.origin_class, issue.line_no, issue.column_no))
+
+    return issue_infos
+
+
+def get_qodana_issue_infos(submission: pd.DataFrame) -> List[IssueInfo]:
+    """ Get issue info from qodana issue. """
+
+    issue_infos = []
+
+    for issue in parse_qodana_issues_to_objects(submission[SubmissionColumns.QODANA_ISSUES.value]):
+        issue_infos.append(IssueInfo(issue.problem_id, issue.line, issue.offset))
+
+    return issue_infos
 
 
 def search_submissions_by_step_issue(df_submissions: pd.DataFrame, issues_type: str, step: int, issue: str, count: int,
@@ -81,13 +101,10 @@ def search_submissions_by_step_issue(df_submissions: pd.DataFrame, issues_type: 
     df_submissions = df_submissions[df_submissions[SubmissionColumns.STEP_ID.value] == step]
 
     issue_column = SubmissionColumns(issues_type).value
-    if issue_column == SubmissionColumns.QODANA_ISSUES.value:
-        add_comment_to_code = add_qodana_issue_info_comment_to_code
-    else:
-        add_comment_to_code = add_raw_issue_info_comment_to_code
 
     df_submissions_with_issue = df_submissions[df_submissions[issue_column].str.contains(issue)].head(count)
-    df_submissions_with_issue = df_submissions_with_issue.apply(add_comment_to_code, axis=1, issue=issue)
+    df_submissions_with_issue = df_submissions_with_issue.apply(add_issue_info_comment_to_code,
+                                                                axis=1, issue_type=issues_type, issue_name=issue)
 
     df_submissions_without_issue = df_submissions[
         ~df_submissions[issue_column].str.contains(issue)] \
