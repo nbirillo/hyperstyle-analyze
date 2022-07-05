@@ -6,13 +6,14 @@ from pathlib import Path
 import pandas as pd
 from hyperstyle.src.python.review.common.language import Language
 from pandarallel import pandarallel
-from analysis.src.python.evaluation.common.pandas_util import get_issues_from_json, get_solutions_df_by_file_path, \
-    write_df_to_file
-from analysis.src.python.evaluation.common.args_util import EvaluationArgument, EvaluationRunToolArgument
-from analysis.src.python.evaluation.common.csv_util import ColumnName
-from analysis.src.python.evaluation.common.file_util import AnalysisExtension, get_name_from_path, get_parent_folder, \
-    get_restricted_extension
+
 from analysis.src.python.evaluation.evaluation_run_tool import get_language_version
+from analysis.src.python.evaluation.model.column_name import ColumnName
+from analysis.src.python.evaluation.utils.args_util import EvaluationArgument, EvaluationRunToolArgument
+from analysis.src.python.evaluation.utils.pandas_util import get_issues_from_json
+from analysis.src.python.utils.df_utils import read_df, write_df
+from analysis.src.python.utils.extension_utlis import AnalysisExtension
+from analysis.src.python.utils.file_utils import get_name_from_path, get_parent_folder
 
 TRACEBACK = EvaluationArgument.TRACEBACK.value
 GRADE = ColumnName.GRADE.value
@@ -20,7 +21,7 @@ HISTORY = ColumnName.HISTORY.value
 USER = ColumnName.USER.value
 LANG = ColumnName.LANG.value
 TIME = ColumnName.TIME.value
-EXTRACTED_ISSUES = 'extracted_issues'
+EXTRACTED_ISSUES = ColumnName.EXTRACTED_ISSUES.value
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:
@@ -64,7 +65,7 @@ def _add_history(row, solutions_df: pd.DataFrame) -> str:
 
     filtered_df = solutions_df[
         (solutions_df[USER] == row[USER]) & (solutions_df[LANG] == row[LANG]) & (solutions_df[TIME] < row[TIME])
-    ]
+        ]
     filtered_df.apply(lambda row: _update_counter(row[EXTRACTED_ISSUES], counter), axis=1)
 
     history = {}
@@ -96,7 +97,7 @@ def main():
     pandarallel.initialize()
 
     solutions_file_path = args.solutions_file_path
-    solutions_df = get_solutions_df_by_file_path(solutions_file_path)
+    solutions_df = read_df(solutions_file_path)
     solutions_df[EXTRACTED_ISSUES] = solutions_df.parallel_apply(lambda row: _extract_issues(row[TRACEBACK]), axis=1)
     solutions_df[HISTORY] = solutions_df.parallel_apply(_add_history, axis=1, args=(solutions_df,))
 
@@ -116,8 +117,7 @@ def main():
         dataset_name = get_name_from_path(solutions_file_path, with_extension=False)
         output_path = output_dir / f'{dataset_name}_with_history{AnalysisExtension.CSV.value}'
 
-    output_ext = get_restricted_extension(solutions_file_path, [AnalysisExtension.XLSX, AnalysisExtension.CSV])
-    write_df_to_file(solutions_df, output_path, output_ext)
+    write_df(solutions_df, output_path)
 
 
 if __name__ == '__main__':

@@ -4,13 +4,13 @@ from typing import Optional
 import pandas as pd
 import pytest
 from hyperstyle.src.python.review.common.language import Language
-from analysis.src.python.evaluation.common.pandas_util import equal_df, get_solutions_df_by_file_path
 from analysis.src.python.evaluation.issues_statistics.get_raw_issues_statistics import (
     _convert_language_code_to_language,
     _get_output_folder,
     DEFAULT_OUTPUT_FOLDER_NAME,
     inspect_raw_issues,
 )
+from analysis.src.python.utils.df_utils import equal_df, read_df
 from analysis.test.python.evaluation.issues_statistics import (
     GET_RAW_ISSUES_STATISTICS_TARGET_FILES_FOLDER,
     GET_RAW_ISSUES_STATISTICS_TEST_FILES_FOLDER,
@@ -103,7 +103,7 @@ INSPECT_SOLUTIONS_TEST_DATA = [
 
 @pytest.mark.parametrize(('test_file', 'target_file', 'lang'), INSPECT_SOLUTIONS_TEST_DATA)
 def test_inspect_solutions(test_file: str, target_file: str, lang: str):
-    test_df = get_solutions_df_by_file_path(GET_RAW_ISSUES_STATISTICS_TEST_FILES_FOLDER / test_file)
+    test_df = read_df(GET_RAW_ISSUES_STATISTICS_TEST_FILES_FOLDER / test_file)
     stats = inspect_raw_issues(test_df)
 
     freq_stats = pd.read_csv(GET_RAW_ISSUES_STATISTICS_TARGET_FILES_FOLDER / target_file)

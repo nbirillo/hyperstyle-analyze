@@ -7,7 +7,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from hyperstyle.src.python.review.common.file_system import Extension
 from analysis.src.python.evaluation.plots.common import plotly_consts
-from analysis.src.python.evaluation.common.util import AnalysisExtension
+from analysis.src.python.utils.extension_utlis import AnalysisExtension
 
 COLOR = Optional[plotly_consts.COLOR]
 COLORWAY = Optional[plotly_consts.COLORWAY]
@@ -38,11 +38,11 @@ def create_bar_plot(
 
 
 def create_box_trace(
-    df: pd.DataFrame,
-    *,
-    x_column: Optional[str] = None,
-    y_column: Optional[str] = None,
-    color: COLOR = None,
+        df: pd.DataFrame,
+        *,
+        x_column: Optional[str] = None,
+        y_column: Optional[str] = None,
+        color: COLOR = None,
 ) -> go.Box:
     return go.Box(
         x=df[x_column] if x_column is not None else None,
@@ -52,14 +52,14 @@ def create_box_trace(
 
 
 def create_box_plot(
-    df: pd.DataFrame,
-    *,
-    x_axis: Optional[str],
-    y_axis: Optional[str],
-    margin: MARGIN = None,
-    sort_order: SORT_ORDER = None,
-    color: COLOR = None,
-    horizontal_lines: LINES = None,
+        df: pd.DataFrame,
+        *,
+        x_axis: Optional[str],
+        y_axis: Optional[str],
+        margin: MARGIN = None,
+        sort_order: SORT_ORDER = None,
+        color: COLOR = None,
+        horizontal_lines: LINES = None,
 ) -> go.Figure:
     fig = go.Figure(create_box_trace(df, x_column=x_axis, y_column=y_axis, color=color))
     update_figure(
@@ -74,11 +74,11 @@ def create_box_plot(
 
 
 def create_scatter_trace(
-    df: pd.DataFrame,
-    *,
-    x_column: str,
-    y_column: str,
-    color: COLOR = None,
+        df: pd.DataFrame,
+        *,
+        x_column: str,
+        y_column: str,
+        color: COLOR = None,
 ) -> go.Scatter:
     return go.Scatter(
         x=df[x_column],
@@ -88,13 +88,13 @@ def create_scatter_trace(
 
 
 def create_line_chart(
-    df: pd.DataFrame,
-    *,
-    x_axis: str,
-    y_axis: str,
-    margin: MARGIN = None,
-    color: COLOR = None,
-    vertical_lines: LINES = None,
+        df: pd.DataFrame,
+        *,
+        x_axis: str,
+        y_axis: str,
+        margin: MARGIN = None,
+        color: COLOR = None,
+        vertical_lines: LINES = None,
 ) -> go.Figure:
     fig = go.Figure(create_scatter_trace(df, x_column=x_axis, y_column=y_axis, color=color))
     update_figure(
@@ -108,13 +108,13 @@ def create_line_chart(
 
 
 def create_histogram(
-    df: pd.DataFrame,
-    x_axis: str,
-    y_axis: str,
-    n_bins: Optional[int] = None,
-    margin: MARGIN = None,
-    color: COLOR = None,
-    vertical_lines: LINES = None,
+        df: pd.DataFrame,
+        x_axis: str,
+        y_axis: str,
+        n_bins: Optional[int] = None,
+        margin: MARGIN = None,
+        color: COLOR = None,
+        vertical_lines: LINES = None,
 ) -> go.Figure:
     fig = px.histogram(df, x=x_axis, y=y_axis, nbins=n_bins)
     update_figure(
@@ -129,16 +129,16 @@ def create_histogram(
 
 
 def update_figure(
-    fig: go.Figure,
-    *,
-    margin: MARGIN = None,
-    sort_order: SORT_ORDER = None,
-    color: COLOR = None,
-    colorway: COLORWAY = None,
-    horizontal_lines: LINES = None,
-    vertical_lines: LINES = None,
-    x_axis_name: Optional[str] = None,
-    y_axis_name: Optional[str] = None,
+        fig: go.Figure,
+        *,
+        margin: MARGIN = None,
+        sort_order: SORT_ORDER = None,
+        color: COLOR = None,
+        colorway: COLORWAY = None,
+        horizontal_lines: LINES = None,
+        vertical_lines: LINES = None,
+        x_axis_name: Optional[str] = None,
+        y_axis_name: Optional[str] = None,
 ) -> None:
     new_layout = {}
 
@@ -176,10 +176,10 @@ def update_figure(
 
 
 def save_plot(
-    fig: go.Figure,
-    dir_path: Path,
-    plot_name: str = "result_plot",
-    extension: Union[Extension, AnalysisExtension] = AnalysisExtension.SVG,
+        fig: go.Figure,
+        dir_path: Path,
+        plot_name: str = "result_plot",
+        extension: Union[Extension, AnalysisExtension] = AnalysisExtension.SVG,
 ) -> None:
     os.makedirs(dir_path, exist_ok=True)
     file = dir_path / f"{plot_name}{extension.value}"

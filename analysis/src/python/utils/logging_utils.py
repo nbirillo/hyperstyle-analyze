@@ -2,7 +2,7 @@ import logging
 import os
 from typing import Optional
 
-from analysis.src.python.evaluation.common.file_util import clean_file, create_file, get_name_from_path, \
+from analysis.src.python.utils.file_utils import clean_file, create_file, get_name_from_path, \
     get_parent_folder
 
 

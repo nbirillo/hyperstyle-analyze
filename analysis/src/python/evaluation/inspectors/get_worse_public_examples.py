@@ -4,11 +4,13 @@ from typing import Dict, List
 
 import pandas as pd
 from hyperstyle.src.python.review.quality.penalty import PenaltyIssue
-from analysis.src.python.evaluation.common.csv_util import ColumnName, write_dataframe_to_csv
-from analysis.src.python.evaluation.common.pandas_util import filter_df_by_single_value, get_solutions_df_by_file_path
-from analysis.src.python.evaluation.common.args_util import EvaluationRunToolArgument
-from analysis.src.python.evaluation.common.file_util import AnalysisExtension, deserialize_data_from_file, \
-    get_parent_folder
+
+from analysis.src.python.evaluation.model.column_name import ColumnName
+from analysis.src.python.evaluation.utils.args_util import EvaluationRunToolArgument
+from analysis.src.python.utils.df_utils import filter_df_by_single_value, read_df, write_df
+from analysis.src.python.utils.extension_utlis import AnalysisExtension
+from analysis.src.python.utils.file_utils import get_parent_folder
+from analysis.src.python.utils.serialization_utils import deserialize_data_from_file
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:
@@ -55,13 +57,13 @@ def main() -> None:
     args = parser.parse_args()
 
     solutions_file_path = args.solutions_file_path
-    solutions_df = get_solutions_df_by_file_path(solutions_file_path)
+    solutions_df = read_df(solutions_file_path)
     diffs = deserialize_data_from_file(args.diffs_file_path)
 
     public_fragments = __get_public_fragments(solutions_df, diffs)
 
     output_path = get_parent_folder(Path(solutions_file_path)) / f'worse_fragments{AnalysisExtension.CSV.value}'
-    write_dataframe_to_csv(output_path, public_fragments.head(args.n))
+    write_df(public_fragments.head(args.n), output_path)
 
 
 if __name__ == '__main__':

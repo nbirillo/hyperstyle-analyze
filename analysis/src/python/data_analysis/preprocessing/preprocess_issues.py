@@ -8,9 +8,9 @@ from typing import Dict, List, Optional
 import pandas as pd
 
 from analysis.src.python.data_analysis.model.column_name import IssuesColumns, SubmissionColumns
-from analysis.src.python.data_analysis.utils.df_utils import merge_dfs, read_df, rename_columns, write_df
-from analysis.src.python.data_analysis.utils.logging_utils import configure_logger
-from analysis.src.python.data_analysis.utils.parsing_utils import list_to_str, parse_qodana_issues, str_to_dict
+from analysis.src.python.utils.df_utils import merge_dfs, read_df, rename_columns, write_df
+from analysis.src.python.utils.logging_utils import configure_logger
+from analysis.src.python.utils.parsing_utils import list_to_str, parse_qodana_issues, str_to_dict
 
 
 def get_issues_from_row(issues: str, issue_class_column: str, issue_type_column: str, issues_types: Dict[str, str]):

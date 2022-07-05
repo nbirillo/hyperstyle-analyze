@@ -7,8 +7,9 @@ from hyperstyle.src.python.common.tool_arguments import ArgumentsInfo
 from hyperstyle.src.python.review.application_config import LanguageVersion
 from hyperstyle.src.python.review.common.file_system import Extension, get_all_file_system_items
 
-from analysis.src.python.evaluation.common.csv_util import ColumnName
-from analysis.src.python.evaluation.common.file_util import AnalysisExtension, match_condition
+from analysis.src.python.evaluation.model.column_name import ColumnName
+from analysis.src.python.utils.file_utils import file_match_condition
+from analysis.src.python.utils.extension_utlis import AnalysisExtension
 
 
 @unique
@@ -62,8 +63,8 @@ def get_in_and_out_list(root: Path,
                         in_ext: Union[Extension, AnalysisExtension] = AnalysisExtension.CSV,
                         out_ext: Union[Extension, AnalysisExtension]
                         = AnalysisExtension.CSV) -> List[Tuple[Path, Path]]:
-    in_files = get_all_file_system_items(root, match_condition(rf'in_\d+{in_ext.value}'))
-    out_files = get_all_file_system_items(root, match_condition(rf'out_\d+{out_ext.value}'))
+    in_files = get_all_file_system_items(root, file_match_condition(rf'in_\d+{in_ext.value}'))
+    out_files = get_all_file_system_items(root, file_match_condition(rf'out_\d+{out_ext.value}'))
     return pair_in_and_out_files(in_files, out_files)
 
 

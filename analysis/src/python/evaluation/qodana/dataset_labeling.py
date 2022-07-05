@@ -10,16 +10,16 @@ from math import ceil
 from pathlib import Path
 from typing import Dict, List, Optional
 
-from analysis.src.python.evaluation.common.args_util import EvaluationRunToolArgument
-
-sys.path.append('')
+from analysis.src.python.evaluation.utils.args_util import EvaluationRunToolArgument
 
 import numpy as np
 import pandas as pd
-from analysis.src.python.evaluation.common.csv_util import ColumnName, write_dataframe_to_csv
-from analysis.src.python.evaluation.common.parallel_util import run_and_wait
-from analysis.src.python.evaluation.common.file_util import AnalysisExtension, copy_directory, copy_file, create_file, \
-    extension_file_condition, get_name_from_path, get_parent_folder, remove_directory
+from analysis.src.python.evaluation.model.column_name import ColumnName
+from analysis.src.python.utils.df_utils import read_df, write_df
+from analysis.src.python.utils.parallel_util import run_and_wait
+from analysis.src.python.utils.file_utils import copy_directory, copy_file, create_file, \
+    get_name_from_path, get_parent_folder, remove_directory
+from analysis.src.python.utils.extension_utlis import AnalysisExtension, extension_file_condition
 from analysis.src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue, QodanaJsonField
 from analysis.src.python.evaluation.qodana.util.util import to_json
 from hyperstyle.src.python.review.application_config import LanguageVersion
@@ -99,7 +99,7 @@ class DatasetLabel:
         """
         Runs Qodana on each row of the dataset and writes the found inspections in the 'inspections' column.
         """
-        dataset = pd.read_csv(self.dataset_path, nrows=self.limit)
+        dataset = read_df(self.dataset_path)
 
         group_by_lang = dataset.groupby(ColumnName.LANG.value)
         unique_languages = dataset[ColumnName.LANG.value].unique()
@@ -129,7 +129,7 @@ class DatasetLabel:
         dataset = pd.concat(groups)
 
         logger.info(f'Writing the dataset to a file: {self.output_path}.')
-        write_dataframe_to_csv(self.output_path, dataset)
+        write_df(dataset, self.output_path)
 
     def _label_language(self, df: pd.DataFrame, language: LanguageVersion) -> pd.DataFrame:
         number_of_chunks = 1

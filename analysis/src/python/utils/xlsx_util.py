@@ -23,18 +23,24 @@ def remove_sheet(workbook_path: Union[str, Path], sheet_name: str, to_raise_erro
             logger.info(message)
 
 
-def create_workbook(output_file_path: Path) -> Workbook:
+def create_workbook(output_file_path: Union[str, Path]) -> Workbook:
     workbook = Workbook()
     workbook.save(output_file_path)
     return workbook
 
 
-def write_dataframe_to_xlsx_sheet(xlsx_file_path: Union[str, Path], df: pd.DataFrame, sheet_name: str,
-                                  mode: str = 'a', to_write_row_names: bool = False) -> None:
+def write_df_to_xlsx_sheet(xlsx_file_path: Union[str, Path], df: pd.DataFrame,
+                           sheet_name: str = 'Sheet',
+                           mode: str = 'a',
+                           to_write_row_names: bool = False,
+                           header: bool = True) -> None:
     """
     mode: str Available values are {'w', 'a'}. File mode to use (write or append).
     to_write_row_names: bool Write row names.
     """
 
     with pd.ExcelWriter(xlsx_file_path, mode=mode) as writer:
-        df.to_excel(writer, sheet_name=sheet_name, index=to_write_row_names)
+        df.to_excel(writer,
+                    sheet_name=sheet_name,
+                    index=to_write_row_names,
+                    header=header)

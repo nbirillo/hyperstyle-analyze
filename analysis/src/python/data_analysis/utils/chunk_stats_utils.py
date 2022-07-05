@@ -4,7 +4,7 @@ from typing import Callable
 import pandas as pd
 
 from analysis.src.python.data_analysis.model.column_name import SubmissionColumns
-from analysis.src.python.data_analysis.utils.df_utils import append_df, write_df
+from analysis.src.python.utils.df_utils import append_df, write_df
 
 
 def save_chunk(df: pd.DataFrame, df_path: str, chunk_index: int):
@@ -14,7 +14,7 @@ def save_chunk(df: pd.DataFrame, df_path: str, chunk_index: int):
         append_df(df, df_path)
 
 
-def get_statistics_by_group(df: pd.DataFrame, df_statistics_path: str, chunk_size: int, func: Callable):
+def get_statistics_by_chunk(df: pd.DataFrame, df_statistics_path: str, chunk_size: int, func: Callable):
     """ Process given dataframe dividing into chunks by group of range `chunk_size`. """
 
     min_group, max_group = df[SubmissionColumns.GROUP.value].min(), df[SubmissionColumns.GROUP.value].max()

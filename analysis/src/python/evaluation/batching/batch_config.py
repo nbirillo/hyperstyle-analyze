@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from enum import Enum, unique
 from typing import List
 
-from analysis.src.python.evaluation.common.yaml_util import parse_yaml
+from analysis.src.python.utils.yaml_util import parse_yaml
 
 
 @unique

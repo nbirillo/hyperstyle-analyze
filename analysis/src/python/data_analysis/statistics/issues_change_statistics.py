@@ -5,9 +5,9 @@ from typing import List
 import pandas as pd
 
 from analysis.src.python.data_analysis.model.column_name import IssuesColumns, SubmissionColumns
-from analysis.src.python.data_analysis.utils.df_utils import merge_dfs
-from analysis.src.python.data_analysis.utils.logging_utils import configure_logger
-from analysis.src.python.data_analysis.utils.statistics_utils import get_statistics_by_group
+from analysis.src.python.utils.df_utils import merge_dfs
+from analysis.src.python.utils.logging_utils import configure_logger
+from analysis.src.python.data_analysis.utils.chunk_stats_utils import get_statistics_by_chunk
 
 
 def calculate_issues_change_statistics(df_issues_statistics: pd.DataFrame,
@@ -56,7 +56,7 @@ def get_submissions_issues_change_statistics(submissions_path: str,
         SubmissionColumns.ID.value,
     )
 
-    get_statistics_by_group(df_submissions, issues_change_statistics_path, chunk_size,
+    get_statistics_by_chunk(df_submissions, issues_change_statistics_path, chunk_size,
                             lambda submission_series:
                             calculate_issues_change_statistics(submission_series, issues_classes))
 

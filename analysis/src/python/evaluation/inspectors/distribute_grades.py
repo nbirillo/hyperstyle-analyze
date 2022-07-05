@@ -3,13 +3,12 @@ from pathlib import Path
 from typing import Dict, Optional, Tuple
 
 import pandas as pd
-from analysis.src.python.evaluation.common.pandas_util import (
-    get_solutions_df, get_solutions_df_by_file_path, write_df_to_file,
-)
-from analysis.src.python.evaluation.common.args_util import EvaluationRunToolArgument
-from analysis.src.python.evaluation.common.csv_util import ColumnName
-from analysis.src.python.evaluation.common.file_util import AnalysisExtension, get_parent_folder, \
-    get_restricted_extension
+
+from analysis.src.python.evaluation.model.column_name import ColumnName
+from analysis.src.python.evaluation.utils.args_util import EvaluationRunToolArgument
+from analysis.src.python.utils.df_utils import read_df, write_df
+from analysis.src.python.utils.extension_utlis import AnalysisExtension, get_restricted_extension
+from analysis.src.python.utils.file_utils import get_parent_folder
 
 CodeToGradesDict = Dict[str, Tuple[str, Optional[str]]]
 
@@ -55,14 +54,14 @@ def main() -> None:
 
     all_solutions_file_path = args.solutions_file_path_all
     output_ext = get_restricted_extension(all_solutions_file_path, [AnalysisExtension.XLSX, AnalysisExtension.CSV])
-    all_solutions_df = get_solutions_df(output_ext, all_solutions_file_path)
-    uniq_solutions_df = get_solutions_df_by_file_path(args.solutions_file_path_uniq)
+    all_solutions_df = read_df(all_solutions_file_path)
+    uniq_solutions_df = read_df(args.solutions_file_path_uniq)
 
     code_to_grades_dict = get_code_to_grades_dict(uniq_solutions_df)
     all_solutions_df = fill_all_solutions_df(all_solutions_df, code_to_grades_dict)
 
     output_path = get_parent_folder(Path(all_solutions_file_path))
-    write_df_to_file(all_solutions_df, output_path / f'evaluation_result_all{output_ext.value}', output_ext)
+    write_df(all_solutions_df, output_path / f'evaluation_result_all{output_ext.value}')
 
 
 if __name__ == '__main__':
