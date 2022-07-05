@@ -10,7 +10,7 @@ from analysis.src.python.evaluation.model.column_name import ColumnName
 from analysis.src.python.evaluation.utils.args_util import EvaluationRunToolArgument, parse_set_arg
 from analysis.src.python.evaluation.utils.pandas_util import get_issues_from_json
 from analysis.src.python.utils.df_utils import read_df
-from analysis.src.python.utils.extension_utlis import AnalysisExtension
+from analysis.src.python.utils.extension_utils import AnalysisExtension
 from analysis.src.python.utils.file_utils import get_parent_folder
 from analysis.src.python.utils.serialization_utils import serialize_data_and_write_to_file
 

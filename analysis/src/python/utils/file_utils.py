@@ -6,7 +6,7 @@ from typing import Union
 
 from hyperstyle.src.python.review.common.file_system import Extension, ItemCondition
 
-from analysis.src.python.utils.extension_utlis import AnalysisExtension
+from analysis.src.python.utils.extension_utils import AnalysisExtension
 
 
 def file_match_condition(regex: str) -> ItemCondition:

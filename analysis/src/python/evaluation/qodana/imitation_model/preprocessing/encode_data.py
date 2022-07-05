@@ -11,7 +11,7 @@ from sklearn.preprocessing import MultiLabelBinarizer
 from analysis.src.python.evaluation.model.column_name import ColumnName
 from analysis.src.python.evaluation.qodana.imitation_model.common.util import CustomTokens, DatasetColumnArgument
 from analysis.src.python.utils.df_utils import read_df, write_df
-from analysis.src.python.utils.extension_utlis import AnalysisExtension
+from analysis.src.python.utils.extension_utils import AnalysisExtension
 
 logger = logging.getLogger(__name__)
 

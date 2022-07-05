@@ -9,7 +9,7 @@ import pandas as pd
 from analysis.src.python.evaluation.utils.args_util import EvaluationRunToolArgument
 from analysis.src.python.utils.df_utils import read_df, write_df
 from analysis.src.python.utils.file_utils import get_parent_folder
-from analysis.src.python.utils.extension_utlis import AnalysisExtension
+from analysis.src.python.utils.extension_utils import AnalysisExtension
 from analysis.src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue
 
 INSPECTION_ID = QodanaColumnName.INSPECTION_ID.value

@@ -16,7 +16,7 @@ from analysis.src.python.data_analysis.model.column_name import SubmissionColumn
 from analysis.src.python.utils.df_utils import read_df
 from analysis.src.python.utils.logging_utils import configure_logger
 from analysis.src.python.utils.file_utils import create_file
-from analysis.src.python.utils.parallel_util import run_and_wait
+from analysis.src.python.utils.parallel_utils import run_and_wait
 
 SRC_FOLDER = Path(__file__).parents[4] / 'resources' / 'evaluation' / 'qodana'
 TEMPLATE_FOLDER = SRC_FOLDER / 'project_templates'

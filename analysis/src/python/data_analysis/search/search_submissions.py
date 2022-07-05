@@ -14,7 +14,7 @@ from analysis.src.python.utils.logging_utils import configure_logger
 from analysis.src.python.utils.parsing_utils import parse_qodana_issues_to_objects, \
     parse_raw_issues_to_objects
 from analysis.src.python.utils.file_utils import create_directory
-from analysis.src.python.utils.extension_utlis import AnalysisExtension
+from analysis.src.python.utils.extension_utils import AnalysisExtension
 
 
 def write_submissions_to_files(df_submissions: pd.DataFrame, output_dir: str):

@@ -10,7 +10,7 @@ from analysis.src.python.data_analysis.model.column_name import IssuesColumns, S
 from analysis.src.python.utils.df_utils import merge_dfs, read_df, write_df
 from analysis.src.python.utils.logging_utils import configure_logger
 from analysis.src.python.utils.file_utils import create_directory
-from analysis.src.python.utils.extension_utlis import AnalysisExtension
+from analysis.src.python.utils.extension_utils import AnalysisExtension
 
 
 def get_step_to_issues_statistics(df_submissions_to_issues: pd.DataFrame, min_ratio: float = 0.1) -> pd.DataFrame:

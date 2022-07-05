@@ -12,8 +12,8 @@ from plotly.subplots import make_subplots
 from analysis.src.python.evaluation.plots.common.utils import get_supported_extensions, save_plot
 from analysis.src.python.evaluation.plots.plotters.raw_issues_statistics_plotters import prepare_stats
 from analysis.src.python.utils.df_utils import read_df
-from analysis.src.python.utils.extension_utlis import AnalysisExtension
-from analysis.src.python.utils.yaml_util import parse_yaml
+from analysis.src.python.utils.extension_utils import AnalysisExtension
+from analysis.src.python.utils.yaml_utils import parse_yaml
 
 logger = logging.getLogger(__name__)
 COLORWAY = ['rgb(47,22,84)', 'rgb(99,47,177)', 'rgb(153,110,216)']

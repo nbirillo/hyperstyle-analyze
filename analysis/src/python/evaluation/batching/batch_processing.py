@@ -10,10 +10,10 @@ from typing import List, Tuple
 import pandas as pd
 
 from analysis.src.python.evaluation.batching.batch_config import BatchConfig
-from analysis.src.python.utils.parallel_util import run_and_wait
+from analysis.src.python.utils.parallel_utils import run_and_wait
 from analysis.src.python.utils.df_utils import append_df, write_df
 from analysis.src.python.utils.file_utils import create_directory, get_name_from_path
-from analysis.src.python.utils.extension_utlis import AnalysisExtension
+from analysis.src.python.utils.extension_utils import AnalysisExtension
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
