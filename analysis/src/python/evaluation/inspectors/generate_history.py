@@ -63,9 +63,9 @@ def _update_counter(extracted_issues: str, counter: Counter) -> None:
 def _add_history(row, solutions_df: pd.DataFrame) -> str:
     counter = Counter()
 
-    filtered_df = solutions_df[
-        (solutions_df[USER] == row[USER]) & (solutions_df[LANG] == row[LANG]) & (solutions_df[TIME] < row[TIME])
-        ]
+    filtered_df = solutions_df[(solutions_df[USER] == row[USER]) &
+                               (solutions_df[LANG] == row[LANG]) &
+                               (solutions_df[TIME] < row[TIME])]
     filtered_df.apply(lambda row: _update_counter(row[EXTRACTED_ISSUES], counter), axis=1)
 
     history = {}
