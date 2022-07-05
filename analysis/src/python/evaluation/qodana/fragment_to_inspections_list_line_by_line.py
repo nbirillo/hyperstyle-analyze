@@ -5,9 +5,11 @@ from pathlib import Path
 from typing import Dict, List
 
 import pandas as pd
-from analysis.src.python.evaluation.common.csv_util import ColumnName, write_dataframe_to_csv
-from analysis.src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path
-from analysis.src.python.evaluation.common.file_util import AnalysisExtension, get_parent_folder
+
+from analysis.src.python.evaluation.model.column_name import ColumnName
+from analysis.src.python.utils.df_utils import read_df, write_df
+from analysis.src.python.utils.file_utils import get_parent_folder
+from analysis.src.python.utils.extension_utlis import AnalysisExtension
 from analysis.src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue
 from analysis.src.python.evaluation.qodana.util.util import (
     configure_model_converter_arguments, get_inspections_dict, replace_inspections_on_its_ids,
@@ -44,7 +46,7 @@ def main() -> None:
     args = parser.parse_args()
 
     solutions_file_path = args.solutions_file_path
-    solutions_df = get_solutions_df_by_file_path(solutions_file_path)
+    solutions_df = read_df(solutions_file_path)
     inspections_dict = get_inspections_dict(args.inspections_path)
 
     fragment_df_list = []
@@ -53,8 +55,7 @@ def main() -> None:
                                 fragment_df_list), axis=1)
 
     output_path = get_parent_folder(Path(solutions_file_path))
-    write_dataframe_to_csv(output_path / f'numbered_ids_line_by_line{AnalysisExtension.CSV.value}',
-                           pd.concat(fragment_df_list))
+    write_df(pd.concat(fragment_df_list), output_path / f'numbered_ids_line_by_line{AnalysisExtension.CSV.value}')
 
 
 if __name__ == '__main__':

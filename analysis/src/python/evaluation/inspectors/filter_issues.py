@@ -5,11 +5,14 @@ from typing import List, Set
 import pandas as pd
 from hyperstyle.src.python.review.inspectors.issue import BaseIssue
 from hyperstyle.src.python.review.quality.penalty import PenaltyIssue
-from analysis.src.python.evaluation.common.pandas_util import get_issues_from_json, get_solutions_df_by_file_path
-from analysis.src.python.evaluation.common.args_util import EvaluationRunToolArgument, parse_set_arg
-from analysis.src.python.evaluation.common.csv_util import ColumnName
-from analysis.src.python.evaluation.common.file_util import AnalysisExtension, get_parent_folder, \
-    serialize_data_and_write_to_file
+
+from analysis.src.python.evaluation.model.column_name import ColumnName
+from analysis.src.python.evaluation.utils.args_util import EvaluationRunToolArgument, parse_set_arg
+from analysis.src.python.evaluation.utils.pandas_util import get_issues_from_json
+from analysis.src.python.utils.df_utils import read_df
+from analysis.src.python.utils.extension_utlis import AnalysisExtension
+from analysis.src.python.utils.file_utils import get_parent_folder
+from analysis.src.python.utils.serialization_utils import serialize_data_and_write_to_file
 
 TRACEBACK = ColumnName.TRACEBACK.value
 ID = ColumnName.ID.value
@@ -55,7 +58,7 @@ def main() -> None:
     args = parser.parse_args()
 
     solutions_file_path = args.solutions_file_path
-    solutions_df = get_solutions_df_by_file_path(solutions_file_path)
+    solutions_df = read_df(solutions_file_path)
     issues = parse_set_arg(args.issues)
 
     diffs = get_statistics_dict(solutions_df, issues)

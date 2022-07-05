@@ -3,9 +3,10 @@ from pathlib import Path
 import pytest
 from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
 from hyperstyle.src.python.review.inspectors.issue import IssueDifficulty, IssueType
+
+from analysis.src.python.utils.df_utils import read_df
 from analysis.test.python.evaluation import INSPECTORS_DIR_PATH
-from analysis.src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path
-from analysis.src.python.evaluation.common.csv_util import ColumnName
+from analysis.src.python.evaluation.model.column_name import ColumnName
 from analysis.src.python.evaluation.inspectors.common.statistics import PenaltyIssue
 from analysis.src.python.evaluation.inspectors.diffs_between_df import find_diffs
 
@@ -92,7 +93,7 @@ TEST_DATA = [
 
 @pytest.mark.parametrize(('old_file', 'new_file', 'diffs'), TEST_DATA)
 def test(old_file: Path, new_file: Path, diffs: dict):
-    old_df = get_solutions_df_by_file_path(RESOURCES_PATH / old_file)
-    new_df = get_solutions_df_by_file_path(RESOURCES_PATH / new_file)
+    old_df = read_df(RESOURCES_PATH / old_file)
+    new_df = read_df(RESOURCES_PATH / new_file)
     actual_diffs = find_diffs(old_df, new_df)
     assert sorted(actual_diffs) == sorted(diffs)

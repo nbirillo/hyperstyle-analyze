@@ -4,8 +4,9 @@ from pathlib import Path
 from typing import Dict, List
 
 import pandas as pd
-from analysis.src.python.evaluation.common.args_util import EvaluationRunToolArgument
+from analysis.src.python.evaluation.utils.args_util import EvaluationRunToolArgument
 from analysis.src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue, QodanaJsonField
+from analysis.src.python.utils.df_utils import read_df
 
 
 def to_json(issues: List[QodanaIssue]) -> str:
@@ -17,7 +18,7 @@ def to_json(issues: List[QodanaIssue]) -> str:
 
 # Get a dictionary: Qodana inspection_id -> inspection_id from csv file with two columns: id, inspection_id
 def get_inspections_dict(inspections_path: str) -> Dict[str, int]:
-    inspections_df = pd.read_csv(inspections_path)
+    inspections_df = read_df(inspections_path)
     inspections_dict = inspections_df.set_index(QodanaColumnName.INSPECTION_ID.value).T.to_dict('list')
     for qodana_id, id_list in inspections_dict.items():
         inspections_dict[qodana_id] = id_list[0]

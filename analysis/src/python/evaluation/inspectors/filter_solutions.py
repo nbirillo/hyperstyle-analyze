@@ -4,15 +4,13 @@ from pathlib import Path
 from typing import Set
 
 from hyperstyle.src.python.review.application_config import LanguageVersion
-from analysis.src.python.evaluation.common.pandas_util import (
-    drop_duplicates,
-    filter_df_by_language,
-    get_solutions_df,
-    write_df_to_file,
-)
-from analysis.src.python.evaluation.common.args_util import EvaluationRunToolArgument
-from analysis.src.python.evaluation.common.file_util import AnalysisExtension, get_parent_folder, \
-    get_restricted_extension
+
+from analysis.src.python.evaluation.model.column_name import ColumnName
+from analysis.src.python.evaluation.utils.args_util import EvaluationRunToolArgument
+from analysis.src.python.evaluation.utils.pandas_util import filter_df_by_language
+from analysis.src.python.utils.df_utils import drop_duplicates, read_df, write_df
+from analysis.src.python.utils.extension_utlis import AnalysisExtension, get_restricted_extension
+from analysis.src.python.utils.file_utils import get_parent_folder
 
 logger = logging.getLogger(__name__)
 
@@ -48,13 +46,13 @@ def main() -> None:
 
     solutions_file_path = args.solutions_file_path
     ext = get_restricted_extension(solutions_file_path, [AnalysisExtension.XLSX, AnalysisExtension.CSV])
-    solutions_df = get_solutions_df(ext, solutions_file_path)
+    solutions_df = read_df(solutions_file_path)
 
     filtered_df = filter_df_by_language(solutions_df, args.languages)
     if args.duplicates:
-        filtered_df = drop_duplicates(filtered_df)
+        filtered_df = drop_duplicates(filtered_df, ColumnName.CODE.value)
     output_path = get_parent_folder(Path(solutions_file_path))
-    write_df_to_file(filtered_df, output_path / f'filtered_solutions{ext.value}', ext)
+    write_df(filtered_df, output_path / f'filtered_solutions{ext.value}')
 
 
 if __name__ == '__main__':

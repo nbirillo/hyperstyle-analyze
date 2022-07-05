@@ -8,18 +8,16 @@ import traceback
 from pathlib import Path
 from typing import Optional
 
-sys.path.append('')
-
 import pandas as pd
 from pandarallel import pandarallel
 from analysis import HYPERSTYLE_RUNNER_PATH
-from analysis.src.python.evaluation.common.pandas_util import get_solutions_df, write_df_to_file
-from analysis.src.python.evaluation.common.args_util import (
+from analysis.src.python.evaluation.utils.args_util import (
     EvaluationArgument, EvaluationRunToolArgument, script_structure_rule,
 )
-from analysis.src.python.evaluation.common.parallel_util import run_in_subprocess_with_working_dir
-from analysis.src.python.evaluation.common.csv_util import ColumnName
-from analysis.src.python.evaluation.common.file_util import create_file
+from analysis.src.python.utils.df_utils import read_df, write_df
+from analysis.src.python.utils.parallel_util import run_in_subprocess_with_working_dir
+from analysis.src.python.evaluation.model.column_name import ColumnName
+from analysis.src.python.utils.file_utils import create_file
 from analysis.src.python.evaluation.evaluation_config import EvaluationConfig
 from hyperstyle.src.python.common.tool_arguments import RunToolArgument
 from hyperstyle.src.python.review.application_config import LanguageVersion
@@ -154,9 +152,9 @@ def main() -> int:
         start = time.time()
         args = parser.parse_args()
         config = EvaluationConfig(args)
-        lang_code_dataframe = get_solutions_df(config.extension, config.solutions_file_path)
+        lang_code_dataframe = read_df(config.solutions_file_path)
         results = inspect_solutions_df(config, lang_code_dataframe)
-        write_df_to_file(results, config.get_output_file_path(), config.extension)
+        write_df(results, config.get_output_file_path())
         end = time.time()
         print(f'All time: {end - start}')
         return 0

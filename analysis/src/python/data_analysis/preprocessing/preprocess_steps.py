@@ -9,8 +9,8 @@ from bs4 import BeautifulSoup
 
 from analysis.src.python.data_analysis.model.column_name import CommentsColumns, Complexity, Difficulty, LikesColumns, \
     Scope, StepColumns, TopicColumns
-from analysis.src.python.data_analysis.utils.df_utils import merge_dfs, read_df, write_df
-from analysis.src.python.data_analysis.utils.logging_utils import configure_logger
+from analysis.src.python.utils.df_utils import merge_dfs, read_df, write_df
+from analysis.src.python.utils.logging_utils import configure_logger
 from analysis.src.python.data_analysis.utils.stats_utils import calculate_code_lines_count
 
 

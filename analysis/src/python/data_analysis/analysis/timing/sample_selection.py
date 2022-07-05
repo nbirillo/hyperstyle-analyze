@@ -3,7 +3,7 @@ import sys
 from typing import List
 
 from analysis.src.python.data_analysis.model.column_name import SubmissionColumns, SubmissionStatsColumns
-from analysis.src.python.data_analysis.utils.df_utils import merge_dfs, read_df, write_df
+from analysis.src.python.utils.df_utils import merge_dfs, read_df, write_df
 
 
 def get_random_submission_with_lines_count(submissions_path: str,

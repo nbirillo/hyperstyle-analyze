@@ -10,9 +10,10 @@ from typing import List, Tuple
 import pandas as pd
 
 from analysis.src.python.evaluation.batching.batch_config import BatchConfig
-from analysis.src.python.evaluation.common.csv_util import append_dataframe_to_csv, write_dataframe_to_csv
-from analysis.src.python.evaluation.common.file_util import AnalysisExtension, create_directory, get_name_from_path
-from analysis.src.python.evaluation.common.parallel_util import run_and_wait
+from analysis.src.python.utils.parallel_util import run_and_wait
+from analysis.src.python.utils.df_utils import append_df, write_df
+from analysis.src.python.utils.file_utils import create_directory, get_name_from_path
+from analysis.src.python.utils.extension_utlis import AnalysisExtension
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -84,7 +85,7 @@ def split_to_batches(dataset_path: str, output_dir_path: str, batch_size: int) -
 
         logger.info(f"Coping data to batch {index}")
         batch_input_file = os.path.join(batch_input_path, df_name)
-        write_dataframe_to_csv(batch_input_file, batch)
+        write_df(batch, batch_input_file)
 
         batch_paths.append((index, batch_input_file, batch_logs_path, batch_output_path))
         index += 1
@@ -99,15 +100,15 @@ def merge_batch_results(batch_paths: List[Tuple[int, str, str, str]], output: st
         output_files = os.listdir(output_path)
         for output_file in output_files:
             if AnalysisExtension.get_extension_from_file(output_file) == AnalysisExtension.CSV:
-                output_file_id = re.sub(r'\.*batch_[0-9]+\.*', '', get_name_from_path(output_file))
+                output_file_id = re.sub(r'\.*batch_\d+\.*', '', get_name_from_path(output_file))
                 output_files_by_name[output_file_id].append(os.path.join(output_path, output_file))
     for output_file_name, output_files in output_files_by_name.items():
         for i, output_file in enumerate(output_files):
             output_df = pd.read_csv(output_file)
             if i == 0:
-                write_dataframe_to_csv(os.path.join(output, output_file_name), output_df)
+                write_df(output_df, os.path.join(output, output_file_name))
             else:
-                append_dataframe_to_csv(os.path.join(output, output_file_name), output_df)
+                append_df(output_df, os.path.join(output, output_file_name))
 
 
 if __name__ == "__main__":

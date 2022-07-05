@@ -7,14 +7,14 @@ import numpy as np
 import pandas as pd
 from hyperstyle.src.python.review.inspectors.issue import IssueType
 from hyperstyle.src.python.review.quality.penalty import PenaltyIssue
-from analysis.src.python.evaluation.common.csv_util import ColumnName, write_dataframe_to_csv
-from analysis.src.python.evaluation.common.pandas_util import (
-    filter_df_by_single_value, get_issues_from_json, get_solutions_df, logger,
-)
-from analysis.src.python.evaluation.common.args_util import EvaluationRunToolArgument
-from analysis.src.python.evaluation.common.file_util import AnalysisExtension, get_parent_folder, \
-    get_restricted_extension
+
+from analysis.src.python.evaluation.model.column_name import ColumnName
 from analysis.src.python.evaluation.paper_evaluation.user_dynamics.user_statistics import DynamicsColumn
+from analysis.src.python.evaluation.utils.args_util import EvaluationRunToolArgument
+from analysis.src.python.evaluation.utils.pandas_util import get_issues_from_json, logger
+from analysis.src.python.utils.df_utils import filter_df_by_single_value, read_df, write_df
+from analysis.src.python.utils.extension_utlis import AnalysisExtension
+from analysis.src.python.utils.file_utils import get_parent_folder
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:
@@ -40,7 +40,7 @@ def __write_dynamics(output_path: Path, user_fragments: pd.DataFrame, index: int
     output_path.mkdir(parents=True, exist_ok=True)
     user_fragments.columns = [DynamicsColumn.ISSUE_COUNT.value]
     user_fragments[ColumnName.TIME.value] = np.arange(len(user_fragments))
-    write_dataframe_to_csv(output_path / f'user_{index}{AnalysisExtension.CSV.value}', user_fragments)
+    write_df(user_fragments, output_path / f'user_{index}{AnalysisExtension.CSV.value}')
 
 
 def __get_users_statistics(solutions_df: pd.DataFrame, output_path: Path) -> None:
@@ -70,8 +70,7 @@ def main() -> int:
     try:
         args = parser.parse_args()
         solutions_file_path = args.solutions_file_path
-        extension = get_restricted_extension(solutions_file_path, [AnalysisExtension.CSV])
-        solutions_df = get_solutions_df(extension, solutions_file_path)
+        solutions_df = read_df(solutions_file_path)
 
         output_path = get_parent_folder(Path(solutions_file_path)) / 'dynamics'
         output_path.mkdir(parents=True, exist_ok=True)

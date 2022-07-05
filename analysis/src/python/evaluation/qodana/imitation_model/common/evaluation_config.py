@@ -2,7 +2,7 @@ import argparse
 
 from hyperstyle.src.python.review.common.file_system import Extension
 from analysis.src.python.evaluation.qodana.imitation_model.common.util import ModelCommonArgument
-from evaluation.common.util import AnalysisExtension
+from analysis.src.python.utils.extension_utlis import AnalysisExtension
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:

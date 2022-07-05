@@ -9,11 +9,12 @@ import pandas as pd
 from hyperstyle.src.python.review.common.file_system import Extension
 
 from analysis.src.python.data_analysis.model.column_name import StepsStatsColumns, SubmissionColumns
-from analysis.src.python.data_analysis.utils.df_utils import read_df, write_df
-from analysis.src.python.data_analysis.utils.logging_utils import configure_logger
-from analysis.src.python.data_analysis.utils.parsing_utils import parse_qodana_issues_to_objects, \
+from analysis.src.python.utils.df_utils import read_df, write_df
+from analysis.src.python.utils.logging_utils import configure_logger
+from analysis.src.python.utils.parsing_utils import parse_qodana_issues_to_objects, \
     parse_raw_issues_to_objects
-from analysis.src.python.evaluation.common.file_util import AnalysisExtension, create_directory
+from analysis.src.python.utils.file_utils import create_directory
+from analysis.src.python.utils.extension_utlis import AnalysisExtension
 
 
 def write_submissions_to_files(df_submissions: pd.DataFrame, output_dir: str):

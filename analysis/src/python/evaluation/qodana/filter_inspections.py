@@ -5,10 +5,9 @@ from typing import List
 import pandas as pd
 from hyperstyle.src.python.review.common.file_system import get_all_file_system_items
 
-from analysis.src.python.evaluation.common.args_util import EvaluationRunToolArgument, parse_set_arg
-from analysis.src.python.evaluation.common.csv_util import write_dataframe_to_csv
-from analysis.src.python.evaluation.common.file_util import AnalysisExtension, extension_file_condition
-from analysis.src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path
+from analysis.src.python.evaluation.utils.args_util import EvaluationRunToolArgument, parse_set_arg
+from analysis.src.python.utils.df_utils import read_df, write_df
+from analysis.src.python.utils.extension_utlis import AnalysisExtension, extension_file_condition
 from analysis.src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue
 from analysis.src.python.evaluation.qodana.util.util import to_json
 
@@ -33,7 +32,7 @@ def __get_qodana_dataset(root: Path) -> pd.DataFrame:
     dataset_files = get_all_file_system_items(root, extension_file_condition(AnalysisExtension.CSV))
     datasets = []
     for file_path in dataset_files:
-        datasets.append(get_solutions_df_by_file_path(file_path))
+        datasets.append(read_df(file_path))
     return pd.concat(datasets)
 
 
@@ -55,7 +54,7 @@ def main() -> None:
     full_dataset[QodanaColumnName.INSPECTIONS.value] = full_dataset.apply(
         lambda row: __filter_inspections(row[QodanaColumnName.INSPECTIONS.value], inspections_to_keep), axis=1)
 
-    write_dataframe_to_csv(dataset_folder / f'filtered_issues{AnalysisExtension.CSV.value}', full_dataset)
+    write_df(full_dataset, dataset_folder / f'filtered_issues{AnalysisExtension.CSV.value}')
 
 
 if __name__ == '__main__':

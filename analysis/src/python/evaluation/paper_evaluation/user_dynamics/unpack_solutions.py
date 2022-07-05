@@ -5,11 +5,12 @@ from pathlib import Path
 from typing import List
 
 import pandas as pd
-from analysis.src.python.evaluation.common.csv_util import ColumnName, write_dataframe_to_csv
-from analysis.src.python.evaluation.common.pandas_util import get_solutions_df, logger
-from analysis.src.python.evaluation.common.args_util import EvaluationRunToolArgument
-from analysis.src.python.evaluation.common.file_util import AnalysisExtension, get_parent_folder, \
-    get_restricted_extension
+from analysis.src.python.evaluation.model.column_name import ColumnName
+from analysis.src.python.evaluation.utils.pandas_util import logger
+from analysis.src.python.evaluation.utils.args_util import EvaluationRunToolArgument
+from analysis.src.python.utils.df_utils import read_df, write_df
+from analysis.src.python.utils.file_utils import get_parent_folder
+from analysis.src.python.utils.extension_utlis import AnalysisExtension
 
 '''
 This scripts allows unpacking solutions to the solutions dataframe.
@@ -48,14 +49,13 @@ def main() -> int:
     try:
         args = parser.parse_args()
         solutions_file_path = args.solutions_file_path
-        extension = get_restricted_extension(solutions_file_path, [AnalysisExtension.CSV])
-        solutions_df = get_solutions_df(extension, solutions_file_path)
+        solutions_df = read_df(solutions_file_path)
         user_df_list = []
         solutions_df.apply(lambda row: __add_user_df(user_df_list,
                                                      __parse_time_and_solutions(row['times'], row['codes'])), axis=1)
         unpacked_solutions = pd.concat(user_df_list)
         output_path = get_parent_folder(Path(solutions_file_path)) / f'unpacked_solutions{AnalysisExtension.CSV.value}'
-        write_dataframe_to_csv(output_path, unpacked_solutions)
+        write_df(unpacked_solutions, output_path)
         return 0
 
     except FileNotFoundError:

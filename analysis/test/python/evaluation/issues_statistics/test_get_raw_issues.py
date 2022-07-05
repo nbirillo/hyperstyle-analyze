@@ -12,10 +12,10 @@ from hyperstyle.src.python.review.inspectors.issue import (
     LineLenIssue,
     MaintainabilityLackIssue,
 )
-from analysis.src.python.evaluation.common.pandas_util import equal_df, get_solutions_df_by_file_path
 from analysis.src.python.evaluation.issues_statistics.get_raw_issues import (
     _filter_issues, _get_output_path, inspect_solutions,
 )
+from analysis.src.python.utils.df_utils import equal_df, read_df
 from analysis.test.python.evaluation.issues_statistics import (
     GET_RAW_ISSUES_TARGET_FILES_FOLDER, GET_RAW_ISSUES_TEST_FILES_FOLDER,
 )
@@ -328,7 +328,7 @@ TEST_CORRECT_OUTPUT_DATA = [
 @pytest.mark.parametrize(('test_file', 'target_file'), TEST_CORRECT_OUTPUT_DATA)
 def test_correct_output(test_file: str, target_file: str):
     solutions_file_path = Path(GET_RAW_ISSUES_TEST_FILES_FOLDER / test_file)
-    solutions = get_solutions_df_by_file_path(solutions_file_path)
+    solutions = read_df(solutions_file_path)
 
     test_dataframe = inspect_solutions(
         solutions,
