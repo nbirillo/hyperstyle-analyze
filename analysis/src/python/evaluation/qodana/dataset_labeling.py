@@ -16,10 +16,10 @@ import numpy as np
 import pandas as pd
 from analysis.src.python.evaluation.model.column_name import ColumnName
 from analysis.src.python.utils.df_utils import read_df, write_df
-from analysis.src.python.utils.parallel_util import run_and_wait
+from analysis.src.python.utils.parallel_utils import run_and_wait
 from analysis.src.python.utils.file_utils import copy_directory, copy_file, create_file, \
     get_name_from_path, get_parent_folder, remove_directory
-from analysis.src.python.utils.extension_utlis import AnalysisExtension, extension_file_condition
+from analysis.src.python.utils.extension_utils import AnalysisExtension, extension_file_condition
 from analysis.src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue, QodanaJsonField
 from analysis.src.python.evaluation.qodana.util.util import to_json
 from hyperstyle.src.python.review.application_config import LanguageVersion

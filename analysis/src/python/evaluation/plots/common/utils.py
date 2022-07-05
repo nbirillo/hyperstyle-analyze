@@ -7,7 +7,7 @@ import plotly.express as px
 import plotly.graph_objects as go
 from hyperstyle.src.python.review.common.file_system import Extension
 from analysis.src.python.evaluation.plots.common import plotly_consts
-from analysis.src.python.utils.extension_utlis import AnalysisExtension
+from analysis.src.python.utils.extension_utils import AnalysisExtension
 
 COLOR = Optional[plotly_consts.COLOR]
 COLORWAY = Optional[plotly_consts.COLORWAY]

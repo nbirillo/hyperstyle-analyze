@@ -12,7 +12,7 @@ from analysis.src.python.evaluation.model.column_name import ColumnName
 from analysis.src.python.evaluation.utils.args_util import EvaluationArgument, EvaluationRunToolArgument
 from analysis.src.python.evaluation.utils.pandas_util import get_issues_from_json
 from analysis.src.python.utils.df_utils import read_df, write_df
-from analysis.src.python.utils.extension_utlis import AnalysisExtension
+from analysis.src.python.utils.extension_utils import AnalysisExtension
 from analysis.src.python.utils.file_utils import get_name_from_path, get_parent_folder
 
 TRACEBACK = EvaluationArgument.TRACEBACK.value

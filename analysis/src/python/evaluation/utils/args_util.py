@@ -9,7 +9,7 @@ from hyperstyle.src.python.review.common.file_system import Extension, get_all_f
 
 from analysis.src.python.evaluation.model.column_name import ColumnName
 from analysis.src.python.utils.file_utils import file_match_condition
-from analysis.src.python.utils.extension_utlis import AnalysisExtension
+from analysis.src.python.utils.extension_utils import AnalysisExtension
 
 
 @unique

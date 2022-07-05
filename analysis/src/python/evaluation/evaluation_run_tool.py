@@ -15,7 +15,7 @@ from analysis.src.python.evaluation.utils.args_util import (
     EvaluationArgument, EvaluationRunToolArgument, script_structure_rule,
 )
 from analysis.src.python.utils.df_utils import read_df, write_df
-from analysis.src.python.utils.parallel_util import run_in_subprocess_with_working_dir
+from analysis.src.python.utils.parallel_utils import run_in_subprocess_with_working_dir
 from analysis.src.python.evaluation.model.column_name import ColumnName
 from analysis.src.python.utils.file_utils import create_file
 from analysis.src.python.evaluation.evaluation_config import EvaluationConfig

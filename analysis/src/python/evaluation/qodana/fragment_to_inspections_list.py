@@ -7,7 +7,7 @@ from analysis.src.python.evaluation.qodana.util.util import (
 )
 from analysis.src.python.utils.df_utils import read_df, write_df
 from analysis.src.python.utils.file_utils import get_parent_folder
-from analysis.src.python.utils.extension_utlis import AnalysisExtension
+from analysis.src.python.utils.extension_utils import AnalysisExtension
 
 INSPECTIONS = QodanaColumnName.INSPECTIONS.value
 

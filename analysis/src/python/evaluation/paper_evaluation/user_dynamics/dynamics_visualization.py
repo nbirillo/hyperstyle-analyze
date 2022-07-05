@@ -11,7 +11,7 @@ from hyperstyle.src.python.review.common.file_system import get_all_file_system_
 from analysis.src.python.evaluation.utils.pandas_util import logger
 from analysis.src.python.evaluation.paper_evaluation.user_dynamics.user_statistics import DynamicsColumn
 from analysis.src.python.utils.file_utils import get_parent_folder
-from analysis.src.python.utils.extension_utlis import AnalysisExtension, extension_file_condition
+from analysis.src.python.utils.extension_utils import AnalysisExtension, extension_file_condition
 
 MEDIAN_COLUMN = 'Median number of code quality issues in submissions'
 FREQ_COLUMN = 'Number of users'

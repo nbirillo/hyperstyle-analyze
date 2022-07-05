@@ -13,7 +13,7 @@ from analysis.src.python.evaluation.qodana.imitation_model.common.metric import 
 from analysis.src.python.evaluation.qodana.imitation_model.common.util import DatasetColumnArgument, MeasurerArgument
 from analysis.src.python.evaluation.qodana.imitation_model.dataset.dataset import QodanaDataset
 from analysis.src.python.utils.df_utils import write_df
-from analysis.src.python.utils.extension_utlis import AnalysisExtension
+from analysis.src.python.utils.extension_utils import AnalysisExtension
 
 
 def get_predictions(eval_dataloader: torch.utils.data.DataLoader,

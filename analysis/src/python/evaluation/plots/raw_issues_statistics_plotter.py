@@ -13,8 +13,8 @@ from analysis.src.python.evaluation.plots.common.utils import (
 )
 from analysis.src.python.evaluation.plots.plotters.raw_issues_statistics_plotters import PlotConfig, PlotTypes
 from analysis.src.python.utils.df_utils import read_df
-from analysis.src.python.utils.extension_utlis import AnalysisExtension
-from analysis.src.python.utils.yaml_util import parse_yaml
+from analysis.src.python.utils.extension_utils import AnalysisExtension
+from analysis.src.python.utils.yaml_utils import parse_yaml
 
 
 @unique

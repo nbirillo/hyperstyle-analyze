@@ -6,7 +6,7 @@ from typing import Any, Callable, Dict, Iterable, List, Optional, Union
 import pandas as pd
 from pandarallel import pandarallel
 
-from analysis.src.python.utils.extension_utlis import AnalysisExtension, get_restricted_extension
+from analysis.src.python.utils.extension_utils import AnalysisExtension, get_restricted_extension
 
 
 def _apply_to_row(row: pd.Series, column: str, func: Callable) -> pd.Series:

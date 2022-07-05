@@ -20,9 +20,9 @@ from analysis.src.python.evaluation.plots.plotters.diffs_plotters import (
     get_penalty_influence_distribution,
     get_unique_issues_by_category,
 )
-from analysis.src.python.utils.extension_utlis import AnalysisExtension
+from analysis.src.python.utils.extension_utils import AnalysisExtension
 from analysis.src.python.utils.serialization_utils import deserialize_data_from_file
-from analysis.src.python.utils.yaml_util import parse_yaml
+from analysis.src.python.utils.yaml_utils import parse_yaml
 
 
 @unique

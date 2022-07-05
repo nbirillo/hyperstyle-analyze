@@ -9,7 +9,7 @@ import pandas as pd
 from analysis.src.python.evaluation.model.column_name import ColumnName
 from analysis.src.python.utils.df_utils import read_df, write_df
 from analysis.src.python.utils.file_utils import get_parent_folder
-from analysis.src.python.utils.extension_utlis import AnalysisExtension
+from analysis.src.python.utils.extension_utils import AnalysisExtension
 from analysis.src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue
 from analysis.src.python.evaluation.qodana.util.util import (
     configure_model_converter_arguments, get_inspections_dict, replace_inspections_on_its_ids,
