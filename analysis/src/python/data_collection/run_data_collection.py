@@ -3,8 +3,6 @@ import logging
 import sys
 from typing import List
 
-import pandas as pd
-
 from analysis.src.python.data_collection.api.platform_objects import Platform
 from analysis.src.python.data_collection.hyperskill.hyperskill_client import HyperskillClient
 from analysis.src.python.data_collection.stepik.stepik_client import StepikClient

@@ -3,9 +3,8 @@ import json
 from pathlib import Path
 from typing import Dict, List
 
-import pandas as pd
+from analysis.src.python.evaluation.qodana.utils.models import QodanaColumnName, QodanaIssue, QodanaJsonField
 from analysis.src.python.evaluation.utils.args_util import EvaluationRunToolArgument
-from analysis.src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue, QodanaJsonField
 from analysis.src.python.utils.df_utils import read_df
 
 
