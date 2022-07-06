@@ -4,10 +4,10 @@ import pytest
 
 from analysis.src.python.evaluation.model.column_name import ColumnName
 from analysis.src.python.utils.df_utils import drop_duplicates, equal_df, read_df
-from analysis.test.python.evaluation import PANDAS_UTIL_DIR_PATH
 from analysis.src.python.evaluation.utils.args_util import get_in_and_out_list
+from analysis.test.python.utils import DF_UTILS_DATA_FOLDER
 
-RESOURCES_PATH = PANDAS_UTIL_DIR_PATH / 'drop_duplicates'
+RESOURCES_PATH = DF_UTILS_DATA_FOLDER / 'drop_duplicates'
 
 IN_AND_OUT_FILES = get_in_and_out_list(RESOURCES_PATH)
 

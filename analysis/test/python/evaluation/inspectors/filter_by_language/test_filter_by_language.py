@@ -4,11 +4,11 @@ import pytest
 from hyperstyle.src.python.review.application_config import LanguageVersion
 from analysis.src.python.evaluation.utils.pandas_util import filter_df_by_language
 from analysis.src.python.utils.df_utils import equal_df, read_df
-from analysis.test.python.evaluation import PANDAS_UTIL_DIR_PATH
 from analysis.src.python.utils.file_utils import get_name_from_path
 from analysis.src.python.evaluation.utils.args_util import get_in_and_out_list
+from analysis.test.python.evaluation import INSPECTORS_DIR_PATH
 
-RESOURCES_PATH = PANDAS_UTIL_DIR_PATH / 'filter_by_language'
+RESOURCES_PATH = INSPECTORS_DIR_PATH / 'filter_by_language'
 
 IN_FILE_TO_LANGUAGES = {
     'in_1.csv': set(LanguageVersion),
@@ -25,5 +25,6 @@ IN_AND_OUT_FILES = get_in_and_out_list(RESOURCES_PATH)
 def test(in_file: Path, out_file: Path):
     in_df = read_df(in_file)
     out_df = read_df(out_file)
-    filtered_df = filter_df_by_language(in_df, IN_FILE_TO_LANGUAGES[get_name_from_path(str(in_file))])
+    languages = IN_FILE_TO_LANGUAGES[get_name_from_path(in_file)]
+    filtered_df = filter_df_by_language(in_df, languages)
     assert equal_df(out_df, filtered_df)
