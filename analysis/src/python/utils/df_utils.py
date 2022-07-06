@@ -6,6 +6,7 @@ import pandas as pd
 from pandarallel import pandarallel
 
 from analysis.src.python.utils.extension_utils import AnalysisExtension, get_restricted_extension
+from analysis.src.python.utils.xlsx_utils import read_df_from_xlsx, write_df_to_xlsx
 
 
 def _apply_to_row(row: pd.Series, column: str, func: Callable) -> pd.Series:
@@ -67,34 +68,34 @@ def merge_dfs(df_left: pd.DataFrame, df_right: pd.DataFrame, left_on: str, right
 
 
 def read_df(path: Union[str, Path]) -> Optional[pd.DataFrame]:
-    """ Read dataframe from given .csv or .xlsx file. """
+    """ Read dataframe from given .csv or .xlsx file `Sheet1` sheet. """
 
     ext = get_restricted_extension(path, [AnalysisExtension.CSV, AnalysisExtension.XLSX])
     if ext == AnalysisExtension.CSV:
         df = pd.read_csv(path)
     else:
-        df = pd.read_excel(path)
+        df = read_df_from_xlsx(path)
     return df
 
 
 def write_df(df: pd.DataFrame, path: Union[str, Path]):
-    """ Write dataframe to given .csv or .xlsx file. """
+    """ Write dataframe to given .csv or .xlsx file `Sheet1` sheet. """
 
     ext = get_restricted_extension(path, [AnalysisExtension.CSV, AnalysisExtension.XLSX])
     if ext == AnalysisExtension.CSV:
         df.to_csv(path, index=False)
     else:
-        df.to_excel(path, index=False)
+        write_df_to_xlsx(df, path, index=False)
 
 
 def append_df(df: pd.DataFrame, path: Union[str, Path]):
-    """ Append dataframe by given .csv or .xlsx file. """
+    """ Append dataframe by given .csv file or .xlsx file `Sheet1` sheet. """
 
     if os.path.exists(path):
         ext = get_restricted_extension(path, [AnalysisExtension.CSV, AnalysisExtension.XLSX])
         if ext == AnalysisExtension.CSV:
             df.to_csv(path, index=False, mode='a', header=False)
         else:
-            df.to_excel(path, index=False, mode='a', header=False)
+            write_df_to_xlsx(df, path, index=False, mode='a', header=False)
     else:
         write_df(df, path)
