@@ -14,7 +14,7 @@ RESOURCES_PATH = DF_UTILS_DATA_FOLDER / 'write_df'
 def test(in_file: Path):
     in_df = read_df(RESOURCES_PATH / in_file)
     ext = get_restricted_extension(in_file, [AnalysisExtension.CSV, AnalysisExtension.XLSX])
-    tmp_file_path = RESOURCES_PATH / f'tmp.{ext.value}'
+    tmp_file_path = RESOURCES_PATH / f'tmp{ext.value}'
     remove_file(tmp_file_path)
     write_df(in_df, tmp_file_path)
     out_df = read_df(tmp_file_path)
