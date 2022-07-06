@@ -70,39 +70,32 @@ def merge_dfs(df_left: pd.DataFrame, df_right: pd.DataFrame, left_on: str, right
 def read_df(path: Union[str, Path]) -> Optional[pd.DataFrame]:
     """ Read dataframe from given .csv or .xlsx file. """
 
-    ext = get_restricted_extension(path, [AnalysisExtension.XLSX, AnalysisExtension.CSV])
-    df = None
-    if ext == AnalysisExtension.XLSX:
-        df = pd.read_excel(path)
-    elif ext == AnalysisExtension.CSV:
+    ext = get_restricted_extension(path, [AnalysisExtension.CSV, AnalysisExtension.XLSX])
+    if ext == AnalysisExtension.CSV:
         df = pd.read_csv(path)
     else:
-        logging.error(f"Unknown extension in file path: {path}")
+        df = pd.read_excel(path)
     return df
 
 
 def write_df(df: pd.DataFrame, path: Union[str, Path]):
     """ Write dataframe to given .csv or .xlsx file. """
 
-    ext = get_restricted_extension(path, [AnalysisExtension.XLSX, AnalysisExtension.CSV])
+    ext = get_restricted_extension(path, [AnalysisExtension.CSV, AnalysisExtension.XLSX])
     if ext == AnalysisExtension.CSV:
         df.to_csv(path, index=False)
-    elif ext == AnalysisExtension.XLSX:
-        df.to_excel(path, index=False)
     else:
-        logging.error(f"Unknown extension in file path: {path}")
+        df.to_excel(path, index=False)
 
 
 def append_df(df: pd.DataFrame, path: Union[str, Path]):
-    """ Append data to dataframe by given .csv or .xlsx file. """
+    """ Append dataframe by given .csv or .xlsx file. """
 
     if os.path.exists(path):
-        ext = get_restricted_extension(path, [AnalysisExtension.XLSX, AnalysisExtension.CSV])
+        ext = get_restricted_extension(path, [AnalysisExtension.CSV, AnalysisExtension.XLSX])
         if ext == AnalysisExtension.CSV:
             df.to_csv(path, index=False, mode='a', header=False)
-        elif ext == AnalysisExtension.XLSX:
-            df.to_excel(path, index=False, mode='a', header=False)
         else:
-            logging.error(f"Unknown extension in file path: {path}")
+            df.to_excel(path, index=False, mode='a', header=False)
     else:
         write_df(df, path)
