@@ -25,4 +25,3 @@ def test(in_file: Path):
     assert in_df.shape[0] * 2 == out_df.shape[0]
     assert equal_df(in_df, out_df.head(in_df.shape[0]))
     assert equal_df(in_df, out_df.tail(in_df.shape[0]))
-
