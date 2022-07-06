@@ -36,8 +36,8 @@ def write_df_to_xlsx(df: pd.DataFrame,
                      index: bool = False,
                      header: bool = True) -> None:
     with pd.ExcelWriter(path, mode=mode) as writer:
-        writer.sheets = {w.title: w for w in writer.book.worksheets}
-        start_row = writer.sheets[sheet_name].max_row if mode == 'a' else 0
+        if mode == 'a':
+            start_row = writer.sheets[sheet_name].max_row
         df.to_excel(writer,
                     sheet_name=sheet_name,
                     startrow=start_row,
