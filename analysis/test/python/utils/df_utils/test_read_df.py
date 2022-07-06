@@ -11,7 +11,7 @@ RESOURCES_PATH = DF_UTILS_DATA_FOLDER / 'read_df'
 INPUT_DATA = [
     ('in_1.csv', (3, 4)),
     ('in_2.xlsx', (3, 4)),
-    ('in_3.json', None)
+    ('in_3.json', None),
 ]
 
 
