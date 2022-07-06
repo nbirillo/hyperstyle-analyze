@@ -3,7 +3,7 @@ from typing import Optional, Tuple
 
 import pytest
 
-from analysis.src.python.utils.df_utils import read_df, write_df
+from analysis.src.python.utils.df_utils import read_df
 from analysis.test.python.utils import DF_UTILS_DATA_FOLDER
 
 RESOURCES_PATH = DF_UTILS_DATA_FOLDER / 'read_df'
