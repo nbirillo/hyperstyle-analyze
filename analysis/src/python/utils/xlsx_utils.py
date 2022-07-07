@@ -36,11 +36,11 @@ def write_df_to_xlsx(df: pd.DataFrame,
                      index: bool = False,
                      header: bool = True) -> None:
     with pd.ExcelWriter(path, mode=mode) as writer:
-        writer.sheets = {ws.title: ws for ws in writer.book.worksheets}
-        startrow = writer.sheets[sheet_name].max_row if mode == 'a' else 0
+        writer.sheets = {w.title: w for w in writer.book.worksheets}
+        start_row = writer.sheets[sheet_name].max_row if mode == 'a' else 0
         df.to_excel(writer,
                     sheet_name=sheet_name,
-                    startrow=startrow,
+                    startrow=start_row,
                     index=index,
                     header=header)
 

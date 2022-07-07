@@ -26,7 +26,7 @@ def filter_df_by_language(df: pd.DataFrame, languages: Set[LanguageVersion],
 #  first = | 0 |    A     |    4     |  second = | 0 |    A     |    8     |
 #          | 1 |    B     |    3     |           | 1 |    C     |    3     |
 #
-# So the inconsistent will be multiindex dataframe:
+# So the inconsistent will be multi index dataframe:
 #
 #                 |               |   0  |
 #  inconsistent = | (0, column_2) | True |
@@ -48,7 +48,7 @@ def get_inconsistent_positions(first: pd.DataFrame, second: pd.DataFrame) -> pd.
 #  first = | 0 |    A     |    4     |  second = | 0 |    A     |    8     |
 #          | 1 |    B     |    3     |           | 1 |    C     |    3     |
 #
-# So the diff will be multiindex dataframe:
+# So the diff will be multi index dataframe:
 #
 #         |               |  old  |  new  |
 #  diff = | (0, column_2) |   4   |   8   |
