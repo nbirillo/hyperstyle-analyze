@@ -21,15 +21,19 @@ def filter_df_by_language(df: pd.DataFrame, languages: Set[LanguageVersion],
 
 # Find all rows and columns where two dataframes are inconsistent.
 # For example:
-#  row  |  column    |
-#  -------------------------
-#  3    | column_1   | True
-#       | column_2   | True
-#  -------------------------
-#  4    | column_1   | True
-#       | column_2   | True
-# means first and second dataframes have different values
-# in column_1 and in column_2 in 3-th and 4-th rows
+#
+#          |   | column_1 | column_2 |           |   | column_1 | column_2 |
+#  first = | 0 |    A     |    4     |  second = | 0 |    A     |    8     |
+#          | 1 |    B     |    3     |           | 1 |    C     |    3     |
+#
+# So the inconsistent will be multiindex dataframe:
+#
+#                 |               |   0  |
+#  inconsistent = | (0, column_2) | True |
+#                 | (1, column_1) | True |
+#
+# Which means that the first and second dataframes have different values
+# in 0-th row of column_2 (4 != 8) and in 1-th row of column_1 (B != C)
 def get_inconsistent_positions(first: pd.DataFrame, second: pd.DataFrame) -> pd.DataFrame:
     ne_stacked = (first != second).stack()
     inconsistent_positions = ne_stacked[ne_stacked]
@@ -39,11 +43,19 @@ def get_inconsistent_positions(first: pd.DataFrame, second: pd.DataFrame) -> pd.
 
 # Create a new dataframe with all items that are different.
 # For example:
-#            |       old   |   new
-#  ---------------------------------
-# row column |             |
-# 3   grade  |  EXCELLENT  | MODERATE
-# 4   grade  |  EXCELLENT  |  BAD
+#
+#          |   | column_1 | column_2 |           |   | column_1 | column_2 |
+#  first = | 0 |    A     |    4     |  second = | 0 |    A     |    8     |
+#          | 1 |    B     |    3     |           | 1 |    C     |    3     |
+#
+# So the diff will be multiindex dataframe:
+#
+#         |               |  old  |  new  |
+#  diff = | (0, column_2) |   4   |   8   |
+#         | (1, column_1) |   B   |   C   |
+#
+# Which means that the first and second dataframes have the following changes ([old] -> [new])
+# in 0-th row of column_2 (4 -> 8) and in 1-th row of column_1 (B -> C)
 def get_diffs(first: pd.DataFrame, second: pd.DataFrame) -> pd.DataFrame:
     changed = get_inconsistent_positions(first, second)
 
@@ -61,5 +73,5 @@ def get_issues_from_json(str_json: str) -> List[PenaltyIssue]:
     return convert_json_to_issues(parsed_json)
 
 
-def get_issues_by_row(df: pd.DataFrame, row: int) -> List[PenaltyIssue]:
+def get_issues_from_json_by_row(df: pd.DataFrame, row: int) -> List[PenaltyIssue]:
     return get_issues_from_json(df.iloc[row][ColumnName.TRACEBACK.value])

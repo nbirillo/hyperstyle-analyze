@@ -6,7 +6,7 @@ from hyperstyle.src.python.review.quality.model import QualityType
 
 from analysis.src.python.evaluation.model.column_name import ColumnName
 from analysis.src.python.evaluation.utils.args_util import EvaluationRunToolArgument
-from analysis.src.python.evaluation.utils.pandas_util import get_inconsistent_positions, get_issues_by_row
+from analysis.src.python.evaluation.utils.pandas_util import get_inconsistent_positions, get_issues_from_json_by_row
 from analysis.src.python.utils.df_utils import read_df
 from analysis.src.python.utils.extension_utils import AnalysisExtension
 from analysis.src.python.utils.file_utils import get_parent_folder
@@ -72,8 +72,8 @@ def find_diffs(old_df: pd.DataFrame, new_df: pd.DataFrame) -> dict:
         else:
             if new_quality < old_quality:
                 diffs[ColumnName.DECREASED_GRADE.value].append(fragment_id)
-            old_issues = get_issues_by_row(old_df, row)
-            new_issues = get_issues_by_row(new_df, row)
+            old_issues = get_issues_from_json_by_row(old_df, row)
+            new_issues = get_issues_from_json_by_row(new_df, row)
             # Find difference between issues
             if len(old_issues) > len(new_issues):
                 raise ValueError(f'New dataframe contains less issues than old for fragment {id}')

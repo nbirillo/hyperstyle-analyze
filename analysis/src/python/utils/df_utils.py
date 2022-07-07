@@ -38,8 +38,8 @@ def filter_df_by_single_value(df: pd.DataFrame, column: str, value: Any) -> pd.D
     return df.loc[df[column] == value]
 
 
-def drop_duplicates(df: pd.DataFrame, column: str) -> pd.DataFrame:
-    return df.drop_duplicates(column, keep='last').reset_index(drop=True)
+def drop_duplicates(df: pd.DataFrame, column: str, keep: str = 'last') -> pd.DataFrame:
+    return df.drop_duplicates(column, keep=keep).reset_index(drop=True)
 
 
 def rename_columns(df: pd.DataFrame, columns: Dict[str, str]) -> pd.DataFrame:
@@ -55,8 +55,8 @@ def drop_columns(df: pd.DataFrame, columns: List[str]) -> pd.DataFrame:
 
 
 def equal_df(expected_df: pd.DataFrame, actual_df: pd.DataFrame) -> bool:
-    return expected_df.reset_index(drop=True).equals(
-        actual_df.reset_index(drop=True)) or (expected_df.empty and actual_df.empty)
+    return (expected_df.empty and actual_df.empty) or \
+           expected_df.reset_index(drop=True).equals(actual_df.reset_index(drop=True))
 
 
 def merge_dfs(df_left: pd.DataFrame, df_right: pd.DataFrame, left_on: str, right_on: str, how='inner') -> pd.DataFrame:
