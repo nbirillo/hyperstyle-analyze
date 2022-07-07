@@ -55,8 +55,8 @@ def drop_columns(df: pd.DataFrame, columns: List[str]) -> pd.DataFrame:
 
 
 def equal_df(expected_df: pd.DataFrame, actual_df: pd.DataFrame) -> bool:
-    return (expected_df.empty and actual_df.empty) or \
-           expected_df.reset_index(drop=True).equals(actual_df.reset_index(drop=True))
+    return (expected_df.empty and actual_df.empty) or expected_df.reset_index(drop=True).equals(
+        actual_df.reset_index(drop=True))
 
 
 def merge_dfs(df_left: pd.DataFrame, df_right: pd.DataFrame, left_on: str, right_on: str, how='inner') -> pd.DataFrame:
