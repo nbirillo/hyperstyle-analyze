@@ -32,13 +32,13 @@ def write_submissions_to_files(df_submissions: pd.DataFrame, output_dir: str):
 def split_code_to_lines(submission: pd.DataFrame) -> List[str]:
     """ Split code to lines. Considers both line separations models (with and without /r). """
 
-    return submission[SubmissionColumns.CODE.value].replace('\r', '').split('\n')
+    return submission[SubmissionColumns.CODE.value].split(os.linesep)
 
 
 def merge_lines_to_code(code_lines: List[str]) -> str:
     """ Merge lines to code. """
 
-    return '\n'.join(code_lines)
+    return os.linesep.join(code_lines)
 
 
 @dataclass
