@@ -1,3 +1,4 @@
+import os
 from typing import Callable, Dict, List
 
 import pandas as pd
@@ -60,4 +61,7 @@ def write_df(df: pd.DataFrame, path: str):
 def append_df(df: pd.DataFrame, path: str):
     """ Append data to dataframe by given .csv file. """
 
-    df.to_csv(path, index=False, mode='a', header=False)
+    if not os.path.exists(path):
+        write_df(df, path)
+    else:
+        df.to_csv(path, index=False, mode='a', header=False)

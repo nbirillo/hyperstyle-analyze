@@ -41,6 +41,7 @@ abstractmethod
 aggfunc
 annot
 anova
+applymap
 arange
 astype
 atclause
@@ -137,6 +138,7 @@ idx
 ignorecase
 iloc
 inerop
+infos
 initializer
 inplace
 instantiation

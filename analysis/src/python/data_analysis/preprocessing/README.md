@@ -9,10 +9,10 @@ To run data preprocessing, run following python scripts in stated order:
 
     **Required arguments:**
     
-    | Argument | Description |
-    |----------|-------------|
-    |**submissions_path**| Path to .csv file with `submissions`. |
-    |**preprocessed_submissions_path**| Path to .csv output file with submissions with issues. If not provided `submissions_path` will be used. |
+    | Argument | Description                                                                                                            |
+    |------------------------------------------------------------------------------------------------------------------------|-------------|
+    |**submissions_path**| Path to .csv file with `submissions`.                                                                                  |
+    |**preprocessed_submissions_path**| Path to .csv output file with `preprocessed submissions` with issues. If not provided `submissions_path` will be used. |
 
     **Optional arguments:**
     
