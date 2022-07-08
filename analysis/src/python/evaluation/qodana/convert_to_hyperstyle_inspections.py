@@ -12,8 +12,8 @@ from analysis.src.python.evaluation.model.column_name import ColumnName
 from analysis.src.python.utils.df_utils import drop_duplicates, filter_df_by_iterable_value, read_df, write_df
 from analysis.src.python.utils.file_utils import get_parent_folder
 from analysis.src.python.utils.extension_utils import AnalysisExtension
-from analysis.src.python.evaluation.qodana.util.issue_types import QODANA_CLASS_NAME_TO_ISSUE_TYPE
-from analysis.src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue
+from analysis.src.python.evaluation.qodana.utils.issue_types import QODANA_CLASS_NAME_TO_ISSUE_TYPE
+from analysis.src.python.evaluation.qodana.utils.models import QodanaColumnName, QodanaIssue
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:

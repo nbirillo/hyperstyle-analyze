@@ -1,8 +1,8 @@
 import argparse
 from pathlib import Path
 
-from analysis.src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue
-from analysis.src.python.evaluation.qodana.util.util import (
+from analysis.src.python.evaluation.qodana.utils.models import QodanaColumnName, QodanaIssue
+from analysis.src.python.evaluation.qodana.utils.util import (
     configure_model_converter_arguments, get_inspections_dict, replace_inspections_on_its_ids,
 )
 from analysis.src.python.utils.df_utils import read_df, write_df

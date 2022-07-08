@@ -20,8 +20,8 @@ from analysis.src.python.utils.parallel_utils import run_and_wait
 from analysis.src.python.utils.file_utils import copy_directory, copy_file, create_file, \
     get_name_from_path, get_parent_folder, remove_directory
 from analysis.src.python.utils.extension_utils import AnalysisExtension, extension_file_condition
-from analysis.src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue, QodanaJsonField
-from analysis.src.python.evaluation.qodana.util.util import to_json
+from analysis.src.python.evaluation.qodana.utils.models import QodanaColumnName, QodanaIssue, QodanaJsonField
+from analysis.src.python.evaluation.qodana.utils.util import to_json
 from hyperstyle.src.python.review.application_config import LanguageVersion
 from hyperstyle.src.python.review.common.file_system import Extension, get_all_file_system_items, get_content_from_file
 from hyperstyle.src.python.review.run_tool import positive_int

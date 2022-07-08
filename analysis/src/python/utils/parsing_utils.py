@@ -6,7 +6,7 @@ from typing import Dict, List
 from hyperstyle.src.python.review.inspectors.issue import BaseIssue
 
 from analysis.src.python.evaluation.issues_statistics.common.raw_issue_encoder_decoder import RawIssueDecoder
-from analysis.src.python.evaluation.qodana.util.models import QodanaIssue
+from analysis.src.python.evaluation.qodana.utils.models import QodanaIssue
 
 
 def str_to_dict(s: str) -> Dict:

@@ -8,8 +8,8 @@ from hyperstyle.src.python.review.common.file_system import get_all_file_system_
 from analysis.src.python.evaluation.utils.args_util import EvaluationRunToolArgument, parse_set_arg
 from analysis.src.python.utils.df_utils import read_df, write_df
 from analysis.src.python.utils.extension_utils import AnalysisExtension, extension_file_condition
-from analysis.src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue
-from analysis.src.python.evaluation.qodana.util.util import to_json
+from analysis.src.python.evaluation.qodana.utils.models import QodanaColumnName, QodanaIssue
+from analysis.src.python.evaluation.qodana.utils.util import to_json
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:
