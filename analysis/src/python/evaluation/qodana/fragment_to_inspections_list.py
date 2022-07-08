@@ -1,13 +1,13 @@
 import argparse
 from pathlib import Path
 
-from analysis.src.python.evaluation.common.csv_util import write_dataframe_to_csv
-from analysis.src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path
-from analysis.src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue
-from analysis.src.python.evaluation.qodana.util.util import (
+from analysis.src.python.evaluation.qodana.utils.models import QodanaColumnName, QodanaIssue
+from analysis.src.python.evaluation.qodana.utils.util import (
     configure_model_converter_arguments, get_inspections_dict, replace_inspections_on_its_ids,
 )
-from analysis.src.python.evaluation.common.file_util import AnalysisExtension, get_parent_folder
+from analysis.src.python.utils.df_utils import read_df, write_df
+from analysis.src.python.utils.file_utils import get_parent_folder
+from analysis.src.python.utils.extension_utils import AnalysisExtension
 
 INSPECTIONS = QodanaColumnName.INSPECTIONS.value
 
@@ -18,7 +18,7 @@ def main() -> None:
     args = parser.parse_args()
 
     solutions_file_path = args.solutions_file_path
-    solutions_df = get_solutions_df_by_file_path(solutions_file_path)
+    solutions_df = read_df(solutions_file_path)
     inspections_dict = get_inspections_dict(args.inspections_path)
 
     solutions_df[INSPECTIONS] = solutions_df.apply(
@@ -26,7 +26,7 @@ def main() -> None:
                                                    inspections_dict, args.remove_duplicates), axis=1)
 
     output_path = get_parent_folder(Path(solutions_file_path))
-    write_dataframe_to_csv(output_path / f'numbered_ids{AnalysisExtension.CSV.value}', solutions_df)
+    write_df(solutions_df, output_path / f'numbered_ids{AnalysisExtension.CSV.value}')
 
 
 if __name__ == '__main__':

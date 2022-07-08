@@ -8,12 +8,12 @@ import torch
 import transformers
 from torch.utils.data import DataLoader
 from transformers import RobertaForSequenceClassification
-from analysis.src.python.evaluation.common.csv_util import write_dataframe_to_csv
 from analysis.src.python.evaluation.qodana.imitation_model.common.evaluation_config import configure_arguments
 from analysis.src.python.evaluation.qodana.imitation_model.common.metric import Measurer
 from analysis.src.python.evaluation.qodana.imitation_model.common.util import DatasetColumnArgument, MeasurerArgument
 from analysis.src.python.evaluation.qodana.imitation_model.dataset.dataset import QodanaDataset
-from evaluation.common.util import AnalysisExtension
+from analysis.src.python.utils.df_utils import write_df
+from analysis.src.python.utils.extension_utils import AnalysisExtension
 
 
 def get_predictions(eval_dataloader: torch.utils.data.DataLoader,
@@ -37,7 +37,7 @@ def save_f1_scores(output_directory_path: Path, f1_score_by_class_dict: dict) ->
     f1_score_report_path = Path(output_directory_path).parent / f1_score_report_file_name
     f1_score_report_df = pd.DataFrame({MeasurerArgument.F1_SCORE.value: f1_score_by_class_dict.values(),
                                        'inspection_id': range(len(f1_score_by_class_dict.values()))})
-    write_dataframe_to_csv(f1_score_report_path, f1_score_report_df)
+    write_df(f1_score_report_df, f1_score_report_path)
 
 
 def main():
@@ -66,7 +66,7 @@ def main():
           f"{metric.get_f1_score(torch.tensor(predictions.to_numpy()), true_labels)}",
           f"\n{MeasurerArgument.F1_SCORES_BY_CLS.value}: {f1_score_by_class_dict}")
 
-    write_dataframe_to_csv(args.output_directory_path, predictions)
+    write_df(predictions, args.output_directory_path)
     if args.save_f1_score:
         save_f1_scores(args.output_directory_path, f1_score_by_class_dict)
 

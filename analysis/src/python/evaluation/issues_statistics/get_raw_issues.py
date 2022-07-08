@@ -2,24 +2,13 @@ import argparse
 import json
 import logging
 import os
-import sys
 from pathlib import Path
 from typing import List, Optional
 
-sys.path.append('')
-
 import numpy as np
 import pandas as pd
-from pandarallel import pandarallel
 from hyperstyle.src.python.common.tool_arguments import RunToolArgument
-from analysis.src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path, write_df_to_file
-from analysis.src.python.evaluation.common.csv_util import ColumnName
-from analysis.src.python.evaluation.common.file_util import AnalysisExtension, create_file, get_name_from_path, \
-    get_parent_folder
-from analysis.src.python.evaluation.issues_statistics.common.raw_issue_encoder_decoder import RawIssueEncoder
-from analysis.src.python.evaluation.common.args_util import EvaluationRunToolArgument
 from hyperstyle.src.python.review.application_config import LanguageVersion
-from hyperstyle.src.python.review.common.file_system import Extension
 from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.inspectors.issue import (
     BaseIssue,
@@ -28,6 +17,14 @@ from hyperstyle.src.python.review.inspectors.issue import (
 )
 from hyperstyle.src.python.review.reviewers.common import LANGUAGE_TO_INSPECTORS
 from hyperstyle.src.python.review.reviewers.utils.issues_filter import filter_duplicate_issues
+from pandarallel import pandarallel
+
+from analysis.src.python.evaluation.issues_statistics.common.raw_issue_encoder_decoder import RawIssueEncoder
+from analysis.src.python.evaluation.model.column_name import ColumnName
+from analysis.src.python.evaluation.utils.args_util import EvaluationRunToolArgument
+from analysis.src.python.utils.df_utils import read_df, write_df
+from analysis.src.python.utils.extension_utils import AnalysisExtension
+from analysis.src.python.utils.file_utils import create_file, get_name_from_path, get_parent_folder
 
 LANG = ColumnName.LANG.value
 CODE = ColumnName.CODE.value
@@ -240,7 +237,7 @@ def main() -> None:
         filename=args.log_output, filemode='w', level=logging.INFO, format='%(asctime)s | %(levelname)s | %(message)s',
     )
 
-    solutions = get_solutions_df_by_file_path(args.solutions_file_path)
+    solutions = read_df(args.solutions_file_path)
 
     logger.info('Dataset inspection started.')
 
@@ -256,11 +253,10 @@ def main() -> None:
     logger.info('Dataset inspection finished.')
 
     output_path = _get_output_path(args.solutions_file_path, args.output)
-    output_extension = Extension.get_extension_from_file(str(output_path))
 
     logger.info(f'Saving the dataframe to a file: {output_path}.')
 
-    write_df_to_file(solutions_with_raw_issues, output_path, output_extension)
+    write_df(solutions_with_raw_issues, output_path)
 
     logger.info('Saving complete.')
 

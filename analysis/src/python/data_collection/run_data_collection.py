@@ -3,12 +3,11 @@ import logging
 import sys
 from typing import List
 
-import pandas as pd
-
 from analysis.src.python.data_collection.api.platform_objects import Platform
 from analysis.src.python.data_collection.hyperskill.hyperskill_client import HyperskillClient
 from analysis.src.python.data_collection.stepik.stepik_client import StepikClient
 from analysis.src.python.data_collection.utils.csv_utils import save_objects_to_csv
+from analysis.src.python.utils.df_utils import read_df
 
 platform_client = {
     Platform.HYPERSKILL: HyperskillClient,
@@ -38,7 +37,7 @@ def get_object_ids_from_file(csv_file_path: str, column_name: str) -> List[int]:
     Get ids from scv file column. Method is useful when extra information is required for some subset of objects,
     which are already used in existing dataset (e.x. dataset of solutions).
     """
-    return list(pd.read_csv(csv_file_path)[column_name].unique().values)
+    return list(read_df(csv_file_path)[column_name].unique().values)
 
 
 logging.basicConfig(level=logging.DEBUG)

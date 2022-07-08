@@ -5,7 +5,7 @@ from hyperstyle.src.python.review.common.language import Language
 from hyperstyle.src.python.review.inspectors.checkstyle.checkstyle import CheckstyleInspector
 from hyperstyle.src.python.review.inspectors.checkstyle.issue_types import CHECK_CLASS_NAME_TO_ISSUE_TYPE
 from hyperstyle.src.python.review.inspectors.detekt.detekt import DetektInspector
-from hyperstyle.src.python.review.inspectors.detekt.issue_types import DETECT_CLASS_NAME_TO_ISSUE_TYPE
+from hyperstyle.src.python.review.inspectors.detekt.issue_types import DETEKT_CLASS_NAME_TO_ISSUE_TYPE
 from hyperstyle.src.python.review.inspectors.eslint.eslint import ESLintInspector
 from hyperstyle.src.python.review.inspectors.eslint.issue_types import ESLINT_CLASS_NAME_TO_ISSUE_TYPE
 from hyperstyle.src.python.review.inspectors.flake8.flake8 import Flake8Inspector
@@ -85,7 +85,7 @@ def collect_stat_by_language(language: Language) -> IssuesStat:
         return __collect_language_stat(*java_inspection_to_matcher)
     elif language == Language.KOTLIN:
         kotlin_inspection_to_matcher = [
-            (set(DETECT_CLASS_NAME_TO_ISSUE_TYPE.keys()), DetektInspector.choose_issue_type),
+            (set(DETEKT_CLASS_NAME_TO_ISSUE_TYPE.keys()), DetektInspector.choose_issue_type),
         ]
         return __collect_language_stat(*kotlin_inspection_to_matcher)
     elif language == Language.JS:

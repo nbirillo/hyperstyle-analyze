@@ -9,11 +9,11 @@ from typing import Dict, List, Optional
 import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-from analysis.src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path
 from analysis.src.python.evaluation.plots.common.utils import get_supported_extensions, save_plot
 from analysis.src.python.evaluation.plots.plotters.raw_issues_statistics_plotters import prepare_stats
-from analysis.src.python.evaluation.common.file_util import AnalysisExtension
-from analysis.src.python.evaluation.common.yaml_util import parse_yaml
+from analysis.src.python.utils.df_utils import read_df
+from analysis.src.python.utils.extension_utils import AnalysisExtension
+from analysis.src.python.utils.yaml_utils import parse_yaml
 
 logger = logging.getLogger(__name__)
 COLORWAY = ['rgb(47,22,84)', 'rgb(99,47,177)', 'rgb(153,110,216)']
@@ -187,7 +187,7 @@ def main():
         args = parser.parse_args()
 
         config = parse_yaml(args.config_path)
-        stats = get_solutions_df_by_file_path(args.stats_path)
+        stats = read_df(args.stats_path)
 
         plot_and_save(stats, config, args.save_dir, AnalysisExtension(args.file_extension))
 

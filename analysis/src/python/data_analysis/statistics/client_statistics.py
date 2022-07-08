@@ -6,8 +6,8 @@ import sys
 import pandas as pd
 
 from analysis.src.python.data_analysis.model.column_name import SubmissionColumns
-from analysis.src.python.data_analysis.utils.logging_utils import configure_logger
-from analysis.src.python.data_analysis.utils.statistics_utils import get_statistics_by_group
+from analysis.src.python.utils.logging_utils import configure_logger
+from analysis.src.python.data_analysis.utils.chunk_stats_utils import get_statistics_by_chunk
 
 
 def calculate_submissions_series_client_series(series: pd.DataFrame) -> pd.Series:
@@ -34,7 +34,7 @@ def get_submissions_client_series(submissions_path: str,
 
     logging.info(f'Groups range: [{min_group}, {max_group}]')
 
-    get_statistics_by_group(df_submissions, client_series_statistics_path, chunk_size,
+    get_statistics_by_chunk(df_submissions, client_series_statistics_path, chunk_size,
                             calculate_submissions_series_client_series)
 
 

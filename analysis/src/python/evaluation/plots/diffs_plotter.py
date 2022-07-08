@@ -1,13 +1,11 @@
 import argparse
-import sys
 from enum import Enum, unique
 from pathlib import Path
 from typing import Any, Callable, Dict, Union
 
-sys.path.append('../../../..')
-
 import plotly.graph_objects as go
 from hyperstyle.src.python.common.tool_arguments import RunToolArgument
+
 from analysis.src.python.evaluation.inspectors.common.statistics import (
     GeneralInspectorsStatistics,
     IssuesStatistics,
@@ -22,8 +20,9 @@ from analysis.src.python.evaluation.plots.plotters.diffs_plotters import (
     get_penalty_influence_distribution,
     get_unique_issues_by_category,
 )
-from analysis.src.python.evaluation.common.file_util import AnalysisExtension, deserialize_data_from_file
-from analysis.src.python.evaluation.common.yaml_util import parse_yaml
+from analysis.src.python.utils.extension_utils import AnalysisExtension
+from analysis.src.python.utils.serialization_utils import deserialize_data_from_file
+from analysis.src.python.utils.yaml_utils import parse_yaml
 
 
 @unique
@@ -66,8 +65,8 @@ class PlotTypes(Enum):
         return type_to_function[self]
 
     def extract_statistics(
-        self,
-        statistics: GeneralInspectorsStatistics,
+            self,
+            statistics: GeneralInspectorsStatistics,
     ) -> Union[IssuesStatistics, PenaltyInfluenceStatistics]:
         type_to_statistics = {
             PlotTypes.UNIQUE_ISSUES_BY_CATEGORY: statistics.new_issues_stat,
@@ -141,10 +140,10 @@ def get_plot_params(config: Dict, plot_type: PlotTypes) -> Dict[str, Any]:
 
 
 def plot_and_save(
-    config: Dict,
-    general_statistics: GeneralInspectorsStatistics,
-    save_dir: Path,
-    extension: AnalysisExtension,
+        config: Dict,
+        general_statistics: GeneralInspectorsStatistics,
+        save_dir: Path,
+        extension: AnalysisExtension,
 ) -> None:
     for plot_type in PlotTypes:
         if plot_type.value in config:

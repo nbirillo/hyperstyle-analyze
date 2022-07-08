@@ -4,8 +4,8 @@ import sys
 from typing import Optional, Tuple
 
 from analysis.src.python.data_analysis.model.column_name import Level, UserColumns
-from analysis.src.python.data_analysis.utils.df_utils import read_df, write_df
-from analysis.src.python.data_analysis.utils.logging_utils import configure_logger
+from analysis.src.python.utils.df_utils import read_df, write_df
+from analysis.src.python.utils.logging_utils import configure_logger
 
 
 def get_user_level_tag(passed_problems: int, level_borders: Tuple[int, int]) -> str:

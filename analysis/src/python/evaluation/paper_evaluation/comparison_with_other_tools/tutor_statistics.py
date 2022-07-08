@@ -4,10 +4,10 @@ from dataclasses import dataclass
 from typing import Any, Dict, List
 
 import pandas as pd
-from analysis.src.python.evaluation.common.pandas_util import filter_df_by_single_value
-from analysis.src.python.evaluation.paper_evaluation.comparison_with_other_tools.util import (
+from analysis.src.python.evaluation.paper_evaluation.comparison_with_other_tools.column_name import (
     ComparisonColumnName, ERROR_CONST, TutorTask,
 )
+from analysis.src.python.utils.df_utils import filter_df_by_single_value
 
 
 def sort_freq_dict(freq_dict: Dict[Any, int]) -> Dict[Any, int]:

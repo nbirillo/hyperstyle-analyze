@@ -7,14 +7,13 @@ import pandas as pd
 from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
 from hyperstyle.src.python.review.inspectors.issue import BaseIssue, IssueType
 from hyperstyle.src.python.review.reviewers.utils.print_review import convert_issue_to_json
-from analysis.src.python.evaluation.common.pandas_util import (
-    drop_duplicates, filter_df_by_iterable_value, get_solutions_df_by_file_path, write_df_to_file,
-)
-from analysis.src.python.evaluation.common.args_util import EvaluationRunToolArgument, parse_set_arg
-from analysis.src.python.evaluation.common.csv_util import ColumnName
-from analysis.src.python.evaluation.common.file_util import AnalysisExtension, get_parent_folder
-from analysis.src.python.evaluation.qodana.util.issue_types import QODANA_CLASS_NAME_TO_ISSUE_TYPE
-from analysis.src.python.evaluation.qodana.util.models import QodanaColumnName, QodanaIssue
+from analysis.src.python.evaluation.utils.args_util import EvaluationRunToolArgument, parse_set_arg
+from analysis.src.python.evaluation.model.column_name import ColumnName
+from analysis.src.python.utils.df_utils import drop_duplicates, filter_df_by_iterable_value, read_df, write_df
+from analysis.src.python.utils.file_utils import get_parent_folder
+from analysis.src.python.utils.extension_utils import AnalysisExtension
+from analysis.src.python.evaluation.qodana.utils.issue_types import QODANA_CLASS_NAME_TO_ISSUE_TYPE
+from analysis.src.python.evaluation.qodana.utils.models import QodanaColumnName, QodanaIssue
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:
@@ -38,7 +37,7 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
 # Drop duplicates in the CODE column and delete rows that have ids from value_to_filter
 # The new dataframe will be sorted by the ID column
 def __preprocess_df(df: pd.DataFrame, ids_to_filter: Iterable) -> pd.DataFrame:
-    df = drop_duplicates(df)
+    df = drop_duplicates(df, ColumnName.CODE.value)
     df = filter_df_by_iterable_value(df, ColumnName.ID.value, ids_to_filter)
     return df.sort_values(ColumnName.ID.value).set_index(ColumnName.ID.value, drop=False)
 
@@ -90,7 +89,7 @@ def __prepare_qodana_df(qodana_df: pd.DataFrame, hyperstyle_df: pd.DataFrame,
 
 def __write_updated_df(old_df_path: Path, df: pd.DataFrame, name_prefix: str) -> None:
     output_path = get_parent_folder(Path(old_df_path))
-    write_df_to_file(df, output_path / f'{name_prefix}_updated{AnalysisExtension.CSV.value}', AnalysisExtension.CSV)
+    write_df(df, output_path / f'{name_prefix}_updated{AnalysisExtension.CSV.value}')
 
 
 def __reassign_ids(df: pd.DataFrame) -> pd.DataFrame:
@@ -107,10 +106,10 @@ def main() -> None:
     issues_to_keep = parse_set_arg(args.issues_to_keep)
 
     qodana_solutions_file_path = args.solutions_file_path_qodana
-    qodana_solutions_df = __reassign_ids(get_solutions_df_by_file_path(qodana_solutions_file_path))
+    qodana_solutions_df = __reassign_ids(read_df(qodana_solutions_file_path))
 
     hyperstyle_solutions_file_path = args.solutions_file_path_hyperstyle
-    hyperstyle_solutions_df = __reassign_ids(get_solutions_df_by_file_path(hyperstyle_solutions_file_path))
+    hyperstyle_solutions_df = __reassign_ids(read_df(hyperstyle_solutions_file_path))
     hyperstyle_solutions_df = __preprocess_df(hyperstyle_solutions_df, qodana_solutions_df[ColumnName.ID.value])
 
     qodana_solutions_df = __prepare_qodana_df(qodana_solutions_df, hyperstyle_solutions_df, issues_to_keep)

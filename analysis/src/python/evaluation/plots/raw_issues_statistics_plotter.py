@@ -1,22 +1,20 @@
 import argparse
 import logging
-import sys
 from enum import Enum, unique
 from pathlib import Path
 from typing import Dict, List, Optional
 
-sys.path.append('../../../..')
-
 import plotly.graph_objects as go
-from analysis.src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path
+
 from analysis.src.python.evaluation.plots.common import plotly_consts
 from analysis.src.python.evaluation.plots.common.utils import (
     get_supported_extensions,
     save_plot,
 )
 from analysis.src.python.evaluation.plots.plotters.raw_issues_statistics_plotters import PlotConfig, PlotTypes
-from analysis.src.python.evaluation.common.file_util import AnalysisExtension
-from analysis.src.python.evaluation.common.yaml_util import parse_yaml
+from analysis.src.python.utils.df_utils import read_df
+from analysis.src.python.utils.extension_utils import AnalysisExtension
+from analysis.src.python.utils.yaml_utils import parse_yaml
 
 
 @unique
@@ -74,10 +72,10 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
 
 
 def _get_plot_config(
-    column_name: str,
-    plot_type: str,
-    plot_config: Optional[Dict],
-    common: Optional[Dict],
+        column_name: str,
+        plot_type: str,
+        plot_config: Optional[Dict],
+        common: Optional[Dict],
 ) -> PlotConfig:
     params = {'column': column_name, 'type': PlotTypes(plot_type.lower())}
 
@@ -124,7 +122,7 @@ def _save_plots(plots: Dict[str, go.Figure], save_dir: Path,
 
 def plot_and_save(config: Dict, save_dir: Path, extension: AnalysisExtension, group_stats: bool) -> None:
     stats_by_lang = {
-        lang: get_solutions_df_by_file_path(Path(lang_stats)) for lang, lang_stats in config.pop(STATS).items()
+        lang: read_df(Path(lang_stats)) for lang, lang_stats in config.pop(STATS).items()
     }
 
     for column_name, column_config in config.items():

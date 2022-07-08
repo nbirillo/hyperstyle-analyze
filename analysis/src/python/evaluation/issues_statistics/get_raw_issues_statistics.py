@@ -1,17 +1,12 @@
 import argparse
 import json
 import logging
-import sys
 from collections import Counter
 from json import JSONDecodeError
 from pathlib import Path
 from typing import Dict, List, Optional
 
-sys.path.append('')
-sys.path.append('../../..')
-
 import pandas as pd
-from pandarallel import pandarallel
 from hyperstyle.src.python.review.application_config import LanguageVersion
 from hyperstyle.src.python.review.common.file_system import Extension, get_total_code_lines_from_code
 from hyperstyle.src.python.review.common.language import Language
@@ -19,11 +14,13 @@ from hyperstyle.src.python.review.inspectors.issue import BaseIssue, ISSUE_TYPE_
 from hyperstyle.src.python.review.quality.rules.code_style_scoring import CodeStyleRule
 from hyperstyle.src.python.review.quality.rules.line_len_scoring import LineLengthRule
 from hyperstyle.src.python.review.reviewers.utils.code_statistics import get_code_style_lines
-from analysis.src.python.evaluation.common.pandas_util import get_solutions_df_by_file_path, write_df_to_file
-from analysis.src.python.evaluation.common.csv_util import ColumnName
-from analysis.src.python.evaluation.common.file_util import get_parent_folder
+from pandarallel import pandarallel
+
 from analysis.src.python.evaluation.issues_statistics.common.raw_issue_encoder_decoder import RawIssueDecoder
 from analysis.src.python.evaluation.issues_statistics.get_raw_issues import RAW_ISSUES
+from analysis.src.python.evaluation.model.column_name import ColumnName
+from analysis.src.python.utils.df_utils import read_df, write_df
+from analysis.src.python.utils.file_utils import get_parent_folder
 
 ID = ColumnName.ID.value
 LANG = ColumnName.LANG.value
@@ -200,7 +197,7 @@ def _save_stats(stats_by_lang: Dict[str, pd.DataFrame], solutions_file_path: Pat
     for lang, stats in stats_by_lang.items():
         lang_folder = output_folder / lang
         lang_folder.mkdir(parents=True, exist_ok=True)
-        write_df_to_file(stats, lang_folder / f'{OUTPUT_DF_NAME}{output_extension.value}', output_extension)
+        write_df(stats, lang_folder / f'{OUTPUT_DF_NAME}{output_extension.value}')
 
     logger.info('Saving statistics is complete.')
 
@@ -217,7 +214,7 @@ if __name__ == "__main__":
         filename=args.log_output, filemode="w", level=logging.INFO, format='%(asctime)s | %(levelname)s | %(message)s',
     )
 
-    solutions_with_raw_issues = get_solutions_df_by_file_path(args.solutions_with_raw_issues)
+    solutions_with_raw_issues = read_df(args.solutions_with_raw_issues)
 
     logger.info("Dataset inspection started.")
 

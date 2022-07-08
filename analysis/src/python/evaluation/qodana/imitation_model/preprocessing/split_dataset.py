@@ -5,8 +5,9 @@ from pathlib import Path
 import pandas as pd
 from hyperstyle.src.python.review.common.file_system import Extension
 from sklearn.model_selection import train_test_split
-from analysis.src.python.evaluation.common.csv_util import ColumnName, write_dataframe_to_csv
-from analysis.src.python.evaluation.common.file_util import AnalysisExtension
+from analysis.src.python.evaluation.model.column_name import ColumnName
+from analysis.src.python.utils.df_utils import read_df, write_df
+from analysis.src.python.utils.extension_utils import AnalysisExtension
 from analysis.src.python.evaluation.qodana.imitation_model.common.util import SeedArgument
 
 
@@ -44,7 +45,7 @@ def configure_parser() -> argparse.ArgumentParser:
 
 
 def split_dataset(dataset_path: str, output_directory_path: str, val_size: float, test_size: float, shuffle: bool):
-    df = pd.read_csv(dataset_path)
+    df = read_df(dataset_path)
     target = df.iloc[:, 2:]
     code_bank = df[ColumnName.CODE.value]
 
@@ -67,8 +68,7 @@ def split_dataset(dataset_path: str, output_directory_path: str, val_size: float
                     ("test", code_test, target_test)]:
         df = pd.concat([holdout[1], holdout[2]], axis=1)
         os.makedirs(os.path.join(output_directory_path, holdout[0]), exist_ok=True)
-        write_dataframe_to_csv(Path(output_directory_path) / holdout[0] / f'{holdout[0]}{AnalysisExtension.CSV.value}',
-                               df)
+        write_df(df, Path(output_directory_path) / holdout[0] / f'{holdout[0]}{AnalysisExtension.CSV.value}')
 
 
 if __name__ == "__main__":

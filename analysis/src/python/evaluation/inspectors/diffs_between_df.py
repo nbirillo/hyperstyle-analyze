@@ -3,14 +3,14 @@ from pathlib import Path
 
 import pandas as pd
 from hyperstyle.src.python.review.quality.model import QualityType
-from analysis.src.python.evaluation.common.pandas_util import (
-    get_inconsistent_positions, get_issues_by_row, get_solutions_df, get_solutions_df_by_file_path,
-)
-from analysis.src.python.evaluation.common.args_util import EvaluationRunToolArgument
-from analysis.src.python.evaluation.common.csv_util import ColumnName
-from analysis.src.python.evaluation.common.file_util import AnalysisExtension, get_parent_folder, \
-    get_restricted_extension, \
-    serialize_data_and_write_to_file
+
+from analysis.src.python.evaluation.model.column_name import ColumnName
+from analysis.src.python.evaluation.utils.args_util import EvaluationRunToolArgument
+from analysis.src.python.evaluation.utils.pandas_util import get_inconsistent_positions, get_issues_from_json_by_row
+from analysis.src.python.utils.df_utils import read_df
+from analysis.src.python.utils.extension_utils import AnalysisExtension
+from analysis.src.python.utils.file_utils import get_parent_folder
+from analysis.src.python.utils.serialization_utils import serialize_data_and_write_to_file
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:
@@ -72,8 +72,8 @@ def find_diffs(old_df: pd.DataFrame, new_df: pd.DataFrame) -> dict:
         else:
             if new_quality < old_quality:
                 diffs[ColumnName.DECREASED_GRADE.value].append(fragment_id)
-            old_issues = get_issues_by_row(old_df, row)
-            new_issues = get_issues_by_row(new_df, row)
+            old_issues = get_issues_from_json_by_row(old_df, row)
+            new_issues = get_issues_from_json_by_row(new_df, row)
             # Find difference between issues
             if len(old_issues) > len(new_issues):
                 raise ValueError(f'New dataframe contains less issues than old for fragment {id}')
@@ -94,11 +94,10 @@ def main() -> None:
     args = parser.parse_args()
 
     old_solutions_file_path = args.solutions_file_path_old
-    output_ext = get_restricted_extension(old_solutions_file_path, [AnalysisExtension.XLSX, AnalysisExtension.CSV])
-    old_solutions_df = get_solutions_df(output_ext, old_solutions_file_path)
+    old_solutions_df = read_df(old_solutions_file_path)
 
     new_solutions_file_path = args.solutions_file_path_new
-    new_solutions_df = get_solutions_df_by_file_path(new_solutions_file_path)
+    new_solutions_df = read_df(new_solutions_file_path)
 
     diffs = find_diffs(old_solutions_df, new_solutions_df)
     output_path = get_parent_folder(Path(old_solutions_file_path)) / f'diffs{AnalysisExtension.PICKLE.value}'

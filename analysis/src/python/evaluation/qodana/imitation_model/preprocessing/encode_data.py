@@ -1,6 +1,5 @@
 import argparse
 import logging
-import sys
 from itertools import chain
 from pathlib import Path
 from typing import List
@@ -8,13 +7,13 @@ from typing import List
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MultiLabelBinarizer
-from analysis.src.python.evaluation.common.csv_util import ColumnName, write_dataframe_to_csv
-from analysis.src.python.evaluation.common.file_util import AnalysisExtension
+
+from analysis.src.python.evaluation.model.column_name import ColumnName
 from analysis.src.python.evaluation.qodana.imitation_model.common.util import CustomTokens, DatasetColumnArgument
+from analysis.src.python.utils.df_utils import read_df, write_df
+from analysis.src.python.utils.extension_utils import AnalysisExtension
 
 logger = logging.getLogger(__name__)
-sys.path.append('')
-sys.path.append('../../../../..')
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:
@@ -82,6 +81,7 @@ class Context:
         If there are no lines before or / and after a piece of code,
         special tokens are added.
     """
+
     def __init__(self, df: pd.DataFrame, n_lines: int):
         self.indices = df[DatasetColumnArgument.ID.value].to_numpy()
         self.lines = df[ColumnName.CODE.value]
@@ -143,7 +143,7 @@ def main() -> None:
         output_file_path = Path(dataset_path).parent / f'encoded_dataset{AnalysisExtension.CSV.value}'
 
     # nan -> \n (empty rows)
-    df = pd.read_csv(dataset_path)
+    df = read_df(dataset_path)
     df[ColumnName.CODE.value].fillna('\n', inplace=True)
 
     if args.one_hot_encoding:
@@ -153,7 +153,7 @@ def main() -> None:
     if args.add_context:
         df = Context(df, args.n_lines_to_add).add_context_to_lines()
 
-    write_dataframe_to_csv(output_file_path, df)
+    write_df(df, output_file_path)
 
 
 if __name__ == '__main__':

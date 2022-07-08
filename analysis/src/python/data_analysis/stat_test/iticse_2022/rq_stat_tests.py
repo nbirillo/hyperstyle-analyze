@@ -5,8 +5,7 @@ import pandas as pd
 from pingouin import ttest
 from statsmodels.stats import multitest
 
-from data_analysis.utils.df_utils import read_df
-from evaluation.common.pandas_util import filter_df_by_single_value
+from analysis.src.python.utils.df_utils import filter_df_by_single_value, read_df
 
 SEPARATOR = '######################################'
 P_VALUE_COLUMN = 'p-val'

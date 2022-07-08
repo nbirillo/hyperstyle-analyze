@@ -2,7 +2,7 @@ from argparse import Namespace
 
 from hyperstyle.src.python.review.reviewers.perform_review import OutputFormat
 from analysis import HYPERSTYLE_RUNNER_PATH
-from analysis.src.python.evaluation.common.args_util import EvaluationArgument
+from analysis.src.python.evaluation.utils.args_util import EvaluationArgument
 
 
 def get_testing_arguments(to_add_traceback=None, to_add_tool_path=None, to_add_history=None) -> Namespace:
