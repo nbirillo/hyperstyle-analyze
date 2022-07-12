@@ -85,3 +85,11 @@ def clean_file(path: str):
     if os.path.isfile(path):
         with open(path, 'r+') as f:
             f.truncate(0)
+
+
+def get_output_path(input_path: Union[str, Path], output_suffix: str) -> Path:
+    parent_dir = get_parent_folder(input_path)
+    extension = AnalysisExtension.get_extension_from_file(input_path)
+    input_filename = get_name_from_path(input_path, with_extension=False)
+
+    return parent_dir / f'{input_filename}{output_suffix}{extension})'
