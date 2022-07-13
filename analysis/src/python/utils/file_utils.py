@@ -1,6 +1,7 @@
 import os
 import re
 import shutil
+import tempfile
 from pathlib import Path
 from typing import Union
 
@@ -44,7 +45,7 @@ def copy_file(source: Union[str, Path], destination: Union[str, Path]):
     shutil.copy(source, destination)
 
 
-def create_directory(path: str):
+def create_directory(path: Union[str, Path]):
     if not os.path.exists(path):
         os.makedirs(path)
 
@@ -93,3 +94,7 @@ def get_output_path(input_path: Union[str, Path], output_suffix: str) -> Path:
     input_filename = get_name_from_path(input_path, with_extension=False)
 
     return parent_dir / f'{input_filename}{output_suffix}{extension})'
+
+
+def get_tmp_directory() -> Path:
+    return Path(tempfile.gettempdir())

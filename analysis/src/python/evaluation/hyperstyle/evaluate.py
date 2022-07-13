@@ -28,10 +28,10 @@ def inspect_solution(df_solution: pd.DataFrame,
     language_version = get_language_version(language)
 
     solution_dir_path = config.tmp_directory / f'solution_{solution_id}'
-    solution_file_path = solution_dir_path / f'code{language_version.extension_by_language()}'
-    solution_file = next(create_file(solution_file_path, code))
+    solution_file_path = solution_dir_path / f'code{language_version.extension_by_language().value}'
+    next(create_file(solution_file_path, code))
 
-    command = config.build_command(solution_file, language_version)
+    command = config.build_command(solution_dir_path, language_version)
     results = run_in_subprocess(command)
     remove_directory(solution_dir_path)
 
@@ -39,7 +39,7 @@ def inspect_solution(df_solution: pd.DataFrame,
 
 
 def run_evaluation(df_solutions: pd.DataFrame, config: HyperstyleEvaluationConfig):
-    df_solutions[HYPERSTYLE_TRACEBACK] = df_solutions.apply(inspect_solution, config=config)
+    df_solutions[HYPERSTYLE_TRACEBACK] = df_solutions.apply(inspect_solution, axis=1, config=config)
     return df_solutions
 
 
