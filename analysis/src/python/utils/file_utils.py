@@ -93,7 +93,7 @@ def get_output_path(input_path: Union[str, Path], output_suffix: str) -> Path:
     extension = AnalysisExtension.get_extension_from_file(input_path)
     input_filename = get_name_from_path(input_path, with_extension=False)
 
-    return parent_dir / f'{input_filename}{output_suffix}{extension})'
+    return parent_dir / f'{input_filename}{output_suffix}{extension.value}'
 
 
 def get_tmp_directory() -> Path:
