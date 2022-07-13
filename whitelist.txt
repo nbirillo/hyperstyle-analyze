@@ -1,4 +1,4 @@
-Arithm
+fArithm
 D3
 DARK2
 DARK24
@@ -125,6 +125,7 @@ gamification
 getitem
 getline
 getroot
+gettempdir
 getuid
 gradle
 groupby

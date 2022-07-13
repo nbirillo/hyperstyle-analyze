@@ -166,3 +166,21 @@ for word in words:
   });
 }
 "
+29610898,java11,"import java.util.Scanner;
+
+class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int cups = scanner.nextInt();
+        boolean weekends = scanner.nextBoolean();
+
+        if (weekends) {
+            System.out.println(cups >= 15 && cups <= 25); // BooleanExpressionComplexityCheck line=11 col=43
+        } else {
+            System.out.println(cups >= 10 && cups <= 20); // BooleanExpressionComplexityCheck line=13 col=43
+        }
+
+    }
+}
+"

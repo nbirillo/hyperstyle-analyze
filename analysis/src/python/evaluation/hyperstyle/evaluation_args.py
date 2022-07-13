@@ -24,10 +24,10 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                         help='Path to script in docker to run on files.')
 
     parser.add_argument('--allow-duplicates',
-                        help=f'Allow duplicate issues found by different linters. By default, duplicates are skipped.',
+                        help='Allow duplicate issues found by different linters. By default, duplicates are skipped.',
                         action='store_false')
 
     parser.add_argument('--with-all-categories',
-                        help=f'Without this flag, all issues will be categorized into 5 main categories: '
-                             f'CODE_STYLE, BEST_PRACTICES, ERROR_PRONE, COMPLEXITY, INFO.',
+                        help='Without this flag, all issues will be categorized into 5 main categories: '
+                             'CODE_STYLE, BEST_PRACTICES, ERROR_PRONE, COMPLEXITY, INFO.',
                         action='store_false')
