@@ -9,18 +9,19 @@ from pathlib import Path
 from typing import Optional
 
 import pandas as pd
+from hyperstyle.src.python.common.tool_arguments import RunToolArgument
+from hyperstyle.src.python.review.reviewers.perform_review import OutputFormat
 from pandarallel import pandarallel
+
 from analysis import HYPERSTYLE_RUNNER_PATH
+from analysis.src.python.evaluation.evaluation_config import EvaluationConfig
+from analysis.src.python.evaluation.model.column_name import ColumnName
 from analysis.src.python.evaluation.utils.args_util import EvaluationArgument, EvaluationRunToolArgument, \
     script_structure_rule
+from analysis.src.python.evaluation.utils.pandas_util import get_language_version
 from analysis.src.python.utils.df_utils import read_df, write_df
-from analysis.src.python.utils.parallel_utils import run_in_subprocess_with_working_dir
-from analysis.src.python.evaluation.model.column_name import ColumnName
 from analysis.src.python.utils.file_utils import create_file
-from analysis.src.python.evaluation.evaluation_config import EvaluationConfig
-from hyperstyle.src.python.common.tool_arguments import RunToolArgument
-from hyperstyle.src.python.review.application_config import LanguageVersion
-from hyperstyle.src.python.review.reviewers.perform_review import OutputFormat
+from analysis.src.python.utils.parallel_utils import run_in_subprocess_with_working_dir
 
 logger = logging.getLogger(__name__)
 
@@ -73,15 +74,6 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument('--to-drop-nan',
                         help='If True, empty code fragments will be deleted from df',
                         action='store_true')
-
-
-def get_language_version(lang_key: str) -> LanguageVersion:
-    try:
-        return LanguageVersion(lang_key)
-    except ValueError as e:
-        logger.error(script_structure_rule)
-        # We should raise KeyError since it is incorrect value for key in a column
-        raise KeyError(e)
 
 
 def __inspect_row(lang: str, code: str, fragment_id: int, history: Optional[str],

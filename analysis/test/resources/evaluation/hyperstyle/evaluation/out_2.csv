@@ -1,0 +1,191 @@
+id,lang,code,hyperstyle_traceback
+2637248,java8,"import java.util.Arrays;
+import java.util.Scanner;
+
+public class Main {
+    private static class TableEntry<T> {
+        private final int key;
+        private final T value;
+
+        public TableEntry(int key, T value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public int getKey() {
+            return key;
+        }
+
+        public T getValue() {
+            return value;
+        }
+    }
+
+    private static class HashTable<T> {
+        private int size;
+        private TableEntry[] table;
+
+        public HashTable(int size) {
+            this.size = size;
+            table = new TableEntry[size];
+        }
+
+        public boolean put(int key, T value) {
+            int idx = findKey(key);
+
+            if (idx == -1) {
+                size *= 2;
+                table = Arrays.copyOf(table, size);
+                idx = findKey(key);
+            }
+
+            table[idx] = new TableEntry(key, value);
+            return true;
+        }
+
+        public T get(int key) {
+            int idx = findKey(key);
+
+            if (idx == -1 || table[idx] == null) {
+                return null;
+            }
+
+            return (T) table[idx].getValue();
+        }
+
+        public void remove(int key) {
+            table[findKey(key)] = null;
+        }
+
+        private int findKey(int key) {
+            int hash = key % size;
+
+            while (!(table[hash] == null || table[hash].getKey() == key)) {
+                hash = (hash + 1) % size;
+
+                if (hash == key % size) {
+                    return -1;
+                }
+            }
+
+            return hash;
+        }
+
+        private void rehash() {
+            size *= 2;
+
+            TableEntry[] oldTable = table;
+            table = new TableEntry[size];
+
+            for (TableEntry tableEntry : oldTable) {
+                table[findKey(tableEntry.getKey())] = tableEntry;
+            }
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder tableStringBuilder = new StringBuilder();
+
+            for (int i = 0; i < table.length; i++) {
+                if (table[i] == null) {
+                    tableStringBuilder.append(i + "": null"");
+                } else {
+                    tableStringBuilder.append(i + "": key="" + table[i].getKey()
+                            + "", value="" + table[i].getValue());
+                }
+
+                if (i < table.length - 1) {
+                    tableStringBuilder.append(""\n"");
+                }
+            }
+
+            return tableStringBuilder.toString();
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int counter = scanner.nextInt();
+
+        HashTable<String> data = new HashTable<>(counter);
+        while (counter != 0) {
+            String command = scanner.next();
+            switch (command) {
+                case ""put"":
+                    data.put(scanner.nextInt(), scanner.next());
+                    break;
+                case ""get"":
+                    String  val = data.get(scanner.nextInt());
+                    System.out.println(val == null ? - 1: val);
+                    break;
+                case ""remove"":
+                    data.remove(scanner.nextInt());
+                    break;
+            }
+            counter--;
+        }
+    }
+}
+","{""quality"": {""code"": ""BAD"", ""text"": ""Code quality (beta): BAD""}, ""issues"": [{""code"": ""UnusedPrivateMethod"", ""text"": ""Avoid unused private methods such as 'rehash()'."", ""line"": ""private void rehash() {"", ""line_number"": 73, ""column_number"": 1, ""category"": ""BEST_PRACTICES"", ""difficulty"": ""MEDIUM"", ""influence_on_penalty"": 0}, {""code"": ""InefficientStringBuffering"", ""text"": ""Avoid concatenating nonliterals in a StringBuffer/StringBuilder constructor or append()."", ""line"": ""tableStringBuilder.append(i + \"": null\"");"", ""line_number"": 90, ""column_number"": 1, ""category"": ""BEST_PRACTICES"", ""difficulty"": ""MEDIUM"", ""influence_on_penalty"": 0}, {""code"": ""InefficientStringBuffering"", ""text"": ""Avoid concatenating nonliterals in a StringBuffer/StringBuilder constructor or append()."", ""line"": ""tableStringBuilder.append(i + \"": key=\"" + table[i].getKey()"", ""line_number"": 92, ""column_number"": 1, ""category"": ""BEST_PRACTICES"", ""difficulty"": ""MEDIUM"", ""influence_on_penalty"": 0}, {""code"": ""MissingSwitchDefaultCheck"", ""text"": ""switch without \""default\"" clause."", ""line"": ""switch (command) {"", ""line_number"": 112, ""column_number"": 13, ""category"": ""ERROR_PRONE"", ""difficulty"": ""HARD"", ""influence_on_penalty"": 0}, {""code"": ""NoWhitespaceAfterCheck"", ""text"": ""'-' is followed by whitespace."", ""line"": ""System.out.println(val == null ? - 1: val);"", ""line_number"": 118, ""column_number"": 54, ""category"": ""CODE_STYLE"", ""difficulty"": ""EASY"", ""influence_on_penalty"": 0}, {""code"": ""WhitespaceAroundCheck"", ""text"": ""':' is not preceded with whitespace."", ""line"": ""System.out.println(val == null ? - 1: val);"", ""line_number"": 118, ""column_number"": 57, ""category"": ""CODE_STYLE"", ""difficulty"": ""EASY"", ""influence_on_penalty"": 0}]}
+"
+2760103,kotlin,"import java.util.*;
+
+fun main(args: Array<String>) {
+    val scanner = Scanner(System.`in`)
+    // put your code here
+    val sq = scanner.nextDouble()
+    val sqrt = Math.sqrt(Math.sqrt(sq))
+    println(sqrt)
+}
+","{""quality"": {""code"": ""GOOD"", ""text"": ""Code quality (beta): GOOD""}, ""issues"": [{""code"": ""NoSemicolons"", ""text"": ""Unnecessary semicolon"", ""line"": ""import java.util.*;"", ""line_number"": 1, ""column_number"": 19, ""category"": ""CODE_STYLE"", ""difficulty"": ""EASY"", ""influence_on_penalty"": 0}]}
+"
+2760563,python3,"text = input()
+words = text.split()
+for word in words:
+    # finish the code here
+    if word.startswith(""WWW.""):
+        print(word)
+    elif word.startswith(""www.""):
+        print(word)
+    elif word.startswith(""https://""):
+        print(word)
+    elif word.startswith(""HTTPS://""):
+        print(word)
+    elif word.startswith(""http://""):
+        print(word)
+    elif word.startswith(""HTTP://""):
+        print(word)
+    else:
+        continue
+","{""quality"": {""code"": ""EXCELLENT"", ""text"": ""Code quality (beta): EXCELLENT""}, ""issues"": [{""code"": ""WPS327"", ""text"": ""Found useless `continue` at the end of the loop"", ""line"": ""for word in words:"", ""line_number"": 3, ""column_number"": 1, ""category"": ""BEST_PRACTICES"", ""difficulty"": ""MEDIUM"", ""influence_on_penalty"": 0}, {""code"": ""WPS223"", ""text"": ""Found too many `elif` branches: 5 > 3"", ""line"": ""if word.startswith(\""WWW.\""):"", ""line_number"": 5, ""column_number"": 5, ""category"": ""COMPLEXITY"", ""difficulty"": ""HARD"", ""influence_on_penalty"": 0}]}
+"
+47580013,javascript,"async function rockBand(str) {
+  return new Promise(function(resolve, reject) {
+      if (str == 'Linkin Park') {
+      resolve(""Chester, we miss you!"");
+    } else {
+      resolve(""No matter the band we miss him anyway!"");
+    }
+  });
+}
+","{""quality"": {""code"": ""MODERATE"", ""text"": ""Code quality (beta): MODERATE""}, ""issues"": [{""code"": ""no-unused-vars"", ""text"": ""'rockBand' is defined but never used. (no-unused-vars)"", ""line"": ""async function rockBand(str) {"", ""line_number"": 1, ""column_number"": 16, ""category"": ""CODE_STYLE"", ""difficulty"": ""EASY"", ""influence_on_penalty"": 0}, {""code"": ""no-unused-vars"", ""text"": ""'reject' is defined but never used. (no-unused-vars)"", ""line"": ""return new Promise(function(resolve, reject) {"", ""line_number"": 2, ""column_number"": 40, ""category"": ""CODE_STYLE"", ""difficulty"": ""EASY"", ""influence_on_penalty"": 0}, {""code"": ""eqeqeq"", ""text"": ""Expected '===' and instead saw '=='. (eqeqeq)"", ""line"": ""if (str == 'Linkin Park') {"", ""line_number"": 3, ""column_number"": 15, ""category"": ""BEST_PRACTICES"", ""difficulty"": ""MEDIUM"", ""influence_on_penalty"": 0}]}
+"
+29610898,java11,"import java.util.Scanner;
+
+class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int cups = scanner.nextInt();
+        boolean weekends = scanner.nextBoolean();
+
+        if (weekends) {
+            System.out.println(cups >= 15 && cups <= 25); // BooleanExpressionComplexityCheck line=11 col=43
+        } else {
+            System.out.println(cups >= 10 && cups <= 20); // BooleanExpressionComplexityCheck line=13 col=43
+        }
+
+    }
+}
+","{""quality"": {""code"": ""EXCELLENT"", ""text"": ""Code quality (beta): EXCELLENT""}, ""issues"": [{""code"": ""MagicNumberCheck"", ""text"": ""Found a magic number. The use of unnamed magic numbers in code hides the developers' intent in choosing that number, increases opportunities for subtle errors and makes it more difficult for the program to be adapted and extended in the future.\nHowever, for small programs it can be allowed, but it is better to use constants instead of magic numbers."", ""line"": ""System.out.println(cups >= 15 && cups <= 25); // BooleanExpressionComplexityCheck line=11 col=43"", ""line_number"": 11, ""column_number"": 40, ""category"": ""INFO"", ""difficulty"": ""EASY"", ""influence_on_penalty"": 0}, {""code"": ""MagicNumberCheck"", ""text"": ""Found a magic number. The use of unnamed magic numbers in code hides the developers' intent in choosing that number, increases opportunities for subtle errors and makes it more difficult for the program to be adapted and extended in the future.\nHowever, for small programs it can be allowed, but it is better to use constants instead of magic numbers."", ""line"": ""System.out.println(cups >= 15 && cups <= 25); // BooleanExpressionComplexityCheck line=11 col=43"", ""line_number"": 11, ""column_number"": 54, ""category"": ""INFO"", ""difficulty"": ""EASY"", ""influence_on_penalty"": 0}, {""code"": ""MagicNumberCheck"", ""text"": ""Found a magic number. The use of unnamed magic numbers in code hides the developers' intent in choosing that number, increases opportunities for subtle errors and makes it more difficult for the program to be adapted and extended in the future.\nHowever, for small programs it can be allowed, but it is better to use constants instead of magic numbers."", ""line"": ""System.out.println(cups >= 10 && cups <= 20); // BooleanExpressionComplexityCheck line=13 col=43"", ""line_number"": 13, ""column_number"": 40, ""category"": ""INFO"", ""difficulty"": ""EASY"", ""influence_on_penalty"": 0}, {""code"": ""MagicNumberCheck"", ""text"": ""Found a magic number. The use of unnamed magic numbers in code hides the developers' intent in choosing that number, increases opportunities for subtle errors and makes it more difficult for the program to be adapted and extended in the future.\nHowever, for small programs it can be allowed, but it is better to use constants instead of magic numbers."", ""line"": ""System.out.println(cups >= 10 && cups <= 20); // BooleanExpressionComplexityCheck line=13 col=43"", ""line_number"": 13, ""column_number"": 54, ""category"": ""INFO"", ""difficulty"": ""EASY"", ""influence_on_penalty"": 0}]}
+"

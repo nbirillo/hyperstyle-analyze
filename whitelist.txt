@@ -125,6 +125,7 @@ gamification
 getitem
 getline
 getroot
+gettempdir
 getuid
 gradle
 groupby

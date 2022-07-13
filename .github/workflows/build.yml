@@ -8,7 +8,6 @@ jobs:
     runs-on: ubuntu-latest
     # Consistent with base image in Dockerfile
     container: nastyabirillo/hyperstyle:1.2.1
-
     steps:
       - name: Install git
         run: |
