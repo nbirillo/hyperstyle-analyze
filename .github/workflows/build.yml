@@ -7,10 +7,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     # Consistent with base image in Dockerfile
-    container:
-      image: nastyabirillo/hyperstyle:1.2.1
-      volumes:
-        - /var/run/docker.sock:/var/run/docker.sock
+    container: nastyabirillo/hyperstyle:1.2.1
     steps:
       - name: Install git
         run: |
@@ -48,10 +45,6 @@ jobs:
         with:
           add: "['whitelist.txt']"
           message: 'Sort whitelists (Github Actions)'
-
-      - name: Install hyperstyle docker image
-        run: |
-          docker pull stepik/hyperstyle:1.2.2
 
       - name: Test with pytest
         run: |
