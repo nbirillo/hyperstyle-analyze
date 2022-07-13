@@ -47,6 +47,12 @@ jobs:
           add: "['whitelist.txt']"
           message: 'Sort whitelists (Github Actions)'
 
+      - name: Install hyperstyle docker image
+        run: |
+          apt-get update
+          sudo apt-get install docker-engine
+          docker pull stepik/hyperstyle:1.2.2
+
       - name: Test with pytest
         run: |
           pytest
