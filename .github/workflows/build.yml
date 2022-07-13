@@ -7,8 +7,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     # Consistent with base image in Dockerfile
-    container: nastyabirillo/hyperstyle:1.2.1
-
+    container:
+      image: nastyabirillo/hyperstyle:1.2.1
+      volumes:
+        - /var/run/docker.sock:/var/run/docker.sock
     steps:
       - name: Install git
         run: |
