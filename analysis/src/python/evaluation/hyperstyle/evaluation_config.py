@@ -12,7 +12,11 @@ logger = logging.getLogger(__name__)
 
 class HyperstyleEvaluationConfig:
     def __init__(self, args: Namespace):
-
+        """ Namespace `args` should contain following parameters:
+        `docker_path` - docker image name to run hyperstyle in (custom or default HYPERSTYLE_DOCKER_PATH)
+        `tool_path` - path to hyperstyle tool running script (custom or HYPERSTYLE_TOOL_PATH)
+        Number of hyperstyle tool running script parameters (allow_duplicates, with_all_categories etc.)
+        """
         self.docker_path: str = args.docker_path
         self.tool_path: str = args.tool_path
 
