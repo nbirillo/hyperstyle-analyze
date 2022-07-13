@@ -28,6 +28,5 @@ def test(in_file: Path, out_file: Path):
 
     testing_config = HyperstyleEvaluationConfig(testing_arguments)
     inspected_df = run_evaluation(in_df, testing_config)
-    write_df(inspected_df, out_file)
     out_df = read_df(out_file)
     assert equal_df(out_df, inspected_df)
