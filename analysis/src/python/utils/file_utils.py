@@ -33,9 +33,8 @@ def get_name_from_path(path: Union[Path, str], with_extension: bool = True) -> s
 # File should contain the full path and its extension.
 # Create all parents if necessary
 def create_file(file_path: Union[str, Path], content: str):
-    file_path = Path(file_path)
+    create_directory(get_parent_folder(file_path))
 
-    os.makedirs(os.path.dirname(file_path), exist_ok=True)
     with open(file_path, 'w+') as f:
         f.writelines(content)
         yield Path(file_path)
@@ -45,9 +44,9 @@ def copy_file(source: Union[str, Path], destination: Union[str, Path]):
     shutil.copy(source, destination)
 
 
-def create_directory(path: Union[str, Path]):
+def create_directory(path: Union[str, Path], exist_ok: bool = True):
     if not os.path.exists(path):
-        os.makedirs(path)
+        os.makedirs(path, exist_ok=exist_ok)
 
 
 def copy_directory(source: Union[str, Path], destination: Union[str, Path], dirs_exist_ok: bool = True):

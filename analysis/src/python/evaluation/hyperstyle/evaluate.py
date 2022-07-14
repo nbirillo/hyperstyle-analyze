@@ -1,5 +1,7 @@
 import argparse
 import logging
+import os
+import stat
 import sys
 import time
 
@@ -11,7 +13,8 @@ from analysis.src.python.evaluation.hyperstyle.evaluation_args import configure_
 from analysis.src.python.evaluation.hyperstyle.evaluation_config import HyperstyleEvaluationConfig
 from analysis.src.python.evaluation.utils.pandas_util import get_language_version
 from analysis.src.python.utils.df_utils import read_df, write_df
-from analysis.src.python.utils.file_utils import create_file, get_output_filename, get_output_path, remove_directory, \
+from analysis.src.python.utils.file_utils import create_directory, create_file, get_output_filename, get_output_path, \
+    remove_directory, \
     remove_file
 
 logger = logging.getLogger(__name__)
@@ -29,8 +32,14 @@ def inspect_solution(df_solution: pd.DataFrame, config: HyperstyleEvaluationConf
 
     try:
         solution_dir_path = config.tmp_directory / f'solution_{solution_id}'
+        create_directory(solution_dir_path)
+        os.chmod(solution_dir_path, 0o777)
+        logger.info(f"Dir permission mask: {oct(os.stat(solution_dir_path).st_mode & 0o777)}")
+
         solution_file_path = solution_dir_path / f'code{language_version.extension_by_language().value}'
         next(create_file(solution_file_path, code))
+        os.chmod(solution_file_path, 0o777)
+        logger.info(f"File permission mask: {oct(os.stat(solution_file_path).st_mode & 0o777)}")
 
         command = config.build_command(solution_dir_path, language_version)
 
