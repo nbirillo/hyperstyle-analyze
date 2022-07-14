@@ -34,6 +34,7 @@ def inspect_solution(df_solution: pd.DataFrame, config: HyperstyleEvaluationConf
 
     logger.info(f"Start processing solution {solution_id}")
     start = time.time()
+    logger.info('Executing command' + (' '.join(command)))
     results = run_in_subprocess(command)
     end = time.time()
     logger.info(f"Finish processing solution {solution_id} time={end - start}s output={len(results)}")
