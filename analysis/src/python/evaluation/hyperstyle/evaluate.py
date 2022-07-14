@@ -11,7 +11,8 @@ from analysis.src.python.evaluation.hyperstyle.evaluation_args import configure_
 from analysis.src.python.evaluation.hyperstyle.evaluation_config import HyperstyleEvaluationConfig
 from analysis.src.python.evaluation.utils.pandas_util import get_language_version
 from analysis.src.python.utils.df_utils import read_df, write_df
-from analysis.src.python.utils.file_utils import create_file, get_output_filename, get_output_path, remove_directory
+from analysis.src.python.utils.file_utils import create_file, get_output_filename, get_output_path, remove_directory, \
+    remove_file
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -26,20 +27,28 @@ def inspect_solution(df_solution: pd.DataFrame, config: HyperstyleEvaluationConf
     language = df_solution[SubmissionColumns.LANG.value]
     language_version = get_language_version(language)
 
-    solution_dir_path = config.tmp_directory / f'solution_{solution_id}'
-    solution_file_path = solution_dir_path / f'code{language_version.extension_by_language().value}'
-    next(create_file(solution_file_path, code))
+    try:
+        solution_dir_path = config.tmp_directory / f'solution_{solution_id}'
+        solution_file_path = solution_dir_path / f'code{language_version.extension_by_language().value}'
+        next(create_file(solution_file_path, code))
 
-    command = config.build_command(solution_dir_path, language_version)
+        command = config.build_command(solution_dir_path, language_version)
 
-    logger.info(f"Start processing solution {solution_id}")
-    start = time.time()
-    logger.info('Executing command' + (' '.join(command)))
-    results = run_in_subprocess(command)
-    end = time.time()
-    logger.info(f"Finish processing solution {solution_id} time={end - start}s output={len(results)}")
+        logger.info(f"Start processing solution {solution_id}")
+        start = time.time()
+        logger.info('Executing command' + (' '.join(command)))
 
-    remove_directory(solution_dir_path)
+        results = run_in_subprocess(command)
+
+        end = time.time()
+        logger.info(f"Finish processing solution {solution_id} time={end - start}s output={len(results)}")
+
+        remove_file(solution_file_path)
+        remove_directory(solution_dir_path)
+
+    except Exception as e:
+        logger.error(e)
+        return ''
 
     return results
 
