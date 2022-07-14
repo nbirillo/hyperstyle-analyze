@@ -1,7 +1,6 @@
 import logging.config
-from argparse import Namespace
 from pathlib import Path
-from typing import List, Union
+from typing import List, Optional, Union
 
 from hyperstyle.src.python.review.application_config import LanguageVersion
 
@@ -11,19 +10,27 @@ logger = logging.getLogger(__name__)
 
 
 class HyperstyleEvaluationConfig:
-    def __init__(self, args: Namespace):
-        """ Namespace `args` should contain following parameters:
+    def __init__(self, docker_path: str,
+                 tool_path: str,
+                 allow_duplicates: bool,
+                 with_all_categories: bool,
+                 tmp_directory: Optional[Path] = None):
+        """
         `docker_path` - docker image name to run hyperstyle in (custom or default HYPERSTYLE_DOCKER_PATH)
         `tool_path` - path to hyperstyle tool running script (custom or HYPERSTYLE_TOOL_PATH)
-        Number of hyperstyle tool running script parameters (allow_duplicates, with_all_categories etc.)
+        `tmp_directory` - directory where to place evaluation temporary files
+        Number of hyperstyle tool running script parameters (`allow_duplicates`, `with_all_categories` etc.)
         """
-        self.docker_path: str = args.docker_path
-        self.tool_path: str = args.tool_path
+        self.docker_path: str = docker_path
+        self.tool_path: str = tool_path
 
-        self.allow_duplicates: bool = args.allow_duplicates
-        self.with_all_categories: bool = args.with_all_categories
+        self.allow_duplicates: bool = allow_duplicates
+        self.with_all_categories: bool = with_all_categories
 
-        self.tmp_directory: Path = get_tmp_directory() / 'hyperstyle'
+        if tmp_directory is None:
+            self.tmp_directory: Path = get_tmp_directory() / 'hyperstyle'
+        else:
+            self.tmp_directory = tmp_directory
 
     def build_command(self,
                       input_path: Union[str, Path],

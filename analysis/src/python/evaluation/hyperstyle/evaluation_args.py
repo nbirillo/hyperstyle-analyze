@@ -13,6 +13,11 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                         type=lambda value: Path(value).absolute(),
                         help=EvaluationRunToolArgument.SOLUTIONS_FILE_PATH.value.description)
 
+    parser.add_argument('-o', '--output-path',
+                        default=None,
+                        type=lambda value: Path(value).absolute(),
+                        help='Path to the directory where to save evaluation results')
+
     parser.add_argument('-dp', '--docker-path',
                         default=HYPERSTYLE_DOCKER_PATH,
                         type=str,
