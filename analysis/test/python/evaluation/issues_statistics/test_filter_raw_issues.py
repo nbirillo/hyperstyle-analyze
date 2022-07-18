@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 
 from analysis.src.python.evaluation.issues_statistics.filter_raw_issues import filter_raw_issues
-from analysis.src.python.evaluation.utils.args_util import get_in_and_out_list
+from analysis.src.python.evaluation.utils.args_utils import get_in_and_out_list
 from analysis.src.python.utils.df_utils import equal_df, read_df
 from analysis.test.python.evaluation import ISSUES_STATISTICS_DIR_PATH
 
