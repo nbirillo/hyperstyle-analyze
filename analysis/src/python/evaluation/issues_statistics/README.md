@@ -22,7 +22,7 @@ Run the [get_raw_issues.py](get_raw_issues.py) with the arguments from command l
 
 **Required arguments:**
 
-- `solutions_file_path` — path to xlsx-file or csv-file with inspected code samples to filter low measure issues.
+- `solutions_file_path` — path to xlsx-file or csv-file with code samples to inspect.
 
 **Optional arguments:**
 
@@ -72,7 +72,7 @@ Run the [filter_raw_issues.py](filter_raw_issues.py) with the arguments from com
 
 **Required arguments:**
 
-- `solutions_file_path` — path to xlsx-file or csv-file with code samples to inspect.
+- `solutions_file_path` — path to xlsx-file or csv-file with inspected code samples to filter low measure issues.
 
 ## Get raw issues statistics
 
