@@ -4,8 +4,7 @@ import pytest
 
 from analysis.src.python.evaluation.issues_statistics.filter_raw_issues import filter_raw_issues
 from analysis.src.python.evaluation.utils.args_util import get_in_and_out_list
-from analysis.src.python.utils.df_utils import equal_df, read_df, write_df
-from analysis.src.python.utils.file_utils import get_output_path, get_parent_folder
+from analysis.src.python.utils.df_utils import equal_df, read_df
 from analysis.test.python.evaluation import ISSUES_STATISTICS_DIR_PATH
 
 RESOURCES_PATH = ISSUES_STATISTICS_DIR_PATH / 'filter_raw_issues'
