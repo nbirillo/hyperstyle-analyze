@@ -5,7 +5,8 @@ from typing import Dict, List
 
 from hyperstyle.src.python.review.inspectors.issue import BaseIssue
 
-from analysis.src.python.evaluation.issues_statistics.common.raw_issue_encoder_decoder import RawIssueDecoder
+from analysis.src.python.evaluation.issues_statistics.common.raw_issue_encoder_decoder import RawIssueDecoder, \
+    RawIssueEncoder
 from analysis.src.python.evaluation.qodana.utils.models import QodanaIssue
 
 
@@ -49,3 +50,9 @@ def parse_raw_issues_to_objects(s: str) -> List[BaseIssue]:
     """ Parse raw issues to list of objects. """
 
     return json.loads(s, cls=RawIssueDecoder)
+
+
+def dump_raw_issues_to_str(issues: List[BaseIssue]) -> str:
+    """ Dump raw issues to string. """
+
+    return json.dumps(issues, cls=RawIssueEncoder)
