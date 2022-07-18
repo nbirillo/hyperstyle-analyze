@@ -1,9 +1,9 @@
 import argparse
 import logging
 import os
-import stat
 import sys
 import time
+from pathlib import Path
 
 import pandas as pd
 from hyperstyle.src.python.review.common.subprocess_runner import run_in_subprocess
@@ -24,23 +24,28 @@ HYPERSTYLE_OUTPUT_SUFFIX = '_hyperstyle'
 HYPERSTYLE_TRACEBACK = f'traceback{HYPERSTYLE_OUTPUT_SUFFIX}'
 
 
-def inspect_solution(df_solution: pd.DataFrame, config: HyperstyleEvaluationConfig):
+def solution_to_file(df_solution: pd.DataFrame, base_directory: Path) -> Path:
     solution_id = df_solution[SubmissionColumns.ID.value]
     code = df_solution[SubmissionColumns.CODE.value]
     language = df_solution[SubmissionColumns.LANG.value]
     language_version = get_language_version(language)
 
+    solution_dir_path = base_directory / f'solution_{solution_id}'
+    os.chmod(solution_dir_path, 0o777)
+    solution_file_path = solution_dir_path / f'code{language_version.extension_by_language().value}'
+    os.chmod(solution_file_path, 0o777)
+
+    return next(create_file(solution_file_path, code))
+
+
+def inspect_solution(df_solution: pd.DataFrame, config: HyperstyleEvaluationConfig):
+    language = df_solution[SubmissionColumns.LANG.value]
+    language_version = get_language_version(language)
+
+    base_directory = config.tmp_directory / language_version.value
+
     try:
-        solution_dir_path = config.tmp_directory / f'solution_{solution_id}'
-        create_directory(solution_dir_path)
-        os.chmod(solution_dir_path, 0o777)
-        logger.info(f"Dir permission mask: {oct(os.stat(solution_dir_path).st_mode & 0o777)}")
-
-        solution_file_path = solution_dir_path / f'code{language_version.extension_by_language().value}'
-        next(create_file(solution_file_path, code))
-        os.chmod(solution_file_path, 0o777)
-        logger.info(f"File permission mask: {oct(os.stat(solution_file_path).st_mode & 0o777)}")
-
+        solution_file_path = solution_to_file(df_solution, base_directory)
         command = config.build_command(solution_dir_path, language_version)
 
         logger.info(f"Start processing solution {solution_id}")
