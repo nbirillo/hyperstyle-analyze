@@ -26,8 +26,17 @@ class HyperstyleFileReport:
     quality: Quality
     issues: List[HyperstyleIssue]
 
+    def to_hyperstyle_report(self):
+        return HyperstyleReport(self.quality, self.issues)
+
+
+@dataclass(frozen=True)
+class HyperstyleNewFormatReport:
+    quality: Quality
+    file_review_results: List[HyperstyleFileReport]
+
 
 @dataclass(frozen=True)
 class HyperstyleReport:
     quality: Quality
-    file_review_results: List[HyperstyleFileReport]
+    issues: List[HyperstyleIssue]

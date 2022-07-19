@@ -1,5 +1,6 @@
 import argparse
 from pathlib import Path
+from typing import Optional
 
 from analysis.src.python.evaluation.utils.args_utils import EvaluationRunToolArgument
 
@@ -20,13 +21,14 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
 
     parser.add_argument('-dp', '--docker-path',
                         default=HYPERSTYLE_DOCKER_PATH,
-                        type=str,
-                        help='Path to docker (USER/NAME:VERSION) to run evaluation on.')
+                        type=Optional[str],
+                        help='Path to docker (USER/NAME:VERSION) to run evaluation on. '
+                             'If None hyperstyle will run locally.')
 
     parser.add_argument('-tp', '--tool-path',
                         default=HYPERSTYLE_TOOL_PATH,
                         type=str,
-                        help='Path to script in docker to run on files.')
+                        help='Path to script inside docker (or locally) to run on files.')
 
     parser.add_argument('--allow-duplicates',
                         help='Allow duplicate issues found by different linters. By default, duplicates are skipped.',

@@ -1,0 +1,428 @@
+id,time,lang,code
+2610859,2019-09-08 00:11:37+00:00,java11,"public class Main {
+    public static void main(String[] args) {
+
+        int variable = 123456;  // Change this line
+
+        System.out.println(variable);
+    }
+}
+"
+2610863,2019-09-08 00:12:20+00:00,java11,"class Main {
+    public static void main(String[] args) {
+        System.out.println(0);
+        System.out.println(1);
+        System.out.println(2);
+                System.out.println(3);
+                        System.out.println(4);
+    }
+}
+"
+2610874,2019-09-08 00:14:40+00:00,java11,"class Main {
+    public static void main(String[] args) {
+        System.out.println(""WE NEED TO"");
+        System.out.println("""");
+        System.out.println(""LEARN JAVA"");
+        System.out.println("""");
+        System.out.println(""AS QUICKLY AS POSSIBLE"");
+    }
+}
+"
+2636912,2019-09-09 12:41:18+00:00,java8,"import java.util.Arrays;
+import java.util.Scanner;
+
+public class Main {
+    private static class TableEntry<T> {
+        private final int key;
+        private final T value;
+
+        public TableEntry(int key, T value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public int getKey() {
+            return key;
+        }
+
+        public T getValue() {
+            return value;
+        }
+    }
+
+    private static class HashTable<T> {
+        private int size;
+        private TableEntry[] table;
+
+        public HashTable(int size) {
+            this.size = size;
+            table = new TableEntry[size];
+        }
+
+        public boolean put(int key, T value) {
+            int idx = findKey(key);
+
+            if (idx == -1) {
+                size *= 2;
+                table = Arrays.copyOf(table, size);
+                idx = findKey(key);
+            }
+
+            table[idx] = new TableEntry(key, value);
+            return true;
+        }
+
+        public T get(int key) {
+            int idx = findKey(key);
+
+            if (idx == -1 || table[idx] == null) {
+                return null;
+            }
+
+            return (T) table[idx].getValue();
+        }
+
+        private int findKey(int key) {
+            int hash = key % size;
+
+            while (!(table[hash] == null || table[hash].getKey() == key)) {
+                hash = (hash + 1) % size;
+
+                if (hash == key % size) {
+                    return -1;
+                }
+            }
+
+            return hash;
+        }
+
+        private void rehash() {
+            size *= 2;
+
+            TableEntry[] oldTable = table;
+            table = new TableEntry[size];
+
+            for (TableEntry tableEntry : oldTable) {
+                table[findKey(tableEntry.getKey())] = tableEntry;
+            }
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder tableStringBuilder = new StringBuilder();
+
+            for (int i = 0; i < table.length; i++) {
+                if (table[i] == null) {
+                    tableStringBuilder.append(i + "": null"");
+                } else {
+                    tableStringBuilder.append(i + "": key="" + table[i].getKey()
+                            + "", value="" + table[i].getValue());
+                }
+
+                if (i < table.length - 1) {
+                    tableStringBuilder.append(""\n"");
+                }
+            }
+
+            return tableStringBuilder.toString();
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int counter = scanner.nextInt();
+
+        HashTable<String> data = new HashTable<>(5);
+        while (counter != 0) {
+            data.put(scanner.nextInt(), scanner.next());
+            counter--;
+        }
+
+        System.out.println(data);
+    }
+}
+"
+2637248,2019-09-09 12:55:29+00:00,java8,"import java.util.Arrays;
+import java.util.Scanner;
+
+public class Main {
+    private static class TableEntry<T> {
+        private final int key;
+        private final T value;
+
+        public TableEntry(int key, T value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public int getKey() {
+            return key;
+        }
+
+        public T getValue() {
+            return value;
+        }
+    }
+
+    private static class HashTable<T> {
+        private int size;
+        private TableEntry[] table;
+
+        public HashTable(int size) {
+            this.size = size;
+            table = new TableEntry[size];
+        }
+
+        public boolean put(int key, T value) {
+            int idx = findKey(key);
+
+            if (idx == -1) {
+                size *= 2;
+                table = Arrays.copyOf(table, size);
+                idx = findKey(key);
+            }
+
+            table[idx] = new TableEntry(key, value);
+            return true;
+        }
+
+        public T get(int key) {
+            int idx = findKey(key);
+
+            if (idx == -1 || table[idx] == null) {
+                return null;
+            }
+
+            return (T) table[idx].getValue();
+        }
+
+        public void remove(int key) {
+            table[findKey(key)] = null;
+        }
+
+        private int findKey(int key) {
+            int hash = key % size;
+
+            while (!(table[hash] == null || table[hash].getKey() == key)) {
+                hash = (hash + 1) % size;
+
+                if (hash == key % size) {
+                    return -1;
+                }
+            }
+
+            return hash;
+        }
+
+        private void rehash() {
+            size *= 2;
+
+            TableEntry[] oldTable = table;
+            table = new TableEntry[size];
+
+            for (TableEntry tableEntry : oldTable) {
+                table[findKey(tableEntry.getKey())] = tableEntry;
+            }
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder tableStringBuilder = new StringBuilder();
+
+            for (int i = 0; i < table.length; i++) {
+                if (table[i] == null) {
+                    tableStringBuilder.append(i + "": null"");
+                } else {
+                    tableStringBuilder.append(i + "": key="" + table[i].getKey()
+                            + "", value="" + table[i].getValue());
+                }
+
+                if (i < table.length - 1) {
+                    tableStringBuilder.append(""\n"");
+                }
+            }
+
+            return tableStringBuilder.toString();
+        }
+    }
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int counter = scanner.nextInt();
+
+        HashTable<String> data = new HashTable<>(counter);
+        while (counter != 0) {
+            String command = scanner.next();
+            switch (command) {
+                case ""put"":
+                    data.put(scanner.nextInt(), scanner.next());
+                    break;
+                case ""get"":
+                    String  val = data.get(scanner.nextInt());
+                    System.out.println(val == null ? - 1: val);
+                    break;
+                case ""remove"":
+                    data.remove(scanner.nextInt());
+                    break;
+            }
+            counter--;
+        }
+    }
+}
+"
+2693460,2019-09-12 11:05:46+00:00,java8,"import java.util.Scanner;
+
+public class Main {
+    private static class TableEntry<T> {
+        private final int key;
+        private final T value;
+        private boolean removed;
+
+        public TableEntry(int key, T value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public int getKey() {
+            return key;
+        }
+
+        public T getValue() {
+            return value;
+        }
+
+        public void remove() {
+             removed = true;   
+        }
+
+        public boolean isRemoved() {
+             return removed;   
+        }
+    }
+
+    private static class HashTable<T> {
+        private int size;
+        private TableEntry[] table;
+
+        public HashTable(int size) {
+            this.size = size;
+            table = new TableEntry[size];
+        }
+
+        public boolean put(int key, T value) {
+            int idx = findKey(key);
+        
+            if (idx == -1) {
+                return false;
+            }
+        
+            table[idx] = new TableEntry(key, value);
+            return true;
+        }
+
+        public T get(int key) {
+            int idx = findKey(key);
+        
+            if (idx == -1 || table[idx] == null || table[idx].isRemoved()) {
+                return null;
+            }
+        
+            return (T) table[idx].getValue();
+        }
+
+        public void remove(int key) {
+            int idx = findKey(key);
+            if (idx != -1 && table[idx] != null) {
+                table[idx].remove();
+            }
+        }
+
+        private int findKey(int key) {
+            int hash = key % size;
+        
+            while (table[hash] != null && table[hash].getKey() != key) {
+                hash = (hash + 1) % size;
+        
+                if (hash == key % size) {
+                    return -1;
+                }
+            }
+        
+            return hash;
+        }
+
+        private void rehash() {
+            // put your code here
+        }
+    }
+
+    public static void main(String[] args) {
+        // put your code here
+        Scanner sc = new Scanner(System.in);
+        HashTable<String> ht = new HashTable(10000);
+        int n = sc.nextInt();
+        while (n-- > 0) {
+            String command = sc.next();
+            if (""put"".equals(command)) {
+                ht.put(sc.nextInt(), sc.next());
+            } else if (""get"".equals(command)) {
+                String s = ht.get(sc.nextInt());
+                System.out.println(s == null ? ""-1"" : s);
+            } else if (""remove"".equals(command)) {
+                ht.remove(sc.nextInt());
+            }
+        }
+    }
+}
+"
+2760103,2019-09-16 16:38:07+00:00,kotlin,"import java.util.*;
+
+fun main(args: Array<String>) {
+    val scanner = Scanner(System.`in`)
+    // put your code here
+    val sq = scanner.nextDouble()
+    val sqrt = Math.sqrt(Math.sqrt(sq))
+    println(sqrt)
+}
+"
+2762401,2019-09-16 18:26:22+00:00,kotlin,"fun main() {
+    TODO(""Write some code to cause an exception"")
+    print(3/0)
+}
+"
+2762793,2019-09-16 18:47:55+00:00,kotlin,"import java.util.*
+
+fun main(args: Array<String>) {
+    val scanner = Scanner(System.`in`)
+    // put your code here
+    val line = scanner.nextLine()
+    // val num = 0
+    repeat(10){
+        println(line)
+    }
+}
+"
+2760480,2019-09-16 16:57:41+00:00,python3,"random_numbers = ['1', '22', '333', '4444', '55555']
+print(""\n"".join(random_numbers))
+"
+2760500,2019-09-16 16:58:34+00:00,python3,"s = ""Hello""
+"
+2760563,2019-09-16 17:01:13+00:00,python3,"text = input()
+words = text.split()
+for word in words:
+    # finish the code here
+    if word.startswith(""WWW.""):
+        print(word)
+    elif word.startswith(""www.""):
+        print(word)
+    elif word.startswith(""https://""):
+        print(word)
+    elif word.startswith(""HTTPS://""):
+        print(word)
+    elif word.startswith(""http://""):
+        print(word)
+    elif word.startswith(""HTTP://""):
+        print(word)
+    else:
+        continue
+"

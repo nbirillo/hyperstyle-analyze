@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 class HyperstyleEvaluationConfig:
-    def __init__(self, docker_path: str,
+    def __init__(self, docker_path: Optional[str],
                  tool_path: str,
                  allow_duplicates: bool,
                  with_all_categories: bool,
@@ -43,11 +43,16 @@ class HyperstyleEvaluationConfig:
                       input_path: Union[str, Path],
                       language_version: LanguageVersion) -> List[str]:
 
-        command = ['docker', 'run',
-                   '-v', f'{input_path}/:/input/',
-                   f'{self.docker_path}',
-                   'python', f'{self.tool_path}',
-                   ]
+        command = []
+
+        # If docker path is not specified, hyperstyle will run locally
+        if self.docker_path is not None:
+            command = ['docker', 'run',
+                       '-v', f'{input_path}/:/input/',
+                       f'{self.docker_path}',
+                       ]
+
+        command += ['python3', f'{self.tool_path}']
 
         if self.allow_duplicates:
             command += ['--allow-duplicates']
@@ -61,6 +66,9 @@ class HyperstyleEvaluationConfig:
         if language_version.is_java():
             command += ['--language_version', language_version.value]
 
-        command += ['/input']
+        if self.docker_path is not None:
+            command += ['/input']
+        else:
+            command += [str(input_path)]
 
         return command

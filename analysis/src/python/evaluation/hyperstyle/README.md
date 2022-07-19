@@ -19,7 +19,6 @@ For example `hyperstyle_issues` field on solution with id=2637248 looks like:
 
 ```json
 {
-  "file_name": "2637248/code.java",
   "quality": {
     "code": "BAD",
     "text": "Code quality (beta): BAD"
