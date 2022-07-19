@@ -126,6 +126,8 @@ class SubmissionColumns(Enum):
     QODANA_ISSUE_CLASS = 'problem_id'
 
     STATUS = 'status'
+    FREQUENCY = 'frequency'
+    POS_IN_TEMPLATE = 'pos_in_template'
 
 
 @unique

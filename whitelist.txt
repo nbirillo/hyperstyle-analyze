@@ -9,6 +9,8 @@ E231
 E261
 E265
 Elifs
+idxmax
+agg
 G10
 Gamification
 H0
