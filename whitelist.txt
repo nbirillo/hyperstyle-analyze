@@ -9,8 +9,6 @@ E231
 E261
 E265
 Elifs
-idxmax
-agg
 G10
 Gamification
 H0
@@ -40,6 +38,7 @@ WPS432
 WPS446
 WPS462
 abstractmethod
+agg
 aggfunc
 annot
 anova
@@ -137,6 +136,7 @@ hline
 hyperskill
 hyperstyle
 idx
+idxmax
 ignorecase
 iloc
 inerop
