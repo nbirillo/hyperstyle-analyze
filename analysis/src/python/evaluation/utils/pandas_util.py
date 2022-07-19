@@ -9,9 +9,19 @@ from hyperstyle.src.python.review.quality.penalty import PenaltyIssue
 from hyperstyle.src.python.review.reviewers.utils.print_review import convert_json_to_issues
 
 from analysis.src.python.evaluation.model.column_name import ColumnName
+from analysis.src.python.evaluation.utils.args_util import script_structure_rule
 from analysis.src.python.utils.df_utils import filter_df_by_iterable_value
 
 logger = logging.getLogger(__name__)
+
+
+def get_language_version(lang_key: str) -> LanguageVersion:
+    try:
+        return LanguageVersion(lang_key)
+    except ValueError as e:
+        logger.error(script_structure_rule)
+        # We should raise KeyError since it is incorrect value for key in a column
+        raise KeyError(e)
 
 
 def filter_df_by_language(df: pd.DataFrame, languages: Set[LanguageVersion],

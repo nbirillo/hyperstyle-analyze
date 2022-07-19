@@ -120,6 +120,8 @@ class SubmissionColumns(Enum):
     CODE_STYLE = 'code_style'
     # issues
     RAW_ISSUES = 'raw_issues'
+    RAW_ISSUES_ALL = 'raw_issues_all'
+    RAW_ISSUES_DIFF = 'raw_issues_diff'
     RAW_ISSUE_CLASS = 'origin_class'
     ISSUE_TYPE = 'type'
     QODANA_ISSUES = 'qodana_issues'
