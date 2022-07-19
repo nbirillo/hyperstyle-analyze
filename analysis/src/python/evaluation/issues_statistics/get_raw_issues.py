@@ -21,7 +21,7 @@ from pandarallel import pandarallel
 
 from analysis.src.python.evaluation.issues_statistics.common.raw_issue_encoder_decoder import RawIssueEncoder
 from analysis.src.python.evaluation.model.column_name import ColumnName
-from analysis.src.python.evaluation.utils.args_util import EvaluationRunToolArgument
+from analysis.src.python.evaluation.utils.args_utils import EvaluationRunToolArgument
 from analysis.src.python.utils.df_utils import read_df, write_df
 from analysis.src.python.utils.extension_utils import AnalysisExtension
 from analysis.src.python.utils.file_utils import create_file, get_name_from_path, get_parent_folder

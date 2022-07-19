@@ -1,5 +1,5 @@
 id,lang,code
-2637248,java8,"import java.util.Arrays;
+2637248,java11,"import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -176,9 +176,9 @@ class Main {
         boolean weekends = scanner.nextBoolean();
 
         if (weekends) {
-            System.out.println(cups >= 15 && cups <= 25); // BooleanExpressionComplexityCheck line=11 col=43
+            System.out.println(cups >= 15 && cups <= 25);
         } else {
-            System.out.println(cups >= 10 && cups <= 20); // BooleanExpressionComplexityCheck line=13 col=43
+            System.out.println(cups >= 10 && cups <= 20);
         }
 
     }

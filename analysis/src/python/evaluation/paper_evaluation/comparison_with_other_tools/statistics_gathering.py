@@ -3,7 +3,7 @@ import logging
 import sys
 from pathlib import Path
 
-from analysis.src.python.evaluation.utils.args_util import EvaluationRunToolArgument
+from analysis.src.python.evaluation.utils.args_utils import EvaluationRunToolArgument
 from analysis.src.python.evaluation.paper_evaluation.comparison_with_other_tools.tutor_statistics import (
     IssuesStatistics, TutorStatistics,
 )

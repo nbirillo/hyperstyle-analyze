@@ -1,4 +1,4 @@
-id,lang,code,traceback_hyperstyle
+id,lang,code,hyperstyle_issues
 1,java11,"public class Main {
     public static void main(String[] args) {
 
@@ -8,8 +8,7 @@ id,lang,code,traceback_hyperstyle
     }
 
 
-","{""quality"": {""code"": ""EXCELLENT"", ""text"": ""Code quality (beta): EXCELLENT""}, ""issues"": []}
-"
+","{""file_name"": ""1/code.java"", ""quality"": {""code"": ""EXCELLENT"", ""text"": ""Code quality (beta): EXCELLENT""}, ""issues"": []}"
 2,python3,"text = input()
 words = text.split()
 for word in words:
@@ -28,5 +27,4 @@ for word in words:
         print(word)
     else:
         continue
-","{""quality"": {""code"": ""BAD"", ""text"": ""Code quality (beta): BAD""}, ""issues"": [{""code"": ""E0001"", ""text"": ""invalid syntax (<unknown>, line 5)"", ""line"": ""if word.startswith(\""WWW.\"")"", ""line_number"": 5, ""column_number"": 32, ""category"": ""ERROR_PRONE"", ""difficulty"": ""HARD"", ""influence_on_penalty"": 0}, {""code"": ""E999"", ""text"": ""SyntaxError: invalid syntax"", ""line"": ""if word.startswith(\""WWW.\"")"", ""line_number"": 5, ""column_number"": 30, ""category"": ""CODE_STYLE"", ""difficulty"": ""EASY"", ""influence_on_penalty"": 0}, {""code"": ""E113"", ""text"": ""unexpected indentation"", ""line"": ""print(word)"", ""line_number"": 6, ""column_number"": 9, ""category"": ""CODE_STYLE"", ""difficulty"": ""EASY"", ""influence_on_penalty"": 0}]}
-"
+","{""file_name"": ""2/code.py"", ""quality"": {""code"": ""BAD"", ""text"": ""Code quality (beta): BAD""}, ""issues"": [{""code"": ""E0001"", ""text"": ""invalid syntax (<unknown>, line 5)"", ""line"": ""if word.startswith(\""WWW.\"")"", ""line_number"": 5, ""column_number"": 32, ""category"": ""ERROR_PRONE"", ""difficulty"": ""HARD"", ""influence_on_penalty"": 0}, {""code"": ""E999"", ""text"": ""SyntaxError: invalid syntax"", ""line"": ""if word.startswith(\""WWW.\"")"", ""line_number"": 5, ""column_number"": 30, ""category"": ""CODE_STYLE"", ""difficulty"": ""EASY"", ""influence_on_penalty"": 0}, {""code"": ""E113"", ""text"": ""unexpected indentation"", ""line"": ""print(word)"", ""line_number"": 6, ""column_number"": 9, ""category"": ""CODE_STYLE"", ""difficulty"": ""EASY"", ""influence_on_penalty"": 0}]}"

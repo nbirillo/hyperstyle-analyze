@@ -9,8 +9,8 @@ from pandarallel import pandarallel
 
 from analysis.src.python.evaluation.evaluation_run_tool import get_language_version
 from analysis.src.python.evaluation.model.column_name import ColumnName
-from analysis.src.python.evaluation.utils.args_util import EvaluationArgument, EvaluationRunToolArgument
-from analysis.src.python.evaluation.utils.pandas_util import get_issues_from_json
+from analysis.src.python.evaluation.utils.args_utils import EvaluationArgument, EvaluationRunToolArgument
+from analysis.src.python.evaluation.utils.pandas_utils import get_issues_from_json
 from analysis.src.python.utils.df_utils import read_df, write_df
 from analysis.src.python.utils.extension_utils import AnalysisExtension
 from analysis.src.python.utils.file_utils import get_name_from_path, get_parent_folder

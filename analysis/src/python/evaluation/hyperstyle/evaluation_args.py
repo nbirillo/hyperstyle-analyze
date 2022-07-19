@@ -1,7 +1,7 @@
 import argparse
 from pathlib import Path
 
-from analysis.src.python.evaluation.utils.args_util import EvaluationRunToolArgument
+from analysis.src.python.evaluation.utils.args_utils import EvaluationRunToolArgument
 
 HYPERSTYLE_TOOL_PATH = 'review/hyperstyle/src/python/review/run_tool.py'
 

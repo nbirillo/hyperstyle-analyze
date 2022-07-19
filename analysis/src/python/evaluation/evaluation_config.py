@@ -6,7 +6,7 @@ from typing import List, Optional, Union
 
 from hyperstyle.src.python.common.tool_arguments import RunToolArgument
 from hyperstyle.src.python.review.application_config import LanguageVersion
-from analysis.src.python.evaluation.utils.args_util import EvaluationArgument
+from analysis.src.python.evaluation.utils.args_utils import EvaluationArgument
 from analysis.src.python.utils.file_utils import get_parent_folder
 from analysis.src.python.utils.extension_utils import AnalysisExtension, get_restricted_extension
 
