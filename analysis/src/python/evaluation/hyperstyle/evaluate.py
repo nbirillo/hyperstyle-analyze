@@ -102,7 +102,7 @@ def main():
                                         # new_format is True for batching evaluation
                                         new_format=True)
 
-    logger.info(f'Start processing:')
+    logger.info('Start processing:')
     results = evaluate(df_solutions, config)
     if args.output_path is None:
         output_path = get_output_path(args.solutions_file_path, HYPERSTYLE_OUTPUT_SUFFIX)
