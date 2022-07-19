@@ -97,7 +97,7 @@ def find_user_solutions(
                 wrong_rows.append(row_number)
                 continue
             file_path = Path(f"{cur_path}/solution_{current_attempt}.java")
-            create_file(file_path, step_rows["code"].iloc[row_number])
+            next(create_file(file_path, step_rows["code"].iloc[row_number]))
             visited_rows.append(row_number)
             descriptions.append(current_issues[random.randint(0, len(current_issues) - 1)].description)
             current_attempt += 1

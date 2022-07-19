@@ -37,6 +37,7 @@ def create_file(file_path: Union[str, Path], content: str):
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
     with open(file_path, 'w+') as f:
         f.writelines(content)
+        yield Path(file_path)
 
 
 def copy_file(source: Union[str, Path], destination: Union[str, Path]):
