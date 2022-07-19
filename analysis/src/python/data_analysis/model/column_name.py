@@ -120,6 +120,7 @@ class SubmissionColumns(Enum):
     CODE_STYLE = 'code_style'
     # issues
     RAW_ISSUES = 'raw_issues'
+    HYPERSTYLE_ISSUES = 'hyperstyle_issues'
     RAW_ISSUES_ALL = 'raw_issues_all'
     RAW_ISSUES_DIFF = 'raw_issues_diff'
     HYPERSTYLE_ISSUES = 'hyperstyle_issues'
