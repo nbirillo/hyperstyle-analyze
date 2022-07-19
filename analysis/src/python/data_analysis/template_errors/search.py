@@ -128,7 +128,7 @@ def match_with_template(df_submissions: pd.DataFrame, df_steps: pd.DataFrame, eq
     return df_submissions
 
 
-def search(submissions_path: str, steps_path: str, result_path: str, preprocessed_steps_path: str, n: int,
+def search(submissions_path: str, steps_path: str, result_path: str, steps_with_groups_count: str, n: int,
            equal_type: str):
     """
     Get n most frequently uncorrected issues for every step_id in submissions_path and write them to result_path.
@@ -158,7 +158,7 @@ def search(submissions_path: str, steps_path: str, result_path: str, preprocesse
         df_submissions[SubmissionColumns.CODE.value].map(lambda x: [line.rstrip('\r') for line in x.split(os.linesep)])
 
     df_steps = count_groups(df_submissions, df_steps)
-    write_df(df_steps, preprocessed_steps_path)
+    write_df(df_steps, steps_with_groups_count)
 
     df_submissions = match_with_template(df_submissions, df_steps, equal)
 
@@ -187,15 +187,15 @@ if __name__ == '__main__':
     parser.add_argument('submissions_path', type=str, help='Path to .csv file with submissions.')
     parser.add_argument('steps_path', type=str, help='Path to .csv file with steps.')
     parser.add_argument('result_path', type=str, help='Path to resulting .csv file with issues ranking.')
-    parser.add_argument('preprocessed_steps_path', type=str, nargs='?', default=None,
+    parser.add_argument('steps_with_groups_count', type=str, nargs='?', default=None,
                         help='Path to new .csv file with steps and counted number of groups.')
-    parser.add_argument('--N', type=int, default=5, help='Number of top issues for every step.')
+    parser.add_argument('--N', type=int, default=50, help='Number of top issues for every step.')
     parser.add_argument('--equal', type=str, default='char_by_char',
                         help='Function for lines comparing. Possible functions: "char_by_char", "edit_distance"')
 
     args = parser.parse_args(sys.argv[1:])
 
-    if args.preprocessed_steps_path is None:
-        args.preprocessed_steps_path = args.steps_path
+    if args.steps_with_groups_count is None:
+        args.steps_with_groups_count = args.steps_path
 
-    search(args.submissions_path, args.steps_path, args.result_path, args.preprocessed_steps_path, args.N, args.equal)
+    search(args.submissions_path, args.steps_path, args.result_path, args.steps_with_groups_count, args.N, args.equal)
