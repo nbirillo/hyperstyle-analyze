@@ -58,7 +58,10 @@ def evaluate_solutions(df_solutions: pd.DataFrame, lang: str, config: Hyperstyle
 def parse_new_format_results(results: str) -> pd.DataFrame:
     """ Parse results for group of solution and split by solution id. """
 
-    hyperstyle_report = parse_hyperstyle_new_format_report(results)
+    try:
+        hyperstyle_report = parse_hyperstyle_new_format_report(results)
+    except Exception as e:
+        raise f"Can not parse new format report from hyperstyle output: {e}"
 
     results_dict = {
         SubmissionColumns.ID.value: [],
