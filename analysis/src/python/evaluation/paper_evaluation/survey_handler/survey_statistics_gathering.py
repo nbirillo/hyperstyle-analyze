@@ -1,13 +1,15 @@
 import argparse
 import json
+import logging
 import sys
 from pathlib import Path
 
 from hyperstyle.src.python.review.common.file_system import get_content_from_file
-from analysis.src.python.evaluation.evaluation_run_tool import logger
 from analysis.src.python.evaluation.paper_evaluation.survey_handler.survey_statistics import (
     SurveyJsonField, SurveyStatistics,
 )
+
+logger = logging.getLogger(__name__)
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:
