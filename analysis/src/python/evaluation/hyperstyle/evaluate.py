@@ -34,9 +34,6 @@ def run_evaluation_command(command: List[str]):
     end = time.time()
     logger.info(f"Finish inspecting solutions time={end - start}s output={len(results)}")
 
-    print(' '.join(command))
-    print(results)
-
     return results
 
 
