@@ -25,14 +25,14 @@ HYPERSTYLE_OUTPUT_SUFFIX = '_hyperstyle'
 
 
 def run_evaluation_command(command: List[str]):
-    logger.info(f"Start inspecting solutions")
+    logger.info('Start inspecting solutions')
     start = time.time()
 
     logger.info('Executing command: ' + (' '.join(command)))
     results = run_in_subprocess(command)
 
     end = time.time()
-    logger.info(f"Finish inspecting solutions time={end - start}s output={len(results)}")
+    logger.info(f'Finish inspecting solutions time={end - start}s output={len(results)}')
 
     return results
 
