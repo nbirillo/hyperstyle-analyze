@@ -114,7 +114,7 @@ def main():
     args = parser.parse_args()
 
     df_solutions = read_df(args.solutions_file_path)
-    config = HyperstyleEvaluationConfig(docker_path=args.docker_path,
+    config = HyperstyleEvaluationConfig(docker_path=None if args.docker_path == 'None' else args.docker_path,
                                         tool_path=args.tool_path,
                                         allow_duplicates=args.allow_duplicates,
                                         with_all_categories=args.with_all_categories,
