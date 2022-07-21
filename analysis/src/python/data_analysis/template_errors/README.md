@@ -63,8 +63,13 @@ Optional arguments:
 
 Argument | Description
 --- | ---
-|**&#8209;fd**, **&#8209;&#8209;filter-duplicates** | Function for union the same issues. Possible functions: `max`, `min`. The default value is `max`.|
+|**&#8209;fd**, **&#8209;&#8209;filter-duplicates-type** | Function for union the same issues. Possible functions: `max`, `min`. The default value is `max`.|
 |**&#8209;fk**, **&#8209;&#8209;freq-to-keep** | The threshold of frequency to keep issues in the final table. The default value is `51`.|
+|**&#8209;fr**, **&#8209;&#8209;freq-to-remove** | The threshold of frequency to remove issues in the final table. The default value is `10`.|
+|**&#8209;fs**, **&#8209;&#8209;freq-to-separate** | The threshold of frequency to separate issues into typical and template in the final table. The default value is `25`.|
+|**&#8209;n**, **&#8209;&#8209;number-of-solutions** | Tne number of random students solutions that should be gathered for each task. The default value is `5`.|
+|**&#8209;&#8209;add-description** | The argument determines whether the description of each issue should be added. The default value is `True`.|
+|**&#8209;url**, **&#8209;&#8209;base-task-url** | Base url to the tasks on an education platform. The default value is `https://hyperskill.org/learn/step`.|
 
 ### Output file example
 
