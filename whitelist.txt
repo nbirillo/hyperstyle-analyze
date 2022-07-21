@@ -11,9 +11,6 @@ E265
 Elifs
 G10
 Gamification
-postprocessing
-Postprocessing
-conf
 H0
 HYPERSKILL
 Hyperskill
@@ -22,6 +19,7 @@ Oper
 PASTEL2
 Paren
 Pastel1
+Postprocessing
 R1716
 RQ1
 RQ2
@@ -66,6 +64,7 @@ chunksize
 cloneable
 cmap
 concat
+conf
 config
 configs
 conftest
@@ -232,6 +231,7 @@ pmd
 png
 popen
 pos
+postprocessing
 pred
 preprocess
 preprocessed
