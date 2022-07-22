@@ -19,6 +19,7 @@ Oper
 PASTEL2
 Paren
 Pastel1
+Postprocessing
 R1716
 RQ1
 RQ2
@@ -38,6 +39,7 @@ WPS432
 WPS446
 WPS462
 abstractmethod
+agg
 aggfunc
 annot
 anova
@@ -62,6 +64,7 @@ chunksize
 cloneable
 cmap
 concat
+conf
 config
 configs
 conftest
@@ -136,6 +139,7 @@ hline
 hyperskill
 hyperstyle
 idx
+idxmax
 ignorecase
 iloc
 inerop
@@ -227,6 +231,7 @@ pmd
 png
 popen
 pos
+postprocessing
 pred
 preprocess
 preprocessed
