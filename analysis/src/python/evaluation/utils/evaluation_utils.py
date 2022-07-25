@@ -1,27 +1,21 @@
-import os
-from pathlib import Path
+import logging
+import time
+from typing import List
 
-import pandas as pd
+from hyperstyle.src.python.review.common.subprocess_runner import run_in_subprocess
 
-from analysis.src.python.data_analysis.model.column_name import SubmissionColumns
-from analysis.src.python.evaluation.utils.pandas_utils import get_language_version
-from analysis.src.python.utils.file_utils import create_directory, create_file
+logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
 
 
-def save_solution_to_file(solution: pd.Series, dst_directory: Path) -> Path:
-    """ Save solution code to file dst_directory/solution_{ID}/code.{EXT} """
+def run_evaluation_command(command: List[str]):
+    logger.info('Start evaluation')
+    start = time.time()
 
-    solution_id = solution[SubmissionColumns.ID.value]
-    code = solution[SubmissionColumns.CODE.value]
-    language = solution[SubmissionColumns.LANG.value]
-    language_version = get_language_version(language)
+    logger.info('Executing command: ' + (' '.join(command)))
+    results = run_in_subprocess(command)
 
-    solution_dir_path = dst_directory / str(solution_id)
-    create_directory(solution_dir_path)
-    os.chmod(solution_dir_path, 0o777)
+    end = time.time()
+    logger.info(f'Finish evaluation time={end - start}s output={len(results)}')
 
-    solution_file_path = solution_dir_path / f'code{language_version.extension_by_language().value}'
-    solution_file_path = next(create_file(solution_file_path, code))
-    os.chmod(solution_file_path, 0o777)
-
-    return solution_file_path
+    return results

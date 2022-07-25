@@ -2,17 +2,17 @@ import argparse
 import logging
 import sys
 import time
-from typing import List
 
 import pandas as pd
-from hyperstyle.src.python.review.common.subprocess_runner import run_in_subprocess
 
 from analysis.src.python.data_analysis.model.column_name import SubmissionColumns
 from analysis.src.python.evaluation.hyperstyle.evaluation_args import configure_arguments
 from analysis.src.python.evaluation.hyperstyle.evaluation_config import HyperstyleEvaluationConfig
 from analysis.src.python.evaluation.hyperstyle.model.report import HyperstyleNewFormatReport
-from analysis.src.python.evaluation.utils.evaluation_utils import save_solution_to_file
+from analysis.src.python.evaluation.utils.evaluation_utils import run_evaluation_command
 from analysis.src.python.evaluation.utils.pandas_utils import get_language_version
+from analysis.src.python.evaluation.utils.solutions_saving_utils import get_solution_id_by_file_path, \
+    save_solutions_to_files
 from analysis.src.python.utils.df_utils import merge_dfs, read_df, write_df
 from analysis.src.python.utils.file_utils import create_directory, get_output_filename, get_output_path, \
     remove_directory
@@ -23,33 +23,17 @@ logging.basicConfig(level=logging.INFO)
 HYPERSTYLE_OUTPUT_SUFFIX = '_hyperstyle'
 
 
-def run_evaluation_command(command: List[str]):
-    logger.info('Start inspecting solutions')
-    start = time.time()
-
-    logger.info('Executing command: ' + (' '.join(command)))
-    results = run_in_subprocess(command)
-
-    end = time.time()
-    logger.info(f'Finish inspecting solutions time={end - start}s output={len(results)}')
-
-    return results
-
-
 def evaluate_solutions(df_solutions: pd.DataFrame, lang: str, config: HyperstyleEvaluationConfig) -> str:
     """ Run hyperstyle tool on directory with group of solutions written on same language version. """
 
     language_version = get_language_version(lang)
-    # Directory to inspect is tmp_directory/LANGUAGE_VERSION
-    solution_dir_path = config.tmp_directory / language_version.value
-    create_directory(solution_dir_path)
+    input_path = create_directory(config.tmp_directory / language_version.value)
 
-    # Solutions are saved to tmp_directory/LANGUAGE_VERSION/SOLUTION_ID/code.EXT
-    df_solutions.apply(save_solution_to_file, dst_directory=solution_dir_path, axis=1)
-
-    command = config.build_command(solution_dir_path, language_version)
+    save_solutions_to_files(df_solutions, language_version, input_path)
+    command = config.build_command(input_path, language_version)
     results = run_evaluation_command(command)
-    remove_directory(solution_dir_path)
+
+    remove_directory(input_path)
 
     return results.strip()
 
@@ -68,8 +52,7 @@ def parse_new_format_results(results: str) -> pd.DataFrame:
     }
 
     for file_report in hyperstyle_report.file_review_results:
-        # As solution path is SOLUTION_ID/code.EXT
-        solution_id = int(file_report.file_name.split('/')[0])
+        solution_id = get_solution_id_by_file_path(file_report.file_name)
         results_dict[SubmissionColumns.ID.value].append(solution_id)
 
         issues = file_report.to_hyperstyle_report().to_str()
@@ -101,7 +84,6 @@ def evaluate(df_solutions: pd.DataFrame, config: HyperstyleEvaluationConfig) -> 
             lambda solution: evaluate_solutions(solution.to_frame().T,
                                                 solution[SubmissionColumns.LANG.value],
                                                 config), axis=1)
-
     return df_solutions
 
 

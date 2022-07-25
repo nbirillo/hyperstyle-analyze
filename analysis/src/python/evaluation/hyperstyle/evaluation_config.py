@@ -1,13 +1,15 @@
 import logging.config
-import os
 from pathlib import Path
 from typing import List, Optional, Union
 
 from hyperstyle.src.python.review.application_config import LanguageVersion
 
-from analysis.src.python.utils.file_utils import create_directory, get_tmp_directory, remove_directory
+from analysis.src.python.utils.file_utils import create_directory, get_tmp_directory
 
 logger = logging.getLogger(__name__)
+
+HYPERSTYLE_TOOL_PATH = 'review/hyperstyle/src/python/review/run_tool.py'
+HYPERSTYLE_DOCKER_PATH = 'stepik/hyperstyle:1.2.2'
 
 
 class HyperstyleEvaluationConfig:
@@ -29,15 +31,10 @@ class HyperstyleEvaluationConfig:
         self.allow_duplicates: bool = allow_duplicates
         self.with_all_categories: bool = with_all_categories
         self.new_format = new_format
-
-        if tmp_directory is None:
-            self.tmp_directory: Path = get_tmp_directory() / 'hyperstyle' / str(os.getuid())
-        else:
-            self.tmp_directory = tmp_directory
+        self.tmp_directory = get_tmp_directory() if tmp_directory is None else tmp_directory
 
         # Create new empty directory
-        remove_directory(self.tmp_directory)
-        create_directory(self.tmp_directory)
+        self.tmp_directory = create_directory(self.tmp_directory / 'hyperstyle')
 
     def build_command(self,
                       input_path: Union[str, Path],
