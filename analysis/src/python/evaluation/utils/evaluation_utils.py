@@ -74,7 +74,7 @@ def evaluate_by_solution(df_solutions: pd.DataFrame,
     return pd.concat([df_solutions, pd.DataFrame.from_records(results)], axis=1)
 
 
-T = TypeVar('T', bound='Object')
+T = TypeVar('T')
 
 
 def evaluate(df_solutions: pd.DataFrame,
