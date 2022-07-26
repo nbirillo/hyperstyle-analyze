@@ -18,6 +18,15 @@ class Code:
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass(frozen=True)
+class Code:
+    start_line: int
+    length: int
+    offset: int
+    surrounding_code: str
+
+
+@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass(frozen=True)
 class Source:
     type: str
     path: str
