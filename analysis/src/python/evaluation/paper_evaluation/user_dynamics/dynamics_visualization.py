@@ -8,7 +8,7 @@ from typing import List
 import pandas as pd
 import plotly.express as px
 from hyperstyle.src.python.review.common.file_system import get_all_file_system_items
-from analysis.src.python.evaluation.utils.pandas_util import logger
+from analysis.src.python.evaluation.utils.pandas_utils import logger
 from analysis.src.python.evaluation.paper_evaluation.user_dynamics.user_statistics import DynamicsColumn
 from analysis.src.python.utils.file_utils import get_parent_folder
 from analysis.src.python.utils.extension_utils import AnalysisExtension, extension_file_condition

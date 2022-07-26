@@ -122,6 +122,7 @@ class SubmissionColumns(Enum):
     RAW_ISSUES = 'raw_issues'
     RAW_ISSUES_ALL = 'raw_issues_all'
     RAW_ISSUES_DIFF = 'raw_issues_diff'
+    HYPERSTYLE_ISSUES = 'hyperstyle_issues'
     RAW_ISSUE_CLASS = 'origin_class'
     ISSUE_TYPE = 'type'
     QODANA_ISSUES = 'qodana_issues'

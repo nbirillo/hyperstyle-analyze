@@ -2,10 +2,10 @@ from pathlib import Path
 
 import pytest
 from hyperstyle.src.python.review.application_config import LanguageVersion
-from analysis.src.python.evaluation.utils.pandas_util import filter_df_by_language
+from analysis.src.python.evaluation.utils.pandas_utils import filter_df_by_language
 from analysis.src.python.utils.df_utils import equal_df, read_df
 from analysis.src.python.utils.file_utils import get_name_from_path
-from analysis.src.python.evaluation.utils.args_util import get_in_and_out_list
+from analysis.src.python.evaluation.utils.args_utils import get_in_and_out_list
 from analysis.test.python.evaluation import INSPECTORS_DIR_PATH
 
 RESOURCES_PATH = INSPECTORS_DIR_PATH / 'filter_by_language'

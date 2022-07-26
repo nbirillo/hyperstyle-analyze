@@ -10,9 +10,44 @@ Possible values for column `lang` are: `python3`, `kotlin`, `java8`, `java11`.
 
 Output file is a new `xlsx` or `csv` file with the all columns from the input file and one additional - `traceback` 
 which contains full traceback of [hyperstyle](https://github.com/hyperskill/hyperstyle/blob/main/README.md)  code quality analysis tool.
-For this evaluation you need to download ocker image `stepik/hyperstyle:1.2.2` (with preinstalled hyperstyle tool) 
+For this evaluation you need to download docker image `stepik/hyperstyle:1.2.2` (with preinstalled hyperstyle tool) 
 or build your own docker container.
-This evaluation fully represents solution code quality accessing in hyperskill platform.
+
+The output dataframe will contain one new column: 
+- `hyperstyle_issues` - dumped json with hyperstyle report on each solution. 
+For example `hyperstyle_issues` field on solution with id=2637248 looks like:
+
+```json
+{
+  "quality": {
+    "code": "BAD",
+    "text": "Code quality (beta): BAD"
+  },
+  "issues": [
+    {
+      "code": "UnusedPrivateMethod",
+      "text": "Avoid unused private methods such as 'rehash()'.",
+      "line": "private void rehash() {",
+      "line_number": 73,
+      "column_number": 1,
+      "category": "BEST_PRACTICES",
+      "difficulty": "MEDIUM",
+      "influence_on_penalty": 0
+    },
+    {
+      "code": "InefficientStringBuffering",
+      "text": "Avoid concatenating nonliterals in a StringBuffer/StringBuilder constructor or append().",
+      "line": "tableStringBuilder.append(i + \": null\");",
+      "line_number": 90,
+      "column_number": 1,
+      "category": "BEST_PRACTICES",
+      "difficulty": "MEDIUM",
+      "influence_on_penalty": 0
+    },
+    ...
+  ]
+}
+```
 
 ## Usage
 

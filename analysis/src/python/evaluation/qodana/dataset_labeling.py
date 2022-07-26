@@ -10,7 +10,7 @@ from math import ceil
 from pathlib import Path
 from typing import Dict, List, Optional
 
-from analysis.src.python.evaluation.utils.args_util import EvaluationRunToolArgument
+from analysis.src.python.evaluation.utils.args_utils import EvaluationRunToolArgument
 
 import numpy as np
 import pandas as pd

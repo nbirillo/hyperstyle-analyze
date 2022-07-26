@@ -57,7 +57,7 @@ def run_batching():
             end_time = time.time()
             logger.info(f'Finish batch {index} processing in {end_time - start_time}')
 
-    merge_batch_results(batch_paths, args.output)
+    merge_batch_results(batch_paths, args.output_path)
 
 
 def create_sub_directory(base_path: str, directory_name: str) -> str:
@@ -112,4 +112,5 @@ def merge_batch_results(batch_paths: List[Tuple[int, str, str, str]], output: st
 
 
 if __name__ == "__main__":
+    logging.basicConfig(level=logging.INFO)
     run_batching()

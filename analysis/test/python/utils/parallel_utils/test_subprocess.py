@@ -1,14 +1,13 @@
 import os
 from pathlib import Path
-from typing import Optional
 
 import pytest
 from hyperstyle.src.python.review.application_config import LanguageVersion
 from hyperstyle.src.python.review.common.file_system import get_content_from_file
 
-from analysis.src.python.evaluation.evaluation_config import EvaluationConfig
-from analysis.src.python.utils.parallel_utils import run_in_subprocess_with_working_dir
-from analysis.test.python.evaluation.testing_config import get_testing_arguments
+from analysis import HYPERSTYLE_RUNNER_PATH
+from analysis.src.python.evaluation.hyperstyle.evaluate import run_evaluation_command
+from analysis.src.python.evaluation.hyperstyle.evaluation_config import HyperstyleEvaluationConfig
 from analysis.src.python.utils.file_utils import create_file
 from analysis.test.python.utils import PARALLEL_UTILS_DATA_FOLDER
 
@@ -20,16 +19,20 @@ INPUT_DATA = [
 ]
 
 
-def inspect_code(config: EvaluationConfig, file: str, language: LanguageVersion, history: Optional[str] = None) -> str:
-    command = config.build_command(file, language.value, history)
-    return run_in_subprocess_with_working_dir(command, config.get_tool_root())
+def inspect_code(config: HyperstyleEvaluationConfig, file: Path, language: LanguageVersion) -> str:
+    command = config.build_command(file, language)
+    return run_evaluation_command(command)
 
 
 @pytest.mark.parametrize(('test_file', 'language'), INPUT_DATA)
 def test(test_file: str, language: LanguageVersion):
     input_file = RESOURCES_PATH / test_file
-    test_args = get_testing_arguments(to_add_traceback=True, to_add_tool_path=True)
-    config = EvaluationConfig(test_args)
+    config = HyperstyleEvaluationConfig(docker_path=None,
+                                        tool_path=HYPERSTYLE_RUNNER_PATH,
+                                        allow_duplicates=False,
+                                        with_all_categories=False,
+                                        new_format=True,
+                                        )
 
     expected_output = inspect_code(config, input_file, language)
 

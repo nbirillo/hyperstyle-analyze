@@ -10,8 +10,8 @@ from hyperstyle.src.python.review.quality.penalty import PenaltyIssue
 
 from analysis.src.python.evaluation.model.column_name import ColumnName
 from analysis.src.python.evaluation.paper_evaluation.user_dynamics.user_statistics import DynamicsColumn
-from analysis.src.python.evaluation.utils.args_util import EvaluationRunToolArgument
-from analysis.src.python.evaluation.utils.pandas_util import get_issues_from_json, logger
+from analysis.src.python.evaluation.utils.args_utils import EvaluationRunToolArgument
+from analysis.src.python.evaluation.utils.pandas_utils import get_issues_from_json, logger
 from analysis.src.python.utils.df_utils import filter_df_by_single_value, read_df, write_df
 from analysis.src.python.utils.extension_utils import AnalysisExtension
 from analysis.src.python.utils.file_utils import get_parent_folder
