@@ -5,7 +5,7 @@ import pytest
 from analysis.src.python.evaluation.qodana.evaluate import evaluate_qodana
 from analysis.src.python.evaluation.qodana.evaluation_config import QodanaEvaluationConfig
 from analysis.src.python.evaluation.utils.args_utils import get_in_and_out_list
-from analysis.src.python.utils.df_utils import equal_df, read_df, write_df
+from analysis.src.python.utils.df_utils import equal_df, read_df
 from analysis.test.python.evaluation import QODANA_DIR_PATH
 
 RESOURCES_PATH = QODANA_DIR_PATH / 'docker_evaluation'
