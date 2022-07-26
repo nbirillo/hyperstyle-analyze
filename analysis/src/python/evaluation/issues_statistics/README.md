@@ -26,20 +26,14 @@ Run the [get_raw_issues.py](get_raw_issues.py) with the arguments from command l
 
 **Optional arguments:**
 
-| Argument | Description |
-|----------|-------------|
-| **
-&#8209;&#8209;allow&#8209;duplicates** | Allow duplicate issues found by different linters. By default, duplicates are skipped. |
-| **
-&#8209;&#8209;allow&#8209;zero&#8209;measure&#8209;issues** | Allow issues with zero measure. By default, such issues are skipped. |
-| **
-&#8209;&#8209;allow&#8209;info&#8209;issues** | Allow issues from the INFO category. By default, such issues are skipped. |
-| **
-&#8209;&#8209;to&#8209;save&#8209;path** | Allows to save the path to the file where the issue was found. By default, the path is not saved. |
-| **&#8209;o**, **
-&#8209;&#8209;output** | Path where the dataset with raw issues will be saved. If not specified, the dataset will be saved next to the original one. |
-| **&#8209;l**, **
-&#8209;&#8209;log-output** | Path where logs will be stored. If not specified, then logs will be output to stderr. |
+| Argument                                                      | Description                                                                                                                 |
+|---------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------|
+| **&#8209;&#8209;allow&#8209;duplicates**                      | Allow duplicate issues found by different linters. By default, duplicates are skipped.                                      |
+| **&#8209;&#8209;allow&#8209;zero&#8209;measure&#8209;issues** | Allow issues with zero measure. By default, such issues are skipped.                                                        |
+| **&#8209;&#8209;allow&#8209;info&#8209;issues**               | Allow issues from the INFO category. By default, such issues are skipped.                                                   |
+| **&#8209;&#8209;to&#8209;save&#8209;path**                    | Allows to save the path to the file where the issue was found. By default, the path is not saved.                           |
+| **&#8209;o**, **&#8209;&#8209;output**                        | Path where the dataset with raw issues will be saved. If not specified, the dataset will be saved next to the original one. |
+| **&#8209;l**, **&#8209;&#8209;log-output**                    | Path where logs will be stored. If not specified, then logs will be output to stderr.                                       |
 
 ## Filter raw issues
 
@@ -111,7 +105,6 @@ Run the [get_raw_issues_statistics.py](get_raw_issues_statistics.py) with the ar
 
 **Optional arguments:**
 
-| Argument | Description |
-|----------|-------------|
-| **&#8209;o**, **
-&#8209;&#8209;output** | Path to the folder where datasets with statistics will be saved. If not specified, the datasets will be saved in the folder next to the original dataset. |
+| Argument                               | Description                                                                                                                                               |
+|----------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **&#8209;o**, **&#8209;&#8209;output** | Path to the folder where datasets with statistics will be saved. If not specified, the datasets will be saved in the folder next to the original dataset. |
