@@ -2,7 +2,7 @@ import json
 from dataclasses import dataclass
 from typing import List
 
-from dataclasses_json import LetterCase, dataclass_json
+from dataclasses_json import dataclass_json, LetterCase
 
 
 @dataclass_json(letter_case=LetterCase.CAMEL)

@@ -54,7 +54,7 @@ class HyperstyleEvaluationConfig(EvaluationConfig):
                        '-v', f'{input_path}/:/input/',
                        '-v', f'{output_path}/:/output/',
                        f'{self.docker_path}',
-                       '/bin/bash', '-c'
+                       '/bin/bash', '-c',
                        ]
 
         python_command = ['python3', f'{self.tool_path}']

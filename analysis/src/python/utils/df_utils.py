@@ -107,5 +107,5 @@ def dict_to_df(d: dict, key_column: str, value_column: str) -> pd.DataFrame:
 
     return pd.DataFrame.from_dict({
         key_column: d.keys(),
-        value_column: d.values()
+        value_column: d.values(),
     })
