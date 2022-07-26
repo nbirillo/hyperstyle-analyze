@@ -2,47 +2,23 @@ from pathlib import Path
 
 import pytest
 
-from analysis.src.python.evaluation.hyperstyle.evaluate import evaluate
-from analysis.src.python.evaluation.hyperstyle.evaluation_config import HYPERSTYLE_DOCKER_PATH, HYPERSTYLE_TOOL_PATH, \
-    HyperstyleEvaluationConfig
+from analysis.src.python.evaluation.qodana.evaluate import evaluate
+from analysis.src.python.evaluation.qodana.evaluation_config import QodanaEvaluationConfig
 from analysis.src.python.evaluation.utils.args_utils import get_in_and_out_list
 from analysis.src.python.utils.df_utils import equal_df, read_df
-from analysis.test.python.evaluation import HYPERSTYLE_DIR_PATH
+from analysis.test.python.evaluation import QODANA_DIR_PATH
 
-RESOURCES_PATH = HYPERSTYLE_DIR_PATH / 'docker_evaluation'
+RESOURCES_PATH = QODANA_DIR_PATH / 'docker_evaluation'
 
 IN_AND_OUT_FILES = get_in_and_out_list(RESOURCES_PATH)
 
 
-@pytest.mark.skip(reason="No docker inside CI container")
+# @pytest.mark.skip(reason="No docker inside CI container")
 @pytest.mark.parametrize(('in_file', 'out_file'), IN_AND_OUT_FILES)
 def test_with_batching(in_file: Path, out_file: Path):
     in_df = read_df(in_file)
 
-    testing_config = HyperstyleEvaluationConfig(docker_path=HYPERSTYLE_DOCKER_PATH,
-                                                tool_path=HYPERSTYLE_TOOL_PATH,
-                                                allow_duplicates=False,
-                                                with_all_categories=False,
-                                                new_format=True,
-                                                )
+    testing_config = QodanaEvaluationConfig(tmp_directory=Path(
+        '/Users/tiginamaria1999/PycharmProjects/hyperstyle-analyze/analysis/test/python/evaluation/qodana/tmp_save_report'))
 
-    inspected_df = evaluate(in_df, testing_config)
-    out_df = read_df(out_file)
-    assert equal_df(out_df, inspected_df)
-
-
-@pytest.mark.skip(reason="No docker inside CI container")
-@pytest.mark.parametrize(('in_file', 'out_file'), IN_AND_OUT_FILES)
-def test_without_batching(in_file: Path, out_file: Path):
-    in_df = read_df(in_file)
-
-    testing_config = HyperstyleEvaluationConfig(docker_path=HYPERSTYLE_DOCKER_PATH,
-                                                tool_path=HYPERSTYLE_TOOL_PATH,
-                                                allow_duplicates=False,
-                                                with_all_categories=False,
-                                                new_format=False,
-                                                )
-
-    inspected_df = evaluate(in_df, testing_config)
-    out_df = read_df(out_file)
-    assert equal_df(out_df, inspected_df)
+    evaluate(in_df, testing_config)

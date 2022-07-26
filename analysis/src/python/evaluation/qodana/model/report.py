@@ -1,42 +1,49 @@
+import json
 from dataclasses import dataclass
 from typing import List
 
+from dataclasses_json import LetterCase, dataclass_json
 
+
+@dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass(frozen=True)
-class Quality:
-    code: str
-    text: str
+class Source:
+    type: str
+    path: str
+    language: str
+    line: int
+    offset: int
+    length: int
 
 
+@dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass(frozen=True)
-class HyperstyleIssue:
-    code: str
-    text: str
-    line: str
-    line_number: int
-    column_number: int
+class Attributes:
+    inspection_name: str
+
+
+@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass(frozen=True)
+class Problem:
+    tool: str
     category: str
-    difficulty: str
-    influence_on_penalty: int
+    type: str
+    severity: str
+    comment: str
+    details_info: str
+    sources: List[Source]
+    attributes:  Attributes
 
 
+@dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass(frozen=True)
-class HyperstyleFileReport:
-    file_name: str
-    quality: Quality
-    issues: List[HyperstyleIssue]
+class QodanaReport:
+    version: str
+    list_problem: List[Problem]
 
-    def to_hyperstyle_report(self):
-        return HyperstyleReport(self.quality, self.issues)
+    def to_str(self):
+        return json.dumps(self.to_dict())
 
-
-@dataclass(frozen=True)
-class HyperstyleNewFormatReport:
-    quality: Quality
-    file_review_results: List[HyperstyleFileReport]
-
-
-@dataclass(frozen=True)
-class HyperstyleReport:
-    quality: Quality
-    issues: List[HyperstyleIssue]
+    @staticmethod
+    def from_str(s: str) -> 'QodanaReport':
+        return QodanaReport.from_dict(json.loads(s))
