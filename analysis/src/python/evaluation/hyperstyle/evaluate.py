@@ -2,20 +2,18 @@ import argparse
 import logging
 import sys
 import time
+from pathlib import Path
 
 import pandas as pd
 
 from analysis.src.python.data_analysis.model.column_name import SubmissionColumns
 from analysis.src.python.evaluation.hyperstyle.evaluation_args import configure_arguments
 from analysis.src.python.evaluation.hyperstyle.evaluation_config import HyperstyleEvaluationConfig
-from analysis.src.python.evaluation.hyperstyle.model.report import HyperstyleNewFormatReport
-from analysis.src.python.evaluation.utils.evaluation_utils import run_evaluation_command
-from analysis.src.python.evaluation.utils.pandas_utils import get_language_version
-from analysis.src.python.evaluation.utils.solutions_saving_utils import get_solution_id_by_file_path, \
-    save_solutions_to_files
-from analysis.src.python.utils.df_utils import merge_dfs, read_df, write_df
-from analysis.src.python.utils.file_utils import create_directory, get_output_filename, get_output_path, \
-    remove_directory
+from analysis.src.python.evaluation.hyperstyle.model.report import HyperstyleNewFormatReport, HyperstyleReport
+from analysis.src.python.evaluation.utils.evaluation_utils import evaluate_by_language, evaluate_by_solution
+from analysis.src.python.evaluation.utils.solutions_saving_utils import get_solution_id_by_file_path
+from analysis.src.python.utils.df_utils import read_df, write_df
+from analysis.src.python.utils.file_utils import get_output_filename, get_output_path
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -23,67 +21,54 @@ logging.basicConfig(level=logging.INFO)
 HYPERSTYLE_OUTPUT_SUFFIX = '_hyperstyle'
 
 
-def evaluate_solutions(df_solutions: pd.DataFrame, lang: str, config: HyperstyleEvaluationConfig) -> str:
-    """ Run hyperstyle tool on directory with group of solutions written on same language version. """
-
-    language_version = get_language_version(lang)
-    input_path = create_directory(config.tmp_directory / language_version.value)
-
-    save_solutions_to_files(df_solutions, language_version, input_path)
-    command = config.build_command(input_path, language_version)
-    results = run_evaluation_command(command)
-
-    remove_directory(input_path)
-
-    return results.strip()
-
-
-def parse_new_format_results(results: str) -> pd.DataFrame:
+def parse_hyperstyle_new_format_result(results_path: Path) -> pd.DataFrame:
     """ Parse results for group of solution and split by solution id. """
-
-    try:
-        hyperstyle_report = HyperstyleNewFormatReport.from_str(results)
-    except Exception as e:
-        raise f"Can not parse new format report from hyperstyle output: {e}"
 
     results_dict = {
         SubmissionColumns.ID.value: [],
         SubmissionColumns.HYPERSTYLE_ISSUES.value: [],
     }
 
-    for file_report in hyperstyle_report.file_review_results:
-        solution_id = get_solution_id_by_file_path(file_report.file_name)
-        results_dict[SubmissionColumns.ID.value].append(solution_id)
+    try:
+        with open(results_path, 'r') as f:
+            hyperstyle_report = HyperstyleNewFormatReport.from_str(f.read())
 
-        issues = file_report.to_hyperstyle_report().to_str()
-        results_dict[SubmissionColumns.HYPERSTYLE_ISSUES.value].append(issues)
+        for file_report in hyperstyle_report.file_review_results:
+            solution_id = get_solution_id_by_file_path(file_report.file_name)
+            results_dict[SubmissionColumns.ID.value].append(solution_id)
 
-    df_results = pd.DataFrame.from_dict(results_dict)
+            issues = file_report.to_hyperstyle_report().to_str()
+            results_dict[SubmissionColumns.HYPERSTYLE_ISSUES.value].append(issues)
 
-    return df_results
+    except Exception as e:
+        logging.error(f"Can not parse new format report from hyperstyle output: {e}")
+
+    return pd.DataFrame.from_dict(results_dict)
 
 
-def evaluate(df_solutions: pd.DataFrame, config: HyperstyleEvaluationConfig) -> pd.DataFrame:
+def parse_hyperstyle_result(results_path: Path) -> pd.Series:
+    """ Parse result for single solution. """
+
+    result = ''
+
+    try:
+        with open(results_path, 'r') as f:
+            hyperstyle_report = HyperstyleReport.from_str(f.read())
+            result = hyperstyle_report.to_str()
+
+    except Exception as e:
+        logging.error(f"Can not parse new format report from hyperstyle output: {e}")
+
+    return pd.Series({SubmissionColumns.HYPERSTYLE_ISSUES.value: result})
+
+
+def evaluate_hyperstyle(df_solutions: pd.DataFrame, config: HyperstyleEvaluationConfig) -> pd.DataFrame:
     """ All solutions are grouped by language version and inspected by groups by hyperstyle tool. """
 
     if config.new_format:
-        results = []
-
-        for lang, df_lang_solutions in df_solutions.groupby(SubmissionColumns.LANG.value):
-            lang_results = evaluate_solutions(df_lang_solutions, lang, config)
-            df_lang_results = parse_new_format_results(lang_results)
-            results.append(df_lang_results)
-
-        df_results = pd.concat(results)
-        df_solutions = merge_dfs(df_solutions, df_results,
-                                 left_on=SubmissionColumns.ID.value,
-                                 right_on=SubmissionColumns.ID.value,
-                                 )
+        df_solutions = evaluate_by_language(df_solutions, config, parse_hyperstyle_new_format_result)
     else:
-        df_solutions[SubmissionColumns.HYPERSTYLE_ISSUES.value] = df_solutions.apply(
-            lambda solution: evaluate_solutions(solution.to_frame().T,
-                                                solution[SubmissionColumns.LANG.value],
-                                                config), axis=1)
+        df_solutions = evaluate_by_solution(df_solutions, config, parse_hyperstyle_result)
     return df_solutions
 
 
@@ -103,7 +88,7 @@ def main():
                                         new_format=True)
 
     logger.info('Start processing:')
-    results = evaluate(df_solutions, config)
+    results = evaluate_hyperstyle(df_solutions, config)
     if args.output_path is None:
         output_path = get_output_path(args.solutions_file_path, HYPERSTYLE_OUTPUT_SUFFIX)
     else:

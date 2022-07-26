@@ -7,6 +7,15 @@ from dataclasses_json import LetterCase, dataclass_json
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
 @dataclass(frozen=True)
+class Code:
+    start_line: int
+    length: int
+    offset: int
+    surrounding_code: str
+
+
+@dataclass_json(letter_case=LetterCase.CAMEL)
+@dataclass(frozen=True)
 class Source:
     type: str
     path: str
@@ -14,6 +23,7 @@ class Source:
     line: int
     offset: int
     length: int
+    code: Code
 
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
@@ -32,7 +42,7 @@ class Problem:
     comment: str
     details_info: str
     sources: List[Source]
-    attributes:  Attributes
+    attributes: Attributes
 
 
 @dataclass_json(letter_case=LetterCase.CAMEL)

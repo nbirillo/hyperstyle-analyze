@@ -4,15 +4,18 @@ from typing import List, Optional, Union
 
 from hyperstyle.src.python.review.application_config import LanguageVersion
 
-from analysis.src.python.utils.file_utils import create_directory, get_tmp_directory
+from analysis.src.python.evaluation.utils.evaluation_utils import EvaluationConfig
+from analysis.src.python.utils.file_utils import get_tmp_directory
 
 logger = logging.getLogger(__name__)
 
 HYPERSTYLE_TOOL_PATH = 'review/hyperstyle/src/python/review/run_tool.py'
 HYPERSTYLE_DOCKER_PATH = 'stepik/hyperstyle:1.2.2'
 
+OUTPUT_FILE_PATH = Path('result.json')
 
-class HyperstyleEvaluationConfig:
+
+class HyperstyleEvaluationConfig(EvaluationConfig):
     def __init__(self, docker_path: Optional[str],
                  tool_path: str,
                  allow_duplicates: bool,
@@ -25,19 +28,22 @@ class HyperstyleEvaluationConfig:
         `tmp_directory` - directory where to place evaluation temporary files
         Number of hyperstyle tool running script parameters (`allow_duplicates`, `with_all_categories` etc.)
         """
+
+        tmp_directory = get_tmp_directory() if tmp_directory is None else tmp_directory
+        super().__init__(tmp_path=tmp_directory / 'hyperstyle',
+                         result_path=OUTPUT_FILE_PATH,
+                         with_template=False)
+
         self.docker_path: str = docker_path
         self.tool_path: str = tool_path
 
         self.allow_duplicates: bool = allow_duplicates
         self.with_all_categories: bool = with_all_categories
         self.new_format = new_format
-        self.tmp_directory = get_tmp_directory() if tmp_directory is None else tmp_directory
-
-        # Create new empty directory
-        self.tmp_directory = create_directory(self.tmp_directory / 'hyperstyle')
 
     def build_command(self,
                       input_path: Union[str, Path],
+                      output_path: Union[str, Path],
                       language_version: LanguageVersion) -> List[str]:
 
         command = []
@@ -46,26 +52,32 @@ class HyperstyleEvaluationConfig:
         if self.docker_path is not None:
             command = ['docker', 'run',
                        '-v', f'{input_path}/:/input/',
+                       '-v', f'{output_path}/:/output/',
                        f'{self.docker_path}',
+                       '/bin/bash', '-c'
                        ]
 
-        command += ['python3', f'{self.tool_path}']
+        python_command = ['python3', f'{self.tool_path}']
 
         if self.allow_duplicates:
-            command += ['--allow-duplicates']
+            python_command += ['--allow-duplicates']
 
         if self.with_all_categories:
-            command += ['--with‑all‑categories']
+            python_command += ['--with‑all‑categories']
 
         if self.new_format:
-            command += ['--new-format']
+            python_command += ['--new-format']
 
         if language_version.is_java():
-            command += ['--language_version', language_version.value]
+            python_command += ['--language_version', language_version.value]
 
         if self.docker_path is not None:
-            command += ['/input']
+            python_command += ['/input']
         else:
-            command += [str(input_path)]
+            python_command += [str(input_path)]
+
+        python_command += ['>', f'/output/{OUTPUT_FILE_PATH}']
+
+        command.append(' '.join(python_command))
 
         return command

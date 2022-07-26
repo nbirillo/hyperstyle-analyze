@@ -5,7 +5,8 @@ from typing import List, Optional, Union
 
 from hyperstyle.src.python.review.application_config import LanguageVersion
 
-from analysis.src.python.utils.file_utils import create_directory, get_tmp_directory
+from analysis.src.python.evaluation.utils.evaluation_utils import EvaluationConfig
+from analysis.src.python.utils.file_utils import get_tmp_directory
 
 logger = logging.getLogger(__name__)
 
@@ -14,8 +15,10 @@ PROFILE_FOLDER = Path(__file__).parents[3] / 'resources' / 'evaluation' / 'qodan
 QODANA_JAVA_DOCKER_PATH = 'jetbrains/qodana'
 QODANA_PYTHON_DOCKER_PATH = 'jetbrains/qodana-python:2022.1-eap'
 
+OUTPUT_FILE_PATH = Path('report', 'results', 'result-allProblems.json')
 
-class QodanaEvaluationConfig:
+
+class QodanaEvaluationConfig(EvaluationConfig):
 
     def __init__(self,
                  with_custom_profile: bool = False,
@@ -24,12 +27,13 @@ class QodanaEvaluationConfig:
         `with_custom_profile` - run qodana with custom inspection profile (settings)
         `tmp_directory` - directory where to place evaluation temporary files
         """
+
+        tmp_directory = get_tmp_directory() if tmp_directory is None else tmp_directory
+        super().__init__(tmp_path=tmp_directory / 'qodana',
+                         result_path=OUTPUT_FILE_PATH,
+                         with_template=True)
+
         self.with_custom_profile: bool = with_custom_profile
-
-        self.tmp_directory = get_tmp_directory() if tmp_directory is None else tmp_directory
-
-        # Create new empty directory
-        self.tmp_directory = create_directory(self.tmp_directory / 'qodana')
 
     def build_command(self,
                       input_path: Union[Path, str],
@@ -60,7 +64,3 @@ class QodanaEvaluationConfig:
         command.append('--save-report')
 
         return command
-
-    @staticmethod
-    def get_result_path(output_path: Path) -> Path:
-        return output_path / 'report' / 'results' / 'result-allProblems.json'

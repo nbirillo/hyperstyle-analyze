@@ -44,7 +44,10 @@ def copy_file(source: Union[str, Path], destination: Union[str, Path]):
     shutil.copy(source, destination)
 
 
-def create_directory(path: Union[str, Path], exist_ok: bool = True) -> Path:
+def create_directory(path: Union[str, Path], exist_ok: bool = True, clear: bool = False) -> Path:
+    if os.path.exists(path) and clear:
+        remove_directory(path)
+
     if not os.path.exists(path):
         os.makedirs(path, exist_ok=exist_ok)
     return path
