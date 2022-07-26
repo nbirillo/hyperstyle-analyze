@@ -10,8 +10,7 @@ from hyperstyle.src.python.review.common.subprocess_runner import run_in_subproc
 from analysis.src.python.data_analysis.model.column_name import SubmissionColumns
 from analysis.src.python.evaluation.hyperstyle.evaluation_args import configure_arguments
 from analysis.src.python.evaluation.hyperstyle.evaluation_config import HyperstyleEvaluationConfig
-from analysis.src.python.evaluation.hyperstyle.utils.parsing_utils import dump_report, \
-    parse_hyperstyle_new_format_report
+from analysis.src.python.evaluation.hyperstyle.model.report import HyperstyleNewFormatReport
 from analysis.src.python.evaluation.utils.evaluation_utils import save_solution_to_file
 from analysis.src.python.evaluation.utils.pandas_utils import get_language_version
 from analysis.src.python.utils.df_utils import merge_dfs, read_df, write_df
@@ -59,7 +58,7 @@ def parse_new_format_results(results: str) -> pd.DataFrame:
     """ Parse results for group of solution and split by solution id. """
 
     try:
-        hyperstyle_report = parse_hyperstyle_new_format_report(results)
+        hyperstyle_report = HyperstyleNewFormatReport.from_str(results)
     except Exception as e:
         raise f"Can not parse new format report from hyperstyle output: {e}"
 
@@ -73,7 +72,7 @@ def parse_new_format_results(results: str) -> pd.DataFrame:
         solution_id = int(file_report.file_name.split('/')[0])
         results_dict[SubmissionColumns.ID.value].append(solution_id)
 
-        issues = dump_report(file_report.to_hyperstyle_report())
+        issues = file_report.to_hyperstyle_report().to_str()
         results_dict[SubmissionColumns.HYPERSTYLE_ISSUES.value].append(issues)
 
     df_results = pd.DataFrame.from_dict(results_dict)

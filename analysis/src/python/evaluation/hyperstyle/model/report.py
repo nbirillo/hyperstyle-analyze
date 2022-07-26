@@ -1,5 +1,9 @@
+import dataclasses
+import json
 from dataclasses import dataclass
 from typing import List
+
+from dacite import from_dict
 
 
 @dataclass(frozen=True)
@@ -21,22 +25,34 @@ class HyperstyleIssue:
 
 
 @dataclass(frozen=True)
-class HyperstyleFileReport:
-    file_name: str
+class QualityReport:
     quality: Quality
+
+    def to_str(self):
+        return json.dumps(dataclasses.asdict(self))
+
+
+@dataclass(frozen=True)
+class HyperstyleReport(QualityReport):
     issues: List[HyperstyleIssue]
+
+    @staticmethod
+    def from_str(report: str):
+        return from_dict(data_class=HyperstyleReport, data=json.loads(report))
+
+
+@dataclass(frozen=True)
+class HyperstyleFileReport(HyperstyleReport):
+    file_name: str
 
     def to_hyperstyle_report(self):
         return HyperstyleReport(self.quality, self.issues)
 
 
 @dataclass(frozen=True)
-class HyperstyleNewFormatReport:
-    quality: Quality
+class HyperstyleNewFormatReport(QualityReport):
     file_review_results: List[HyperstyleFileReport]
 
-
-@dataclass(frozen=True)
-class HyperstyleReport:
-    quality: Quality
-    issues: List[HyperstyleIssue]
+    @staticmethod
+    def from_str(report: str):
+        return from_dict(data_class=HyperstyleNewFormatReport, data=json.loads(report))
