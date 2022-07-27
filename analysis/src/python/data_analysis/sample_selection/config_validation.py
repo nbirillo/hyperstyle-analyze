@@ -12,6 +12,15 @@ def _is_list(value: Any, classinfo: Union[type, Tuple[type, ...]]) -> bool:
 
 
 def _validate_by_code_lines_count(args: Optional[Dict]) -> bool:
+    if ConfigArguments.INCLUDE_BOUNDARIES.value in args and not isinstance(
+        args[ConfigArguments.INCLUDE_BOUNDARIES.value], bool
+    ):
+        logger.error(f"The '{ConfigArguments.INCLUDE_BOUNDARIES.value}' must be a boolean.")
+        return False
+
+    if ConfigArguments.INCLUDE_BOUNDARIES.value not in args:
+        args[ConfigArguments.INCLUDE_BOUNDARIES.value] = False
+
     # Only one argument needs to be specified.
     # !(a xor b) <=> a == b
     if args is None or ((ConfigArguments.BINS.value in args) == (ConfigArguments.LENGTH.value in args)):
@@ -58,9 +67,16 @@ def validate_config(config: Optional[Dict]) -> bool:
         )
         config[ConfigArguments.NUMBER_OF_SAMPLES.value] = DEFAULT_NUMBER_OF_SAMPLES
 
+    if not isinstance(config[ConfigArguments.NUMBER_OF_SAMPLES.value], int):
+        logger.error('The number of samples must be a integer.')
+        return False
+
     if ConfigArguments.RANDOM_STATE.value in config and not isinstance(config[ConfigArguments.RANDOM_STATE.value], int):
         logger.error("The 'random_state' must be an integer.")
         return False
+
+    if ConfigArguments.RANDOM_STATE.value not in config:
+        config[ConfigArguments.RANDOM_STATE.value] = None
 
     # Check that there is one and only one strategy in the config
     if sum([strategy in config for strategy in GroupStrategy.strategies()]) != 1:
