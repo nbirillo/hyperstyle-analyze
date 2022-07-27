@@ -27,7 +27,7 @@ def _validate_by_code_lines_count(args: Optional[Dict]) -> bool:
         logger.error(f"The '{ConfigArguments.LENGTH.value}' can either be an integer or a list of integers.")
         return False
 
-    if ConfigArguments.BINS.value in args and not _is_list(args[ConfigArguments.LENGTH.value], int):
+    if ConfigArguments.BINS.value in args and not _is_list(args[ConfigArguments.BINS.value], int):
         logger.error(f"The '{ConfigArguments.BINS.value}' must be a list of integers.")
         return False
 

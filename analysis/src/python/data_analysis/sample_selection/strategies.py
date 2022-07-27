@@ -121,7 +121,7 @@ def get_samples_by_step_id(
     return (
         submissions[submissions[SubmissionColumns.STEP_ID.value].isin(args[ConfigArguments.IDS.value])]
         .groupby(SubmissionColumns.STEP_ID.value, as_index=False)
-        .apply(lambda group: group.sample(min(number_of_samples, len(group))), random_state=random_state)
+        .apply(lambda group: group.sample(min(number_of_samples, len(group)), random_state=random_state))
         .reset_index(drop=True)
     )
 
