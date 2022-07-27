@@ -10,5 +10,6 @@ class ConfigArguments(Enum):
     #
     BINS = 'bins'
     LENGTH = 'length'
+    INCLUDE_BOUNDARIES = 'include_boundaries'
     #
     IDS = 'ids'
