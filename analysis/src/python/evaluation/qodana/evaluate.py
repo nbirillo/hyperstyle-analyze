@@ -8,7 +8,7 @@ from pathlib import Path
 import pandas as pd
 
 from analysis.src.python.data_analysis.model.column_name import SubmissionColumns
-from analysis.src.python.evaluation.hyperstyle.evaluation_args import configure_arguments
+from analysis.src.python.evaluation.qodana.evaluation_args import configure_arguments
 from analysis.src.python.evaluation.qodana.evaluation_config import QodanaEvaluationConfig
 from analysis.src.python.evaluation.qodana.model.report import QodanaReport
 from analysis.src.python.evaluation.utils.evaluation_utils import evaluate_by_language
