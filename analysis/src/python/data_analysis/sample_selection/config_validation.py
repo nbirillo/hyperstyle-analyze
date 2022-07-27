@@ -13,7 +13,8 @@ def _is_list(value: Any, classinfo: Union[type, Tuple[type, ...]]) -> bool:
 
 def _validate_by_code_lines_count(args: Optional[Dict]) -> bool:
     if ConfigArguments.INCLUDE_BOUNDARIES.value in args and not isinstance(
-        args[ConfigArguments.INCLUDE_BOUNDARIES.value], bool
+        args[ConfigArguments.INCLUDE_BOUNDARIES.value],
+        bool,
     ):
         logger.error(f"The '{ConfigArguments.INCLUDE_BOUNDARIES.value}' must be a boolean.")
         return False
