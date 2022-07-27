@@ -63,7 +63,7 @@ def parse_hyperstyle_result(results_path: Path) -> pd.Series:
 
 
 def evaluate_hyperstyle(df_solutions: pd.DataFrame, config: HyperstyleEvaluationConfig) -> pd.DataFrame:
-    """ All solutions are grouped by language version and inspected by groups by hyperstyle tool. """
+    """ Run hyperstyle tool on solutions. """
 
     if config.new_format:
         df_solutions = evaluate_by_language(df_solutions, config, parse_hyperstyle_new_format_result)

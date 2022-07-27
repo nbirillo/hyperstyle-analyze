@@ -48,6 +48,8 @@ def parse_qodana_result(result_path: Path) -> pd.DataFrame:
 
 
 def evaluate_qodana(df_solutions: pd.DataFrame, config: QodanaEvaluationConfig) -> pd.DataFrame:
+    """ Run qodana on set of solutions. """
+
     df_solutions = evaluate_by_language(df_solutions, config, parse_qodana_result)
     return df_solutions
 

@@ -77,9 +77,7 @@ def evaluate_by_solution(df_solutions: pd.DataFrame,
 T = TypeVar('T')
 
 
-def evaluate(df_solutions: pd.DataFrame,
-             config: EvaluationConfig,
-             parse_result: [[Path], T]) -> T:
+def evaluate(df_solutions: pd.DataFrame, config: EvaluationConfig, parse_result: [[Path], T]) -> T:
     """
     Run tool on directory with group of solutions written on same language version.
     Return path to evaluation result.
@@ -89,8 +87,9 @@ def evaluate(df_solutions: pd.DataFrame,
     assert language_versions.size == 1, "Given solution should have same language version"
     language_version = language_versions[0]
 
-    input_path = create_directory(config.tmp_path / 'input', clear=True)
-    output_path = create_directory(config.tmp_path / 'output', clear=True)
+    language_version_path = create_directory(config.tmp_path / language_version.value, clear=True)
+    input_path = create_directory(language_version_path / 'input', clear=True)
+    output_path = create_directory(language_version_path / 'output', clear=True)
 
     save_solutions_to_files(df_solutions, language_version, input_path, config.with_template)
 
@@ -99,8 +98,7 @@ def evaluate(df_solutions: pd.DataFrame,
 
     result = parse_result(output_path / config.result_path)
 
-    remove_directory(input_path)
-    remove_directory(output_path)
+    remove_directory(language_version_path)
 
     return result
 
