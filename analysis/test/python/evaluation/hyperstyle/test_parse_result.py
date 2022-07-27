@@ -25,10 +25,10 @@ NEW_FORMAT_DATA = [
 @pytest.mark.parametrize(('result_file', 'solutions_count', 'issues_count'), NEW_FORMAT_DATA)
 def test_new_format(result_file: Path, solutions_count: int, issues_count: List[int]):
     df_result = parse_hyperstyle_new_format_result(NEW_FORMAT_RESOURCES_PATH / result_file)
+    assert df_result.shape[0] == solutions_count
     for i, result in enumerate(df_result.iterrows()):
         report = HyperstyleReport.from_str(result[1][SubmissionColumns.HYPERSTYLE_ISSUES.value])
         assert len(report.issues) == issues_count[i]
-    assert df_result.shape[0] == solutions_count
 
 
 OLD_FORMAT_DATA = [
