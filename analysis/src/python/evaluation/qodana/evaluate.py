@@ -32,9 +32,10 @@ def parse_qodana_result(result_path: Path) -> pd.DataFrame:
             report = QodanaReport.from_str(f.read())
 
         for problem in report.list_problem:
-            for source in problem.sources:
-                solution_id = get_solution_id_by_file_path(source.path)
-                results_dict[solution_id].append(problem)
+            if len(problem.sources) != 1:
+                logging.warning(f'Skipping multi source problem {problem}')
+            solution_id = get_solution_id_by_file_path(problem.sources[0].path)
+            results_dict[solution_id].append(problem)
 
         results_dict = {i: QodanaReport(report.version, problems).to_str()
                         for i, problems in results_dict.items()}
