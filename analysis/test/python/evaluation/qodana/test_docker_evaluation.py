@@ -13,7 +13,7 @@ RESOURCES_PATH = QODANA_DIR_PATH / 'docker_evaluation'
 IN_AND_OUT_FILES = get_in_and_out_list(RESOURCES_PATH)
 
 
-# @pytest.mark.skip(reason="No docker inside CI container")
+@pytest.mark.skip(reason="No docker inside CI container")
 @pytest.mark.parametrize(('in_file', 'out_file'), IN_AND_OUT_FILES)
 def test_with_batching(in_file: Path, out_file: Path):
     in_df = read_df(in_file)
