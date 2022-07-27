@@ -85,7 +85,8 @@ def main():
                                         allow_duplicates=args.allow_duplicates,
                                         with_all_categories=args.with_all_categories,
                                         # new_format is True for batching evaluation
-                                        new_format=True)
+                                        new_format=True,
+                                        tmp_directory=args.tmp_directory)
 
     logger.info('Start processing:')
     results = evaluate_hyperstyle(df_solutions, config)

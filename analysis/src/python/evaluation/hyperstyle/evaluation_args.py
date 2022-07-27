@@ -34,3 +34,8 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                         help='Without this flag, all issues will be categorized into 5 main categories: '
                              'CODE_STYLE, BEST_PRACTICES, ERROR_PRONE, COMPLEXITY, INFO.',
                         action='store_true')
+
+    parser.add_argument('-dp', '--tmp-directory',
+                        default=None,
+                        type=lambda value: Path(value).absolute(),
+                        help='Path to tmp directory to save temporary files')
