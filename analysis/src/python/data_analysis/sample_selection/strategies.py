@@ -50,7 +50,7 @@ def get_samples_by_code_lines_count(
     `length` may be:
     1) An integer number `step`.
        In this case only those code line counts which are multiples of `step` will be used for grouping.
-       Also, the bounding values of the `code_lines_count` column will be included.
+       Also, if you want to include boundaries, you can do it with the `include_boundaries` flag.
     2) An array of integers.
        In this case only those code line counts which are specified in the array will be used for grouping.
 
@@ -74,13 +74,12 @@ def get_samples_by_code_lines_count(
                 ),
             )
 
-            # Add left boundary
-            if 1 not in lines_range:
-                lines_range.append(1)
+            if args[ConfigArguments.INCLUDE_BOUNDARIES.value]:
+                if 1 not in lines_range:
+                    lines_range.append(1)
 
-            # Add right boundary
-            if submissions[SubmissionStatsColumns.CODE_LINES_COUNT.value].max() not in lines_range:
-                lines_range.append(submissions[SubmissionStatsColumns.CODE_LINES_COUNT.value].max())
+                if submissions[SubmissionStatsColumns.CODE_LINES_COUNT.value].max() not in lines_range:
+                    lines_range.append(submissions[SubmissionStatsColumns.CODE_LINES_COUNT.value].max())
 
         submissions_samples = (
             submissions[submissions[SubmissionStatsColumns.CODE_LINES_COUNT.value].isin(lines_range)]
