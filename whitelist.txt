@@ -325,3 +325,4 @@ yaxes
 yaxis
 ylabel
 yscale
+classinfo
