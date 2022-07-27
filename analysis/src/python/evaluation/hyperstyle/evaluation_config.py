@@ -46,17 +46,6 @@ class HyperstyleEvaluationConfig(EvaluationConfig):
                       output_path: Union[str, Path],
                       language_version: LanguageVersion) -> List[str]:
 
-        command = []
-
-        # If docker path is not specified, hyperstyle will run locally
-        if self.docker_path is not None:
-            command = ['docker', 'run',
-                       '-v', f'{input_path}/:/input/',
-                       '-v', f'{output_path}/:/output/',
-                       f'{self.docker_path}',
-                       '/bin/bash', '-c',
-                       ]
-
         python_command = ['python3', f'{self.tool_path}']
 
         if self.allow_duplicates:
@@ -71,13 +60,17 @@ class HyperstyleEvaluationConfig(EvaluationConfig):
         if language_version.is_java():
             python_command += ['--language_version', language_version.value]
 
+        # If docker path specified, hyperstyle will run inside docker
         if self.docker_path is not None:
-            python_command += ['/input']
+            python_command += ['/input', '>', f'/output/{OUTPUT_FILE_PATH}']
+            command = ['docker', 'run',
+                       '-v', f'{input_path}/:/input/',
+                       '-v', f'{output_path}/:/output/',
+                       f'{self.docker_path}',
+                       '/bin/bash', '-c', ' '.join(python_command),
+                       ]
         else:
-            python_command += [str(input_path)]
-
-        python_command += ['>', f'/output/{OUTPUT_FILE_PATH}']
-
-        command.append(' '.join(python_command))
+            python_command += [str(input_path), '>', str(output_path / OUTPUT_FILE_PATH)]
+            command = ['/bin/bash', '-c', ' '.join(python_command)]
 
         return command
