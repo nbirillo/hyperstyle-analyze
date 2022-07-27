@@ -35,7 +35,7 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                              'CODE_STYLE, BEST_PRACTICES, ERROR_PRONE, COMPLEXITY, INFO.',
                         action='store_true')
 
-    parser.add_argument('-dp', '--tmp-directory',
+    parser.add_argument('-td', '--tmp-directory',
                         default=None,
                         type=lambda value: Path(value).absolute(),
                         help='Path to tmp directory to save temporary files')
