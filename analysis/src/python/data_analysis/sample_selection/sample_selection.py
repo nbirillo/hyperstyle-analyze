@@ -32,7 +32,7 @@ def get_submissions_samples(submissions: pd.DataFrame, config: Dict) -> pd.DataF
     """
 
     number_of_samples = config[ConfigArguments.NUMBER_OF_SAMPLES.value]
-    random_state = config.get(ConfigArguments.RANDOM_STATE.value)
+    random_state = config[ConfigArguments.RANDOM_STATE.value]
 
     strategy = GroupStrategy.from_config(config)
     args = config[strategy.value]
