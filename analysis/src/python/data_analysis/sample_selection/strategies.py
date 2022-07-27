@@ -71,7 +71,7 @@ def get_samples_by_code_lines_count(
                     args[ConfigArguments.LENGTH.value],
                     submissions[SubmissionStatsColumns.CODE_LINES_COUNT.value].max() + 1,
                     args[ConfigArguments.LENGTH.value],
-                )
+                ),
             )
 
             # Add left boundary

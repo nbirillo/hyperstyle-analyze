@@ -17,7 +17,7 @@ def _validate_by_code_lines_count(args: Optional[Dict]) -> bool:
     if args is None or ((ConfigArguments.BINS.value in args) == (ConfigArguments.LENGTH.value in args)):
         logger.error(
             f"You must specify either the '{ConfigArguments.BINS.value}' argument or "
-            f"the '{ConfigArguments.LENGTH.value}' argument."
+            f"the '{ConfigArguments.LENGTH.value}' argument.",
         )
         return False
 

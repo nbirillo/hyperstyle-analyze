@@ -88,6 +88,7 @@ def main() -> int:
 
     selected_submissions = get_submissions_samples(submissions, config)
     write_df(selected_submissions, args.output_path)
+    return 0
 
 
 if __name__ == '__main__':
