@@ -50,7 +50,7 @@ def get_samples_by_code_lines_count(
     """
     Get samples by code lines count.
 
-    `submissions` must contain a `code_lines_count` column.
+    `submissions` must contain the `code_lines_count` column.
     The `args` must contain either the `count` value or the `bins` value.
 
     `count` may be:
@@ -114,7 +114,7 @@ def get_samples_by_step_id(
     """
     Get samples by step ID.
 
-    `submissions` must contain a `step_id` column.
+    `submissions` must contain the `step_id` column.
     The `args` must contain the `ids` value. The `ids` is an array of integers by which the grouping will be done.
 
     The `number_of_samples` sets the number of samples to be in the group.
