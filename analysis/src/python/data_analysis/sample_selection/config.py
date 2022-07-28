@@ -1,6 +1,8 @@
 from enum import Enum, unique
 
 DEFAULT_NUMBER_OF_SAMPLES = 100
+DEFAULT_RANDOM_STATE = None
+DEFAULT_INCLUDE_BOUNDARIES = False
 
 
 @unique
