@@ -53,8 +53,6 @@ There are several strategies for grouping data:
 
 ### `by_code_lines_count` strategy config
 
-There must be a `code_lines_count` column in the table.
-
 A config must contain either the `count` value or the `bins` value.
 
 `count` may be:
@@ -82,8 +80,6 @@ by_code_lines_count:
 ```
 
 ### `by_step_id` strategy config
-
-There must be a `step_id` column in the table.
 
 A config must contain the `ids` value. The `ids` is an array of integers by which the grouping will be done.
 
