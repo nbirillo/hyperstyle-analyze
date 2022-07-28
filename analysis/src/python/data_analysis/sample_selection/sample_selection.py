@@ -90,8 +90,8 @@ def main() -> int:
             right_on=SubmissionColumns.ID.value,
         )
 
-    selected_submissions = get_submissions_samples(submissions, config)
-    write_df(selected_submissions, args.output_path)
+    submissions_samples = get_submissions_samples(submissions, config)
+    write_df(submissions_samples, args.output_path)
     return 0
 
 
