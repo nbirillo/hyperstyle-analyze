@@ -1,6 +1,6 @@
 from enum import Enum, unique
 
-DEFAULT_NUMBER_OF_SAMPLES = 1000
+DEFAULT_NUMBER_OF_SAMPLES = 100
 
 
 @unique
@@ -9,7 +9,7 @@ class ConfigArguments(Enum):
     RANDOM_STATE = 'random_state'
     #
     BINS = 'bins'
-    LENGTH = 'length'
+    COUNT = 'length'
     INCLUDE_BOUNDARIES = 'include_boundaries'
     #
     IDS = 'ids'
