@@ -53,7 +53,7 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
 
     parser.add_argument(
         'output_path',
-        type=str,
+        type=lambda value: Path(value).absolute(),
         help='Path to .csv file where to save the samples.',
     )
 
