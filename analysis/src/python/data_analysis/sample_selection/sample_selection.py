@@ -3,7 +3,7 @@ This script will allow you to select several submission samples from certain gro
 
 There are several strategies for grouping data:
 - 'by_code_lines_count' -- grouping is done by the 'code_lines_count' column, where the code lines count is specified.
-- 'by_step_id' -- the grouping is done by the 'step_id' column, where the step ID is specified.
+- 'by_step_id' -- grouping is done by the 'step_id' column, where the step ID is specified.
 """
 import argparse
 import logging
