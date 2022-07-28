@@ -1,7 +1,7 @@
 import logging
 from typing import Any, Dict, Optional, Tuple, Union
 
-from analysis.src.python.data_analysis.sample_selection.config import ConfigArguments, DEFAULT_NUMBER_OF_SAMPLES
+from analysis.src.python.data_analysis.sample_selection.config import ConfigArguments
 from analysis.src.python.data_analysis.sample_selection.strategies import GroupStrategy
 
 logger = logging.getLogger(__name__)
@@ -27,9 +27,6 @@ def _validate_by_code_lines_count(args: Optional[Dict]) -> bool:
     ):
         logger.error(f"The '{ConfigArguments.INCLUDE_BOUNDARIES.value}' must be a boolean.")
         return False
-
-    if ConfigArguments.INCLUDE_BOUNDARIES.value not in args:
-        args[ConfigArguments.INCLUDE_BOUNDARIES.value] = False
 
     if ConfigArguments.COUNT.value in args and not (
         isinstance(args[ConfigArguments.COUNT.value], int) or _is_list(args[ConfigArguments.COUNT.value], int)
@@ -61,13 +58,6 @@ def validate_config(config: Optional[Dict]) -> bool:
         logger.error('The config is empty.')
         return False
 
-    if ConfigArguments.NUMBER_OF_SAMPLES.value not in config:
-        logger.info(
-            f"'{ConfigArguments.NUMBER_OF_SAMPLES.value}' is not specified. "
-            f'The default value will be used: {DEFAULT_NUMBER_OF_SAMPLES}.',
-        )
-        config[ConfigArguments.NUMBER_OF_SAMPLES.value] = DEFAULT_NUMBER_OF_SAMPLES
-
     if not isinstance(config[ConfigArguments.NUMBER_OF_SAMPLES.value], int):
         logger.error('The number of samples must be a integer.')
         return False
@@ -75,9 +65,6 @@ def validate_config(config: Optional[Dict]) -> bool:
     if ConfigArguments.RANDOM_STATE.value in config and not isinstance(config[ConfigArguments.RANDOM_STATE.value], int):
         logger.error("The 'random_state' must be an integer.")
         return False
-
-    if ConfigArguments.RANDOM_STATE.value not in config:
-        config[ConfigArguments.RANDOM_STATE.value] = None
 
     # Check that there is one and only one strategy in the config
     if sum([strategy in config for strategy in GroupStrategy.strategies()]) != 1:
