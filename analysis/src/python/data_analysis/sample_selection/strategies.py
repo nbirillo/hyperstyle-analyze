@@ -81,8 +81,8 @@ def get_samples_by_code_lines_count(
             )
 
             if args.get(ConfigArguments.INCLUDE_BOUNDARIES.value, DEFAULT_INCLUDE_BOUNDARIES):
-                if 1 not in count_range:
-                    count_range.append(1)
+                if submissions[SubmissionStatsColumns.CODE_LINES_COUNT.value].min() not in count_range:
+                    count_range.append(submissions[SubmissionStatsColumns.CODE_LINES_COUNT.value].min())
 
                 if submissions[SubmissionStatsColumns.CODE_LINES_COUNT.value].max() not in count_range:
                     count_range.append(submissions[SubmissionStatsColumns.CODE_LINES_COUNT.value].max())
