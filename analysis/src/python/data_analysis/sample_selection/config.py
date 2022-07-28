@@ -9,7 +9,7 @@ class ConfigArguments(Enum):
     RANDOM_STATE = 'random_state'
     #
     BINS = 'bins'
-    COUNT = 'length'
+    COUNT = 'count'
     INCLUDE_BOUNDARIES = 'include_boundaries'
     #
     IDS = 'ids'
