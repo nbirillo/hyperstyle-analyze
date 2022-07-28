@@ -45,9 +45,9 @@ def get_samples_by_code_lines_count(
     Get samples by code lines count.
 
     `submissions` must contain a `code_lines_count` column.
-    The `args` must contain either the `length` value or the `bins` value.
+    The `args` must contain either the `count` value or the `bins` value.
 
-    `length` may be:
+    `count` may be:
     1) An integer number `step`.
        In this case only those code line counts which are multiples of `step` will be used for grouping.
        Also, if you want to include boundaries, you can do it with the `include_boundaries` flag.
@@ -62,27 +62,27 @@ def get_samples_by_code_lines_count(
     The `random_seed` sets a seed for the random generator.
     """
 
-    if ConfigArguments.LENGTH.value in args:
-        if isinstance(args[ConfigArguments.LENGTH.value], list):
-            lines_range = args[ConfigArguments.LENGTH.value]
+    if ConfigArguments.COUNT.value in args:
+        if isinstance(args[ConfigArguments.COUNT.value], list):
+            count_range = args[ConfigArguments.COUNT.value]
         else:
-            lines_range = list(
+            count_range = list(
                 range(
-                    args[ConfigArguments.LENGTH.value],
+                    args[ConfigArguments.COUNT.value],
                     submissions[SubmissionStatsColumns.CODE_LINES_COUNT.value].max() + 1,
-                    args[ConfigArguments.LENGTH.value],
+                    args[ConfigArguments.COUNT.value],
                 ),
             )
 
             if args[ConfigArguments.INCLUDE_BOUNDARIES.value]:
-                if 1 not in lines_range:
-                    lines_range.append(1)
+                if 1 not in count_range:
+                    count_range.append(1)
 
-                if submissions[SubmissionStatsColumns.CODE_LINES_COUNT.value].max() not in lines_range:
-                    lines_range.append(submissions[SubmissionStatsColumns.CODE_LINES_COUNT.value].max())
+                if submissions[SubmissionStatsColumns.CODE_LINES_COUNT.value].max() not in count_range:
+                    count_range.append(submissions[SubmissionStatsColumns.CODE_LINES_COUNT.value].max())
 
         submissions_samples = (
-            submissions[submissions[SubmissionStatsColumns.CODE_LINES_COUNT.value].isin(lines_range)]
+            submissions[submissions[SubmissionStatsColumns.CODE_LINES_COUNT.value].isin(count_range)]
             .groupby(SubmissionStatsColumns.CODE_LINES_COUNT.value)
             .apply(lambda group: group.sample(min(number_of_samples, len(group)), random_state=random_state))
             .reset_index(drop=True)

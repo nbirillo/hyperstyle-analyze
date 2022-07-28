@@ -24,17 +24,17 @@ def _validate_by_code_lines_count(args: Optional[Dict]) -> bool:
 
     # Only one argument needs to be specified.
     # !(a xor b) <=> a == b
-    if args is None or ((ConfigArguments.BINS.value in args) == (ConfigArguments.LENGTH.value in args)):
+    if args is None or ((ConfigArguments.BINS.value in args) == (ConfigArguments.COUNT.value in args)):
         logger.error(
             f"You must specify either the '{ConfigArguments.BINS.value}' argument or "
-            f"the '{ConfigArguments.LENGTH.value}' argument.",
+            f"the '{ConfigArguments.COUNT.value}' argument.",
         )
         return False
 
-    if ConfigArguments.LENGTH.value in args and not (
-        isinstance(args[ConfigArguments.LENGTH.value], int) or _is_list(args[ConfigArguments.LENGTH.value], int)
+    if ConfigArguments.COUNT.value in args and not (
+        isinstance(args[ConfigArguments.COUNT.value], int) or _is_list(args[ConfigArguments.COUNT.value], int)
     ):
-        logger.error(f"The '{ConfigArguments.LENGTH.value}' can either be an integer or a list of integers.")
+        logger.error(f"The '{ConfigArguments.COUNT.value}' can either be an integer or a list of integers.")
         return False
 
     if ConfigArguments.BINS.value in args and not _is_list(args[ConfigArguments.BINS.value], int):
