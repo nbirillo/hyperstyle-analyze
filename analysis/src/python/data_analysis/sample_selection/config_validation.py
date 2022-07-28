@@ -12,6 +12,15 @@ def _is_list(value: Any, classinfo: Union[type, Tuple[type, ...]]) -> bool:
 
 
 def _validate_by_code_lines_count(args: Optional[Dict]) -> bool:
+    # Only one argument needs to be specified.
+    # !(a xor b) <=> a == b
+    if args is None or ((ConfigArguments.BINS.value in args) == (ConfigArguments.COUNT.value in args)):
+        logger.error(
+            f"You must specify either the '{ConfigArguments.BINS.value}' argument or "
+            f"the '{ConfigArguments.COUNT.value}' argument.",
+        )
+        return False
+
     if ConfigArguments.INCLUDE_BOUNDARIES.value in args and not isinstance(
         args[ConfigArguments.INCLUDE_BOUNDARIES.value],
         bool,
@@ -21,15 +30,6 @@ def _validate_by_code_lines_count(args: Optional[Dict]) -> bool:
 
     if ConfigArguments.INCLUDE_BOUNDARIES.value not in args:
         args[ConfigArguments.INCLUDE_BOUNDARIES.value] = False
-
-    # Only one argument needs to be specified.
-    # !(a xor b) <=> a == b
-    if args is None or ((ConfigArguments.BINS.value in args) == (ConfigArguments.COUNT.value in args)):
-        logger.error(
-            f"You must specify either the '{ConfigArguments.BINS.value}' argument or "
-            f"the '{ConfigArguments.COUNT.value}' argument.",
-        )
-        return False
 
     if ConfigArguments.COUNT.value in args and not (
         isinstance(args[ConfigArguments.COUNT.value], int) or _is_list(args[ConfigArguments.COUNT.value], int)
@@ -62,7 +62,7 @@ def validate_config(config: Optional[Dict]) -> bool:
         return False
 
     if ConfigArguments.NUMBER_OF_SAMPLES.value not in config:
-        logger.warning(
+        logger.info(
             f"'{ConfigArguments.NUMBER_OF_SAMPLES.value}' is not specified. "
             f'The default value will be used: {DEFAULT_NUMBER_OF_SAMPLES}.',
         )
