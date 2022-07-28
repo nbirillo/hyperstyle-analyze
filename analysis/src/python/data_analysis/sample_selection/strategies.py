@@ -5,7 +5,7 @@ from typing import Dict, Optional, Set
 import pandas as pd
 
 from analysis.src.python.data_analysis.model.column_name import SubmissionColumns, SubmissionStatsColumns
-from analysis.src.python.data_analysis.sample_selection.config import ConfigArguments
+from analysis.src.python.data_analysis.sample_selection.config import ConfigArguments, DEFAULT_INCLUDE_BOUNDARIES
 
 logger = logging.getLogger(__name__)
 
@@ -27,7 +27,13 @@ class GroupStrategy(Enum):
 
         return GroupStrategy(strategies[0])
 
-    def execute(self, submissions: pd.DataFrame, number_of_samples: int, random_state: int, args: Dict) -> pd.DataFrame:
+    def execute(
+        self,
+        submissions: pd.DataFrame,
+        number_of_samples: int,
+        random_state: Optional[int],
+        args: Dict,
+    ) -> pd.DataFrame:
         function = GROUP_STRATEGY_TO_FUNCTION.get(self)
         if function is None:
             raise NotImplementedError('This strategy has no implementation.')
@@ -38,7 +44,7 @@ class GroupStrategy(Enum):
 def get_samples_by_code_lines_count(
     submissions: pd.DataFrame,
     number_of_samples: int,
-    random_state: int,
+    random_state: Optional[int],
     args: Dict,
 ) -> pd.DataFrame:
     """
@@ -74,7 +80,7 @@ def get_samples_by_code_lines_count(
                 ),
             )
 
-            if args[ConfigArguments.INCLUDE_BOUNDARIES.value]:
+            if args.get(ConfigArguments.INCLUDE_BOUNDARIES.value, DEFAULT_INCLUDE_BOUNDARIES):
                 if 1 not in count_range:
                     count_range.append(1)
 
@@ -102,7 +108,7 @@ def get_samples_by_code_lines_count(
 def get_samples_by_step_id(
     submissions: pd.DataFrame,
     number_of_samples: int,
-    random_state: int,
+    random_state: Optional[int],
     args: Dict,
 ) -> pd.DataFrame:
     """

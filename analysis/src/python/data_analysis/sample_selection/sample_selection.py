@@ -14,7 +14,11 @@ from typing import Dict
 import pandas as pd
 
 from analysis.src.python.data_analysis.model.column_name import SubmissionColumns
-from analysis.src.python.data_analysis.sample_selection.config import ConfigArguments
+from analysis.src.python.data_analysis.sample_selection.config import (
+    ConfigArguments,
+    DEFAULT_NUMBER_OF_SAMPLES,
+    DEFAULT_RANDOM_STATE,
+)
 from analysis.src.python.data_analysis.sample_selection.config_validation import validate_config
 from analysis.src.python.data_analysis.sample_selection.strategies import GroupStrategy
 from analysis.src.python.utils.df_utils import merge_dfs, read_df, write_df
@@ -31,8 +35,8 @@ def get_submissions_samples(submissions: pd.DataFrame, config: Dict) -> pd.DataF
     It is also possible to set a seed for the random generator using the `random_seed` argument in `config`.
     """
 
-    number_of_samples = config[ConfigArguments.NUMBER_OF_SAMPLES.value]
-    random_state = config[ConfigArguments.RANDOM_STATE.value]
+    number_of_samples = config.get(ConfigArguments.NUMBER_OF_SAMPLES.value, DEFAULT_NUMBER_OF_SAMPLES)
+    random_state = config.get(ConfigArguments.RANDOM_STATE.value, DEFAULT_RANDOM_STATE)
 
     strategy = GroupStrategy.from_config(config)
     args = config[strategy.value]
