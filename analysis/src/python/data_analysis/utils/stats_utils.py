@@ -1,4 +1,5 @@
 import ast
+import os
 
 
 def calculate_issues_count(issues: str) -> int:
@@ -7,11 +8,17 @@ def calculate_issues_count(issues: str) -> int:
     return len(ast.literal_eval(issues))
 
 
-def calculate_code_lines_count(code: str) -> int:
+def calculate_code_lines_count(code: str, ignore_empty_lines: bool = False) -> int:
     """ Calculate number of code lines. """
 
     if isinstance(code, str):
-        return len(code.split('\n'))
+        lines = code.split(os.linesep)
+
+        if ignore_empty_lines:
+            lines = list(filter(lambda line: line.strip() != '', lines))
+
+        return len(lines)
+
     return 0
 
 
