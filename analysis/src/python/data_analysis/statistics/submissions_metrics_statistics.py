@@ -1,52 +1,141 @@
 import argparse
-import sys
+from functools import partial
+from pathlib import Path
+from typing import Literal, Optional
+
+import pandas as pd
 
 from analysis.src.python.data_analysis.model.column_name import SubmissionColumns, SubmissionStatsColumns
+from analysis.src.python.data_analysis.utils.stats_utils import (
+    calculate_code_lines_count,
+    calculate_code_symbols_count,
+    calculate_issues_count,
+)
 from analysis.src.python.utils.df_utils import read_df, write_df
-from analysis.src.python.utils.logging_utils import configure_logger
-from analysis.src.python.data_analysis.utils.stats_utils import calculate_code_lines_count, \
-    calculate_code_symbols_count, calculate_issues_count
 
 
-def get_submission_statistics(submissions_with_issues_path: str, submissions_statistics_path: str):
-    """ Calculate submissions metrics such number of code lines, symbols, issues. """
+def get_submission_statistics(
+    submissions: pd.DataFrame,
+    code_lines_count: Optional[Literal['all', 'ignore_empty_lines']] = None,
+    code_symbols_count: bool = False,
+    raw_issue_count: bool = False,
+    raw_issue_by_code_lines: bool = False,
+    qodana_issue_count: bool = False,
+    qodana_issue_by_code_lines: bool = False,
+) -> pd.DataFrame:
+    """Calculate submissions metrics such number of code lines, symbols, issues."""
 
-    df_submissions = read_df(submissions_with_issues_path)
-    df_stats = df_submissions[[SubmissionColumns.ID.value]].copy()
+    stats = submissions[[SubmissionColumns.ID.value]].copy()
 
-    df_stats[SubmissionStatsColumns.CODE_LINES_COUNT.value] = df_submissions[SubmissionColumns.CODE.value] \
-        .apply(calculate_code_lines_count)
-    df_stats[SubmissionStatsColumns.CODE_SYMBOLS_COUNT.value] = df_submissions[SubmissionColumns.CODE.value] \
-        .apply(calculate_code_symbols_count)
+    if code_lines_count is not None:
+        stats[SubmissionStatsColumns.CODE_LINES_COUNT.value] = submissions[SubmissionColumns.CODE.value].apply(
+            partial(calculate_code_lines_count, ignore_empty_lines=True)
+            if code_lines_count == 'ignore_empty_lines'
+            else calculate_code_lines_count,
+        )
 
-    df_stats[SubmissionStatsColumns.RAW_ISSUE_COUNT.value] = df_submissions[SubmissionColumns.RAW_ISSUES.value] \
-        .apply(calculate_issues_count)
+    if code_symbols_count:
+        stats[SubmissionStatsColumns.CODE_SYMBOLS_COUNT.value] = submissions[SubmissionColumns.CODE.value].apply(
+            calculate_code_symbols_count,
+        )
 
-    df_stats[SubmissionStatsColumns.RAW_ISSUE_BY_CODE_LINES.value] = \
-        df_stats[SubmissionStatsColumns.RAW_ISSUE_COUNT.value] / \
-        df_stats[SubmissionStatsColumns.CODE_LINES_COUNT.value]
+    if raw_issue_count:
+        stats[SubmissionStatsColumns.RAW_ISSUE_COUNT.value] = submissions[SubmissionColumns.RAW_ISSUES.value].apply(
+            calculate_issues_count,
+        )
 
-    if SubmissionStatsColumns.QODANA_ISSUE_COUNT.value in df_stats.columns:
-        df_stats[SubmissionStatsColumns.QODANA_ISSUE_COUNT.value] = \
-            df_submissions[SubmissionColumns.QODANA_ISSUES.value].apply(calculate_issues_count)
+    if raw_issue_by_code_lines:
+        stats[SubmissionStatsColumns.RAW_ISSUE_BY_CODE_LINES.value] = (
+            stats[SubmissionStatsColumns.RAW_ISSUE_COUNT.value] / stats[SubmissionStatsColumns.CODE_LINES_COUNT.value]
+        )
 
-        df_stats[SubmissionStatsColumns.QODANA_ISSUE_BY_CODE_LINES.value] = \
-            df_stats[SubmissionStatsColumns.QODANA_ISSUE_COUNT.value] / \
-            df_stats[SubmissionStatsColumns.CODE_LINES_COUNT.value]
+    if qodana_issue_count:
+        stats[SubmissionStatsColumns.QODANA_ISSUE_COUNT.value] = submissions[
+            SubmissionColumns.QODANA_ISSUES.value
+        ].apply(calculate_issues_count)
 
-    write_df(df_stats, submissions_statistics_path)
+    if qodana_issue_by_code_lines:
+        stats[SubmissionStatsColumns.QODANA_ISSUE_BY_CODE_LINES.value] = (
+            stats[SubmissionStatsColumns.QODANA_ISSUE_COUNT.value]
+            / stats[SubmissionStatsColumns.CODE_LINES_COUNT.value]
+        )
+
+    return stats
+
+
+def configure_parser(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(
+        'submissions_path',
+        type=lambda value: Path(value).absolute(),
+        help='Path to .csv file with submissions',
+    )
+
+    parser.add_argument(
+        'submissions_statistics_path',
+        type=lambda value: Path(value).absolute(),
+        help='Path to .csv file where to save submissions statistics',
+    )
+
+    parser.add_argument(
+        '--code-lines-count',
+        type=str,
+        nargs='?',
+        const='all',
+        choices=['all', 'ignore_empty_lines'],
+        help="Count the number of lines of code. Select 'ignore_empty_lines' to ignore empty lines.",
+    )
+
+    parser.add_argument(
+        '--code-symbols-count',
+        type=bool,
+        help='Count the number of symbols in the code.',
+    )
+
+    parser.add_argument(
+        '--raw-issue-count',
+        type=bool,
+        help='Count the number of raw issues.',
+    )
+
+    parser.add_argument(
+        '--raw-issue-by-code-lines',
+        type=str,
+        help='Calculate the frequency of raw issues.',
+    )
+
+    parser.add_argument(
+        '--qodana-issue-count',
+        type=bool,
+        help='Count the number of Qodana issues.',
+    )
+
+    parser.add_argument(
+        '--qodana-issue-by-code-lines',
+        type=bool,
+        help='Calculate the frequency of Qodana issues.',
+    )
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    configure_parser(parser)
+
+    args = parser.parse_args()
+
+    submissions = read_df(args.submissions_path)
+
+    submissions_with_stats = get_submission_statistics(
+        submissions,
+        args.code_lines_count,
+        args.code_symbols_count,
+        args.raw_issue_count,
+        args.raw_issue_by_code_lines,
+        args.qodana_issue_count,
+        args.qodana_issue_by_code_lines,
+    )
+
+    write_df(submissions_with_stats, args.submissions_statistics_path)
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-
-    parser.add_argument('submissions_path', type=str,
-                        help='Path to .csv file with preprocessed submissions with series')
-    parser.add_argument('submissions_statistics_path', type=str,
-                        help='Path to .csv file where to save submissions statistics')
-    parser.add_argument('--log-path', type=str, default=None, help='Path to directory for log.')
-
-    args = parser.parse_args(sys.argv[1:])
-    configure_logger(args.submissions_statistics_path, 'statistics', args.log_path)
-
-    get_submission_statistics(args.submissions_path, args.submissions_statistics_path)
+    main()
