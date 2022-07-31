@@ -10,8 +10,8 @@ Run the [benchmark.py](benchmark.py) with the arguments from command line.
 
 - `submissions_path` — Path to .csv file with submissions.
 - `output_path` — Path to .csv file where to save submissions with timings.
-- `&#8209;&#8209;analyzer` — Name of the analyzer that needs to be benchmarked. Possible values: `hyperstyle`, `qodana`.
-- `&#8209;&#8209;docker&#8209;path` — Path to docker (USER/NAME:VERSION) with the analyzer.
+- `--analyzer` — Name of the analyzer that needs to be benchmarked. Possible values: `hyperstyle`, `qodana`.
+- `--docker-path` — Path to docker (USER/NAME:VERSION) with the analyzer.
 
 **Optional arguments**:
 
