@@ -3,7 +3,7 @@ import logging
 import time
 from functools import partial
 from pathlib import Path
-from typing import Any, Callable, Literal
+from typing import Any, Callable, Literal, Optional
 
 import numpy as np
 import pandas as pd
@@ -41,7 +41,7 @@ def time_benchmark_row(
     docker_path: str,
     analyzer: Literal['hyperstyle', 'qodana'],
     repeat: int,
-    n_cpu: int,
+    n_cpu: Optional[int],
     tmp_directory: Path,
 ) -> float:
     if analyzer == 'hyperstyle':
@@ -97,7 +97,7 @@ def configure_parser(parser: argparse.ArgumentParser) -> None:
 
     parser.add_argument('--repeat', type=int, default=3, help='Times to repeat time evaluation for averaging.')
 
-    parser.add_argument('--n-cpu', type=int, default=1, help='Number of cpu that can be used to run analyzer.')
+    parser.add_argument('--n-cpu', type=int, help='Number of cpu that can be used to run analyzer.')
 
     parser.add_argument(
         '--time-column',
