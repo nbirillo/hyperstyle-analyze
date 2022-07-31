@@ -1,9 +1,10 @@
 import argparse
 import logging
 import time
+from enum import Enum
 from functools import partial
 from pathlib import Path
-from typing import Any, Callable, Literal, Optional
+from typing import Any, Callable, Optional, Set
 
 import numpy as np
 import pandas as pd
@@ -18,6 +19,22 @@ from analysis.src.python.utils.df_utils import read_df, write_df
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
+
+
+class Analyzer(Enum):
+    HYPERSTYLE = 'hyperstyle'
+    QODANA = 'qodana'
+
+    @classmethod
+    def from_value(cls, value: str) -> Optional['Analyzer']:
+        try:
+            return Analyzer(value)
+        except ValueError:
+            return None
+
+    @classmethod
+    def available_values(cls) -> Set[str]:
+        return {cls.HYPERSTYLE.value, cls.QODANA.value}
 
 
 def measure_run_time(f: Callable[[], Any], repeat: int) -> float:
@@ -39,12 +56,12 @@ def measure_run_time(f: Callable[[], Any], repeat: int) -> float:
 def time_benchmark_row(
     row: pd.Series,
     docker_path: str,
-    analyzer: Literal['hyperstyle', 'qodana'],
+    analyzer: Optional[Analyzer],
     repeat: int,
     n_cpu: Optional[int],
     tmp_directory: Path,
 ) -> float:
-    if analyzer == 'hyperstyle':
+    if analyzer == Analyzer.HYPERSTYLE:
         config = HyperstyleEvaluationConfig(
             docker_path=docker_path,
             tool_path=HYPERSTYLE_TOOL_PATH,
@@ -55,9 +72,11 @@ def time_benchmark_row(
             tmp_directory=tmp_directory,
         )
         parser = parse_hyperstyle_result
-    else:
+    elif analyzer == Analyzer.QODANA:
         config = QodanaEvaluationConfig(tmp_directory=tmp_directory)
         parser = parse_qodana_result
+    else:
+        raise NotImplementedError(f'Benchmark for {analyzer} is not implemented.')
 
     logger.info(f'Benchmarking {row[ColumnName.ID.value]}...')
 
@@ -84,7 +103,7 @@ def configure_parser(parser: argparse.ArgumentParser) -> None:
         '--analyzer',
         type=str,
         required=True,
-        choices=['hyperstyle', 'qodana'],
+        choices=Analyzer.available_values(),
         help='Name of the analyzer that needs to be benchmarked.',
     )
 
@@ -125,7 +144,14 @@ def main() -> None:
 
     submissions = read_df(args.submissions_path)
     submissions[args.time_column] = submissions.apply(
-        lambda row: time_benchmark_row(row, args.docker_path, args.analyzer, args.repeat, args.n_cpu, args.tmp_dir),
+        lambda row: time_benchmark_row(
+            row,
+            args.docker_path,
+            Analyzer.from_value(args.analyzer),
+            args.repeat,
+            args.n_cpu,
+            args.tmp_dir,
+        ),
         axis=1,
     )
 
