@@ -85,7 +85,7 @@ def time_benchmark_row(
 
     logger.info(f'Benchmarking {row[SubmissionColumns.ID.value]} ...')
 
-    language_version = get_language_version(SubmissionColumns.LANG.value)
+    language_version = get_language_version(row[SubmissionColumns.LANG.value])
     input_path = create_directory(config.tmp_path / 'input', clear=True)
     output_path = create_directory(config.tmp_path / 'output', clear=True)
 
