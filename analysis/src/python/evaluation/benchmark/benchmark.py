@@ -8,14 +8,17 @@ from typing import Any, Callable, Optional, Set
 
 import numpy as np
 import pandas as pd
+from hyperstyle.src.python.review.common.subprocess_runner import run_in_subprocess
 
+from analysis.src.python.data_analysis.model.column_name import SubmissionColumns
 from analysis.src.python.evaluation.hyperstyle.evaluate import parse_hyperstyle_result
 from analysis.src.python.evaluation.hyperstyle.evaluation_config import HYPERSTYLE_TOOL_PATH, HyperstyleEvaluationConfig
-from analysis.src.python.evaluation.model.column_name import ColumnName
 from analysis.src.python.evaluation.qodana.evaluate import parse_qodana_result
 from analysis.src.python.evaluation.qodana.evaluation_config import QodanaEvaluationConfig
-from analysis.src.python.evaluation.utils.evaluation_utils import evaluate
+from analysis.src.python.evaluation.utils.pandas_utils import get_language_version
+from analysis.src.python.evaluation.utils.solutions_saving_utils import save_solutions_to_files
 from analysis.src.python.utils.df_utils import read_df, write_df
+from analysis.src.python.utils.file_utils import create_directory
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -37,20 +40,22 @@ class Analyzer(Enum):
         return {cls.HYPERSTYLE.value, cls.QODANA.value}
 
 
-def measure_run_time(f: Callable[[], Any], repeat: int) -> float:
+def measure_run_time(f: Callable[[], Any], repeat: int, output_path: Path, parser: Callable[[Path], Any]) -> float:
     repeat_times = []
     for i in range(1, repeat + 1):
         logger.info(f'Time measuring attempt={i}')
 
         start_time = time.time()
-        logger.info(f())
+        f()
         end_time = time.time()
 
-        repeat_times.append(end_time - start_time)
+        difference = end_time - start_time
+        logger.info(f'Time: {difference}')
+        logger.info(parser(output_path))
 
-    mean_time = np.array(repeat_times).mean()
-    logger.info(f'Mean time: {mean_time}')
-    return mean_time
+        repeat_times.append(difference)
+
+    return np.array(repeat_times).mean()
 
 
 def time_benchmark_row(
@@ -78,12 +83,25 @@ def time_benchmark_row(
     else:
         raise NotImplementedError(f'Benchmark for {analyzer} is not implemented.')
 
-    logger.info(f'Benchmarking {row[ColumnName.ID.value]}...')
+    logger.info(f'Benchmarking {row[SubmissionColumns.ID.value]} ...')
 
-    return measure_run_time(
-        partial(evaluate, df_solutions=row.to_frame().T, config=config, parse_result=parser),
+    language_version = get_language_version(SubmissionColumns.LANG.value)
+    input_path = create_directory(config.tmp_path / 'input', clear=True)
+    output_path = create_directory(config.tmp_path / 'output', clear=True)
+
+    save_solutions_to_files(row.to_frame().T, language_version, input_path, config.with_template)
+
+    command = config.build_command(input_path, output_path, language_version)
+
+    mean_time = measure_run_time(
+        partial(run_in_subprocess, command=command),
         repeat,
+        output_path / config.result_path,
+        parser,
     )
+
+    logger.info(f'Mean time: {mean_time}')
+    return mean_time
 
 
 def configure_parser(parser: argparse.ArgumentParser) -> None:
