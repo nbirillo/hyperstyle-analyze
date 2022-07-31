@@ -21,6 +21,7 @@ class HyperstyleEvaluationConfig(EvaluationConfig):
                  allow_duplicates: bool,
                  with_all_categories: bool,
                  new_format: bool,
+                 n_cpu: Optional[int] = None,
                  tmp_directory: Optional[Path] = None):
         """
         `docker_path` - docker image name to run hyperstyle in (custom or default HYPERSTYLE_DOCKER_PATH)
@@ -40,6 +41,7 @@ class HyperstyleEvaluationConfig(EvaluationConfig):
         self.allow_duplicates: bool = allow_duplicates
         self.with_all_categories: bool = with_all_categories
         self.new_format = new_format
+        self.n_cpu = n_cpu
 
     def build_command(self,
                       input_path: Union[str, Path],
@@ -56,6 +58,9 @@ class HyperstyleEvaluationConfig(EvaluationConfig):
 
         if self.new_format:
             python_command += ['--new-format']
+
+        if self.n_cpu:
+            python_command += ['--n-cpu', str(self.n_cpu)]
 
         if language_version.is_java():
             python_command += ['--language_version', language_version.value]
