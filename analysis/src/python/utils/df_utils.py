@@ -99,3 +99,13 @@ def append_df(df: pd.DataFrame, path: Union[str, Path]):
             write_df_to_xlsx(df, path, index=False, mode='a', header=False)
     else:
         write_df(df, path)
+
+
+def dict_to_df(d: dict, key_column: str, value_column: str) -> pd.DataFrame:
+    """ From key: value dict create dataframe with two columns [key_column, value_column] with
+    d.keys() values in key_column and d.values() in value_column. """
+
+    return pd.DataFrame.from_dict({
+        key_column: d.keys(),
+        value_column: d.values(),
+    })

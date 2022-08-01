@@ -1,11 +1,9 @@
 import argparse
 from pathlib import Path
 
+from analysis.src.python.evaluation.hyperstyle.evaluation_config import HYPERSTYLE_DOCKER_PATH, HYPERSTYLE_TOOL_PATH
 from analysis.src.python.evaluation.utils.args_utils import EvaluationRunToolArgument
-
-HYPERSTYLE_TOOL_PATH = 'review/hyperstyle/src/python/review/run_tool.py'
-
-HYPERSTYLE_DOCKER_PATH = 'stepik/hyperstyle:1.2.2'
+from analysis.src.python.utils.file_utils import get_tmp_directory
 
 
 def configure_arguments(parser: argparse.ArgumentParser) -> None:
@@ -37,3 +35,8 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                         help='Without this flag, all issues will be categorized into 5 main categories: '
                              'CODE_STYLE, BEST_PRACTICES, ERROR_PRONE, COMPLEXITY, INFO.',
                         action='store_true')
+
+    parser.add_argument('-td', '--tmp-directory',
+                        default=get_tmp_directory(),
+                        type=lambda value: Path(value).absolute(),
+                        help='Path to tmp directory to save temporary files')
