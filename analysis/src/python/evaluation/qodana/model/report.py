@@ -1,8 +1,10 @@
-import json
 from dataclasses import dataclass
-from typing import List
+from pathlib import Path
+from typing import List, Union
 
-from dataclasses_json import dataclass_json, LetterCase
+from dataclasses_json import LetterCase, dataclass_json
+
+from analysis.src.python.utils.json_utils import parse_json
 
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
@@ -51,9 +53,6 @@ class QodanaReport:
     version: str
     list_problem: List[Problem]
 
-    def to_str(self):
-        return json.dumps(self.to_dict())
-
     @staticmethod
-    def from_str(s: str) -> 'QodanaReport':
-        return QodanaReport.from_dict(json.loads(s))
+    def from_file(json_path: Union[Path, str]) -> 'QodanaReport':
+        return QodanaReport.from_dict(parse_json(json_path))

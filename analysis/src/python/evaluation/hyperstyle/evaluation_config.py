@@ -5,7 +5,6 @@ from typing import List, Optional, Union
 from hyperstyle.src.python.review.application_config import LanguageVersion
 
 from analysis.src.python.evaluation.utils.evaluation_utils import EvaluationConfig
-from analysis.src.python.utils.file_utils import get_tmp_directory
 
 logger = logging.getLogger(__name__)
 
@@ -21,16 +20,15 @@ class HyperstyleEvaluationConfig(EvaluationConfig):
                  allow_duplicates: bool,
                  with_all_categories: bool,
                  new_format: bool,
-                 tmp_directory: Optional[Path] = None):
+                 tmp_path: Path):
         """
         `docker_path` - docker image name to run hyperstyle in (custom or default HYPERSTYLE_DOCKER_PATH)
         `tool_path` - path to hyperstyle tool running script (custom or HYPERSTYLE_TOOL_PATH)
-        `tmp_directory` - directory where to place evaluation temporary files
+        `tmp_path` - path where to place evaluation temporary files
         Number of hyperstyle tool running script parameters (`allow_duplicates`, `with_all_categories` etc.)
         """
 
-        tmp_directory = get_tmp_directory() if tmp_directory is None else tmp_directory
-        super().__init__(tmp_path=tmp_directory / 'hyperstyle',
+        super().__init__(tmp_path=tmp_path / 'hyperstyle',
                          result_path=OUTPUT_FILE_PATH,
                          with_template=False)
 

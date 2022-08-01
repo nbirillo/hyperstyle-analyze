@@ -1,17 +1,21 @@
-import dataclasses
 import json
 from dataclasses import dataclass
+from pathlib import Path
 from typing import List
 
-from dacite import from_dict
+from dataclasses_json import dataclass_json
+
+from analysis.src.python.utils.json_utils import parse_json
 
 
+@dataclass_json
 @dataclass(frozen=True)
 class Quality:
     code: str
     text: str
 
 
+@dataclass_json
 @dataclass(frozen=True)
 class HyperstyleIssue:
     code: str
@@ -24,35 +28,39 @@ class HyperstyleIssue:
     influence_on_penalty: int
 
 
+@dataclass_json
 @dataclass(frozen=True)
 class QualityReport:
     quality: Quality
 
-    def to_str(self):
-        return json.dumps(dataclasses.asdict(self))
+    def to_str(self) -> str:
+        return json.dumps(self.to_dict())
 
 
+@dataclass_json
 @dataclass(frozen=True)
 class HyperstyleReport(QualityReport):
     issues: List[HyperstyleIssue]
 
     @staticmethod
-    def from_str(report: str):
-        return from_dict(data_class=HyperstyleReport, data=json.loads(report))
+    def from_file(json_path: Path) -> 'HyperstyleReport':
+        return HyperstyleReport.from_dict(parse_json(json_path))
 
 
+@dataclass_json
 @dataclass(frozen=True)
 class HyperstyleFileReport(HyperstyleReport):
     file_name: str
 
-    def to_hyperstyle_report(self):
+    def to_hyperstyle_report(self) -> HyperstyleReport:
         return HyperstyleReport(self.quality, self.issues)
 
 
+@dataclass_json
 @dataclass(frozen=True)
 class HyperstyleNewFormatReport(QualityReport):
     file_review_results: List[HyperstyleFileReport]
 
     @staticmethod
-    def from_str(report: str):
-        return from_dict(data_class=HyperstyleNewFormatReport, data=json.loads(report))
+    def from_file(json_path: Path) -> 'HyperstyleNewFormatReport':
+        return HyperstyleNewFormatReport.from_dict(parse_json(json_path))
