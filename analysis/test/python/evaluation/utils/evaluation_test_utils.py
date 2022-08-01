@@ -38,5 +38,5 @@ def run_evaluation_parsing_test(
         issues = get_result_issues(result_row)
         expected_issues_count = result_row_shapes[i]
         actual_issues_count = len(issues)
-        assert len(issues) == result_row_shapes[i], \
+        assert actual_issues_count == expected_issues_count, \
             f"Incorrect number of issues, expected {expected_issues_count} got {actual_issues_count}"
