@@ -26,11 +26,17 @@ def run_evaluation_parsing_test(
         parse_result: Callable[[Path], pd.DataFrame],
         get_result_issues: Callable[[pd.Series], List[Any]],
         result_shape: int,
-        result_row_shapes: List[int]
-):
+        result_row_shapes: List[int]):
     """ Parse evaluation results and compare its shapes with expected `result_shape` and `result_content_shape`. """
     df_result = parse_result(result_path)
-    assert df_result.shape[0] == result_shape
+
+    submissions_count = df_result.shape[0]
+    assert df_result.shape[0] == result_shape, \
+        f"Incorrect number of submissions, expected {submissions_count} got {result_shape}"
+
     for i, result_row in df_result.iterrows():
         issues = get_result_issues(result_row)
-        assert len(issues) == result_row_shapes[i]
+        expected_issues_count = result_row_shapes[i]
+        actual_issues_count = len(issues)
+        assert len(issues) == result_row_shapes[i], \
+            f"Incorrect number of issues, expected {expected_issues_count} got {actual_issues_count}"
