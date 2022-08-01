@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import List, Union
 
-from dataclasses_json import LetterCase, dataclass_json
+from dataclasses_json import dataclass_json, LetterCase
 
 from analysis.src.python.utils.json_utils import parse_json
 
