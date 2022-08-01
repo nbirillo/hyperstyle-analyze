@@ -7,6 +7,7 @@ from analysis.src.python.data_analysis.model.column_name import SubmissionColumn
 from analysis.src.python.evaluation.qodana.evaluate import parse_qodana_result
 from analysis.src.python.evaluation.qodana.model.report import QodanaReport
 from analysis.test.python.evaluation import QODANA_DIR_PATH
+from analysis.test.python.evaluation.utils.evaluation_test_utils import run_evaluation_parsing_test
 
 RESOURCES_PATH = QODANA_DIR_PATH / 'parse_result'
 
@@ -18,8 +19,10 @@ QODANA_OUTPUT_DATA = [
 
 @pytest.mark.parametrize(('result_file', 'solutions_count', 'issues_count'), QODANA_OUTPUT_DATA)
 def test_parse_qodana_result(result_file: Path, solutions_count: int, issues_count: List[int]):
-    df_result = parse_qodana_result(RESOURCES_PATH / result_file)
-    assert df_result.shape[0] == solutions_count
-    for i, result in enumerate(df_result.iterrows()):
-        report = QodanaReport.from_str(result[1][SubmissionColumns.QODANA_ISSUES.value])
-        assert len(report.list_problem) == issues_count[i]
+    run_evaluation_parsing_test(
+        result_path=RESOURCES_PATH / result_file,
+        parse_result=parse_qodana_result,
+        get_result_issues=lambda result_content:
+        QodanaReport.from_json(result_content[SubmissionColumns.QODANA_ISSUES.value]).list_problem,
+        result_shape=solutions_count,
+        result_row_shapes=issues_count)
