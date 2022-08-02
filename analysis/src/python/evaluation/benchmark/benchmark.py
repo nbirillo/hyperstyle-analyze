@@ -21,7 +21,6 @@ from analysis.src.python.utils.df_utils import read_df, write_df
 from analysis.src.python.utils.file_utils import create_directory
 
 logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO)
 
 
 class Analyzer(Enum):
@@ -146,6 +145,12 @@ def configure_parser(parser: argparse.ArgumentParser) -> None:
     )
 
     parser.add_argument(
+        '--log-path',
+        type=lambda value: Path(value).absolute(),
+        help='Path to log file',
+    )
+
+    parser.add_argument(
         '--tmp-dir',
         type=lambda value: Path(value).absolute(),
         help='The path to the directory with the temporary files.',
@@ -159,6 +164,11 @@ def main() -> None:
     args = parser.parse_args()
     if args.time_column is None:
         args.time_column = f'{args.analyzer}_time'
+
+    if args.log_path is not None:
+        args.log_path.parent.mkdir(parents=True, exist_ok=True)
+
+    logging.basicConfig(level=logging.INFO, filename=args.log_path, filemode='w')
 
     submissions = read_df(args.submissions_path)
     submissions[args.time_column] = submissions.apply(
