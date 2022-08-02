@@ -21,7 +21,7 @@ def get_issues_info(df_submissions: pd.DataFrame, issues_column: str) -> pd.Data
         for issue in report.issues:
             issues_info[issue.name] = issue.category
 
-    logging.info(f'Getting issues names and categories from submissions')
+    logging.info('Getting issues names and categories from submissions')
     df_submissions[issues_column].apply(get_info)
 
     return dict_to_df(issues_info, IssuesColumns.NAME.value, IssuesColumns.CATEGORY.value)
@@ -43,7 +43,8 @@ def filter_issues(df_submissions: pd.DataFrame, issues_column: str, ignore_issue
 def convert_to_analysis_report(df_submissions: pd.DataFrame, issues_column: str) -> pd.DataFrame:
     """ Map all report to analysis report format. """
 
-    df_submissions[issues_column] = df_submissions[issues_column].apply(AnalysisReport.convert, column=issues_column)
+    df_submissions[issues_column] = df_submissions[issues_column].apply(AnalysisReport.convert_to_analysis_json_report,
+                                                                        column=issues_column)
     return df_submissions
 
 

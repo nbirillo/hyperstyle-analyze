@@ -66,6 +66,6 @@ class AnalysisReport:
         raise NotImplementedError(f'Implement parser for issue stored in column: {column}')
 
     @staticmethod
-    def convert(str_report: str, column: str):
+    def convert_to_analysis_json_report(str_report: str, column: str):
         report = AnalysisReport.from_json_report(str_report, column)
         return report.to_json()

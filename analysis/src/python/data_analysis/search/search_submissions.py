@@ -7,7 +7,7 @@ import pandas as pd
 
 from analysis.src.python.data_analysis.model.column_name import StepsStatsColumns, SubmissionColumns
 from analysis.src.python.data_analysis.utils.analysis_issue import AnalysisIssue, AnalysisReport
-from analysis.src.python.data_analysis.utils.code_utlis import merge_lines_to_code, split_code_to_lines
+from analysis.src.python.data_analysis.utils.code_utils import merge_lines_to_code, split_code_to_lines
 from analysis.src.python.data_analysis.utils.submission_utils import load_issues
 from analysis.src.python.evaluation.utils.solutions_saving_utils import save_solution_to_file
 from analysis.src.python.utils.df_utils import read_df, write_df
