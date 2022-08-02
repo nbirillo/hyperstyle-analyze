@@ -58,7 +58,7 @@ class HyperstyleEvaluationConfig(EvaluationConfig):
             python_command += ['--new-format']
 
         if self.n_cpu:
-            python_command += ['--n-cpu', self.n_cpu]
+            python_command += ['--n-cpu', str(self.n_cpu)]
 
         if language_version.is_java():
             python_command += ['--language_version', language_version.value]

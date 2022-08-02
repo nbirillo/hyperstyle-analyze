@@ -73,11 +73,11 @@ def time_benchmark_row(
             with_all_categories=False,
             new_format=False,
             n_cpu=n_cpu,
-            tmp_directory=tmp_directory,
+            tmp_path=tmp_directory,
         )
         parser = parse_hyperstyle_result
     elif analyzer == Analyzer.QODANA:
-        config = QodanaEvaluationConfig(tmp_directory=tmp_directory)
+        config = QodanaEvaluationConfig(tmp_path=tmp_directory)
         parser = parse_qodana_result
     else:
         raise NotImplementedError(f'Benchmark for {analyzer} is not implemented.')
