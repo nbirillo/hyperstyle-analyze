@@ -1,6 +1,6 @@
 # Benchmark
 
-This model allows you to test the performance of Hyperstyle and Qodana.
+This module allows you to test the performance of Hyperstyle and Qodana.
 
 ## Usage
 
