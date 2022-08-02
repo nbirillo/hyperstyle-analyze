@@ -11,7 +11,7 @@ from analysis.src.python.data_analysis.utils.chunk_stats_utils import get_statis
 
 
 def calculate_issues_change_statistics(df_issues_statistics: pd.DataFrame,
-                                       issues_classes: List[str]):
+                                       issue_names: List[str]):
     """ Calculate issues count diff between previous and current attempt in one submissions series. """
 
     df_issues_statistics = df_issues_statistics.sort_values([SubmissionColumns.ATTEMPT.value])
@@ -20,18 +20,18 @@ def calculate_issues_change_statistics(df_issues_statistics: pd.DataFrame,
         SubmissionColumns.ID.value: df_issues_statistics[SubmissionColumns.ID.value].values,
     }
 
-    for issue_class in issues_classes:
-        issues_change_statistics[issue_class] = []
+    for issue_name in issue_names:
+        issues_change_statistics[issue_name] = []
 
     previous_submission_issues_statistics = None
     for _, submission_issues_statistics in df_issues_statistics.iterrows():
-        for issue_class in issues_classes:
+        for issue_name in issue_names:
             if previous_submission_issues_statistics is None:
-                diff = submission_issues_statistics[issue_class]
+                diff = submission_issues_statistics[issue_name]
             else:
-                diff = submission_issues_statistics[issue_class] - previous_submission_issues_statistics[issue_class]
+                diff = submission_issues_statistics[issue_name] - previous_submission_issues_statistics[issue_name]
 
-            issues_change_statistics[issue_class].append(diff)
+            issues_change_statistics[issue_name].append(diff)
         previous_submission_issues_statistics = submission_issues_statistics
     return pd.DataFrame.from_dict(issues_change_statistics)
 
@@ -47,7 +47,7 @@ def get_submissions_issues_change_statistics(submissions_path: str,
     df_issues_statistics = pd.read_csv(issues_statistics_path)
     df_issues = pd.read_csv(issues_path)
 
-    issues_classes = df_issues[IssuesColumns.CLASS.value].values
+    issue_names = df_issues[IssuesColumns.NAME.value].values
 
     df_submissions = merge_dfs(
         df_submissions[[SubmissionColumns.ID.value, SubmissionColumns.GROUP.value, SubmissionColumns.ATTEMPT.value]],
@@ -58,7 +58,7 @@ def get_submissions_issues_change_statistics(submissions_path: str,
 
     get_statistics_by_chunk(df_submissions, issues_change_statistics_path, chunk_size,
                             lambda submission_series:
-                            calculate_issues_change_statistics(submission_series, issues_classes))
+                            calculate_issues_change_statistics(submission_series, issue_names))
 
 
 if __name__ == '__main__':

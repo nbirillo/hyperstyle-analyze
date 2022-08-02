@@ -19,19 +19,19 @@ def get_submission_statistics(submissions_with_issues_path: str, submissions_sta
     df_stats[SubmissionStatsColumns.CODE_SYMBOLS_COUNT.value] = df_submissions[SubmissionColumns.CODE.value] \
         .apply(calculate_code_symbols_count)
 
-    df_stats[SubmissionStatsColumns.RAW_ISSUE_COUNT.value] = df_submissions[SubmissionColumns.RAW_ISSUES.value] \
-        .apply(calculate_issues_count)
+    df_stats[SubmissionStatsColumns.HYPERSTYLE_ISSUES_COUNT.value] = \
+        df_submissions[SubmissionColumns.HYPERSTYLE_ISSUES.value].apply(calculate_issues_count)
 
-    df_stats[SubmissionStatsColumns.RAW_ISSUE_BY_CODE_LINES.value] = \
-        df_stats[SubmissionStatsColumns.RAW_ISSUE_COUNT.value] / \
+    df_stats[SubmissionStatsColumns.HYPERSTYLE_ISSUES_BY_CODE_LINES.value] = \
+        df_stats[SubmissionStatsColumns.HYPERSTYLE_ISSUES_COUNT.value] / \
         df_stats[SubmissionStatsColumns.CODE_LINES_COUNT.value]
 
-    if SubmissionStatsColumns.QODANA_ISSUE_COUNT.value in df_stats.columns:
-        df_stats[SubmissionStatsColumns.QODANA_ISSUE_COUNT.value] = \
+    if SubmissionColumns.QODANA_ISSUES.value in df_submissions.columns:
+        df_stats[SubmissionStatsColumns.QODANA_ISSUES_COUNT.value] = \
             df_submissions[SubmissionColumns.QODANA_ISSUES.value].apply(calculate_issues_count)
 
-        df_stats[SubmissionStatsColumns.QODANA_ISSUE_BY_CODE_LINES.value] = \
-            df_stats[SubmissionStatsColumns.QODANA_ISSUE_COUNT.value] / \
+        df_stats[SubmissionStatsColumns.QODANA_ISSUES_BY_CODE_LINES.value] = \
+            df_stats[SubmissionStatsColumns.QODANA_ISSUES_COUNT.value] / \
             df_stats[SubmissionStatsColumns.CODE_LINES_COUNT.value]
 
     write_df(df_stats, submissions_statistics_path)
