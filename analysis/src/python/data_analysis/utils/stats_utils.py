@@ -1,5 +1,6 @@
-from analysis.src.python.data_analysis.utils.analysis_issue import AnalysisReport
 from analysis.src.python.data_analysis.utils.code_utils import split_code_to_lines
+
+from analysis.src.python.data_analysis.utils.analysis_issue import AnalysisReport
 
 
 def calculate_issues_count(str_report: str) -> int:

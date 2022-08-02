@@ -8,7 +8,6 @@ import pandas as pd
 from analysis.src.python.data_analysis.model.column_name import StepsStatsColumns, SubmissionColumns
 from analysis.src.python.data_analysis.utils.analysis_issue import AnalysisIssue, AnalysisReport
 from analysis.src.python.data_analysis.utils.code_utils import merge_lines_to_code, split_code_to_lines
-from analysis.src.python.data_analysis.utils.submission_utils import load_issues
 from analysis.src.python.evaluation.utils.solutions_saving_utils import save_solution_to_file
 from analysis.src.python.utils.df_utils import read_df, write_df
 from analysis.src.python.utils.file_utils import AnalysisExtension, create_directory
@@ -84,8 +83,6 @@ def search_submissions(submissions_path: str, issues_column: str, steps_issues_p
 
     create_directory(output_dir)
     df_submissions = read_df(submissions_path)
-
-    df_submissions = load_issues(df_submissions, issues_column)
 
     if steps_issues_path is None:
         search_submissions_by_step_issue(df_submissions, issues_column, step, issue_name, count, output_dir)
