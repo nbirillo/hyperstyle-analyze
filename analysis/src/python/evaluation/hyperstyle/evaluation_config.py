@@ -38,8 +38,8 @@ class HyperstyleEvaluationConfig(EvaluationConfig):
 
         self.allow_duplicates: bool = allow_duplicates
         self.with_all_categories: bool = with_all_categories
-        self.new_format = new_format
-        self.n_cpu = n_cpu
+        self.new_format: bool = new_format
+        self.n_cpu: int = n_cpu
 
     def build_command(self,
                       input_path: Union[str, Path],
