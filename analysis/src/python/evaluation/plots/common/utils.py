@@ -78,12 +78,14 @@ def create_scatter_trace(
         *,
         x_column: str,
         y_column: str,
+        name: Optional[str] = None,
         color: COLOR = None,
 ) -> go.Scatter:
     return go.Scatter(
         x=df[x_column],
         y=df[y_column],
         line={'color': color.value if color is not None else None},
+        name=name,
     )
 
 
