@@ -7,8 +7,8 @@ from hyperstyle.src.python.review.inspectors.issue import BaseIssue
 from hyperstyle.src.python.review.quality.penalty import PenaltyIssue
 
 from analysis.src.python.evaluation.model.column_name import ColumnName
-from analysis.src.python.evaluation.utils.args_util import EvaluationRunToolArgument, parse_set_arg
-from analysis.src.python.evaluation.utils.pandas_util import get_issues_from_json
+from analysis.src.python.evaluation.utils.args_utils import EvaluationRunToolArgument, parse_set_arg
+from analysis.src.python.evaluation.utils.pandas_utils import get_issues_from_json
 from analysis.src.python.utils.df_utils import read_df
 from analysis.src.python.utils.extension_utils import AnalysisExtension
 from analysis.src.python.utils.file_utils import get_parent_folder

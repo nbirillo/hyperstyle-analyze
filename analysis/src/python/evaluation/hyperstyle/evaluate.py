@@ -2,74 +2,96 @@ import argparse
 import logging
 import sys
 import time
-import traceback
+from pathlib import Path
 
 import pandas as pd
-from hyperstyle.src.python.review.common.subprocess_runner import run_in_subprocess
 
 from analysis.src.python.data_analysis.model.column_name import SubmissionColumns
 from analysis.src.python.evaluation.hyperstyle.evaluation_args import configure_arguments
 from analysis.src.python.evaluation.hyperstyle.evaluation_config import HyperstyleEvaluationConfig
-from analysis.src.python.evaluation.utils.args_util import script_structure_rule
-from analysis.src.python.evaluation.utils.pandas_util import get_language_version
+from analysis.src.python.evaluation.hyperstyle.model.report import HyperstyleNewFormatReport, HyperstyleReport
+from analysis.src.python.evaluation.utils.evaluation_utils import evaluate_by_language, evaluate_by_solution
+from analysis.src.python.evaluation.utils.solutions_saving_utils import get_solution_id_by_file_path
 from analysis.src.python.utils.df_utils import read_df, write_df
-from analysis.src.python.utils.file_utils import create_file, get_output_path, remove_directory
+from analysis.src.python.utils.file_utils import get_output_filename, get_output_path
 
 logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
 
-HYPERSTYLE_TRACEBACK = 'hyperstyle_traceback'
-
-
-def inspect_solution(df_solution: pd.DataFrame,
-                     config: HyperstyleEvaluationConfig):
-    solution_id = df_solution[SubmissionColumns.ID.value]
-    code = df_solution[SubmissionColumns.CODE.value]
-    language = df_solution[SubmissionColumns.LANG.value]
-    language_version = get_language_version(language)
-
-    solution_dir_path = config.tmp_directory / f'solution_{solution_id}'
-    solution_file_path = solution_dir_path / f'code{language_version.extension_by_language().value}'
-    next(create_file(solution_file_path, code))
-
-    command = config.build_command(solution_dir_path, language_version)
-    results = run_in_subprocess(command)
-    remove_directory(solution_dir_path)
-
-    return results
+HYPERSTYLE_OUTPUT_SUFFIX = '_hyperstyle'
 
 
-def run_evaluation(df_solutions: pd.DataFrame, config: HyperstyleEvaluationConfig):
-    df_solutions[HYPERSTYLE_TRACEBACK] = df_solutions.apply(inspect_solution, axis=1, config=config)
+def parse_hyperstyle_new_format_result(results_path: Path) -> pd.DataFrame:
+    """ Parse results for group of solution and split by solution id. """
+
+    try:
+        report = HyperstyleNewFormatReport.from_file(results_path)
+    except Exception as e:
+        logging.error(f"Can not parse new format report from hyperstyle output: {e}")
+        raise Exception(e)
+
+    results_dict = {
+        SubmissionColumns.ID.value: [],
+        SubmissionColumns.HYPERSTYLE_ISSUES.value: [],
+    }
+
+    for file_report in report.file_review_results:
+        solution_id = get_solution_id_by_file_path(file_report.file_name)
+        results_dict[SubmissionColumns.ID.value].append(solution_id)
+
+        issues = file_report.to_hyperstyle_report().to_json()
+        results_dict[SubmissionColumns.HYPERSTYLE_ISSUES.value].append(issues)
+
+    return pd.DataFrame.from_dict(results_dict)
+
+
+def parse_hyperstyle_result(results_path: Path) -> pd.Series:
+    """ Parse result for single solution. """
+
+    try:
+        report = HyperstyleReport.from_file(results_path)
+    except Exception as e:
+        logging.error(f"Can not parse new format report from hyperstyle output: {e}")
+        raise Exception(e)
+
+    return pd.Series({SubmissionColumns.HYPERSTYLE_ISSUES.value: report.to_json()})
+
+
+def evaluate_hyperstyle(df_solutions: pd.DataFrame, config: HyperstyleEvaluationConfig) -> pd.DataFrame:
+    """ Run hyperstyle tool on solutions. """
+
+    if config.new_format:
+        df_solutions = evaluate_by_language(df_solutions, config, parse_hyperstyle_new_format_result)
+    else:
+        df_solutions = evaluate_by_solution(df_solutions, config, parse_hyperstyle_result)
     return df_solutions
 
 
-def main() -> int:
+def main():
     parser = argparse.ArgumentParser()
     configure_arguments(parser)
 
-    try:
-        start = time.time()
-        args = parser.parse_args()
-        df_solutions = read_df(args.solutions_file_path)
-        config = HyperstyleEvaluationConfig(args)
-        results = run_evaluation(df_solutions, config)
-        write_df(results, get_output_path(args.solutions_file_path, '_hyperstyle'))
-        end = time.time()
-        print(f'All time: {end - start}')
-        return 0
+    start = time.time()
+    args = parser.parse_args()
 
-    except FileNotFoundError:
-        logger.error('XLSX-file or CSV-file with the specified name does not exists.')
-        return 2
+    df_solutions = read_df(args.solutions_file_path)
+    config = HyperstyleEvaluationConfig(docker_path=None if args.docker_path == 'None' else args.docker_path,
+                                        tool_path=args.tool_path,
+                                        allow_duplicates=args.allow_duplicates,
+                                        with_all_categories=args.with_all_categories,
+                                        # new_format is True for batching evaluation
+                                        new_format=True,
+                                        tmp_path=args.tmp_directory)
 
-    except KeyError:
-        logger.error(script_structure_rule)
-        return 2
-
-    except Exception:
-        traceback.print_exc()
-        logger.exception('An unexpected error.')
-        return 2
+    logger.info('Start processing:')
+    results = evaluate_hyperstyle(df_solutions, config)
+    if args.output_path is None:
+        output_path = get_output_path(args.solutions_file_path, HYPERSTYLE_OUTPUT_SUFFIX)
+    else:
+        output_path = args.output_path / get_output_filename(args.solutions_file_path, HYPERSTYLE_OUTPUT_SUFFIX)
+    write_df(results, output_path)
+    end = time.time()
+    logger.info(f'Total processing time: {end - start}')
 
 
 if __name__ == '__main__':

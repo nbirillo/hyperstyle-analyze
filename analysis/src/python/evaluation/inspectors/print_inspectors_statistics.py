@@ -5,7 +5,7 @@ from typing import Dict, List
 
 from hyperstyle.src.python.review.inspectors.issue import ShortIssue
 from hyperstyle.src.python.review.quality.penalty import PenaltyIssue
-from analysis.src.python.evaluation.utils.args_util import EvaluationRunToolArgument
+from analysis.src.python.evaluation.utils.args_utils import EvaluationRunToolArgument
 from analysis.src.python.evaluation.model.column_name import ColumnName
 from analysis.src.python.utils.serialization_utils import deserialize_data_from_file
 from analysis.src.python.evaluation.inspectors.common.statistics import (

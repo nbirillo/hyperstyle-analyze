@@ -4,7 +4,7 @@ import pytest
 
 from analysis.src.python.evaluation.model.column_name import ColumnName
 from analysis.src.python.utils.df_utils import drop_duplicates, equal_df, read_df
-from analysis.src.python.evaluation.utils.args_util import get_in_and_out_list
+from analysis.src.python.evaluation.utils.args_utils import get_in_and_out_list
 from analysis.test.python.utils import DF_UTILS_DATA_FOLDER
 
 RESOURCES_PATH = DF_UTILS_DATA_FOLDER / 'drop_duplicates'

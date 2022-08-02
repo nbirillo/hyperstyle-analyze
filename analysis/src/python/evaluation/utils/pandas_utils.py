@@ -9,7 +9,7 @@ from hyperstyle.src.python.review.quality.penalty import PenaltyIssue
 from hyperstyle.src.python.review.reviewers.utils.print_review import convert_json_to_issues
 
 from analysis.src.python.evaluation.model.column_name import ColumnName
-from analysis.src.python.evaluation.utils.args_util import script_structure_rule
+from analysis.src.python.evaluation.utils.args_utils import script_structure_rule
 from analysis.src.python.utils.df_utils import filter_df_by_iterable_value
 
 logger = logging.getLogger(__name__)

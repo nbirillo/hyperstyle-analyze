@@ -7,7 +7,7 @@ import pandas as pd
 from hyperstyle.src.python.review.inspectors.inspector_type import InspectorType
 from hyperstyle.src.python.review.inspectors.issue import BaseIssue, IssueType
 from hyperstyle.src.python.review.reviewers.utils.print_review import convert_issue_to_json
-from analysis.src.python.evaluation.utils.args_util import EvaluationRunToolArgument, parse_set_arg
+from analysis.src.python.evaluation.utils.args_utils import EvaluationRunToolArgument, parse_set_arg
 from analysis.src.python.evaluation.model.column_name import ColumnName
 from analysis.src.python.utils.df_utils import drop_duplicates, filter_df_by_iterable_value, read_df, write_df
 from analysis.src.python.utils.file_utils import get_parent_folder

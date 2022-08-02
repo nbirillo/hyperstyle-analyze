@@ -1,0 +1,53 @@
+{
+  "quality": {
+    "code": "EXCELLENT",
+    "text": "Code quality (beta): EXCELLENT"
+  },
+  "file_review_results": [
+    {
+      "file_name": "solution_2760480/code.py",
+      "quality": {
+        "code": "EXCELLENT",
+        "text": "Code quality (beta): EXCELLENT"
+      },
+      "issues": []
+    },
+    {
+      "file_name": "solution_2760500/code.py",
+      "quality": {
+        "code": "EXCELLENT",
+        "text": "Code quality (beta): EXCELLENT"
+      },
+      "issues": []
+    },
+    {
+      "file_name": "solution_2760563/code.py",
+      "quality": {
+        "code": "EXCELLENT",
+        "text": "Code quality (beta): EXCELLENT"
+      },
+      "issues": [
+        {
+          "code": "WPS327",
+          "text": "Found useless `continue` at the end of the loop",
+          "line": "for word in words:",
+          "line_number": 3,
+          "column_number": 1,
+          "category": "BEST_PRACTICES",
+          "difficulty": "MEDIUM",
+          "influence_on_penalty": 0
+        },
+        {
+          "code": "WPS223",
+          "text": "Found too many `elif` branches: 5 > 3",
+          "line": "if word.startswith(\"WWW.\"):",
+          "line_number": 5,
+          "column_number": 5,
+          "category": "COMPLEXITY",
+          "difficulty": "HARD",
+          "influence_on_penalty": 0
+        }
+      ]
+    }
+  ]
+}

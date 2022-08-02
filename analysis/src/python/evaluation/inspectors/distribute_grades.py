@@ -5,7 +5,7 @@ from typing import Dict, Optional, Tuple
 import pandas as pd
 
 from analysis.src.python.evaluation.model.column_name import ColumnName
-from analysis.src.python.evaluation.utils.args_util import EvaluationRunToolArgument
+from analysis.src.python.evaluation.utils.args_utils import EvaluationRunToolArgument
 from analysis.src.python.utils.df_utils import read_df, write_df
 from analysis.src.python.utils.extension_utils import AnalysisExtension, get_restricted_extension
 from analysis.src.python.utils.file_utils import get_parent_folder
