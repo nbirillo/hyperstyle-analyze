@@ -16,9 +16,9 @@ Run the [search.py](search.py) script with the arguments from command line.
 
 Required arguments:
 
-`submissions_path` — Path to .csv file with submissions. The file must contain the following columns: `id`, `step_id`, `code`, `group`, `attempt`, `raw_issues`.
-`steps_path` — Path to .csv file with steps. The file must contain the following columns: `id`, `code_templates`.
-`result_path` — Path to resulting .csv file with issues ranking.
+- `submissions_path` — Path to .csv file with submissions. The file must contain the following columns: `id`, `step_id`, `code`, `group`, `attempt`, `raw_issues` (please, use [preprocess_submissions.py](../preprocessing/preprocess_submissions.py) script to get  `group` and `attempt` columns).
+- `steps_path` — Path to .csv file with steps. The file must contain the following columns: `id`, `code_template`.
+- `result_path` — Path to resulting .csv file with issues ranking.
 
 Optional arguments:
 

@@ -1,5 +1,4 @@
 import argparse
-import ast
 import json
 import os
 import sys
@@ -119,7 +118,7 @@ def match_with_template(df_submissions: pd.DataFrame, df_steps: pd.DataFrame, eq
 
     def match_single_submission(submission: pd.DataFrame, df_steps: pd.DataFrame) -> List[int]:
         step_id = submission[SubmissionColumns.STEP_ID.value]
-        template = df_steps[df_steps[StepColumns.ID.value] == step_id].iloc[0][StepColumns.CODE_TEMPLATES.value]
+        template = df_steps[df_steps[StepColumns.ID.value] == step_id].iloc[0][StepColumns.CODE_TEMPLATE.value]
         positions = match(submission[SubmissionColumns.CODE.value], template, equal)
         return positions
 
@@ -137,11 +136,10 @@ def search(submissions_path: str, steps_path: str, result_path: str, steps_with_
 
     df_submissions = read_df(submissions_path)
 
-    lang = 'java17'
     df_steps = read_df(steps_path)
     # Parsing code templates
-    df_steps[StepColumns.CODE_TEMPLATES.value] = \
-        df_steps[StepColumns.CODE_TEMPLATES.value].map(lambda x: ast.literal_eval(x)[lang].split(os.linesep))
+    df_steps[StepColumns.CODE_TEMPLATE.value] = \
+        df_steps[StepColumns.CODE_TEMPLATE.value].map(lambda x: x.split(os.linesep))
 
     df_submissions = df_submissions[[SubmissionColumns.ID.value,
                                      SubmissionColumns.STEP_ID.value,
