@@ -18,7 +18,7 @@ from analysis.src.python.evaluation.qodana.evaluation_config import QodanaEvalua
 from analysis.src.python.evaluation.utils.pandas_utils import get_language_version
 from analysis.src.python.evaluation.utils.solutions_saving_utils import save_solutions_to_files
 from analysis.src.python.utils.df_utils import read_df, write_df
-from analysis.src.python.utils.file_utils import create_directory
+from analysis.src.python.utils.file_utils import create_directory, get_tmp_directory
 
 logger = logging.getLogger(__name__)
 
@@ -162,8 +162,12 @@ def main() -> None:
     configure_parser(parser)
 
     args = parser.parse_args()
+
     if args.time_column is None:
         args.time_column = f'{args.analyzer}_time'
+
+    if args.tmp_dir is None:
+        args.tmp_dir = get_tmp_directory()
 
     if args.log_path is not None:
         args.log_path.parent.mkdir(parents=True, exist_ok=True)
