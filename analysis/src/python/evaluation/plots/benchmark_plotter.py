@@ -54,9 +54,9 @@ def plot_as_line_chart(
     min_data = grouped_df[timing_column].min().reset_index()
 
     if color is not None:
-        max_color, median_trace, min_trace = color
+        max_color, median_color, min_color = color
     else:
-        max_color, median_trace, min_trace = [None] * 3
+        max_color, median_color, min_color = [None] * 3
 
     max_trace = create_scatter_trace(
         max_data,
@@ -66,26 +66,26 @@ def plot_as_line_chart(
         name='Max',
     )
 
-    median_trace = create_scatter_trace(
+    median_color = create_scatter_trace(
         median_data,
         x_column=group_by,
         y_column=timing_column,
-        color=median_trace,
+        color=median_color,
         name='Median',
     )
 
-    min_trace = create_scatter_trace(
+    min_color = create_scatter_trace(
         min_data,
         x_column=group_by,
         y_column=timing_column,
-        color=min_trace,
+        color=min_color,
         name='Min',
     )
 
     fig = go.Figure()
     fig.add_trace(max_trace)
-    fig.add_trace(median_trace)
-    fig.add_trace(min_trace)
+    fig.add_trace(median_color)
+    fig.add_trace(min_color)
 
     update_figure(
         fig,
