@@ -1,12 +1,11 @@
 import logging.config
 import os
 from pathlib import Path
-from typing import List, Optional, Union
+from typing import List, Union
 
 from hyperstyle.src.python.review.application_config import LanguageVersion
 
 from analysis.src.python.evaluation.utils.evaluation_utils import EvaluationConfig
-from analysis.src.python.utils.file_utils import get_tmp_directory
 
 logger = logging.getLogger(__name__)
 
@@ -21,15 +20,14 @@ OUTPUT_FILE_PATH = Path('report', 'results', 'result-allProblems.json')
 class QodanaEvaluationConfig(EvaluationConfig):
 
     def __init__(self,
-                 with_custom_profile: bool = False,
-                 tmp_directory: Optional[Path] = None):
+                 tmp_path: Path,
+                 with_custom_profile: bool = False):
         """
+        `tmp_path` - directory where to place evaluation temporary files
         `with_custom_profile` - run qodana with custom inspection profile (settings)
-        `tmp_directory` - directory where to place evaluation temporary files
         """
 
-        tmp_directory = get_tmp_directory() if tmp_directory is None else tmp_directory
-        super().__init__(tmp_path=tmp_directory / 'qodana',
+        super().__init__(tmp_path=tmp_path / 'qodana',
                          result_path=OUTPUT_FILE_PATH,
                          with_template=True)
 

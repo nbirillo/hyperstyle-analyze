@@ -24,24 +24,23 @@ HYPERSTYLE_OUTPUT_SUFFIX = '_hyperstyle'
 def parse_hyperstyle_new_format_result(results_path: Path) -> pd.DataFrame:
     """ Parse results for group of solution and split by solution id. """
 
+    try:
+        report = HyperstyleNewFormatReport.from_file(results_path)
+    except Exception as e:
+        logging.error(f"Can not parse new format report from hyperstyle output: {e}")
+        raise Exception(e)
+
     results_dict = {
         SubmissionColumns.ID.value: [],
         SubmissionColumns.HYPERSTYLE_ISSUES.value: [],
     }
 
-    try:
-        with open(results_path, 'r') as f:
-            hyperstyle_report = HyperstyleNewFormatReport.from_str(f.read())
+    for file_report in report.file_review_results:
+        solution_id = get_solution_id_by_file_path(file_report.file_name)
+        results_dict[SubmissionColumns.ID.value].append(solution_id)
 
-        for file_report in hyperstyle_report.file_review_results:
-            solution_id = get_solution_id_by_file_path(file_report.file_name)
-            results_dict[SubmissionColumns.ID.value].append(solution_id)
-
-            issues = file_report.to_hyperstyle_report().to_str()
-            results_dict[SubmissionColumns.HYPERSTYLE_ISSUES.value].append(issues)
-
-    except Exception as e:
-        logging.error(f"Can not parse new format report from hyperstyle output: {e}")
+        issues = file_report.to_hyperstyle_report().to_json()
+        results_dict[SubmissionColumns.HYPERSTYLE_ISSUES.value].append(issues)
 
     return pd.DataFrame.from_dict(results_dict)
 
@@ -49,17 +48,13 @@ def parse_hyperstyle_new_format_result(results_path: Path) -> pd.DataFrame:
 def parse_hyperstyle_result(results_path: Path) -> pd.Series:
     """ Parse result for single solution. """
 
-    result = ''
-
     try:
-        with open(results_path, 'r') as f:
-            hyperstyle_report = HyperstyleReport.from_str(f.read())
-            result = hyperstyle_report.to_str()
-
+        report = HyperstyleReport.from_file(results_path)
     except Exception as e:
         logging.error(f"Can not parse new format report from hyperstyle output: {e}")
+        raise Exception(e)
 
-    return pd.Series({SubmissionColumns.HYPERSTYLE_ISSUES.value: result})
+    return pd.Series({SubmissionColumns.HYPERSTYLE_ISSUES.value: report.to_json()})
 
 
 def evaluate_hyperstyle(df_solutions: pd.DataFrame, config: HyperstyleEvaluationConfig) -> pd.DataFrame:
@@ -86,7 +81,7 @@ def main():
                                         with_all_categories=args.with_all_categories,
                                         # new_format is True for batching evaluation
                                         new_format=True,
-                                        tmp_directory=args.tmp_directory)
+                                        tmp_path=args.tmp_directory)
 
     logger.info('Start processing:')
     results = evaluate_hyperstyle(df_solutions, config)
