@@ -1,5 +1,4 @@
 import argparse
-import ast
 import json
 import os
 import sys
@@ -9,8 +8,8 @@ import pandas as pd
 
 from analysis.src.python.data_analysis.model.column_name import StepColumns, SubmissionColumns
 from analysis.src.python.data_analysis.template_errors.template_matching import EQUAL, match, parse_template_code
-from analysis.src.python.utils.df_utils import drop_columns, read_df, write_df
 from analysis.src.python.evaluation.issues_statistics.common.raw_issue_encoder_decoder import RawIssueDecoder
+from analysis.src.python.utils.df_utils import drop_columns, read_df, write_df
 
 
 def submission_to_issue_code_pos(submission: pd.DataFrame) -> List[Tuple[str, str, int]]:
