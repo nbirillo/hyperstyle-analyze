@@ -108,12 +108,12 @@ def get_issues_steps_statistics(submissions_path: str,
         SubmissionColumns.ID.value,
     )
 
-    df_issues = df_issues[~df_issues[IssuesColumns.CLASS.value].isin(
-        ignore_issues) & df_issues[IssuesColumns.CLASS.value].isin(
+    df_issues = df_issues[~df_issues[IssuesColumns.NAME.value].isin(
+        ignore_issues) & df_issues[IssuesColumns.NAME.value].isin(
         df_issues_statistics.columns)]
 
     df_issues_statistics = df_issues_statistics[
-        [SubmissionColumns.STEP_ID.value] + df_issues[IssuesColumns.CLASS.value].values.tolist()]
+        [SubmissionColumns.STEP_ID.value] + df_issues[IssuesColumns.NAME.value].values.tolist()]
 
     get_steps_to_issues_statistics(issues_steps_statistics_directory_path, df_issues_statistics)
 
