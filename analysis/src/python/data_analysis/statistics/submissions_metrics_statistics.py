@@ -1,7 +1,8 @@
 import argparse
+from enum import Enum
 from functools import partial
 from pathlib import Path
-from typing import Literal, Optional
+from typing import Literal, Optional, Set
 
 import pandas as pd
 
@@ -14,9 +15,18 @@ from analysis.src.python.data_analysis.utils.stats_utils import (
 from analysis.src.python.utils.df_utils import read_df, write_df
 
 
+class CodeLinesCountOption(Enum):
+    ALL = 'all'
+    IGNORE_EMPTY_LINES = 'ignore_empty_lines'
+
+    @classmethod
+    def values(cls) -> Set[str]:
+        return {cls.ALL.value, cls.IGNORE_EMPTY_LINES.value}
+
+
 def get_submission_statistics(
     submissions: pd.DataFrame,
-    code_lines_count: Optional[Literal['all', 'ignore_empty_lines']] = None,
+    code_lines_count: Optional[CodeLinesCountOption] = None,
     code_symbols_count: bool = False,
     raw_issue_count: bool = False,
     raw_issue_by_code_lines: bool = False,
@@ -30,7 +40,7 @@ def get_submission_statistics(
     if code_lines_count is not None:
         stats[SubmissionStatsColumns.CODE_LINES_COUNT.value] = submissions[SubmissionColumns.CODE.value].apply(
             partial(calculate_code_lines_count, ignore_empty_lines=True)
-            if code_lines_count == 'ignore_empty_lines'
+            if code_lines_count == CodeLinesCountOption.IGNORE_EMPTY_LINES
             else calculate_code_lines_count,
         )
 
@@ -80,8 +90,8 @@ def configure_parser(parser: argparse.ArgumentParser) -> None:
         '--code-lines-count',
         type=str,
         nargs='?',
-        const='all',
-        choices=['all', 'ignore_empty_lines'],
+        const=CodeLinesCountOption.ALL.value,
+        choices=CodeLinesCountOption.values(),
         help="Count the number of lines of code. Select 'ignore_empty_lines' to ignore empty lines.",
     )
 
@@ -121,6 +131,8 @@ def main() -> None:
     configure_parser(parser)
 
     args = parser.parse_args()
+    if args.code_lines_count is not None:
+        args.code_lines_count = CodeLinesCountOption(args.code_lines_count)
 
     submissions = read_df(args.submissions_path)
 
