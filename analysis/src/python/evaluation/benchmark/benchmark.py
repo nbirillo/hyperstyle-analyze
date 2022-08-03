@@ -35,14 +35,39 @@ class Analyzer(Enum):
             return None
 
     @classmethod
-    def available_values(cls) -> Set[str]:
+    def values(cls) -> Set[str]:
         return {cls.HYPERSTYLE.value, cls.QODANA.value}
 
 
-def measure_run_time(f: Callable[[], Any], repeat: int, output_path: Path, parser: Callable[[Path], Any]) -> float:
+class AggregateOption(Enum):
+    MEAN = 'mean'
+    MEDIAN = 'median'
+
+    @classmethod
+    def values(cls) -> Set[str]:
+        return {cls.MEAN.value, cls.MEDIAN.value}
+
+    def to_function(self) -> Callable[[np.array], float]:
+        option_to_function = {
+            AggregateOption.MEAN: np.mean,
+            AggregateOption.MEDIAN: np.median,
+        }
+
+        return option_to_function[self]
+
+
+def measure_run_time(
+    f: Callable[[], Any],
+    repeat: int,
+    aggregate_option: AggregateOption = AggregateOption.MEAN,
+    output_path: Optional[Path] = None,
+    parser: Optional[Callable[[Path], Any]] = None,
+) -> float:
+    aggregate_function = aggregate_option.to_function()
+
     repeat_times = []
-    for i in range(1, repeat + 1):
-        logger.info(f'Time measuring attempt={i}')
+    for i in range(repeat):
+        logger.info(f'Time measuring attempt={i + 1}')
 
         start_time = time.time()
         f()
@@ -50,11 +75,13 @@ def measure_run_time(f: Callable[[], Any], repeat: int, output_path: Path, parse
 
         difference = end_time - start_time
         logger.info(f'Time: {difference}')
-        logger.info(parser(output_path))
+
+        if output_path is not None and parser is not None:
+            logger.info(parser(output_path))
 
         repeat_times.append(difference)
 
-    return np.array(repeat_times).mean()
+    return aggregate_function(repeat_times)
 
 
 def time_benchmark_row(
@@ -62,6 +89,7 @@ def time_benchmark_row(
     docker_path: str,
     analyzer: Optional[Analyzer],
     repeat: int,
+    aggregate_option: AggregateOption,
     n_cpu: Optional[int],
     tmp_directory: Path,
 ) -> float:
@@ -95,6 +123,7 @@ def time_benchmark_row(
     mean_time = measure_run_time(
         partial(run_in_subprocess, command=command),
         repeat,
+        aggregate_option,
         output_path / config.result_path,
         parser,
     )
@@ -120,7 +149,7 @@ def configure_parser(parser: argparse.ArgumentParser) -> None:
         '--analyzer',
         type=str,
         required=True,
-        choices=Analyzer.available_values(),
+        choices=Analyzer.values(),
         help='Name of the analyzer that needs to be benchmarked.',
     )
 
@@ -132,6 +161,14 @@ def configure_parser(parser: argparse.ArgumentParser) -> None:
     )
 
     parser.add_argument('--repeat', type=int, default=3, help='Times to repeat time evaluation for averaging.')
+
+    parser.add_argument(
+        '--aggregate',
+        type=str,
+        default=AggregateOption.MEAN.value,
+        choices=AggregateOption.values(),
+        help='The function that will be used to aggregate the values from the different iterations.',
+    )
 
     parser.add_argument('--n-cpu', type=int, help='Number of cpu that can be used to run analyzer.')
 
@@ -181,6 +218,7 @@ def main() -> None:
             args.docker_path,
             Analyzer.from_value(args.analyzer),
             args.repeat,
+            AggregateOption(args.aggregate),
             args.n_cpu,
             args.tmp_dir,
         ),
