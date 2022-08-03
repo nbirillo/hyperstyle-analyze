@@ -2,7 +2,7 @@ import argparse
 from enum import Enum
 from functools import partial
 from pathlib import Path
-from typing import Literal, Optional, Set
+from typing import Optional, Set
 
 import pandas as pd
 
