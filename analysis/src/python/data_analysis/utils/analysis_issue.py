@@ -9,7 +9,7 @@ from analysis.src.python.evaluation.qodana.model.report import Problem, QodanaRe
 
 
 @dataclass_json
-@dataclass(frozen=True)
+@dataclass(frozen=True, eq=True)
 class AnalysisIssue:
     name: str
     text: str
