@@ -1,17 +1,15 @@
-import json
+import ast
 from typing import Callable, List, Optional, Tuple
 
 from analysis.src.python.data_analysis.utils.code_utils import split_code_to_lines
 
 
 def parse_template_code(template_config: str, lang: str = 'java11') -> List[str]:
-    template_code = json.loads(template_config)[lang]
+    template_code = ast.literal_eval(template_config)[lang]
     return split_code_to_lines(template_code)
 
 
-def parse_template_issues_positions(positions: Optional[str]) -> List[int]:
-    if positions is None:
-        return []
+def parse_template_issues_positions(positions: str) -> List[int]:
     return list(map(int, positions.split(', ')))
 
 

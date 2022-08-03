@@ -1,4 +1,5 @@
 import argparse
+import logging
 import sys
 
 import pandas as pd
@@ -13,9 +14,10 @@ from analysis.src.python.utils.df_utils import merge_dfs, read_df, write_df
 from analysis.src.python.utils.logging_utils import configure_logger
 
 
-def configure_arguments(parser: argparse.ArgumentParser):
+def configure_arguments(parser: argparse.ArgumentParser) -> None:
     parser.add_argument('templates_issues_path', type=str, help='Path to .csv file with issues in templates.')
     parser.add_argument('submissions_path', type=str, help='Path to file with submissions.')
+    parser.add_argument('steps_path', type=str, help='Path to file with submissions.')
     parser.add_argument('filtered_submissions_path', type=str, help='Path to file with submissions.')
     parser.add_argument('issues_column', type=str, help='Path to file with submissions.')
     parser.add_argument('template_lang', type=str, help='Language to select template for')
@@ -45,17 +47,29 @@ def filter_template_issues_from_submission(submission: pd.Series,
         if len(template_issue_positions) == 0:
             continue
 
+        matched_template_issue_positions = []
         for issue in report.issues:
+
             if issue.name != template_issue_name:
                 continue
-            for template_issue_position in template_issue_positions:
-                if matching[issue.line_number] == template_issue_position:
-                    template_issues_report.issues.append(issue)
 
-    filtered_report = AnalysisReport(issues=[issue for issue in report.issues if issue not in template_issues_report])
+            for template_issue_position in template_issue_positions:
+                if matching[issue.line_number - 1] == template_issue_position:
+                    template_issues_report.issues.append(issue)
+                    matched_template_issue_positions.append(template_issue_position)
+
+        logging.info(f'{len(matched_template_issue_positions)}/{len(template_issue_positions)} '
+                     f'template issues {template_issue_name} was matched '
+                     f'in step {submission[SubmissionColumns.STEP_ID.value]}. '
+                     f'Unmatched issues positions: '
+                     f'{list(set(template_issue_positions) - set(matched_template_issue_positions))}')
+
+    filtered_report = AnalysisReport(
+        issues=[issue for issue in report.issues if issue not in template_issues_report.issues],
+    )
     submission[issues_column] = filtered_report.to_json()
     submission[issues_column + '_all'] = report.to_json()
-    submission[issues_column + 'diff'] = template_issues_report.to_json()
+    submission[issues_column + '_diff'] = template_issues_report.to_json()
 
     return submission
 
@@ -72,6 +86,8 @@ def filter_template_issues(df_templates_issues: pd.DataFrame,
 
     df_templates_issues[StepColumns.CODE_TEMPLATES.value] = \
         df_templates_issues[StepColumns.CODE_TEMPLATES.value].apply(parse_template_code, lang=template_lang)
+
+    df_templates_issues = df_templates_issues.dropna(subset=[TemplateColumns.POS_IN_TEMPLATE.value])
 
     df_templates_issues[TemplateColumns.POS_IN_TEMPLATE.value] = \
         df_templates_issues[TemplateColumns.POS_IN_TEMPLATE.value].apply(parse_template_issues_positions)
