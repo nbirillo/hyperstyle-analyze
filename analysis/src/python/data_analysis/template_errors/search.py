@@ -1,4 +1,5 @@
 import argparse
+import ast
 import json
 import os
 import sys
@@ -10,6 +11,7 @@ from analysis.src.python.data_analysis.model.column_name import StepColumns, Sub
 from analysis.src.python.data_analysis.template_errors.template_matching import EQUAL, match
 from analysis.src.python.utils.df_utils import drop_columns, read_df, write_df
 from analysis.src.python.evaluation.issues_statistics.common.raw_issue_encoder_decoder import RawIssueDecoder
+from data_analysis.template_errors.models.postprocessing_models import TemplateGatheringType
 
 
 def submission_to_issue_code_pos(submission: pd.DataFrame) -> List[Tuple[str, str, int]]:
@@ -127,6 +129,33 @@ def match_with_template(df_submissions: pd.DataFrame, df_steps: pd.DataFrame, eq
     return df_submissions
 
 
+def parsing_template_code_lambda(df_steps: pd.DataFrame, template_gathering_type: TemplateGatheringType) -> Callable:
+    columns = df_steps.columns
+    # The dataframe was gathered from the database
+    if template_gathering_type == TemplateGatheringType.DATABASE:
+        return lambda x: x.split(os.linesep)
+
+    # The dataframe was gathered via public API
+    if template_gathering_type == TemplateGatheringType.API:
+        if SubmissionColumns.LANG.value not in columns:
+            raise ValueError(f'The steps dataframe has {template_gathering_type.get_template_column()} column, '
+                             f'but does not have {SubmissionColumns.LANG.value} column')
+        return lambda x: ast.literal_eval(x)[SubmissionColumns.LANG.value].split(os.linesep)
+
+    raise NotImplementedError('Can not find a function to parse templates!')
+
+
+def parse_template_code(df_steps: pd.DataFrame) -> pd.DataFrame:
+    template_gathering_type = TemplateGatheringType.define_template_gathering_type(df_steps)
+    template_column = template_gathering_type.get_template_column()
+
+    # Rewrite template column
+    df_steps[StepColumns.CODE_TEMPLATE.value] = \
+        df_steps[template_column].map(parsing_template_code_lambda(df_steps, template_gathering_type))
+
+    return df_steps
+
+
 def search(submissions_path: str, steps_path: str, result_path: str, steps_with_groups_count: str, n: int,
            equal_type: str):
     """
@@ -137,9 +166,7 @@ def search(submissions_path: str, steps_path: str, result_path: str, steps_with_
     df_submissions = read_df(submissions_path)
 
     df_steps = read_df(steps_path)
-    # Parsing code templates
-    df_steps[StepColumns.CODE_TEMPLATE.value] = \
-        df_steps[StepColumns.CODE_TEMPLATE.value].map(lambda x: x.split(os.linesep))
+    df_steps = parse_template_code(df_steps)
 
     df_submissions = df_submissions[[SubmissionColumns.ID.value,
                                      SubmissionColumns.STEP_ID.value,
