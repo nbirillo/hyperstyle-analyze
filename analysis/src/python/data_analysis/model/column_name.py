@@ -123,6 +123,8 @@ class SubmissionColumns(Enum):
     RAW_ISSUES_ALL = 'raw_issues_all'
     RAW_ISSUES_DIFF = 'raw_issues_diff'
     HYPERSTYLE_ISSUES = 'hyperstyle_issues'
+    HYPERSTYLE_ISSUES_DIFF = 'hyperstyle_issues_diff'
+    HYPERSTYLE_ISSUES_ALL = 'hyperstyle_issues_all'
     RAW_ISSUE_CLASS = 'origin_class'
     ISSUE_TYPE = 'type'
     QODANA_ISSUES = 'qodana_issues'
@@ -186,3 +188,8 @@ class Level(Enum):
     LOW = 'low'
     AVERAGE = 'average'
     HIGH = 'high'
+
+
+@unique
+class TemplateColumns(Enum):
+    POS_IN_TEMPLATE = 'pos_in_template'
