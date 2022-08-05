@@ -23,7 +23,7 @@ def filter_duplicates_function(filter_duplicates_type: FilterDuplicatesType):
     if filter_duplicates_type == FilterDuplicatesType.MAX:
         return lambda row: row.loc[row[SubmissionColumns.FREQUENCY.value].idxmax()]
     if filter_duplicates_type == FilterDuplicatesType.MIN:
-        return lambda row: row.loc[row[SubmissionColumns.FREQUENCY.value].idxmax()]
+        return lambda row: row.loc[row[SubmissionColumns.FREQUENCY.value].idxmin()]
     raise AttributeError(f'The --filter-duplicates arg {filter_duplicates_type.value} is unknown!')
 
 
