@@ -5,6 +5,16 @@ for further analysis.
 
 To run data preprocessing, run following python scripts in stated order:
 
+
+0. **Optional**. [preprocess_hidden_templates.py](preprocess_hidden_templates.py) - substitutes the code in the hidden template.
+
+   **Required arguments:*
+   | Argument                          | Description                                                                                                            |
+   |-----------------------------------|------------------------------------------------------------------------------------------------------------------------| 
+   | **submissions_path**              | Path to .csv file with `submissions`.                                                                                  |
+   | **preprocessed_submissions_path** | Path to .csv output file with `preprocessed submissions`. If not provided `submissions_path` will be used. |
+
+
 1. [preprocess_submissions.py](preprocess_submissions.py) - merges submissions with detected issues. 
 
     **Required arguments:**
