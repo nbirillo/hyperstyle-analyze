@@ -143,6 +143,7 @@ hyperskill
 hyperstyle
 idx
 idxmax
+idxmin
 ignorecase
 iloc
 inerop
