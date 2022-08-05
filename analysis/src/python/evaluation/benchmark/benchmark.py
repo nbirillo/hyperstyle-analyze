@@ -6,7 +6,6 @@ from functools import partial
 from pathlib import Path
 from typing import Any, Callable, Optional, Set
 
-import numpy as np
 import pandas as pd
 from hyperstyle.src.python.review.common.subprocess_runner import run_in_subprocess
 
@@ -19,6 +18,7 @@ from analysis.src.python.evaluation.utils.pandas_utils import get_language_versi
 from analysis.src.python.evaluation.utils.solutions_saving_utils import save_solutions_to_files
 from analysis.src.python.utils.df_utils import read_df, write_df
 from analysis.src.python.utils.file_utils import create_directory, get_tmp_directory
+from utils.numpy_utils import AggregateFunction
 
 logger = logging.getLogger(__name__)
 
@@ -39,31 +39,14 @@ class Analyzer(Enum):
         return {cls.HYPERSTYLE.value, cls.QODANA.value}
 
 
-class AggregateOption(Enum):
-    MEAN = 'mean'
-    MEDIAN = 'median'
-
-    @classmethod
-    def values(cls) -> Set[str]:
-        return {cls.MEAN.value, cls.MEDIAN.value}
-
-    def to_function(self) -> Callable[[np.array], float]:
-        option_to_function = {
-            AggregateOption.MEAN: np.mean,
-            AggregateOption.MEDIAN: np.median,
-        }
-
-        return option_to_function[self]
-
-
 def measure_run_time(
     f: Callable[[], Any],
     repeat: int,
-    aggregate_option: AggregateOption = AggregateOption.MEAN,
+    aggregate: AggregateFunction = AggregateFunction.MEAN,
     output_path: Optional[Path] = None,
     parser: Optional[Callable[[Path], Any]] = None,
 ) -> float:
-    aggregate_function = aggregate_option.to_function()
+    aggregate_function = aggregate.to_function()
 
     repeat_times = []
     for i in range(repeat):
@@ -89,7 +72,7 @@ def time_benchmark_row(
     docker_path: str,
     analyzer: Optional[Analyzer],
     repeat: int,
-    aggregate_option: AggregateOption,
+    aggregate: AggregateFunction,
     n_cpu: Optional[int],
     tmp_directory: Path,
 ) -> float:
@@ -123,7 +106,7 @@ def time_benchmark_row(
     mean_time = measure_run_time(
         partial(run_in_subprocess, command=command),
         repeat,
-        aggregate_option,
+        aggregate,
         output_path / config.result_path,
         parser,
     )
@@ -165,8 +148,8 @@ def configure_parser(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         '--aggregate',
         type=str,
-        default=AggregateOption.MEAN.value,
-        choices=AggregateOption.values(),
+        default=AggregateFunction.MEAN.value,
+        choices=AggregateFunction.values(),
         help='The function that will be used to aggregate the values from the different iterations.',
     )
 
@@ -218,7 +201,7 @@ def main() -> None:
             args.docker_path,
             Analyzer.from_value(args.analyzer),
             args.repeat,
-            AggregateOption(args.aggregate),
+            AggregateFunction(args.aggregate),
             args.n_cpu,
             args.tmp_dir,
         ),
