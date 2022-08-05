@@ -8,7 +8,7 @@ To run data preprocessing, run following python scripts in stated order:
 
 0. **Optional**. [preprocess_hidden_templates.py](preprocess_hidden_templates.py) - substitutes the code in the hidden template.
 
-   **Required arguments:*
+   **Required arguments:**
    | Argument                          | Description                                                                                                            |
    |-----------------------------------|------------------------------------------------------------------------------------------------------------------------| 
    | **submissions_path**              | Path to .csv file with `submissions`.                                                                                  |
