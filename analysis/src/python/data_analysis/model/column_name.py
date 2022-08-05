@@ -117,6 +117,7 @@ class SubmissionColumns(Enum):
     CODE = 'code'
     LANG = 'lang'
     TIME = 'time'
+    HIDDEN_CODE_TEMPLATE = 'hidden_code_template'
     CODE_STYLE = 'code_style'
     # issues
     RAW_ISSUES = 'raw_issues'
