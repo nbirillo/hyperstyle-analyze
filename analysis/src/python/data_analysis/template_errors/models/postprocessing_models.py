@@ -5,8 +5,8 @@ from typing import List, Optional
 
 import pandas as pd
 
-from data_analysis.model.column_name import StepColumns
-from data_collection.api.platform_objects import Object
+from analysis.src.python.data_analysis.model.column_name import StepColumns
+from analysis.src.python.data_collection.api.platform_objects import Object
 
 
 @unique

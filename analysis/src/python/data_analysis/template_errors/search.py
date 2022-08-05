@@ -11,7 +11,7 @@ from analysis.src.python.data_analysis.model.column_name import StepColumns, Sub
 from analysis.src.python.data_analysis.template_errors.template_matching import EQUAL, match
 from analysis.src.python.utils.df_utils import drop_columns, read_df, write_df
 from analysis.src.python.evaluation.issues_statistics.common.raw_issue_encoder_decoder import RawIssueDecoder
-from data_analysis.template_errors.models.postprocessing_models import TemplateGatheringType
+from analysis.src.python.data_analysis.template_errors.models.postprocessing_models import TemplateGatheringType
 
 
 def submission_to_issue_code_pos(submission: pd.DataFrame) -> List[Tuple[str, str, int]]:
