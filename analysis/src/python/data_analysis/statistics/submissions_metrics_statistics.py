@@ -28,8 +28,8 @@ def get_submission_statistics(
     submissions: pd.DataFrame,
     code_lines_count: Optional[CodeLinesCountOption] = None,
     code_symbols_count: bool = False,
-    raw_issue_count: bool = False,
-    raw_issue_by_code_lines: bool = False,
+    hyperstyle_issue_count: bool = False,
+    hyperstyle_issue_by_code_lines: bool = False,
     qodana_issue_count: bool = False,
     qodana_issue_by_code_lines: bool = False,
 ) -> pd.DataFrame:
@@ -49,12 +49,15 @@ def get_submission_statistics(
             calculate_code_symbols_count,
         )
 
-    if raw_issue_count:
-        stats[SubmissionStatsColumns.HYPERSTYLE_ISSUES_COUNT.value] = submissions[SubmissionColumns.HYPERSTYLE_ISSUES.value].apply(calculate_issues_count)
+    if hyperstyle_issue_count:
+        stats[SubmissionStatsColumns.HYPERSTYLE_ISSUES_COUNT.value] = submissions[
+            SubmissionColumns.HYPERSTYLE_ISSUES.value
+        ].apply(calculate_issues_count)
 
-    if raw_issue_by_code_lines:
+    if hyperstyle_issue_by_code_lines:
         stats[SubmissionStatsColumns.HYPERSTYLE_ISSUES_BY_CODE_LINES.value] = (
-            stats[SubmissionStatsColumns.HYPERSTYLE_ISSUES_COUNT.value] / stats[SubmissionStatsColumns.CODE_LINES_COUNT.value]
+            stats[SubmissionStatsColumns.HYPERSTYLE_ISSUES_COUNT.value]
+            / stats[SubmissionStatsColumns.CODE_LINES_COUNT.value]
         )
 
     if qodana_issue_count:
@@ -100,15 +103,15 @@ def configure_parser(parser: argparse.ArgumentParser) -> None:
     )
 
     parser.add_argument(
-        '--raw-issue-count',
+        '--hyperstyle-issue-count',
         type=bool,
-        help='Count the number of raw issues.',
+        help='Count the number of hyperstyle issues.',
     )
 
     parser.add_argument(
-        '--raw-issue-by-code-lines',
+        '--hyperstyle-issue-by-code-lines',
         type=str,
-        help='Calculate the frequency of raw issues.',
+        help='Calculate the frequency of hyperstyle issues.',
     )
 
     parser.add_argument(
@@ -138,8 +141,8 @@ def main() -> None:
         submissions,
         args.code_lines_count,
         args.code_symbols_count,
-        args.raw_issue_count,
-        args.raw_issue_by_code_lines,
+        args.hyperstyle_issue_count,
+        args.hyperstyle_issue_by_code_lines,
         args.qodana_issue_count,
         args.qodana_issue_by_code_lines,
     )
