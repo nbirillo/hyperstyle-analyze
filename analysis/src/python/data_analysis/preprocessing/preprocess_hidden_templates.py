@@ -11,64 +11,64 @@ from analysis.src.python.data_analysis.utils.code_utils import merge_lines_to_co
 from analysis.src.python.utils.df_utils import apply, read_df, write_df
 
 
-class TemplateField(Enum):
+class TemplateBlock(Enum):
     HEADER = '::header'
     CODE = '::code'
     FOOTER = '::footer'
 
     @staticmethod
-    def from_value(value: str) -> Optional['TemplateField']:
+    def from_value(value: str) -> Optional['TemplateBlock']:
         try:
-            return TemplateField(value)
+            return TemplateBlock(value)
         except ValueError:
             return None
 
 
 class Template:
-    _field_to_content: Dict[TemplateField, str]
+    block_to_content: Dict[TemplateBlock, str]
 
     def __init__(self, template: Optional[str]):
-        self._field_to_content = {}
+        self.block_to_content = {}
 
         if template is not None:
-            self._field_to_content = self._parse_template(template)
+            self.block_to_content = self._parse(template)
 
     @staticmethod
-    def _parse_template(template: str) -> Dict[TemplateField, str]:
+    def _parse(template: str) -> Dict[TemplateBlock, str]:
         lines = split_code_to_lines(template)
 
-        lines_by_field = defaultdict(list)
-        current_field = None
+        lines_by_block = defaultdict(list)
+        current_block = None
         for line in lines:
             if line.startswith('::'):
-                current_field = TemplateField.from_value(line.strip())
+                current_block = TemplateBlock.from_value(line.strip())
                 continue
 
-            if current_field is not None:
-                lines_by_field[current_field].append(line)
+            if current_block is not None:
+                lines_by_block[current_block].append(line)
 
-        return {field: merge_lines_to_code(lines).strip('\n') for field, lines in lines_by_field.items()}
+        return {block: merge_lines_to_code(lines).strip('\n') for block, lines in lines_by_block.items()}
 
     def compile_template(
         self,
-        new_field_content: Optional[Dict[TemplateField, str]] = None,
-        separate_fields: bool = True,
+        new_block_content: Optional[Dict[TemplateBlock, str]] = None,
+        separate_blocks: bool = True,
     ) -> str:
-        if new_field_content is not None:
-            for field, content in new_field_content.items():
-                self._field_to_content[field] = content
+        if new_block_content is not None:
+            for block, content in new_block_content.items():
+                self.block_to_content[block] = content
 
-        if separate_fields:
-            for field, content in self._field_to_content.items():
-                self._field_to_content[field] = content + '\n'
+        if separate_blocks:
+            for block, content in self.block_to_content.items():
+                self.block_to_content[block] = content + '\n'
 
-        header = self._field_to_content.get(TemplateField.HEADER)
-        code = self._field_to_content.get(TemplateField.CODE)
-        footer = self._field_to_content.get(TemplateField.FOOTER)
+        header = self.block_to_content.get(TemplateBlock.HEADER)
+        code = self.block_to_content.get(TemplateBlock.CODE)
+        footer = self.block_to_content.get(TemplateBlock.FOOTER)
 
-        fields = list(filter(None, [header, code, footer]))
+        blocks = list(filter(None, [header, code, footer]))
 
-        return merge_lines_to_code(fields)
+        return merge_lines_to_code(blocks)
 
 
 def _substitute_code_in_template(row: pd.Series) -> str:
@@ -78,7 +78,7 @@ def _substitute_code_in_template(row: pd.Series) -> str:
     if pd.isna(template_content):
         return code
 
-    return Template(template_content).compile_template({TemplateField.CODE: code})
+    return Template(template_content).compile_template({TemplateBlock.CODE: code})
 
 
 def preprocess_templates(submissions: pd.DataFrame) -> pd.DataFrame:
