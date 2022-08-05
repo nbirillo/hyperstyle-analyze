@@ -1,90 +1,71 @@
 import argparse
-import ast
-import json
 import logging
 import sys
-from typing import Dict, List, Optional
+from typing import List, Optional
 
 import pandas as pd
 
 from analysis.src.python.data_analysis.model.column_name import IssuesColumns, SubmissionColumns
-from analysis.src.python.utils.df_utils import merge_dfs, read_df, rename_columns, write_df
+from analysis.src.python.data_analysis.utils.analysis_issue import AnalysisReport
+from analysis.src.python.utils.df_utils import dict_to_df, merge_dfs, read_df, write_df
 from analysis.src.python.utils.logging_utils import configure_logger
-from analysis.src.python.utils.parsing_utils import list_to_str, parse_qodana_issues, str_to_dict
 
 
-def get_issues_from_row(issues: str, issue_class_column: str, issue_type_column: str, issues_types: Dict[str, str]):
-    """ Extracts issues classes and types from list with issue reports. """
-
-    for issue in str_to_dict(issues):
-        issues_types[issue[issue_class_column]] = issue.get(issue_type_column, 'Issues type undefined')
-
-
-def get_issues_info(df_submissions: pd.DataFrame, issues_column: str,
-                    issue_class_column: str, issue_type_column: str) -> pd.DataFrame:
+def get_issues_info(df_submissions: pd.DataFrame, issues_column: str) -> pd.DataFrame:
     """ Extracts issues classes and types from submissions issues. """
 
     issues_info = {}
 
-    logging.info(f'Getting issues class `{issue_class_column}` and type `{issue_type_column}` from submissions')
-    df_submissions[issues_column].apply(get_issues_from_row,
-                                        issue_class_column=issue_class_column,
-                                        issue_type_column=issue_type_column,
-                                        issues_types=issues_info)
+    def get_info(str_report: str):
+        report = AnalysisReport.from_json(str_report)
+        for issue in report.issues:
+            issues_info[issue.name] = issue.category
 
-    return pd.DataFrame.from_dict({
-        IssuesColumns.CLASS.value: issues_info.keys(),
-        IssuesColumns.TYPE.value: issues_info.values(),
-    })
+    logging.info('Getting issues names and categories from submissions')
+    df_submissions[issues_column].apply(get_info)
+
+    return dict_to_df(issues_info, IssuesColumns.NAME.value, IssuesColumns.CATEGORY.value)
 
 
-def filter_issues(issues: str, ignore_issue_classes: List[str], issue_class_column: str) -> str:
+def filter_issues(df_submissions: pd.DataFrame, issues_column: str, ignore_issue_names: List[str]) -> pd.DataFrame:
     """ Filter issues to selected as ignored. """
 
-    filtered_issues = []
-    for issue in ast.literal_eval(issues):
-        if issue[issue_class_column] not in ignore_issue_classes:
-            filtered_issues.append(issue)
-    return list_to_str(filtered_issues)
+    def filter_issues_by_name(str_report: str) -> str:
+        report = AnalysisReport.from_json(str_report)
+        report.issues = [issue for issue in report.issues if issue.name not in ignore_issue_names]
+        return report.to_json()
+
+    df_submissions[issues_column] = df_submissions[issues_column].apply(filter_issues_by_name)
+
+    return df_submissions
 
 
-def merge_submissions_with_issues(df_submissions: pd.DataFrame, df_issues: pd.DataFrame, issue_column: str,
-                                  issue_class_column: str, ignore_issue_classes: Optional[List[str]]) -> pd.DataFrame:
+def convert_to_analysis_report(df_submissions: pd.DataFrame, issues_column: str) -> pd.DataFrame:
+    """ Map all report to analysis report format. """
+
+    df_submissions[issues_column] = df_submissions[issues_column].apply(AnalysisReport.convert_to_analysis_json_report,
+                                                                        column=issues_column)
+    return df_submissions
+
+
+def merge_submissions_with_issues(df_submissions: pd.DataFrame,
+                                  df_issues: pd.DataFrame,
+                                  issues_column: str) -> pd.DataFrame:
     """ Filter and merges submissions with issues. """
 
-    df_issues[issue_column] = df_issues[issue_column].fillna(value=json.dumps([]))
-
-    logging.info(f'Filter issues: {ignore_issue_classes}')
-    if ignore_issue_classes is not None:
-        df_issues[issue_column] = df_issues[issue_column] \
-            .apply(filter_issues,
-                   ignore_issue_classes=ignore_issue_classes,
-                   issue_class_column=issue_class_column)
-
     logging.info('Merging submissions with issues')
-    df_issues = df_issues[[SubmissionColumns.ID.value, issue_column, SubmissionColumns.CODE.value]]
-    df_submissions = merge_dfs(df_submissions, df_issues, SubmissionColumns.CODE.value,
-                               SubmissionColumns.CODE.value, how='left')
-    df_submissions[issue_column] = df_submissions[issue_column].fillna(value=json.dumps([]))
+    df_issues = df_issues[[SubmissionColumns.ID.value, issues_column, SubmissionColumns.CODE.value]]
+    df_submissions = merge_dfs(df_submissions, df_issues, SubmissionColumns.ID.value, SubmissionColumns.ID.value)
     logging.info(f'Finish merging. Submissions shape: {df_submissions.shape}')
 
     return df_submissions
 
 
-def preprocess_qodana_issues(df_issues: pd.DataFrame) -> pd.DataFrame:
-    logging.info('Preprocessing qodana issues')
-
-    df_issues = rename_columns(df_issues, columns={'inspections': SubmissionColumns.QODANA_ISSUES.value})
-    df_issues[SubmissionColumns.QODANA_ISSUES.value] = df_issues[SubmissionColumns.QODANA_ISSUES.value] \
-        .apply(parse_qodana_issues)
-    return df_issues
-
-
 def preprocess_issues(submissions_path: str,
                       issues_path: str,
                       issues_info_path: str,
-                      issues_type: str,
-                      ignore_issue_classes: List[str]):
+                      issues_column: str,
+                      ignore_issue_names: Optional[List[str]]):
     """ Extracts all issues classes and types from lists with issue reports in submissions with issues dataset. """
 
     df_submissions = read_df(submissions_path)
@@ -93,18 +74,13 @@ def preprocess_issues(submissions_path: str,
     df_issues = read_df(issues_path)
     logging.info(f'Issues initial shape: {df_issues.shape}')
 
-    issues_column = SubmissionColumns(issues_type).value
-    issue_type_column = SubmissionColumns.ISSUE_TYPE.value
+    df_submissions = merge_submissions_with_issues(df_submissions, df_issues, issues_column)
+    df_submissions = convert_to_analysis_report(df_submissions, issues_column)
 
-    if issues_column == SubmissionColumns.QODANA_ISSUES.value:
-        df_issues = preprocess_qodana_issues(df_issues)
-        issue_class_column = SubmissionColumns.QODANA_ISSUE_CLASS.value
-    else:
-        issue_class_column = SubmissionColumns.RAW_ISSUE_CLASS.value
+    if ignore_issue_names is not None:
+        df_submissions = filter_issues(df_submissions, issues_column, ignore_issue_names)
 
-    df_submissions = merge_submissions_with_issues(df_submissions, df_issues,
-                                                   issues_column, issue_class_column, ignore_issue_classes)
-    df_issues_info = get_issues_info(df_submissions, issues_column, issue_class_column, issue_type_column)
+    df_issues_info = get_issues_info(df_submissions, issues_column)
 
     write_df(df_submissions, submissions_path)
     write_df(df_issues_info, issues_info_path)
@@ -113,12 +89,13 @@ def preprocess_issues(submissions_path: str,
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('issues_type', type=str, help='Type of issues to analyse (can be raw or qodana).',
-                        choices=[SubmissionColumns.RAW_ISSUES.value, SubmissionColumns.QODANA_ISSUES.value])
+    parser.add_argument('issues_column', type=str,
+                        help='Column where issues stored (can be hyperstyle_issues or qodana_issues).',
+                        choices=[SubmissionColumns.HYPERSTYLE_ISSUES.value, SubmissionColumns.QODANA_ISSUES.value])
     parser.add_argument('submissions_path', type=str, help='Path to .csv file with submissions with issues.')
     parser.add_argument('issues_path', type=str, help='Path to .csv file with submissions to issues relation.')
     parser.add_argument('issues_info_path', type=str, help='Path to .csv file where issues info will be saved')
-    parser.add_argument('--ignore-issue-classes', nargs='*', default=None,
+    parser.add_argument('--ignore-issue-names', nargs='*', default=None,
                         help='Issues class name to ignore')
     parser.add_argument('--log-path', type=str, default=None, help='Path to directory for log.')
 
@@ -129,5 +106,5 @@ if __name__ == '__main__':
     preprocess_issues(args.submissions_path,
                       args.issues_path,
                       args.issues_info_path,
-                      args.issues_type,
-                      args.ignore_issue_classes)
+                      args.issues_column,
+                      args.ignore_issue_names)

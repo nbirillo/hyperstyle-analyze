@@ -50,13 +50,11 @@ def get_submission_statistics(
         )
 
     if raw_issue_count:
-        stats[SubmissionStatsColumns.RAW_ISSUE_COUNT.value] = submissions[SubmissionColumns.RAW_ISSUES.value].apply(
-            calculate_issues_count,
-        )
+        stats[SubmissionStatsColumns.HYPERSTYLE_ISSUES_COUNT.value] = submissions[SubmissionColumns.HYPERSTYLE_ISSUES.value].apply(calculate_issues_count)
 
     if raw_issue_by_code_lines:
-        stats[SubmissionStatsColumns.RAW_ISSUE_BY_CODE_LINES.value] = (
-            stats[SubmissionStatsColumns.RAW_ISSUE_COUNT.value] / stats[SubmissionStatsColumns.CODE_LINES_COUNT.value]
+        stats[SubmissionStatsColumns.HYPERSTYLE_ISSUES_BY_CODE_LINES.value] = (
+            stats[SubmissionStatsColumns.HYPERSTYLE_ISSUES_COUNT.value] / stats[SubmissionStatsColumns.CODE_LINES_COUNT.value]
         )
 
     if qodana_issue_count:

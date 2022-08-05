@@ -50,7 +50,7 @@ def create_directory(path: Union[str, Path], exist_ok: bool = True, clear: bool 
 
     if not os.path.exists(path):
         os.makedirs(path, exist_ok=exist_ok)
-    return path
+    return Path(path)
 
 
 def copy_directory(source: Union[str, Path], destination: Union[str, Path], dirs_exist_ok: bool = True):

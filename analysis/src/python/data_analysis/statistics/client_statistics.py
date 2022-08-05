@@ -25,7 +25,7 @@ def calculate_submissions_series_client_series(series: pd.DataFrame) -> pd.Serie
 def get_submissions_client_series(submissions_path: str,
                                   client_series_statistics_path: str,
                                   chunk_size: int):
-    """ For each submissions series build client series (the sequence of clients). """
+    """ For each submissions' series build client series (the sequence of clients). """
 
     df_submissions = pd.read_csv(submissions_path)
 

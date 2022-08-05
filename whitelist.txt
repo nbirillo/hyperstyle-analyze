@@ -61,6 +61,7 @@ cbo
 changelog
 checkstyle
 chunksize
+classinfo
 cloneable
 cmap
 concat
