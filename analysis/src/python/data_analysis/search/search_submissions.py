@@ -83,7 +83,7 @@ def main(submissions_path: str,
     df_submissions = read_df(submissions_path)
 
     if steps_issues_path is None:
-        search_submissions_by_step_issue(df_submissions, issues_column, step, issue_name, count, output_dir)
+        search_submissions_by_step_issue(df_submissions, issues_column, step, issue_name, count, output_path)
     else:
         df_issues_steps = read_df(steps_issues_path)
         df_issues_steps.apply(lambda row: search_submissions_by_step_issue(df_submissions,
