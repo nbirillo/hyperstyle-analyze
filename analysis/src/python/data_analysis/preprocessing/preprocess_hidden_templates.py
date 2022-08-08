@@ -4,6 +4,7 @@ from enum import Enum
 from pathlib import Path
 from typing import Dict, Optional
 
+import numpy as np
 import pandas as pd
 
 from analysis.src.python.data_analysis.model.column_name import SubmissionColumns
@@ -81,8 +82,25 @@ def _substitute_code_in_template(row: pd.Series) -> str:
     return Template(template_content).compile_template({TemplateBlock.CODE: code})
 
 
-def preprocess_templates(submissions: pd.DataFrame) -> pd.DataFrame:
-    return apply(submissions, SubmissionColumns.CODE.value, _substitute_code_in_template, pass_row=True)
+def _compile_template(template_content: Optional[str]) -> Optional[str]:
+    if pd.isna(template_content):
+        return np.nan
+
+    return Template(template_content).compile_template()
+
+
+def preprocess_templates(
+    submissions: pd.DataFrame,
+    substitute_code_in_template: bool = True,
+    compile_template: bool = True,
+) -> pd.DataFrame:
+    if substitute_code_in_template:
+        submissions = apply(submissions, SubmissionColumns.CODE.value, _substitute_code_in_template, pass_row=True)
+
+    if compile_template:
+        submissions = apply(submissions, SubmissionColumns.HIDDEN_CODE_TEMPLATE.value, _compile_template)
+
+    return submissions
 
 
 def configure_parser(parser: argparse.ArgumentParser) -> None:
@@ -100,6 +118,18 @@ def configure_parser(parser: argparse.ArgumentParser) -> None:
         help='Path to .csv file where to save the processed submissions.',
     )
 
+    parser.add_argument(
+        '--substitute-code-in-template',
+        type=bool,
+        help='Insert a code into a hidden template.',
+    )
+
+    parser.add_argument(
+        '--compile-template',
+        type=bool,
+        help='Compile and overwrite a hidden template.',
+    )
+
 
 def main() -> None:
     parser = argparse.ArgumentParser()
@@ -108,7 +138,11 @@ def main() -> None:
     args = parser.parse_args()
 
     submissions = read_df(args.submissions_path)
-    submissions = preprocess_templates(submissions)
+    submissions = preprocess_templates(
+        submissions,
+        args.substitute_code_in_template,
+        args.compile_template,
+    )
 
     if args.preprocessed_submissions_path is None:
         args.preprocessed_submissions_path = args.submissions_path
