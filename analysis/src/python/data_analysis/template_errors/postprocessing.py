@@ -8,19 +8,21 @@ from typing import Optional, Tuple
 import pandas as pd
 from hyperstyle.src.python.review.common.file_system import Extension
 
-from data_analysis.model.column_name import StepColumns, SubmissionColumns
-from data_analysis.template_errors.models.postprocessing_models import FilterDuplicatesType, PostprocessingConfig
-from evaluation.issues_statistics.common.raw_issue_encoder_decoder import RawIssueDecoder
-from utils.df_utils import read_df, write_df
-from utils.extension_utils import AnalysisExtension
-from utils.file_utils import create_directory, create_file
+from analysis.src.python.data_analysis.model.column_name import StepColumns, SubmissionColumns
+from analysis.src.python.data_analysis.template_errors.models.postprocessing_models import PostprocessingConfig
+from analysis.src.python.evaluation.issues_statistics.common.raw_issue_encoder_decoder import RawIssueDecoder
+from analysis.src.python.utils.df_utils import read_df, write_df
+from analysis.src.python.utils.extension_utils import AnalysisExtension
+from analysis.src.python.utils.file_utils import create_directory, create_file
+
+from analysis.src.python.utils.numpy_utils import AggregateFunction
 
 
-def filter_duplicates_function(filter_duplicates_type: FilterDuplicatesType):
-    if filter_duplicates_type == FilterDuplicatesType.MAX:
+def filter_duplicates_function(filter_duplicates_type: AggregateFunction):
+    if filter_duplicates_type == AggregateFunction.MAX:
         return lambda row: row.loc[row[SubmissionColumns.FREQUENCY.value].idxmax()]
-    if filter_duplicates_type == FilterDuplicatesType.MIN:
-        return lambda row: row.loc[row[SubmissionColumns.FREQUENCY.value].idxmax()]
+    if filter_duplicates_type == AggregateFunction.MIN:
+        return lambda row: row.loc[row[SubmissionColumns.FREQUENCY.value].idxmin()]
     raise AttributeError(f'The --filter-duplicates arg {filter_duplicates_type.value} is unknown!')
 
 
@@ -167,10 +169,10 @@ if __name__ == '__main__':
     parser.add_argument('templates_search_result', type=str, help='Path to .csv file with issues in templates.')
     parser.add_argument('result_path', type=str, help='Path to resulting folder with processed issues.')
     parser.add_argument('raw_issues_path', type=str, help='Path to .csv file with raw issues.', default=None)
-    parser.add_argument('-fd', '--filter-duplicates-type', type=str, default=FilterDuplicatesType.MAX.value,
-                        choices=FilterDuplicatesType.values(),
+    parser.add_argument('-fd', '--filter-duplicates-type', type=str, default=AggregateFunction.MAX.value,
+                        choices=[AggregateFunction.MIN.value, AggregateFunction.MAX.value],
                         help=f'Function for union the same issues. '
-                             f'Possible functions: {FilterDuplicatesType.values()}.')
+                             f'Possible functions: {[AggregateFunction.MIN.value, AggregateFunction.MAX.value]}.')
     parser.add_argument('-fk', '--freq-to-keep', type=int, default=51,
                         help='The threshold of frequency to keep issues in the final table.')
     parser.add_argument('-fr', '--freq-to-remove', type=int, default=10,
