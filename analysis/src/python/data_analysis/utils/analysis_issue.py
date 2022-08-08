@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import List
 
+import pandas as pd
 from dataclasses_json import dataclass_json
 
 from analysis.src.python.data_analysis.model.column_name import SubmissionColumns
@@ -45,6 +46,15 @@ class AnalysisIssue:
 @dataclass
 class AnalysisReport:
     issues: List[AnalysisIssue]
+
+    @staticmethod
+    def get_issues_column(df_submissions: pd.DataFrame) -> str:
+        if SubmissionColumns.HYPERSTYLE_ISSUES.value in df_submissions.columns:
+            return SubmissionColumns.HYPERSTYLE_ISSUES.value
+        elif SubmissionColumns.QODANA_ISSUES.value in df_submissions.columns:
+            return SubmissionColumns.QODANA_ISSUES.value
+        else:
+            raise ValueError('Unexpected issue')
 
     @staticmethod
     def from_qodana_report(str_report: str) -> 'AnalysisReport':

@@ -139,7 +139,8 @@ def parsing_template_code_lambda(df_steps: pd.DataFrame, template_gathering_type
         if SubmissionColumns.LANG.value not in columns:
             raise ValueError(f'The steps dataframe has {template_gathering_type.get_template_column()} column, '
                              f'but does not have {SubmissionColumns.LANG.value} column')
-        return lambda x: ast.literal_eval(x)[SubmissionColumns.LANG.value].split(os.linesep)
+
+        return lambda x: ast.literal_eval(x).get(SubmissionColumns.LANG.value, '').split(os.linesep)
 
     raise NotImplementedError('Can not find a function to parse templates!')
 
@@ -156,8 +157,11 @@ def parse_template_code(df_steps: pd.DataFrame) -> pd.DataFrame:
 
 
 def parse_issues(df_submissions: pd.DataFrame, df_steps: pd.DataFrame) -> pd.DataFrame:
+    issues_column = AnalysisReport.get_issues_column(df_submissions)
+    df_submissions[issues_column] = df_submissions[issues_column].apply(AnalysisReport.convert_to_analysis_json_report,
+                                                                        column=issues_column)
     df_submissions[SubmissionColumns.RAW_ISSUES.value] = \
-        df_submissions[SubmissionColumns.RAW_ISSUES.value].map(lambda x: AnalysisReport.from_json(x))
+        df_submissions[issues_column].map(lambda x: AnalysisReport.from_json(x))
     issues_count_column = 'issues_count'
     df_submissions[issues_count_column] = \
         df_submissions[SubmissionColumns.RAW_ISSUES.value].map(lambda x: len(x.issues))
@@ -182,13 +186,6 @@ def search(submissions_path: str, steps_path: str, result_path: str, steps_with_
 
     df_steps = read_df(steps_path)
     df_steps = parse_template_code(df_steps)
-
-    df_submissions = df_submissions[[SubmissionColumns.ID.value,
-                                     SubmissionColumns.STEP_ID.value,
-                                     SubmissionColumns.CODE.value,
-                                     SubmissionColumns.GROUP.value,
-                                     SubmissionColumns.ATTEMPT.value,
-                                     SubmissionColumns.RAW_ISSUES.value]]
 
     # Parsing raw issues
     df_submissions = parse_issues(df_submissions, df_steps)
