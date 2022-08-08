@@ -3,6 +3,7 @@ import json
 from datetime import datetime
 from typing import Dict, List
 
+import dateutil.parser
 from hyperstyle.src.python.review.inspectors.issue import BaseIssue
 
 from analysis.src.python.evaluation.issues_statistics.common.raw_issue_encoder_decoder import RawIssueDecoder, \
@@ -31,7 +32,10 @@ def list_to_str(ls: List) -> str:
 def str_to_datetime(s) -> datetime:
     """ Parse datetime from string. """
 
-    return datetime.fromisoformat(s)
+    try:
+        return datetime.fromisoformat(s)
+    except ValueError:
+        return dateutil.parser.isoparse(s)
 
 
 def parse_qodana_issues(s: str) -> str:

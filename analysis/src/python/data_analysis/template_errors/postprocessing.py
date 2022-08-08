@@ -8,12 +8,12 @@ from typing import Optional, Tuple
 import pandas as pd
 from hyperstyle.src.python.review.common.file_system import Extension
 
-from data_analysis.model.column_name import StepColumns, SubmissionColumns
-from data_analysis.template_errors.models.postprocessing_models import PostprocessingConfig
-from evaluation.issues_statistics.common.raw_issue_encoder_decoder import RawIssueDecoder
-from utils.df_utils import read_df, write_df
-from utils.extension_utils import AnalysisExtension
-from utils.file_utils import create_directory, create_file
+from analysis.src.python.data_analysis.model.column_name import StepColumns, SubmissionColumns
+from analysis.src.python.data_analysis.template_errors.models.postprocessing_models import PostprocessingConfig
+from analysis.src.python.evaluation.issues_statistics.common.raw_issue_encoder_decoder import RawIssueDecoder
+from analysis.src.python.utils.df_utils import read_df, write_df
+from analysis.src.python.utils.extension_utils import AnalysisExtension
+from analysis.src.python.utils.file_utils import create_directory, create_file
 
 from analysis.src.python.utils.numpy_utils import AggregateFunction
 
@@ -22,7 +22,7 @@ def filter_duplicates_function(filter_duplicates_type: AggregateFunction):
     if filter_duplicates_type == AggregateFunction.MAX:
         return lambda row: row.loc[row[SubmissionColumns.FREQUENCY.value].idxmax()]
     if filter_duplicates_type == AggregateFunction.MIN:
-        return lambda row: row.loc[row[SubmissionColumns.FREQUENCY.value].idxmax()]
+        return lambda row: row.loc[row[SubmissionColumns.FREQUENCY.value].idxmin()]
     raise AttributeError(f'The --filter-duplicates arg {filter_duplicates_type.value} is unknown!')
 
 

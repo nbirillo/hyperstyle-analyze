@@ -32,6 +32,7 @@ class StepColumns(Enum):
     HEADER_LINES_COUNT = 'code_templates_header_lines_count'
     FOOTER_LINES_COUNT = 'code_templates_footer_lines_count'
     CODE_TEMPLATES = 'code_templates'
+    CODE_TEMPLATE = 'code_template'
     HAS_HEADER_FOOTER = 'has_header_footer'
     HAS_TEMPLATE = 'has_template'
     HAS_CONSTANT = 'has_constant'
