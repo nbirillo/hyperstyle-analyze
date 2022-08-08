@@ -6,17 +6,8 @@ from typing import List, Optional
 import pandas as pd
 
 from analysis.src.python.data_analysis.model.column_name import StepColumns
-from analysis.src.python.data_collection.api.platform_objects import Object
-
-
-@unique
-class FilterDuplicatesType(Enum):
-    MAX = 'max'
-    MIN = 'min'
-
-    @classmethod
-    def values(cls) -> List[str]:
-        return [member.value for member in FilterDuplicatesType]
+from data_collection.api.platform_objects import Object
+from utils.numpy_utils import AggregateFunction
 
 
 @unique
@@ -26,7 +17,7 @@ class TemplateGatheringType(Enum):
 
     @classmethod
     def values(cls) -> List[str]:
-        return [member.value for member in FilterDuplicatesType]
+        return [member.value for member in TemplateGatheringType]
 
     @classmethod
     def define_template_gathering_type(cls, df: pd.DataFrame) -> 'TemplateGatheringType':
@@ -50,7 +41,7 @@ class PostprocessingConfig(Object):
     templates_search_result_path: Path
     result_path: Path
     raw_issues_path: Optional[Path]
-    filter_duplicates_type: FilterDuplicatesType
+    filter_duplicates_type: AggregateFunction
     freq_to_remove: float
     freq_to_keep: float
     freq_to_separate_typical_and_template: float

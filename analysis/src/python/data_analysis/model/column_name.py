@@ -137,12 +137,12 @@ class SubmissionColumns(Enum):
 @unique
 class SubmissionStatsColumns(Enum):
     ATTEMPTS = 'attempts'
-    RAW_ISSUE_COUNT = 'raw_issues_count'
-    QODANA_ISSUE_COUNT = 'qodana_issues_count'
+    HYPERSTYLE_ISSUES_COUNT = 'hyperstyle_issues_count'
+    QODANA_ISSUES_COUNT = 'qodana_issues_count'
     CODE_LINES_COUNT = 'code_lines_count'
     CODE_SYMBOLS_COUNT = 'code_symbols_count'
-    RAW_ISSUE_BY_CODE_LINES = 'raw_issues_by_code_lines'
-    QODANA_ISSUE_BY_CODE_LINES = 'qodana_issues_by_code_lines'
+    HYPERSTYLE_ISSUES_BY_CODE_LINES = 'hyperstyle_issues_by_code_lines'
+    QODANA_ISSUES_BY_CODE_LINES = 'qodana_issues_by_code_lines'
 
     FIRST_SUFFIX = '_first'
     LAST_SUFFIX = '_last'
@@ -158,8 +158,8 @@ class StepsStatsColumns(Enum):
 
 @unique
 class IssuesColumns(Enum):
-    CLASS = 'class'
-    TYPE = 'type'
+    NAME = 'name'
+    CATEGORY = 'category'
 
 
 @unique

@@ -22,10 +22,10 @@ def get_top_issues(df: pd.DataFrame, df_issues: pd.DataFrame, n: int = 15, ignor
 
     df_top_issues = df_issues.copy()
     if ignore_issues is not None:
-        df_top_issues = df_top_issues[~df_top_issues[IssuesColumns.CLASS.value].isin(ignore_issues)]
+        df_top_issues = df_top_issues[~df_top_issues[IssuesColumns.NAME.value].isin(ignore_issues)]
 
     df_top_issues[Stats.COUNT.value] = \
-        [df[issue_class].sum() for issue_class in df_top_issues[IssuesColumns.CLASS.value].values]
+        [df[issue_class].sum() for issue_class in df_top_issues[IssuesColumns.NAME.value].values]
     df_top_issues = df_top_issues.sort_values(Stats.COUNT.value, ascending=False)
 
     return df_top_issues[:n]
@@ -80,8 +80,8 @@ def get_submissions_percent_by_issues(df: pd.DataFrame, df_issues: pd.DataFrame,
     """
 
     issues_stats = {
-        Stats.ISSUE.value: df_issues[IssuesColumns.TYPE.value if by_type else IssuesColumns.CLASS.value].values,
-        Stats.COUNT.value: [df[issue_class].sum() for issue_class in df_issues[IssuesColumns.CLASS.value].values],
+        Stats.ISSUE.value: df_issues[IssuesColumns.CATEGORY.value if by_type else IssuesColumns.NAME.value].values,
+        Stats.COUNT.value: [df[issue_class].sum() for issue_class in df_issues[IssuesColumns.NAME.value].values],
     }
 
     attr = get_attr(attr)
@@ -90,7 +90,7 @@ def get_submissions_percent_by_issues(df: pd.DataFrame, df_issues: pd.DataFrame,
         df_value = df[df[attr.name] == value]
         issues_stats[value] = []
 
-        for issue_class in df_issues[IssuesColumns.CLASS.value].values:
+        for issue_class in df_issues[IssuesColumns.NAME.value].values:
             issues_stats[value].append(df_value[issue_class].sum())
 
     df_stats = pd.DataFrame.from_dict(issues_stats)
@@ -168,7 +168,7 @@ def get_submissions_series_dynamic_by_feature(df: pd.DataFrame, feature: str, at
 
 
 def get_issue_key_column(by_type: bool) -> str:
-    return IssuesColumns.TYPE.value if by_type else IssuesColumns.CLASS.value
+    return IssuesColumns.CATEGORY.value if by_type else IssuesColumns.NAME.value
 
 
 def get_submissions_series_issues_dynamic(df: pd.DataFrame, df_issues: pd.DataFrame, max_attempts: int = 3,
@@ -200,7 +200,7 @@ def get_submissions_series_issues_dynamic(df: pd.DataFrame, df_issues: pd.DataFr
 
         for _, issue in df_issues.iterrows():
             issue_key = issue[get_issue_key_column(by_type)]
-            stats_dict[issue_key][-1] += df_attempt[issue[IssuesColumns.CLASS.value]]
+            stats_dict[issue_key][-1] += df_attempt[issue[IssuesColumns.NAME.value]]
 
     series_stats_dict = get_statistics_by_attempts(df, get_issues_change)
 
