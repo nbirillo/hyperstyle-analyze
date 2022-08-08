@@ -1,6 +1,5 @@
 import argparse
 import logging
-import sys
 from pathlib import Path
 from typing import List
 
@@ -10,12 +9,22 @@ from analysis.src.python.data_analysis.model.column_name import SubmissionColumn
 from analysis.src.python.data_analysis.search.utils.comment_utils import add_issues_comments_to_code
 from analysis.src.python.evaluation.utils.pandas_utils import get_language_version
 from analysis.src.python.utils.df_utils import filter_df_by_single_value, read_df
-from analysis.src.python.utils.file_utils import create_file
+from analysis.src.python.utils.file_utils import create_directory, create_file
 from analysis.src.python.utils.logging_utils import configure_logger
 
 
+def configure_parser(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument('submission_path', type=str, help='Path to .csv file with steps')
+    parser.add_argument('output_path', type=str, help='Path to directory where to save submission series')
+    parser.add_argument('issues_column', type=str, help='Issue column name to add issues comment',
+                        choices=[SubmissionColumns.HYPERSTYLE_ISSUES.value, SubmissionColumns.QODANA_ISSUES.value])
+    parser.add_argument('--total-attempts', type=int, help='Issue example to search for')
+    parser.add_argument('--count', type=int, default=1, help='Step to search templates for')
+    parser.add_argument('--log-path', type=str, default=None, help='Path to directory for log.')
+
+
 def save_submission_series_to_files(submission_series: pd.DataFrame,
-                                    submission_series_path: str,
+                                    output_path: Path,
                                     issues_column: str):
     """ Save submission series to files. """
 
@@ -29,7 +38,7 @@ def save_submission_series_to_files(submission_series: pd.DataFrame,
         code = submission[SubmissionColumns.CODE.value]
 
         file_name = f'attempt_{attempt}{extension.value}'
-        file_path = Path(submission_series_path) / f'user_{user_id}' / f'step_{step_id}'
+        file_path = output_path / f'user_{user_id}' / f'step_{step_id}'
         next(create_file(file_path / file_name, content=code))
 
 
@@ -49,30 +58,25 @@ def search_submission_series(df_submission: pd.DataFrame, total_attempts: int, c
     return submission_series_list[:count]
 
 
-def main(submission_path: str, issues_column: str, total_attempts: int, count: int, submission_series_path: str):
+def main(submission_path: str, issues_column: str, total_attempts: int, count: int, output_path: str):
     df_submission = read_df(submission_path)
     submission_series_list = search_submission_series(df_submission, total_attempts, count)
 
+    output_path = create_directory(output_path)
+
     for _, submission_series in submission_series_list:
-        save_submission_series_to_files(submission_series, submission_series_path, issues_column)
+        save_submission_series_to_files(submission_series, output_path, issues_column)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
+    configure_parser(parser)
 
-    parser.add_argument('submission_path', type=str, help='Path to .csv file with steps')
-    parser.add_argument('submission_series_path', type=str, help='Path to directory where to save submission series')
-    parser.add_argument('issues_column', type=str, help='Issue column name to add issues comment',
-                        choices=[SubmissionColumns.HYPERSTYLE_ISSUES.value, SubmissionColumns.QODANA_ISSUES.value])
-    parser.add_argument('--total-attempts', type=int, help='Issue example to search for')
-    parser.add_argument('--count', type=int, default=1, help='Step to search templates for')
-    parser.add_argument('--log-path', type=str, default=None, help='Path to directory for log.')
-
-    args = parser.parse_args(sys.argv[1:])
-    configure_logger(args.submission_series_path, 'search', args.log_path)
+    args = parser.parse_args()
+    configure_logger(args.output_path, 'search', args.log_path)
 
     main(args.submission_path,
          args.issues_column,
          args.total_attempts,
          args.count,
-         args.submission_series_path, )
+         args.output_path)

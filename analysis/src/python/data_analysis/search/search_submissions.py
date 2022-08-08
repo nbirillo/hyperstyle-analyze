@@ -1,7 +1,5 @@
 import argparse
-import logging
-import os
-import sys
+from pathlib import Path
 from typing import Optional
 
 import pandas as pd
@@ -15,22 +13,35 @@ from analysis.src.python.utils.file_utils import AnalysisExtension, create_direc
 from analysis.src.python.utils.logging_utils import configure_logger
 
 
-def write_submissions_to_files(df_submissions: pd.DataFrame, output_dir: str):
+def configure_parser(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument('submissions_path', type=str,
+                        help='Path to .csv file with preprocessed submissions with series')
+    parser.add_argument('output_path', type=str, help='Path to directory with output')
+    parser.add_argument('issues_column', type=str, help='Issue column name to add issues comment',
+                        choices=[SubmissionColumns.HYPERSTYLE_ISSUES.value, SubmissionColumns.QODANA_ISSUES.value])
+    parser.add_argument('--steps-issues-path', type=str, default=None,
+                        help='Path to .csv file with pairs fo steps and issues for examples finding')
+    parser.add_argument('--issue-name', type=str, default=None, help='Issue example to search for')
+    parser.add_argument('--step', type=int, default=None, help='Step to search submissions for')
+    parser.add_argument('--count', type=int, default=5, help='Size of search output')
+    parser.add_argument('--log-path', type=str, default=None, help='Path to directory for log.')
+
+
+def write_submissions_to_files(df_submissions: pd.DataFrame, output_path: Path):
     """ Save submission to file with extension. Easy to compare diffs. """
 
-    output_dir = create_directory(output_dir)
-    output_file = output_dir / f'submissions{AnalysisExtension.CSV.value}'
+    output_path = create_directory(output_path)
+    output_file = output_path / f'submissions{AnalysisExtension.CSV.value}'
     write_df(df_submissions, output_file)
 
-    df_submissions.apply(save_solution_to_file, input_path=output_dir, axis=1)
+    df_submissions.apply(save_solution_to_file, input_path=output_path, axis=1)
 
 
 def search_submissions_by_step_issue(df_submissions: pd.DataFrame, issues_column: str,
-                                     step: int,
-                                     issue_name: str,
-                                     count: int, output_dir: str):
+                                     step: int, issue_name: str,
+                                     count: int, output_path: Path):
     """
-    Search and save to `output_dir` examples of submissions for given `step`
+    Search and save to `submissions_sample_path` examples of submissions for given `step`
     with and without given `issue_name`.
     """
 
@@ -51,24 +62,24 @@ def search_submissions_by_step_issue(df_submissions: pd.DataFrame, issues_column
                                                           inverse=True)
     df_submissions_without_issue = df_submissions_without_issue.head(count)
 
-    step_issue_output_dir = os.path.join(output_dir, f'{issue_name}_{step}_{count}')
-    write_submissions_to_files(df_submissions_with_issue, os.path.join(step_issue_output_dir, 'with_issue'))
-    write_submissions_to_files(df_submissions_without_issue, os.path.join(step_issue_output_dir, 'without_issue'))
+    step_output_path = output_path / f'{issue_name}_{step}_{count}'
+    write_submissions_to_files(df_submissions_with_issue, step_output_path / 'with_issue')
+    write_submissions_to_files(df_submissions_without_issue, step_output_path / 'without_issue')
 
 
 def main(submissions_path: str,
          issues_column: str, steps_issues_path: Optional[str],
          step: Optional[int], issue_name: Optional[str],
-         count: int, output_dir: str):
+         count: int, output_path: str):
     """
-    Search and save to `output_dir` examples of steps submissions with and without issue.
+    Search and save to `submissions_sample_path` examples of steps submissions with and without issue.
     Pairs of step and issue can be provided directly or listed in `steps_issues_path` csv file.
     """
 
     assert steps_issues_path is not None or (step is not None and issue_name is not None), \
         "if steps_issues_path is not defined provide step and issue_name to search issues"
 
-    create_directory(output_dir)
+    output_path = create_directory(output_path)
     df_submissions = read_df(submissions_path)
 
     if steps_issues_path is None:
@@ -80,28 +91,14 @@ def main(submissions_path: str,
                                                                            row[SubmissionColumns.STEP_ID.value],
                                                                            row[IssuesColumns.NAME.value],
                                                                            count,
-                                                                           output_dir), axis=1)
+                                                                           output_path), axis=1)
 
 
 if __name__ == '__main__':
-    log = logging.getLogger()
-    log.setLevel(logging.DEBUG)
-
     parser = argparse.ArgumentParser()
+    configure_parser(parser)
 
-    parser.add_argument('submissions_path', type=str,
-                        help='Path to .csv file with preprocessed submissions with series')
-    parser.add_argument('output_dir', type=str, help='Path to directory with output')
-    parser.add_argument('issues_column', type=str, help='Issue column name to add issues comment',
-                        choices=[SubmissionColumns.HYPERSTYLE_ISSUES.value, SubmissionColumns.QODANA_ISSUES.value])
-    parser.add_argument('--steps-issues-path', type=str, default=None,
-                        help='Path to .csv file with pairs fo steps and issues for examples finding')
-    parser.add_argument('--issue-name', type=str, default=None, help='Issue example to search for')
-    parser.add_argument('--step', type=int, default=None, help='Step to search submissions for')
-    parser.add_argument('--count', type=int, default=5, help='Size of search output')
-    parser.add_argument('--log-path', type=str, default=None, help='Path to directory for log.')
-
-    args = parser.parse_args(sys.argv[1:])
+    args = parser.parse_args()
     configure_logger(args.output_dir, 'search', args.log_path)
 
     main(args.submissions_path,
@@ -110,4 +107,4 @@ if __name__ == '__main__':
          args.step,
          args.issue_name,
          args.count,
-         args.output_dir)
+         args.output_path)
