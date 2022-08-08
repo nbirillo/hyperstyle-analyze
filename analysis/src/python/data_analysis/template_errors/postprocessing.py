@@ -9,10 +9,7 @@ import pandas as pd
 from hyperstyle.src.python.review.common.file_system import Extension
 
 from analysis.src.python.data_analysis.model.column_name import StepColumns, SubmissionColumns
-from analysis.src.python.data_analysis.template_errors.models.postprocessing_models import (
-    FilterDuplicatesType,
-    PostprocessingConfig,
-)
+from analysis.src.python.data_analysis.template_errors.models.postprocessing_models import PostprocessingConfig
 from analysis.src.python.evaluation.issues_statistics.common.raw_issue_encoder_decoder import RawIssueDecoder
 from analysis.src.python.utils.df_utils import read_df, write_df
 from analysis.src.python.utils.extension_utils import AnalysisExtension
