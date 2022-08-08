@@ -6,11 +6,11 @@ from typing import Optional
 
 import pandas as pd
 
-from analysis.src.python.data_analysis.model.column_name import StepsStatsColumns, SubmissionColumns
-from analysis.src.python.data_analysis.utils.analysis_issue import AnalysisIssue, AnalysisReport
-from analysis.src.python.data_analysis.utils.code_utils import merge_lines_to_code, split_code_to_lines
+from analysis.src.python.data_analysis.model.column_name import IssuesColumns, SubmissionColumns
+from analysis.src.python.data_analysis.search.utils.comment_utils import add_issues_comments_to_code
+from analysis.src.python.data_analysis.utils.analysis_issue import AnalysisReport
 from analysis.src.python.evaluation.utils.solutions_saving_utils import save_solution_to_file
-from analysis.src.python.utils.df_utils import read_df, write_df
+from analysis.src.python.utils.df_utils import filter_df_by_predicate, filter_df_by_single_value, read_df, write_df
 from analysis.src.python.utils.file_utils import AnalysisExtension, create_directory
 from analysis.src.python.utils.logging_utils import configure_logger
 
@@ -25,27 +25,6 @@ def write_submissions_to_files(df_submissions: pd.DataFrame, output_dir: str):
     df_submissions.apply(save_solution_to_file, input_path=output_dir, axis=1)
 
 
-def get_comment_to_code_line(issue: AnalysisIssue) -> str:
-    """ Add comment to given code line. """
-
-    return f' // {issue.name} line={issue.line_number} offset={issue.column_number}'
-
-
-def add_issue_info_comment_to_code(submission: pd.Series, issues_column: str, issue_name: Optional[str]) -> pd.Series:
-    """ Add comment to row where specific issue appears in solution. """
-
-    code_lines = split_code_to_lines(submission[SubmissionColumns.CODE.value])
-
-    report = AnalysisReport.from_json(submission[issues_column])
-    for issue in report.issues:
-        if issue_name is None or issue.name == issue_name:
-            code_lines[issue.line_number - 1] += get_comment_to_code_line(issue)
-
-    submission[SubmissionColumns.CODE.value] = merge_lines_to_code(code_lines)
-
-    return submission
-
-
 def search_submissions_by_step_issue(df_submissions: pd.DataFrame, issues_column: str,
                                      step: int,
                                      issue_name: str,
@@ -55,22 +34,22 @@ def search_submissions_by_step_issue(df_submissions: pd.DataFrame, issues_column
     with and without given `issue_name`.
     """
 
-    df_submissions = df_submissions[df_submissions[SubmissionColumns.STEP_ID.value] == step]
+    df_submissions = filter_df_by_single_value(df_submissions, SubmissionColumns.STEP_ID.value, step)
 
-    def check_contains_issue(submission: pd.Series):
-        report = AnalysisReport.from_json(submission[issues_column])
-        for issue in report.issues:
-            if issue.name == issue_name:
-                return True
-        return False
+    def check_contains_issue(issues: str) -> bool:
+        report = AnalysisReport.from_json(issues)
+        return report.has_issue(issue_name)
 
-    df_submissions_with_issue = df_submissions[df_submissions.apply(check_contains_issue, axis=1)].head(count)
-    df_submissions_with_issue = df_submissions_with_issue.apply(add_issue_info_comment_to_code,
+    df_submissions_with_issue = filter_df_by_predicate(df_submissions, issues_column, check_contains_issue)
+    df_submissions_with_issue = df_submissions_with_issue.head(count)
+    df_submissions_with_issue = df_submissions_with_issue.apply(add_issues_comments_to_code,
                                                                 issues_column=issues_column,
                                                                 issue_name=issue_name,
                                                                 axis=1)
 
-    df_submissions_without_issue = df_submissions[~df_submissions.apply(check_contains_issue, axis=1)].head(count)
+    df_submissions_without_issue = filter_df_by_predicate(df_submissions, issues_column, check_contains_issue,
+                                                          inverse=True)
+    df_submissions_without_issue = df_submissions_without_issue.head(count)
 
     step_issue_output_dir = os.path.join(output_dir, f'{issue_name}_{step}_{count}')
     write_submissions_to_files(df_submissions_with_issue, os.path.join(step_issue_output_dir, 'with_issue'))
@@ -78,13 +57,16 @@ def search_submissions_by_step_issue(df_submissions: pd.DataFrame, issues_column
 
 
 def main(submissions_path: str,
-         issues_column: str, steps_issues_path: str,
-         step: int, issue_name: str,
+         issues_column: str, steps_issues_path: Optional[str],
+         step: Optional[int], issue_name: Optional[str],
          count: int, output_dir: str):
     """
     Search and save to `output_dir` examples of steps submissions with and without issue.
     Pairs of step and issue can be provided directly or listed in `steps_issues_path` csv file.
     """
+
+    assert steps_issues_path is not None or (step is not None and issue_name is not None), \
+        "if steps_issues_path is not defined provide step and issue_name to search issues"
 
     create_directory(output_dir)
     df_submissions = read_df(submissions_path)
@@ -96,7 +78,7 @@ def main(submissions_path: str,
         df_issues_steps.apply(lambda row: search_submissions_by_step_issue(df_submissions,
                                                                            issues_column,
                                                                            row[SubmissionColumns.STEP_ID.value],
-                                                                           row[StepsStatsColumns.ISSUE.value],
+                                                                           row[IssuesColumns.NAME.value],
                                                                            count,
                                                                            output_dir), axis=1)
 
@@ -110,7 +92,7 @@ if __name__ == '__main__':
     parser.add_argument('submissions_path', type=str,
                         help='Path to .csv file with preprocessed submissions with series')
     parser.add_argument('output_dir', type=str, help='Path to directory with output')
-    parser.add_argument('issues_type', type=str, help='Type of issue to analyse',
+    parser.add_argument('issues_column', type=str, help='Issue column name to add issues comment',
                         choices=[SubmissionColumns.HYPERSTYLE_ISSUES.value, SubmissionColumns.QODANA_ISSUES.value])
     parser.add_argument('--steps-issues-path', type=str, default=None,
                         help='Path to .csv file with pairs fo steps and issues for examples finding')
@@ -122,11 +104,8 @@ if __name__ == '__main__':
     args = parser.parse_args(sys.argv[1:])
     configure_logger(args.output_dir, 'search', args.log_path)
 
-    assert args.steps_issues_path is not None or (args.step is not None and args.issue_name is not None), \
-        "if steps_issues_path is not defined provide step and issue_name to search issues"
-
     main(args.submissions_path,
-         args.issues_type,
+         args.issues_column,
          args.steps_issues_path,
          args.step,
          args.issue_name,

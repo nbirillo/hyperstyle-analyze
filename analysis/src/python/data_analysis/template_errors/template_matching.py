@@ -1,7 +1,17 @@
 import ast
-from typing import Callable, Dict, List, Tuple
+from typing import Callable, Dict, List, Optional, Tuple
+
+from hyperstyle.src.python.review.application_config import LanguageVersion
 
 from analysis.src.python.data_analysis.utils.code_utils import split_code_to_lines
+from analysis.src.python.evaluation.utils.pandas_utils import get_language_version
+
+
+def get_template_language_version(lang: str) -> LanguageVersion:
+    # TODO: Remove if when java17 language version will be added ti hyperstyle.
+    if lang == 'java17':
+        return LanguageVersion.JAVA_15
+    return get_language_version(lang)
 
 
 def parse_template_code(template_config: str, lang: str = 'java11') -> List[str]:

@@ -43,11 +43,18 @@ def parallel_apply(df: pd.DataFrame, column: str, func: Callable, pass_row: bool
 
 
 def filter_df_by_iterable_value(df: pd.DataFrame, column: str, value: Iterable) -> pd.DataFrame:
-    return df.loc[df[column].isin(value)]
+    return df[df[column].isin(value)]
 
 
 def filter_df_by_single_value(df: pd.DataFrame, column: str, value: Any) -> pd.DataFrame:
-    return df.loc[df[column] == value]
+    return df[df[column] == value]
+
+
+def filter_df_by_predicate(df: pd.DataFrame, column: str, func: Callable[[Any], bool],
+                           inverse: bool = False) -> pd.DataFrame:
+    if inverse:
+        return df[~df[column].apply(func)]
+    return df[df[column].apply(func)]
 
 
 def drop_duplicates(df: pd.DataFrame, column: str, keep: str = 'last') -> pd.DataFrame:
