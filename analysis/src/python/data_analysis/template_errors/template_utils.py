@@ -8,7 +8,7 @@ from analysis.src.python.evaluation.utils.pandas_utils import get_language_versi
 
 
 def get_template_language_version(lang: str) -> LanguageVersion:
-    # TODO: Remove if when java17 language version will be added ti hyperstyle.
+    # TODO: Remove if when java17 language version will be added to hyperstyle.
     if lang == 'java17':
         return LanguageVersion.JAVA_15
     return get_language_version(lang)
