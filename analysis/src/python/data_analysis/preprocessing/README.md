@@ -92,12 +92,12 @@ To run data preprocessing, run following python scripts in stated order:
    
     **Required arguments:**
     
-    | Argument             | Description |
-----------------------|----------|-------------|
-    | **issues_column**         | Type of issues to analyse (can be `raw_issues` or `qodana_issues`). |
-    | **submissions_path** | Path to .csv file with `preprocessed submissions`. |
-    | **issues_path**      | Path to .csv file with submissions to issues relation. |
-    | **issues_info_path** | Path to .csv file where `preprocessed issues info` will be saved. |
+    | Argument             | Description                                                         |
+    |----------------------|---------------------------------------------------------------------|
+    | **issues_column**    | Type of issues to analyse (can be `raw_issues` or `qodana_issues`). |
+    | **submissions_path** | Path to .csv file with `preprocessed submissions`.                  |
+    | **issues_path**      | Path to .csv file with submissions to issues relation.              |
+    | **issues_info_path** | Path to .csv file where `preprocessed issues info` will be saved.   |
 
     **Optional arguments:**
     
