@@ -110,10 +110,10 @@ def main() -> None:
     submissions = read_df(args.submissions_path)
     submissions = preprocess_templates(submissions)
 
-    if args.output_path is None:
-        args.output_path = args.submissions_path
+    if args.preprocessed_submissions_path is None:
+        args.preprocessed_submissions_path = args.submissions_path
 
-    write_df(submissions, args.output_path)
+    write_df(submissions, args.preprocessed_submissions_path)
 
 
 if __name__ == '__main__':
