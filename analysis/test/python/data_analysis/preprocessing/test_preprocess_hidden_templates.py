@@ -21,10 +21,10 @@ FOOTER = textwrap.dedent(
     """
     def main():
         print(get_hello_world())
-        
+
     if __name__ == '__main__':
         main()
-    """
+    """,
 ).strip()
 
 TEMPLATE = textwrap.dedent(
@@ -39,7 +39,7 @@ TEMPLATE = textwrap.dedent(
     ::footer
     def main():
         print(get_hello_world())
-        
+
     if __name__ == '__main__':
         main()
     """,
@@ -48,8 +48,8 @@ TEMPLATE = textwrap.dedent(
 
 BAD_TEMPLATE = textwrap.dedent(
     """
-    
-    
+
+
     ::python3
     ::header
     import numpy as np
