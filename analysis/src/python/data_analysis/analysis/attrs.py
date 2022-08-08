@@ -30,6 +30,10 @@ ATTRS = {
         Attr('complexity',
              ['shallow', 'middle', 'deep'],
              [(0.77, 0.85, 0.93), (0.41, 0.68, 0.83), (0.12, 0.44, 0.70)]),
+    'scope':
+        Attr('scope',
+             ['small', 'medium', 'wide'],
+             [(0.93, 0.82, 0.79), (0.73, 0.47, 0.59), (0.17, 0.11, 0.24)]),
     'level':
         Attr('level',
              ['low', 'average', 'high'],

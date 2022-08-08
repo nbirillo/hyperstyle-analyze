@@ -7,6 +7,7 @@ import pandas as pd
 
 from analysis.src.python.data_analysis.analysis.attrs import AttrType, get_attr
 from analysis.src.python.data_analysis.model.column_name import IssuesColumns, SubmissionColumns
+from analysis.src.python.utils.df_utils import merge_dfs
 
 
 class Stats(Enum):
@@ -64,7 +65,7 @@ def get_submissions_percent_by_feature(df: pd.DataFrame, feature: str, attr: Att
 
 
 def get_submissions_percent_by_issues(df: pd.DataFrame, df_issues: pd.DataFrame, attr: AttrType,
-                                      by_type: bool = False) -> pd.DataFrame:
+                                      by_type: bool = False, sort: bool = True) -> pd.DataFrame:
     """
     Divides submissions into groups according to `attr` values and for each group calculates percent of submissions
     with each issue (issue class or issue type).
@@ -99,7 +100,13 @@ def get_submissions_percent_by_issues(df: pd.DataFrame, df_issues: pd.DataFrame,
 
     for value in attr.values:
         df_stats[value] = df_stats[value] / df[df[attr.name] == value].shape[0]
-    return df_stats
+
+    if sort:
+        return df_stats.sort_values(Stats.COUNT.value, ascending=False)
+
+    return merge_dfs(df_issues[[IssuesColumns.NAME.value]], df_stats,
+                     left_on=IssuesColumns.NAME.value,
+                     right_on=Stats.ISSUE.value)
 
 
 def get_client_stats(df: pd.DataFrame) -> pd.DataFrame:
@@ -125,7 +132,6 @@ def filter_by_attempts(df: pd.DataFrame, max_attempts: int, exact_attempts: bool
 
 def get_statistics_by_attempts(df: pd.DataFrame, statistics_function: Callable[[pd.DataFrame, Dict[str, Any]], None]) \
         -> Dict[str, Any]:
-
     series_stats_dict = {
         SubmissionColumns.ATTEMPT.value: [],
         Stats.COUNT.value: [],

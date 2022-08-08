@@ -11,10 +11,21 @@ from analysis.src.python.data_analysis.analysis.attrs import AttrType, get_attr
 from analysis.src.python.data_analysis.analysis.statistics import Stats
 from analysis.src.python.data_analysis.model.column_name import SubmissionColumns
 
-sns.set_theme(style='whitegrid', font_scale=2, rc={"lines.linewidth": 5, "lines.markersize": 15})
+sns.set_theme(style='whitegrid', font_scale=2, rc={"lines.linewidth": 5,
+                                                   "lines.markersize": 15})
 
 MAX_LABEL_LENGTH = 5
 MAX_LABELS_COUNT = 5
+
+WINDOW_WIDTH = 30
+WIGHT_HEIGHT_RATIO = 0.5
+
+
+def get_fig_size(cols, rows) -> Tuple[float, float]:
+    width = WINDOW_WIDTH
+    heights = width / cols * WIGHT_HEIGHT_RATIO * rows
+
+    return width, heights
 
 
 def get_bins_count(data: List[Any]) -> int:
@@ -38,7 +49,7 @@ def draw_heatmap_compare(df: pd.DataFrame, attr_pairs: List[Tuple[AttrType, Attr
     """ Draw heatmaps to compare statistics and correlation between attribute pairs. """
 
     rows, cols = len(attr_pairs), len(features)
-    fig, ax = plt.subplots(figsize=(20, 6 * len(attr_pairs)), ncols=cols, nrows=rows, constrained_layout=True)
+    fig, ax = plt.subplots(figsize=(WINDOW_WIDTH, 6 * len(attr_pairs)), ncols=cols, nrows=rows, constrained_layout=True)
 
     for i, attr_pair in enumerate(attr_pairs):
 
@@ -64,12 +75,13 @@ def draw_heatmap_compare(df: pd.DataFrame, attr_pairs: List[Tuple[AttrType, Attr
 def draw_compare(df: pd.DataFrame, feature: str, attr: AttrType,
                  blur_ticks: Optional[List[str]] = None,
                  y_label: str = None,
-                 title: str = None):
+                 title: str = None,
+                 save_path: str = None):
     """ Draw line plots for feature values distribution for different attributes. """
 
     attr = get_attr(attr)
 
-    fig, ax = plt.subplots(figsize=(20, 10), constrained_layout=True)
+    fig, ax = plt.subplots(figsize=(WINDOW_WIDTH, 10))
     ranges = list(map(str, df[feature].values))
 
     for value in attr.values:
@@ -96,17 +108,21 @@ def draw_compare(df: pd.DataFrame, feature: str, attr: AttrType,
     ax.set_xlabel(feature)
     ax.set_ylabel('% submission' if y_label is None else y_label)
     plt.suptitle(f'Submissions % distributions by {attr.name}' if title is None else title)
+
+    if save_path is not None:
+        fig.savefig(save_path)
+
     plt.show()
 
 
-def draw_hist_plots(df: pd.DataFrame, features: List[str],
+def draw_hist_plots(df: pd.DataFrame, features: List[str], columns: int = 2,
                     q: int = 0.99, log_scale: bool = False, kde: bool = False, bins: int = None,
                     y_label: str = '', title: str = ''):
     """ Draw hist plots table for given `features`. """
 
     n = len(features)
-    rows, cols = int(np.ceil(n / 2)), min(2, n)
-    fig, ax = plt.subplots(figsize=(cols * 12, rows * 7), nrows=rows, ncols=cols)
+    rows, cols = int(np.ceil(n / columns)), min(columns, n)
+    fig, ax = plt.subplots(figsize=get_fig_size(cols, rows), nrows=rows, ncols=cols)
 
     for k, feature in enumerate(features):
         ax_sub = get_sub_axis(ax, k, rows, cols)
@@ -121,13 +137,13 @@ def draw_hist_plots(df: pd.DataFrame, features: List[str],
     plt.show()
 
 
-def draw_count_plots(df: pd.DataFrame, attrs: List[AttrType],
+def draw_count_plots(df: pd.DataFrame, attrs: List[AttrType], columns: int = 2,
                      y_label: str = '', title: str = ''):
     """ Draw count plots table for given `attrs`. """
 
     n = len(attrs)
-    rows, cols = int(np.ceil(n / 2)), min(2, n)
-    fig, ax = plt.subplots(figsize=(cols * 12, rows * 7), nrows=rows, ncols=cols)
+    rows, cols = int(np.ceil(n / columns)), min(columns, n)
+    fig, ax = plt.subplots(figsize=get_fig_size(cols, rows), nrows=rows, ncols=cols)
 
     for k, attr in enumerate(attrs):
         ax_sub = get_sub_axis(ax, k, rows, cols)
