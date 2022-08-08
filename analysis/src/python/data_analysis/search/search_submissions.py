@@ -2,13 +2,13 @@ import argparse
 import logging
 import os
 import sys
+from typing import Optional
 
 import pandas as pd
 
 from analysis.src.python.data_analysis.model.column_name import StepsStatsColumns, SubmissionColumns
 from analysis.src.python.data_analysis.utils.analysis_issue import AnalysisIssue, AnalysisReport
 from analysis.src.python.data_analysis.utils.code_utils import merge_lines_to_code, split_code_to_lines
-from analysis.src.python.data_analysis.utils.submission_utils import load_issues
 from analysis.src.python.evaluation.utils.solutions_saving_utils import save_solution_to_file
 from analysis.src.python.utils.df_utils import read_df, write_df
 from analysis.src.python.utils.file_utils import AnalysisExtension, create_directory
@@ -31,14 +31,14 @@ def get_comment_to_code_line(issue: AnalysisIssue) -> str:
     return f' // {issue.name} line={issue.line_number} offset={issue.column_number}'
 
 
-def add_issue_info_comment_to_code(submission: pd.Series, issues_column: str, issue_name: str) -> pd.Series:
+def add_issue_info_comment_to_code(submission: pd.Series, issues_column: str, issue_name: Optional[str]) -> pd.Series:
     """ Add comment to row where specific issue appears in solution. """
 
     code_lines = split_code_to_lines(submission[SubmissionColumns.CODE.value])
 
     report = AnalysisReport.from_json(submission[issues_column])
-    for issue in report.issue:
-        if issue.name == issue_name:
+    for issue in report.issues:
+        if issue_name is None or issue.name == issue_name:
             code_lines[issue.line_number - 1] += get_comment_to_code_line(issue)
 
     submission[SubmissionColumns.CODE.value] = merge_lines_to_code(code_lines)
@@ -46,7 +46,9 @@ def add_issue_info_comment_to_code(submission: pd.Series, issues_column: str, is
     return submission
 
 
-def search_submissions_by_step_issue(df_submissions: pd.DataFrame, issues_column: str, step: int, issue_name: str,
+def search_submissions_by_step_issue(df_submissions: pd.DataFrame, issues_column: str,
+                                     step: int,
+                                     issue_name: str,
                                      count: int, output_dir: str):
     """
     Search and save to `output_dir` examples of submissions for given `step`
@@ -57,7 +59,7 @@ def search_submissions_by_step_issue(df_submissions: pd.DataFrame, issues_column
 
     def check_contains_issue(submission: pd.Series):
         report = AnalysisReport.from_json(submission[issues_column])
-        for issue in report.issue:
+        for issue in report.issues:
             if issue.name == issue_name:
                 return True
         return False
@@ -75,8 +77,10 @@ def search_submissions_by_step_issue(df_submissions: pd.DataFrame, issues_column
     write_submissions_to_files(df_submissions_without_issue, os.path.join(step_issue_output_dir, 'without_issue'))
 
 
-def search_submissions(submissions_path: str, issues_column: str, steps_issues_path: str, step: int, issue_name: str,
-                       count: int, output_dir: str):
+def main(submissions_path: str,
+         issues_column: str, steps_issues_path: str,
+         step: int, issue_name: str,
+         count: int, output_dir: str):
     """
     Search and save to `output_dir` examples of steps submissions with and without issue.
     Pairs of step and issue can be provided directly or listed in `steps_issues_path` csv file.
@@ -84,8 +88,6 @@ def search_submissions(submissions_path: str, issues_column: str, steps_issues_p
 
     create_directory(output_dir)
     df_submissions = read_df(submissions_path)
-
-    df_submissions = load_issues(df_submissions, issues_column)
 
     if steps_issues_path is None:
         search_submissions_by_step_issue(df_submissions, issues_column, step, issue_name, count, output_dir)
@@ -120,10 +122,13 @@ if __name__ == '__main__':
     args = parser.parse_args(sys.argv[1:])
     configure_logger(args.output_dir, 'search', args.log_path)
 
-    search_submissions(args.submissions_path,
-                       args.issues_type,
-                       args.steps_issues_path,
-                       args.step,
-                       args.issue_name,
-                       args.count,
-                       args.output_dir)
+    assert args.steps_issues_path is not None or (args.step is not None and args.issue_name is not None), \
+        "if steps_issues_path is not defined provide step and issue_name to search issues"
+
+    main(args.submissions_path,
+         args.issues_type,
+         args.steps_issues_path,
+         args.step,
+         args.issue_name,
+         args.count,
+         args.output_dir)
