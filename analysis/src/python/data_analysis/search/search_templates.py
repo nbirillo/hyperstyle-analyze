@@ -9,7 +9,7 @@ import pandas as pd
 from analysis.src.python.data_analysis.model.column_name import IssuesColumns, StepColumns, SubmissionColumns, \
     TemplateColumns
 from analysis.src.python.data_analysis.search.utils.comment_utils import get_issue_comment
-from analysis.src.python.data_analysis.template_errors.template_matching import get_template_language_version, \
+from analysis.src.python.data_analysis.template_errors.template_utils import get_template_language_version, \
     parse_template_issue_positions, parse_templates_code
 from analysis.src.python.data_analysis.utils.code_utils import merge_lines_to_code
 from analysis.src.python.utils.df_utils import filter_df_by_single_value, read_df

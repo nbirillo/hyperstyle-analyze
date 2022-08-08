@@ -6,8 +6,7 @@ from typing import List, Optional
 import pandas as pd
 
 from analysis.src.python.data_analysis.model.column_name import StepColumns
-from data_collection.api.platform_objects import Object
-from utils.numpy_utils import AggregateFunction
+from analysis.src.python.utils.numpy_utils import AggregateFunction
 
 
 @unique
@@ -37,7 +36,7 @@ class TemplateGatheringType(Enum):
 
 
 @dataclass(frozen=True)
-class PostprocessingConfig(Object):
+class PostprocessingConfig:
     templates_search_result_path: Path
     result_path: Path
     raw_issues_path: Optional[Path]

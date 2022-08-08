@@ -55,9 +55,9 @@ Run the [postprocessing.py](postprocessing.py) script with the arguments from co
 
 Required arguments:
 
-`templates_search_result` — Path to .csv file with issues in templates, that can be calculated on the previous step.
-`result_path` — Path to resulting folder with processed issues.
-`raw_issues_path` — Path to .csv file with raw issues. By default, it is `None`. If this argument is not `None`, the resulting file will contain the `description` column for each task and the students solutions will be gathered.
+- `templates_search_result` — Path to .csv file with issues in templates, that can be calculated on the previous step.
+- `result_path` — Path to resulting folder with processed issues.
+- `raw_issues_path` — Path to .csv file with raw issues. By default, it is `None`. If this argument is not `None`, the resulting file will contain the `description` column for each task and the students solutions will be gathered.
 
 Optional arguments:
 
@@ -77,3 +77,16 @@ step_id | origin_class | frequency | pos_in_template | task_link | description
 --- | --- | --- | --- | --- | ---
 2262|UselessParentheses|0.8195615514333895|<null>|LINK|Useless parentheses.
 5203|IndentationCheck|0.6465067778936392|30, 33, 36|LINK|'method def modifier' has incorrect indentation level 5, expected level should be 4.
+
+## Filtering template issues from submissions code quality reports
+
+For the student code quality analysis we need to filter out template issues (as they were done not by students and can influence statistics).
+Run the [filter_template_issues.py](filter_template_issues.py) script with the arguments from command line.
+
+Required arguments:
+
+- `templates_issues_path` — Path to .csv file with template search script output
+- `submissions_path` — Path to .csv file with submissions. The file must contain the following columns: `id`, `step_id`, `code`, `group`, `attempt`, `raw_issues` (please, use [preprocess_submissions.py](../preprocessing/preprocess_submissions.py) script to get  `group` and `attempt` columns).
+- `steps_path` — Path to .csv file with steps. The file must contain the following columns: `id`, and `code_template` OR `id`, `code_templates`, and `lang`.
+- `filtered_submissions_path` — Path to .csv file with submissions with filtered issues with new columns: `{issue_column}_diff` will contain filtered issues, `{issue_column}_all` will contain all issues before filtering and `{issue_column}` will be rewritten with report with filtered issues.
+- `issues_column` — column name with analysis report with code quality issues is stored.
