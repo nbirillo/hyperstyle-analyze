@@ -14,6 +14,18 @@ To get statistics on collected and preprocessed data, run following python scrip
     |**submissions_path**| Path to .csv file with `preprocessed submissions`. |
     |**submissions_statistics_path**| Path to .csv file where to save submissions statistics. |
 
+    **Optional arguments:**
+    
+    | Arguments                                                                | Description                                                                           |
+    |--------------------------------------------------------------------------|---------------------------------------------------------------------------------------|
+    | **&#8209;&#8209;code&#8209;lines&#8209;count**                           | Count the number of lines of code. Select `ignore_empty_lines` to ignore empty lines. |
+    | **&#8209;&#8209;code&#8209;symbols&#8209;count**                         | Count the number of symbols in the code.                                              |
+    | **&#8209;&#8209;hyperstyle&#8209;issue&#8209;count**                     | Count the number of hyperstyle issues.                                                |
+    | **&#8209;&#8209;hyperstyle&#8209;issue&#8209;by&#8209;code&#8209;lines** | Calculate the frequency of hyperstyle issues.                                         |
+    | **&#8209;&#8209;qodana&#8209;issue&#8209;count**                         | Count the number of Qodana issues.                                                    |
+    | **&#8209;&#8209;qodana&#8209;issue&#8209;by&#8209;code&#8209;lines**     | Calculate the frequency of Qodana issues.                                             |
+
+
 4. [client_statistics.py](client_statistics.py) - build .csv file with submissions series client
    for clients change statistics analysis.
    

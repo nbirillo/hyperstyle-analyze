@@ -1,6 +1,11 @@
 # Hyperstyle evaluation: plots
 This module allows you to visualize the data.
 
+Plotters:
+- [Diffs plotter](#diffs-plotter)
+- [Raw issues statistics plotter](#raw-issues-statistics-plotter)
+- [Benchmark plotter](#benchmark-plotter)
+
 ## Diffs plotter
 This script allows you to visualize a dataset obtained with [diffs_between_df.py](../inspectors/diffs_between_df.py). 
 
@@ -159,4 +164,65 @@ The result will be two graphs: line chart and histogram. The values in both char
 #### Histogram
 <p align="middle">
   <img src="./examples/CODE_STYLE_ratio_histogram.png" width="49%" />
+</p>
+
+## Benchmark plotter
+This script allows you to visualize a dataset obtained with [benchmark.py](../benchmark/benchmark.py).
+
+The data will be grouped by `group_by` column and one of the following graphs will be plotted depending on the value of the `as_box_plot` flag.
+- Line chart. There will be 3 traces on the chart: max value of `timing_column`, median value of `timing_column` and min value of `timing_column` for each group.
+- Box plot. A box plot for each group will be plotted.
+
+### Usage
+Run the [benchmark_plotter.py](benchmark_plotter.py) with the arguments from command line.
+
+**Required arguments**:
+1. `submissions_with_timings` — Path to .csv file with submissions and timings.
+2. `save_dir` — Path where the plotted chart will be saved.
+3. `config` — Path to .yml config file. For more information, see [Config](#config-2) section.
+
+**Optional arguments**:
+
+| Argument                               | Description                                                                                                                                                     |
+|----------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **&#8209;&#8209;file&#8209;extension** | Allows you to select the extension of output files. Available extensions: `.png`, `.jpg`, `.jpeg`, `.webp`, `.svg`, `.pdf`, `.eps`, `.json`. Default is `.svg`. |
+
+### Config
+A config is a yml file that must contain two **required arguments**:
+1. `group_by` — The name of the column to group by. This will be used as the X-axis.
+2. `timing_column` — The name of the column with timings. This will be used as the Y-axis.
+
+There are also several **optional** arguments:
+
+| Argument        | Description                                                                                                                                                                                                                                                                                                                                                                                                                             |
+|-----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **as_box_plot** | Is it necessary to visualize the data as a box plot. By default the data is visualized as a line graph.                                                                                                                                                                                                                                                                                                                                 |
+| **bins**        | Array of integers in which the boundaries of the bins are specified. If specified, the values of the `group_by` column will be grouped by the specified bins.                                                                                                                                                                                                                                                                           |
+| **x_axis_name** | Name of the x-axis. Default: `group_by` value.                                                                                                                                                                                                                                                                                                                                                                                          |
+| **y_axis_name** | Name of the y-axis. Default: `timing_column` value.                                                                                                                                                                                                                                                                                                                                                                                     |
+| **margin**      | Defines the outer margin on all four sides of the chart. The available values are specified in the Enum class `MARGIN` from [plots const file](./common/plotly_consts.py). If not specified, the default value provided by Plotly is used.                                                                                                                                                                                              |
+| **sort_order**  | Defines the sorting order of the chart. The available values are specified in the Enum class `SORT_ORDER` from [plots const file](./common/plotly_consts.py). If not specified, the default value provided by Plotly is used.                                                                                                                                                                                                           |
+| **color**       | Defines the color of the chart. The available values are specified in the Enum class `COLOR` from [plots const file](./common/plotly_consts.py). If you plot a line chart, you can pass the list. The first color specified in the list will be applied to the trace with the maximum values, the second with the median values, and the third with the minimum values. If not specified, the default value provided by Plotly is used. |
+
+#### Examples
+```yaml
+group_by: "code_lines_count"
+timing_column: "hyperstyle_time"
+```
+
+```yaml
+group_by: "code_lines_count"
+timing_column: "hyperstyle_time"
+
+as_box_plot: true
+bins: [0, 10, 20, 30, 40]
+
+x_axis_name: "Number of code lines"
+y_axis_name: "Time (s)"
+```
+
+### Examples
+<p align="middle">
+  <img src="./examples/timings_as_line_chart.png" width="49%" />
+  <img src="./examples/timings_as_box_plot.png" width="49%" />
 </p>
