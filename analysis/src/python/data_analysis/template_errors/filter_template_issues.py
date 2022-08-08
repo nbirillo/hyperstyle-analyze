@@ -7,7 +7,7 @@ import pandas as pd
 from analysis.src.python.data_analysis.model.column_name import IssuesColumns, StepColumns, SubmissionColumns, \
     TemplateColumns
 from analysis.src.python.data_analysis.template_errors.template_matching import equal_char_by_char, match, \
-    parse_template_code, parse_template_issues_positions
+    parse_template_code, parse_template_issue_positions
 from analysis.src.python.data_analysis.utils.analysis_issue import AnalysisReport
 from analysis.src.python.data_analysis.utils.code_utils import split_code_to_lines
 from analysis.src.python.utils.df_utils import merge_dfs, read_df, write_df
@@ -33,36 +33,33 @@ def filter_template_issues_from_submission(submission: pd.Series,
 
     template_issues_report = AnalysisReport([])
 
-    for _, templates_issue in df_templates_issues.iterrows():
+    df_step_templates_issues = df_templates_issues[
+        df_templates_issues[SubmissionColumns.STEP_ID.value] == submission[SubmissionColumns.STEP_ID.value]]
 
-        if templates_issue[SubmissionColumns.STEP_ID.value] != submission[SubmissionColumns.STEP_ID.value]:
-            continue
+    for _, templates_issue in df_step_templates_issues.iterrows():
 
         template_issue_name = templates_issue[IssuesColumns.NAME.value]
         template_issue_positions = templates_issue[TemplateColumns.POS_IN_TEMPLATE.value]
         template_lines = templates_issue[StepColumns.CODE_TEMPLATES.value]
 
         matching = match(code_lines, template_lines, equal_char_by_char)
-
-        if len(template_issue_positions) == 0:
-            continue
-
         matched_template_issue_positions = []
+
         for issue in report.issues:
 
             if issue.name != template_issue_name:
                 continue
 
             for template_issue_position in template_issue_positions:
-                if matching[issue.line_number - 1] == template_issue_position:
+                matched_issues_position = matching[issue.line_number - 1]
+
+                if matched_issues_position == template_issue_position:
                     template_issues_report.issues.append(issue)
                     matched_template_issue_positions.append(template_issue_position)
 
         logging.info(f'{len(matched_template_issue_positions)}/{len(template_issue_positions)} '
                      f'template issues {template_issue_name} was matched '
-                     f'in step {submission[SubmissionColumns.STEP_ID.value]}. '
-                     f'Unmatched issues positions: '
-                     f'{list(set(template_issue_positions) - set(matched_template_issue_positions))}')
+                     f'in step {submission[SubmissionColumns.STEP_ID.value]}.')
 
     filtered_report = AnalysisReport(
         issues=[issue for issue in report.issues if issue not in template_issues_report.issues],
@@ -90,7 +87,7 @@ def filter_template_issues(df_templates_issues: pd.DataFrame,
     df_templates_issues = df_templates_issues.dropna(subset=[TemplateColumns.POS_IN_TEMPLATE.value])
 
     df_templates_issues[TemplateColumns.POS_IN_TEMPLATE.value] = \
-        df_templates_issues[TemplateColumns.POS_IN_TEMPLATE.value].apply(parse_template_issues_positions)
+        df_templates_issues[TemplateColumns.POS_IN_TEMPLATE.value].apply(parse_template_issue_positions)
 
     df_submissions = df_submissions.apply(filter_template_issues_from_submission,
                                           df_templates_issues=df_templates_issues,
