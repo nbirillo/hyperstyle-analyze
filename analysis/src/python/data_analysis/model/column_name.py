@@ -132,10 +132,6 @@ class SubmissionColumns(Enum):
     QODANA_ISSUES = 'qodana_issues'
     QODANA_ISSUE_CLASS = 'problem_id'
 
-    STATUS = 'status'
-    FREQUENCY = 'frequency'
-    POS_IN_TEMPLATE = 'pos_in_template'
-
 
 @unique
 class SubmissionStatsColumns(Enum):
@@ -194,4 +190,6 @@ class Level(Enum):
 
 @unique
 class TemplateColumns(Enum):
+    STATUS = 'status'
+    FREQUENCY = 'frequency'
     POS_IN_TEMPLATE = 'pos_in_template'

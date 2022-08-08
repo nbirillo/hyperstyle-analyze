@@ -104,7 +104,7 @@ def count_groups(df_submissions: pd.DataFrame, df_steps: pd.DataFrame):
 
     def count(step_id: int):
         return len(df_submissions[df_submissions[SubmissionColumns.STEP_ID.value] == step_id][
-            SubmissionColumns.GROUP.value].unique())
+                       SubmissionColumns.GROUP.value].unique())
 
     groups_count = df_steps[StepColumns.ID.value].map(count).rename('groups_cnt')
     df_steps = pd.concat([df_steps, groups_count], axis=1)

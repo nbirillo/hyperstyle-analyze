@@ -8,7 +8,7 @@ from typing import Optional, Tuple
 import pandas as pd
 from hyperstyle.src.python.review.common.file_system import Extension
 
-from analysis.src.python.data_analysis.model.column_name import StepColumns, SubmissionColumns
+from analysis.src.python.data_analysis.model.column_name import StepColumns, SubmissionColumns, TemplateColumns
 from analysis.src.python.data_analysis.template_errors.models.postprocessing_models import PostprocessingConfig
 from analysis.src.python.evaluation.issues_statistics.common.raw_issue_encoder_decoder import RawIssueDecoder
 from analysis.src.python.utils.df_utils import read_df, write_df
@@ -20,15 +20,15 @@ from analysis.src.python.utils.numpy_utils import AggregateFunction
 
 def filter_duplicates_function(filter_duplicates_type: AggregateFunction):
     if filter_duplicates_type == AggregateFunction.MAX:
-        return lambda row: row.loc[row[SubmissionColumns.FREQUENCY.value].idxmax()]
+        return lambda row: row.loc[row[TemplateColumns.FREQUENCY.value].idxmax()]
     if filter_duplicates_type == AggregateFunction.MIN:
-        return lambda row: row.loc[row[SubmissionColumns.FREQUENCY.value].idxmin()]
+        return lambda row: row.loc[row[TemplateColumns.FREQUENCY.value].idxmin()]
     raise AttributeError(f'The --filter-duplicates arg {filter_duplicates_type.value} is unknown!')
 
 
 def get_none_and_not_none_freq(templates_df: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame]:
-    templates_with_none_position = templates_df[templates_df[SubmissionColumns.POS_IN_TEMPLATE.value].isnull()]
-    templates_with_not_none_position = templates_df[templates_df[SubmissionColumns.POS_IN_TEMPLATE.value].notnull()]
+    templates_with_none_position = templates_df[templates_df[TemplateColumns.POS_IN_TEMPLATE.value].isnull()]
+    templates_with_not_none_position = templates_df[templates_df[TemplateColumns.POS_IN_TEMPLATE.value].notnull()]
     return templates_with_none_position, templates_with_not_none_position
 
 
@@ -43,17 +43,17 @@ def filter_duplicates(templates_df: pd.DataFrame, config: PostprocessingConfig) 
                                                               filter_duplicates_function(
                                                                   config.filter_duplicates_type,
                                                               ))
-    templates_with_not_none_position[SubmissionColumns.POS_IN_TEMPLATE.value] = templates_with_not_none_position[
-        SubmissionColumns.POS_IN_TEMPLATE.value].apply(lambda x: str(int(x)))
+    templates_with_not_none_position[TemplateColumns.POS_IN_TEMPLATE.value] = templates_with_not_none_position[
+        TemplateColumns.POS_IN_TEMPLATE.value].apply(lambda x: str(int(x)))
     templates_with_not_none_position = templates_with_not_none_position \
         .sort_values([SubmissionColumns.STEP_ID.value,
                       SubmissionColumns.RAW_ISSUE_CLASS.value,
-                      SubmissionColumns.POS_IN_TEMPLATE.value],
+                      TemplateColumns.POS_IN_TEMPLATE.value],
                      ascending=[True, True, True])
     merged_pos = templates_with_not_none_position.groupby(
         [SubmissionColumns.STEP_ID.value, SubmissionColumns.RAW_ISSUE_CLASS.value], group_keys=False).agg(
         {SubmissionColumns.STEP_ID.value: 'first', SubmissionColumns.RAW_ISSUE_CLASS.value: 'first',
-         SubmissionColumns.FREQUENCY.value: 'first', SubmissionColumns.POS_IN_TEMPLATE.value: ', '.join})
+         TemplateColumns.FREQUENCY.value: 'first', TemplateColumns.POS_IN_TEMPLATE.value: ', '.join})
     return merged_pos.append(filtered_with_none_position).reset_index(drop=True)
 
 
@@ -61,14 +61,14 @@ def filter_by_freq(
         templates_df: pd.DataFrame,
         config: PostprocessingConfig,
 ) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
-    # Filter issues with frequency les than freq_to_remove
-    filtered = templates_df.loc[templates_df[SubmissionColumns.FREQUENCY.value] > config.freq_to_remove]
-    template_issues = filtered[filtered[SubmissionColumns.FREQUENCY.value] > config.freq_to_keep]
-    rare_typical_issues = filtered[(filtered[SubmissionColumns.FREQUENCY.value] > config.freq_to_remove) & (
-            filtered[SubmissionColumns.FREQUENCY.value] <= config.freq_to_separate_typical_and_template)]
+    # Filter issues with frequency less than freq_to_remove
+    filtered = templates_df.loc[templates_df[TemplateColumns.FREQUENCY.value] > config.freq_to_remove]
+    template_issues = filtered[filtered[TemplateColumns.FREQUENCY.value] > config.freq_to_keep]
+    rare_typical_issues = filtered[(filtered[TemplateColumns.FREQUENCY.value] > config.freq_to_remove) & (
+            filtered[TemplateColumns.FREQUENCY.value] <= config.freq_to_separate_typical_and_template)]
     common_typical_issues = filtered[
-        (filtered[SubmissionColumns.FREQUENCY.value] > config.freq_to_separate_typical_and_template) & (
-                filtered[SubmissionColumns.FREQUENCY.value] <= config.freq_to_keep)]
+        (filtered[TemplateColumns.FREQUENCY.value] > config.freq_to_separate_typical_and_template) & (
+                filtered[TemplateColumns.FREQUENCY.value] <= config.freq_to_keep)]
     return template_issues, rare_typical_issues, common_typical_issues
 
 
