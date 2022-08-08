@@ -23,16 +23,16 @@ class TemplateGatheringType(Enum):
     def define_template_gathering_type(cls, df: pd.DataFrame) -> 'TemplateGatheringType':
         columns = df.columns
         if StepColumns.CODE_TEMPLATE.value in columns:
-            return TemplateGatheringType.API
-        if StepColumns.CODE_TEMPLATES.value in columns:
             return TemplateGatheringType.DATABASE
+        if StepColumns.CODE_TEMPLATES.value in columns:
+            return TemplateGatheringType.API
         raise ValueError('Can not define template gathering type: API or DATABASE')
 
     def get_template_column(self):
         if self == TemplateGatheringType.API:
-            return StepColumns.CODE_TEMPLATE
+            return StepColumns.CODE_TEMPLATES.value
         if self == TemplateGatheringType.DATABASE:
-            return StepColumns.CODE_TEMPLATES
+            return StepColumns.CODE_TEMPLATE.value
         raise ValueError(f'Undefined template gathering type: {self}')
 
 
@@ -48,3 +48,5 @@ class PostprocessingConfig(Object):
     number_of_solutions: int
     to_add_description: bool
     base_task_url: str
+    # TODO: use Hyperstyle extension after adding GO
+    output_extension: str

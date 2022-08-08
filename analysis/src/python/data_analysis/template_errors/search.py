@@ -1,6 +1,5 @@
 import argparse
 import ast
-import json
 import os
 import sys
 from typing import Callable, List, Tuple
@@ -8,20 +7,20 @@ from typing import Callable, List, Tuple
 import pandas as pd
 
 from analysis.src.python.data_analysis.model.column_name import StepColumns, SubmissionColumns
-from analysis.src.python.data_analysis.template_errors.template_matching import EQUAL, match
-from analysis.src.python.utils.df_utils import drop_columns, read_df, write_df
-from analysis.src.python.evaluation.issues_statistics.common.raw_issue_encoder_decoder import RawIssueDecoder
 from analysis.src.python.data_analysis.template_errors.models.postprocessing_models import TemplateGatheringType
+from analysis.src.python.data_analysis.template_errors.template_matching import EQUAL, match
+from analysis.src.python.data_analysis.utils.analysis_issue import AnalysisReport
+from analysis.src.python.utils.df_utils import drop_columns, filter_df_by_iterable_value, read_df, write_df
 
 
 def submission_to_issue_code_pos(submission: pd.DataFrame) -> List[Tuple[str, str, int]]:
     """
     Represent issue as a tuple <origin_class, line, pos_in_template>.
     """
-    issues = submission[SubmissionColumns.RAW_ISSUES.value]
-    return [(issue.origin_class,
-             submission[SubmissionColumns.CODE.value][issue.line_no - 1],
-             submission['pos_in_template'][issue.line_no - 1])
+    issues = submission[SubmissionColumns.RAW_ISSUES.value].issues
+    return [(issue.name,
+             submission[SubmissionColumns.CODE.value][issue.line_number - 1],
+             submission['pos_in_template'][issue.line_number - 1])
             for issue in issues]
 
 
@@ -104,7 +103,7 @@ def count_groups(df_submissions: pd.DataFrame, df_steps: pd.DataFrame):
 
     def count(step_id: int):
         return len(df_submissions[df_submissions[SubmissionColumns.STEP_ID.value] == step_id][
-            SubmissionColumns.GROUP.value].unique())
+                       SubmissionColumns.GROUP.value].unique())
 
     groups_count = df_steps[StepColumns.ID.value].map(count).rename('groups_cnt')
     df_steps = pd.concat([df_steps, groups_count], axis=1)
@@ -156,6 +155,22 @@ def parse_template_code(df_steps: pd.DataFrame) -> pd.DataFrame:
     return df_steps
 
 
+def parse_issues(df_submissions: pd.DataFrame, df_steps: pd.DataFrame) -> pd.DataFrame:
+    df_submissions[SubmissionColumns.RAW_ISSUES.value] = \
+        df_submissions[SubmissionColumns.RAW_ISSUES.value].map(lambda x: AnalysisReport.from_json(x))
+    issues_count_column = 'issues_count'
+    df_submissions[issues_count_column] = \
+        df_submissions[SubmissionColumns.RAW_ISSUES.value].map(lambda x: len(x.issues))
+    # Delete submissions without code quality issues
+    df_submissions = df_submissions.loc[df_submissions[issues_count_column] > 0]
+    df_submissions = filter_df_by_iterable_value(
+        df_submissions,
+        SubmissionColumns.STEP_ID.value,
+        df_steps[SubmissionColumns.ID.value].dropna().unique(),
+    )
+    return df_submissions
+
+
 def search(submissions_path: str, steps_path: str, result_path: str, steps_with_groups_count: str, n: int,
            equal_type: str):
     """
@@ -176,8 +191,8 @@ def search(submissions_path: str, steps_path: str, result_path: str, steps_with_
                                      SubmissionColumns.RAW_ISSUES.value]]
 
     # Parsing raw issues
-    df_submissions[SubmissionColumns.RAW_ISSUES.value] = \
-        df_submissions[SubmissionColumns.RAW_ISSUES.value].map(lambda x: json.loads(x, cls=RawIssueDecoder))
+    df_submissions = parse_issues(df_submissions, df_steps)
+
     # Splitting code to lines
     df_submissions[SubmissionColumns.CODE.value] = \
         df_submissions[SubmissionColumns.CODE.value].map(lambda x: [line.rstrip('\r') for line in x.split(os.linesep)])

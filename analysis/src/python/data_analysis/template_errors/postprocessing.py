@@ -1,29 +1,26 @@
 import argparse
-import json
 import random
 import sys
 from pathlib import Path
 from typing import Optional, Tuple
 
 import pandas as pd
-from hyperstyle.src.python.review.common.file_system import Extension
 
 from analysis.src.python.data_analysis.model.column_name import StepColumns, SubmissionColumns
 from analysis.src.python.data_analysis.template_errors.models.postprocessing_models import PostprocessingConfig
-from analysis.src.python.evaluation.issues_statistics.common.raw_issue_encoder_decoder import RawIssueDecoder
+from analysis.src.python.data_analysis.utils.analysis_issue import AnalysisReport
 from analysis.src.python.utils.df_utils import read_df, write_df
 from analysis.src.python.utils.extension_utils import AnalysisExtension
 from analysis.src.python.utils.file_utils import create_directory, create_file
-
 from analysis.src.python.utils.numpy_utils import AggregateFunction
 
 
-def filter_duplicates_function(filter_duplicates_type: AggregateFunction):
-    if filter_duplicates_type == AggregateFunction.MAX:
+def filter_duplicates_function(filter_duplicates_type: str):
+    if filter_duplicates_type == AggregateFunction.MAX.value:
         return lambda row: row.loc[row[SubmissionColumns.FREQUENCY.value].idxmax()]
-    if filter_duplicates_type == AggregateFunction.MIN:
+    if filter_duplicates_type == AggregateFunction.MIN.value:
         return lambda row: row.loc[row[SubmissionColumns.FREQUENCY.value].idxmin()]
-    raise AttributeError(f'The --filter-duplicates arg {filter_duplicates_type.value} is unknown!')
+    raise AttributeError(f'The --filter-duplicates arg {filter_duplicates_type} is unknown!')
 
 
 def get_none_and_not_none_freq(templates_df: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame]:
@@ -94,22 +91,25 @@ def find_user_solutions(
         cur_path = f'{base_path}/{row[SubmissionColumns.STEP_ID.value]}/{row[SubmissionColumns.RAW_ISSUE_CLASS.value]}'
         create_directory(cur_path)
         while current_attempt < config.number_of_solutions:
+            if len(wrong_rows) + len(visited_rows) >= step_rows.shape[0]:
+                break
             row_number = generate_index(step_rows.shape[0])
             if row_number in visited_rows or row_number in wrong_rows:
                 continue
-            issues = json.loads(step_rows[SubmissionColumns.RAW_ISSUES.value].iloc[row_number], cls=RawIssueDecoder)
+            issues = AnalysisReport.from_json(step_rows[SubmissionColumns.RAW_ISSUES.value].iloc[row_number]).issues
             current_issues = list(
-                filter(lambda i: i.origin_class == row[SubmissionColumns.RAW_ISSUE_CLASS.value], issues))
+                filter(lambda i: i.name == row[SubmissionColumns.RAW_ISSUE_CLASS.value], issues))
             if len(current_issues) == 0:
                 wrong_rows.append(row_number)
                 continue
-            file_path = Path(f"{cur_path}/solution_{current_attempt}{Extension.JAVA.value}")
+            file_path = Path(f"{cur_path}/solution_{current_attempt}{config.output_extension}")
             next(create_file(file_path, step_rows["code"].iloc[row_number]))
             visited_rows.append(row_number)
-            descriptions.append(current_issues[generate_index(len(current_issues))].description)
+            descriptions.append(current_issues[generate_index(len(current_issues))].text)
             current_attempt += 1
         if config.to_add_description:
             final_descriptions.append(descriptions[generate_index(len(descriptions))])
+        print(f'Finish the step: {row[SubmissionColumns.STEP_ID.value]}')
     template_issues_df[description] = final_descriptions
     return template_issues_df
 
@@ -151,15 +151,16 @@ def save_results(
 def parse_args(args) -> PostprocessingConfig:
     return PostprocessingConfig(
         templates_search_result_path=args.templates_search_result,
-        result_path=args.result_path,
+        result_path=Path(args.result_path),
         raw_issues_path=args.raw_issues_path,
         filter_duplicates_type=args.filter_duplicates_type,
         freq_to_remove=args.freq_to_remove / 100,
         freq_to_keep=args.freq_to_keep / 100,
-        freq_to_separate_typical_and_template=args.freq_to_separate_typical_and_template / 100,
+        freq_to_separate_typical_and_template=args.freq_to_separate / 100,
         number_of_solutions=args.number_of_solutions,
         to_add_description=args.add_description,
         base_task_url=args.base_task_url.rstrip('/'),
+        output_extension=args.extension,
     )
 
 
@@ -186,6 +187,8 @@ if __name__ == '__main__':
                         help='The argument determines whether the description of each issue should be added')
     parser.add_argument('-url', '--base-task-url', type=str, default='https://hyperskill.org/learn/step',
                         help='Base url to the tasks on an education platform.')
+    parser.add_argument('-ext', '--extension', type=str, default='',
+                        help='Extension for students solutions files.')
 
     args = parser.parse_args(sys.argv[1:])
     conf = parse_args(args)
