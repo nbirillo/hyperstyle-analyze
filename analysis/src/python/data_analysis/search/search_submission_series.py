@@ -28,7 +28,7 @@ def save_submission_series_to_files(submission_series: pd.DataFrame,
                                     issues_column: str):
     """ Save submission series to files. """
 
-    for i, submission in submission_series.iterrows():
+    for _, submission in submission_series.iterrows():
         add_issues_comments_to_code(submission, issues_column)
         lang = submission[SubmissionColumns.LANG.value]
         extension = get_language_version(lang).extension_by_language()
