@@ -5,6 +5,71 @@ for further analysis.
 
 To run data preprocessing, run following python scripts in stated order:
 
+
+0. **Optional**. [preprocess_hidden_templates.py](preprocess_hidden_templates.py) - substitutes the code in the hidden template.
+
+   **Required arguments:**
+   | Argument                          | Description                                                                                                            |
+   |-----------------------------------|------------------------------------------------------------------------------------------------------------------------| 
+   | **submissions_path**              | Path to .csv file with `submissions`.                                                                                  |
+   | **preprocessed_submissions_path** | Path to .csv output file with `preprocessed submissions`. If not provided `submissions_path` will be used. |
+
+    **Optional arguments:**
+    
+    | Argument                                                        | Description                              |
+    |-----------------------------------------------------------------|------------------------------------------|
+    | **&#8209;&#8209;substitute&#8209;code&#8209;in&#8209;template** | Insert a code into a hidden template.    |
+    | **&#8209;&#8209;compile&#8209;template**                        | Compile and overwrite a hidden template. |
+
+    **Example:**
+    If we have this hidden template:
+    ```text
+    ::go
+    ::header
+    package main
+   
+    import "fmt"
+   
+    ::code
+    // Declare and assign the correct value to the 'helloWorld' variable below
+   
+    ::footer
+    func main() {
+        fmt.Println(helloWorld)
+    }
+    ```
+   
+    Then the compiled template will look like this (`--compile-template` flag):
+    ```go
+    package main
+   
+    import "fmt"
+   
+    // Declare and assign the correct value to the 'helloWorld' variable below
+   
+    func main() {
+        fmt.Println(helloWorld)
+    }
+    ```
+   
+    And if we have this code:
+    ```go
+    var helloWorld string = "Hello, World!"
+    ```
+   
+    Then after substitution in the hidden template we get (`--substitute-code-in-template` flag):
+    ```go
+    package main
+   
+    import "fmt"
+   
+    var helloWorld string = "Hello, World!"
+   
+    func main() {
+        fmt.Println(helloWorld)
+    }
+    ```
+
 1. [preprocess_submissions.py](preprocess_submissions.py) - merges submissions with detected issues. 
 
     **Required arguments:**
@@ -27,12 +92,12 @@ To run data preprocessing, run following python scripts in stated order:
    
     **Required arguments:**
     
-    | Argument             | Description |
-----------------------|----------|-------------|
-    | **issues_column**         | Type of issues to analyse (can be `raw_issues` or `qodana_issues`). |
-    | **submissions_path** | Path to .csv file with `preprocessed submissions`. |
-    | **issues_path**      | Path to .csv file with submissions to issues relation. |
-    | **issues_info_path** | Path to .csv file where `preprocessed issues info` will be saved. |
+    | Argument             | Description                                                         |
+    |----------------------|---------------------------------------------------------------------|
+    | **issues_column**    | Type of issues to analyse (can be `raw_issues` or `qodana_issues`). |
+    | **submissions_path** | Path to .csv file with `preprocessed submissions`.                  |
+    | **issues_path**      | Path to .csv file with submissions to issues relation.              |
+    | **issues_info_path** | Path to .csv file where `preprocessed issues info` will be saved.   |
 
     **Optional arguments:**
     

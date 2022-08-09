@@ -9,25 +9,37 @@ from analysis.src.python.utils.extension_utils import AnalysisExtension, get_res
 from analysis.src.python.utils.xlsx_utils import read_df_from_xlsx, write_df_to_xlsx
 
 
-def _apply_to_row(row: pd.Series, column: str, func: Callable) -> pd.Series:
-    """ Apply `func` to data in `column` of dataframe's `raw`. """
+def _apply_to_row(row: pd.Series, column: str, func: Callable, pass_row: bool = False) -> pd.Series:
+    """
+    Apply `func` to dataframe's `row`. The function's output will be saved in `column`.
+
+    If pass_row is True, then the row will be passed to the function, else only data in `column`.
+    """
 
     copy_row = row.copy()
-    copy_row[column] = func(copy_row[column])
+    copy_row[column] = func(copy_row) if pass_row else func(copy_row[column])
     return copy_row
 
 
-def apply(df: pd.DataFrame, column: str, func: Callable) -> pd.DataFrame:
-    """ Apply `func` to  data in `column` of dataframe `df`. """
+def apply(df: pd.DataFrame, column: str, func: Callable, pass_row: bool = False) -> pd.DataFrame:
+    """
+    Apply `func` to rows of dataframe `df`. The function's output will be saved in `column`.
 
-    return df.apply(lambda row: _apply_to_row(row, column, func), axis=1)
+    If pass_row is True, then every row will be passed to the function, else only data in `column`.
+    """
+
+    return df.apply(lambda row: _apply_to_row(row, column, func, pass_row), axis=1)
 
 
-def parallel_apply(df: pd.DataFrame, column: str, func: Callable) -> pd.DataFrame:
-    """ Parallel apply `func` to  data in `column` of dataframe `df`. """
+def parallel_apply(df: pd.DataFrame, column: str, func: Callable, pass_row: bool = False) -> pd.DataFrame:
+    """
+    Parallel apply `func` to rows of dataframe `df`. The function's output will be saved in `column`.
+
+    If pass_row is True, then every row will be passed to the function, else only data in `column`.
+    """
 
     pandarallel.initialize(nb_workers=4)
-    return df.parallel_apply(lambda raw: _apply_to_row(raw, column, func), axis=1)
+    return df.parallel_apply(lambda raw: _apply_to_row(raw, column, func, pass_row), axis=1)
 
 
 def filter_df_by_iterable_value(df: pd.DataFrame, column: str, value: Iterable) -> pd.DataFrame:
