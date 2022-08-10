@@ -18,7 +18,7 @@ MAX_LABEL_LENGTH = 5
 MAX_LABELS_COUNT = 5
 
 WINDOW_WIDTH = 30
-WIGHT_HEIGHT_RATIO = 0.5
+WIGHT_HEIGHT_RATIO = 0.7
 
 
 def get_fig_size(cols, rows) -> Tuple[float, float]:
@@ -110,7 +110,7 @@ def draw_compare(df: pd.DataFrame, feature: str, attr: AttrType,
     plt.suptitle(f'Submissions % distributions by {attr.name}' if title is None else title)
 
     if save_path is not None:
-        fig.savefig(save_path)
+        fig.savefig(save_path, bbox_inches='tight')
 
     plt.show()
 
@@ -150,6 +150,7 @@ def draw_count_plots(df: pd.DataFrame, attrs: List[AttrType], columns: int = 2,
 
         attr = get_attr(attr)
         sns.countplot(data=df, x=attr.name, ax=ax_sub, order=attr.values, palette=attr.palette)
+        ax_sub.bar_label(ax_sub.containers[0])
 
         ax_sub.set_xlabel(attr.name)
         ax_sub.set_ylabel(y_label)

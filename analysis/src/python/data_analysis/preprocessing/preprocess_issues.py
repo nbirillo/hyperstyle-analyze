@@ -74,11 +74,11 @@ def preprocess_issues(submissions_path: str,
     df_issues = read_df(issues_path)
     logging.info(f'Issues initial shape: {df_issues.shape}')
 
-    df_submissions = merge_submissions_with_issues(df_submissions, df_issues, issues_column)
-    df_submissions = convert_to_analysis_report(df_submissions, issues_column)
-
-    if ignore_issue_names is not None:
-        df_submissions = filter_issues(df_submissions, issues_column, ignore_issue_names)
+    # df_submissions = merge_submissions_with_issues(df_submissions, df_issues, issues_column)
+    # df_submissions = convert_to_analysis_report(df_submissions, issues_column)
+    #
+    # if ignore_issue_names is not None:
+    #     df_submissions = filter_issues(df_submissions, issues_column, ignore_issue_names)
 
     df_issues_info = get_issues_info(df_submissions, issues_column)
 

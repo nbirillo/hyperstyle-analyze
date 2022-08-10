@@ -1,6 +1,6 @@
 import ast
 from enum import Enum
-from typing import Any, Callable, Dict, List
+from typing import Any, Callable, Dict, List, Optional
 
 import numpy as np
 import pandas as pd
@@ -13,10 +13,11 @@ from analysis.src.python.utils.df_utils import merge_dfs
 class Stats(Enum):
     COUNT = 'count'
     ISSUE = 'issue'
+    RATIO = 'ratio'
 
 
-def get_top_issues(df: pd.DataFrame, df_issues: pd.DataFrame, n: int = 15, ignore_issues: List[str] = None) \
-        -> pd.DataFrame:
+def get_top_issues(df: pd.DataFrame, df_issues: pd.DataFrame,
+                   n: Optional[int] = None, ignore_issues: List[str] = None) -> pd.DataFrame:
     """
     Gets first `n` issues form `df_issues` (ignoring `ignore_issues`) sorted by count in all submissions from `df`.
     """
@@ -29,7 +30,22 @@ def get_top_issues(df: pd.DataFrame, df_issues: pd.DataFrame, n: int = 15, ignor
         [df[issue_class].sum() for issue_class in df_top_issues[IssuesColumns.NAME.value].values]
     df_top_issues = df_top_issues.sort_values(Stats.COUNT.value, ascending=False)
 
-    return df_top_issues[:n]
+    df_top_issues[Stats.RATIO.value] = df_top_issues[Stats.COUNT.value] / df.shape[0]
+
+    return df_top_issues if n is None else df_top_issues[:n]
+
+
+def get_top_issues_categories(df: pd.DataFrame, df_issues: pd.DataFrame,
+                              n: Optional[int] = None, ignore_issues: List[str] = None) -> pd.DataFrame:
+    df_top_issues = get_top_issues(df, df_issues, ignore_issues=ignore_issues)
+    df_top_categories = df_top_issues.groupby(IssuesColumns.CATEGORY.value) \
+        .sum() \
+        .reset_index() \
+        .sort_values(by=Stats.COUNT.value, ascending=False)
+
+    df_top_categories[Stats.RATIO.value] = df_top_categories[Stats.COUNT.value] / df.shape[0]
+
+    return df_top_categories if n is None else df_top_categories[:n]
 
 
 def get_submissions_percent_by_feature(df: pd.DataFrame, feature: str, attr: AttrType, bins: List[int]) -> pd.DataFrame:
@@ -39,11 +55,11 @@ def get_submissions_percent_by_feature(df: pd.DataFrame, feature: str, attr: Att
     inside interval.
 
     The result dataframe for
-        feature=`raw_issues_count`
+        feature=`hyperstyle_issues_count`
         attr=(`difficulty`, [`easy`, `medium`, `hard`], ...)
         bins=[0, 5, 10, 15]:
 
-    | `raw_issues_count` | `easy` | `medium` | `hard` |
+    | `hyperstyle_issues_count` | `easy` | `medium` | `hard` |
     |      (0, 5]        |  0.5   |    0.2   |   0.3  |
     |      (5, 10]       |  0.3   |    0.7   |   0.6  |
     |      (10, 15]      |  0.2   |    0.1   |   0.1  |
@@ -64,7 +80,7 @@ def get_submissions_percent_by_feature(df: pd.DataFrame, feature: str, attr: Att
     return df_result
 
 
-def get_submissions_percent_by_issues(df: pd.DataFrame, df_issues: pd.DataFrame, attr: AttrType,
+def get_submissions_percent_by_issues(df: pd.DataFrame, df_issues: pd.DataFrame, attr: Optional[AttrType] = None,
                                       by_type: bool = False, sort: bool = True) -> pd.DataFrame:
     """
     Divides submissions into groups according to `attr` values and for each group calculates percent of submissions
@@ -85,7 +101,11 @@ def get_submissions_percent_by_issues(df: pd.DataFrame, df_issues: pd.DataFrame,
         Stats.COUNT.value: [df[issue_class].sum() for issue_class in df_issues[IssuesColumns.NAME.value].values],
     }
 
-    attr = get_attr(attr)
+    if attr is None:
+        df['submission'] = 'submission'
+        attr = get_attr(('submission', ['submission']))
+    else:
+        attr = get_attr(attr)
 
     for value in attr.values:
         df_value = df[df[attr.name] == value]
@@ -106,7 +126,7 @@ def get_submissions_percent_by_issues(df: pd.DataFrame, df_issues: pd.DataFrame,
 
     return merge_dfs(df_issues[[IssuesColumns.NAME.value]], df_stats,
                      left_on=IssuesColumns.NAME.value,
-                     right_on=Stats.ISSUE.value)
+                     right_on=Stats.ISSUE.value).drop(columns=[IssuesColumns.NAME.value])
 
 
 def get_client_stats(df: pd.DataFrame) -> pd.DataFrame:
