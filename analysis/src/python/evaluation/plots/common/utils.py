@@ -31,7 +31,7 @@ def create_bar_plot(
     margin: MARGIN = None,
     sort_order: SORT_ORDER = None,
     color: COLOR = None,
-    title: Optional[str] = None
+    title: Optional[str] = None,
 ) -> go.Figure:
     fig = px.bar(df, x=x_axis, y=y_axis, text=y_axis)
     update_figure(fig, margin=margin, sort_order=sort_order, color=color, title=title)
