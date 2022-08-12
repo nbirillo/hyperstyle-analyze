@@ -140,19 +140,14 @@ def create_histogram(
     return fig
 
 
-def update_figure(
-        fig: go.Figure,
-        *,
+def _get_new_layout(
         margin: MARGIN = None,
         sort_order: SORT_ORDER = None,
-        color: COLOR = None,
         colorway: COLORWAY = None,
-        horizontal_lines: LINES = None,
-        vertical_lines: LINES = None,
         x_axis_name: Optional[str] = None,
         y_axis_name: Optional[str] = None,
         title: Optional[str] = None,
-) -> None:
+) -> Dict:
     new_layout = {}
 
     if margin is not None:
@@ -173,14 +168,33 @@ def update_figure(
     if title is not None:
         new_layout['title'] = title
 
-    fig.update_layout(**new_layout)
+    return new_layout
 
+
+def _get_new_trace(color: COLOR = None) -> Dict:
     new_trace = {}
 
     if color is not None:
         new_trace["marker"] = {"color": color.value}
 
-    fig.update_traces(**new_trace)
+    return new_trace
+
+
+def update_figure(
+        fig: go.Figure,
+        *,
+        margin: MARGIN = None,
+        sort_order: SORT_ORDER = None,
+        color: COLOR = None,
+        colorway: COLORWAY = None,
+        horizontal_lines: LINES = None,
+        vertical_lines: LINES = None,
+        x_axis_name: Optional[str] = None,
+        y_axis_name: Optional[str] = None,
+        title: Optional[str] = None,
+) -> None:
+    fig.update_layout(**_get_new_layout(margin, sort_order, colorway, x_axis_name, y_axis_name, title))
+    fig.update_traces(**_get_new_trace(color))
 
     if horizontal_lines is not None:
         for y, annotation in horizontal_lines.items():
