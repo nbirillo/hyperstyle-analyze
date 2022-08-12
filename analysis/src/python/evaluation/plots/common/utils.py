@@ -31,9 +31,10 @@ def create_bar_plot(
     margin: MARGIN = None,
     sort_order: SORT_ORDER = None,
     color: COLOR = None,
+    title: Optional[str] = None
 ) -> go.Figure:
     fig = px.bar(df, x=x_axis, y=y_axis, text=y_axis)
-    update_figure(fig, margin=margin, sort_order=sort_order, color=color)
+    update_figure(fig, margin=margin, sort_order=sort_order, color=color, title=title)
     return fig
 
 
@@ -43,11 +44,13 @@ def create_box_trace(
         x_column: Optional[str] = None,
         y_column: Optional[str] = None,
         color: COLOR = None,
+        name: Optional[str] = None,
 ) -> go.Box:
     return go.Box(
         x=df[x_column] if x_column is not None else None,
         y=df[y_column] if y_column is not None else None,
         line={'color': color.value if color is not None else None},
+        name=name,
     )
 
 
@@ -60,6 +63,7 @@ def create_box_plot(
         sort_order: SORT_ORDER = None,
         color: COLOR = None,
         horizontal_lines: LINES = None,
+        title: Optional[str] = None,
 ) -> go.Figure:
     fig = go.Figure(create_box_trace(df, x_column=x_axis, y_column=y_axis, color=color))
     update_figure(
@@ -69,6 +73,7 @@ def create_box_plot(
         horizontal_lines=horizontal_lines,
         x_axis_name=x_axis,
         y_axis_name=y_axis,
+        title=title,
     )
     return fig
 
@@ -97,6 +102,7 @@ def create_line_chart(
         margin: MARGIN = None,
         color: COLOR = None,
         vertical_lines: LINES = None,
+        title: Optional[str] = None,
 ) -> go.Figure:
     fig = go.Figure(create_scatter_trace(df, x_column=x_axis, y_column=y_axis, color=color))
     update_figure(
@@ -105,18 +111,21 @@ def create_line_chart(
         vertical_lines=vertical_lines,
         x_axis_name=x_axis,
         y_axis_name=y_axis,
+        title=title,
     )
     return fig
 
 
 def create_histogram(
         df: pd.DataFrame,
+        *,
         x_axis: str,
         y_axis: str,
         n_bins: Optional[int] = None,
         margin: MARGIN = None,
         color: COLOR = None,
         vertical_lines: LINES = None,
+        title: Optional[None] = None,
 ) -> go.Figure:
     fig = px.histogram(df, x=x_axis, y=y_axis, nbins=n_bins)
     update_figure(
@@ -126,6 +135,7 @@ def create_histogram(
         vertical_lines=vertical_lines,
         x_axis_name=x_axis,
         y_axis_name=y_axis,
+        title=title,
     )
     return fig
 
@@ -141,6 +151,7 @@ def update_figure(
         vertical_lines: LINES = None,
         x_axis_name: Optional[str] = None,
         y_axis_name: Optional[str] = None,
+        title: Optional[str] = None,
 ) -> None:
     new_layout = {}
 
@@ -158,6 +169,9 @@ def update_figure(
 
     if colorway is not None:
         new_layout['colorway'] = colorway.value
+
+    if title is not None:
+        new_layout['title'] = title
 
     fig.update_layout(**new_layout)
 
