@@ -88,23 +88,19 @@ To run data preprocessing, run following python scripts in stated order:
     | **&#8209;&#8209;max-attempts** | Remove submissions series with more then `max-attempts` attempts. Default is 5. |
 
 2. [preprocess_issues.py](preprocess_issues.py) - collect information about issues, which are detected in all submissions. 
-   Must be invoked twice (both for raw and qodana issues).
+   Must be invoked twice (both for hyperstyle and qodana issues).
    
     **Required arguments:**
     
-    | Argument             | Description                                                         |
-    |----------------------|---------------------------------------------------------------------|
-    | **issues_column**    | Type of issues to analyse (can be `raw_issues` or `qodana_issues`). |
-    | **submissions_path** | Path to .csv file with `preprocessed submissions`.                  |
-    | **issues_path**      | Path to .csv file with submissions to issues relation.              |
-    | **issues_info_path** | Path to .csv file where `preprocessed issues info` will be saved.   |
+    | Argument             | Description                                                                |
+    |----------------------------------------------------------------------------|---------------------------------------------------------------------|
+    | **issues_column**    | Type of issues to analyse (can be `hypertysle_issues` or `qodana_issues`). |
+    | **submissions_path** | Path to .csv file with `preprocessed submissions`.                         |
+    | **issues_path**      | Path to .csv file with submissions to issues relation.                     |
+    | **issues_info_path** | Path to .csv file where `preprocessed issues info` will be saved.          |
 
     **Optional arguments:**
-    
-    | Argument | Description |
-    |----------|-------------|
-    | **&#8209;&#8209;ignore-issue-classes** | List of issue classes to remove from issues list (for example 'CyclomaticComplexityCheck', 'JavaNCSSCheck' raw issues and 'JavaAnnotator', 'WrongPackageStatement' qodana issues). |
-   
+
 3. [preprocess_topics.py](preprocess_topics.py) - add information about topic depth in knowledge tree.
 
     **Required arguments:**

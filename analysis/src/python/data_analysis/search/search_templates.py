@@ -11,6 +11,7 @@ from analysis.src.python.data_analysis.search.utils.comment_utils import get_iss
 from analysis.src.python.data_analysis.template_errors.template_utils import get_template_language_version, \
     parse_template_issue_positions, parse_templates_code
 from analysis.src.python.data_analysis.utils.code_utils import merge_lines_to_code
+from analysis.src.python.evaluation.utils.pandas_utils import get_language_version
 from analysis.src.python.utils.df_utils import filter_df_by_single_value, read_df
 from analysis.src.python.utils.file_utils import create_directory, create_file
 from analysis.src.python.utils.logging_utils import configure_logger
@@ -39,9 +40,8 @@ def add_issue_comment_to_template(step: pd.Series, df_templates_issues: pd.DataF
 
     templates_code = step[StepColumns.CODE_TEMPLATES.value]
 
-    df_step_templates_issues = filter_df_by_single_value(df_templates_issues,
-                                                         SubmissionColumns.STEP_ID.value,
-                                                         step[StepColumns.ID.value])
+    df_step_templates_issues = \
+        filter_df_by_single_value(df_templates_issues, SubmissionColumns.STEP_ID.value, step[StepColumns.ID.value])
 
     for _, template_issues in df_step_templates_issues.iterrows():
 
@@ -53,7 +53,7 @@ def add_issue_comment_to_template(step: pd.Series, df_templates_issues: pd.DataF
         for lang, template_code_lines in templates_code.items():
             for template_issue_position in template_issue_positions:
                 if template_issue_position < len(template_code_lines):
-                    language_version = get_template_language_version(lang)
+                    language_version = get_language_version(lang)
                     comment = get_issue_comment(language_version, template_issue_name, template_issue_position)
                     template_code_lines[template_issue_position] += comment
 

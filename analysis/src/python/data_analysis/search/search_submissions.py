@@ -6,7 +6,7 @@ import pandas as pd
 
 from analysis.src.python.data_analysis.model.column_name import IssuesColumns, SubmissionColumns
 from analysis.src.python.data_analysis.search.utils.comment_utils import add_issues_comments_to_code
-from analysis.src.python.data_analysis.utils.analysis_issue import AnalysisReport
+from analysis.src.python.data_analysis.utils.analysis_issue import parse_str_report
 from analysis.src.python.evaluation.utils.solutions_saving_utils import save_solution_to_file
 from analysis.src.python.utils.df_utils import filter_df_by_predicate, filter_df_by_single_value, read_df, write_df
 from analysis.src.python.utils.file_utils import AnalysisExtension, create_directory
@@ -47,8 +47,8 @@ def search_submissions_by_step_issue(df_submissions: pd.DataFrame, issues_column
 
     df_submissions = filter_df_by_single_value(df_submissions, SubmissionColumns.STEP_ID.value, step)
 
-    def check_contains_issue(issues: str) -> bool:
-        report = AnalysisReport.from_json(issues)
+    def check_contains_issue(str_report: str) -> bool:
+        report = parse_str_report(str_report, issues_column)
         return report.has_issue(issue_name)
 
     df_submissions_with_issue = filter_df_by_predicate(df_submissions, issues_column, check_contains_issue)

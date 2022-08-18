@@ -9,7 +9,7 @@ from analysis.src.python.data_analysis.model.column_name import IssuesColumns, S
 from analysis.src.python.data_analysis.template_errors.template_matching import equal_char_by_char, match
 from analysis.src.python.data_analysis.template_errors.template_utils import parse_template_issue_positions, \
     parse_templates_code
-from analysis.src.python.data_analysis.utils.analysis_issue import AnalysisReport
+from analysis.src.python.data_analysis.utils.analysis_issue import parse_report
 from analysis.src.python.data_analysis.utils.code_utils import split_code_to_lines
 from analysis.src.python.utils.df_utils import filter_df_by_single_value, merge_dfs, read_df, write_df
 from analysis.src.python.utils.logging_utils import configure_logger
@@ -34,11 +34,11 @@ def filter_template_issues_from_submission(submission: pd.Series,
     Filter submission issue in case of matching line in template contains such issue.
     """
 
-    report = AnalysisReport.from_json(submission[issues_column])
+    report = parse_report(submission, issues_column)
     code_lines = split_code_to_lines(submission[SubmissionColumns.CODE.value])
     lang = submission[SubmissionColumns.LANG.value]
 
-    template_issues_report = AnalysisReport([])
+    template_issues = []
 
     df_step_templates_issues = filter_df_by_single_value(df_templates_issues,
                                                          SubmissionColumns.STEP_ID.value,
@@ -62,19 +62,16 @@ def filter_template_issues_from_submission(submission: pd.Series,
                 matched_issues_position = matching[issue.line_number - 1]
 
                 if matched_issues_position == template_issue_position:
-                    template_issues_report.issues.append(issue)
+                    template_issues.append(issue)
                     matched_template_issue_positions.append(template_issue_position)
 
         logging.info(f'{len(matched_template_issue_positions)}/{len(template_issue_positions)} '
                      f'template issues {template_issue_name} was matched '
                      f'in step {submission[SubmissionColumns.STEP_ID.value]}.')
 
-    filtered_report = AnalysisReport(
-        issues=[issue for issue in report.issues if issue not in template_issues_report.issues],
-    )
-    submission[issues_column] = filtered_report.to_json()
+    submission[issues_column] = report.filter_issues(lambda i: i not in template_issues).to_json()
+    submission[issues_column + '_diff'] = report.filter_issues(lambda i: i in template_issues).to_json()
     submission[issues_column + '_all'] = report.to_json()
-    submission[issues_column + '_diff'] = template_issues_report.to_json()
 
     return submission
 

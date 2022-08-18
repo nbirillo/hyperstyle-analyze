@@ -4,7 +4,7 @@ import pandas as pd
 from hyperstyle.src.python.review.application_config import LanguageVersion
 
 from analysis.src.python.data_analysis.model.column_name import SubmissionColumns
-from analysis.src.python.data_analysis.utils.analysis_issue import AnalysisReport
+from analysis.src.python.data_analysis.utils.analysis_issue import parse_report
 from analysis.src.python.data_analysis.utils.code_utils import merge_lines_to_code, split_code_to_lines
 from analysis.src.python.evaluation.utils.pandas_utils import get_language_version
 
@@ -37,7 +37,7 @@ def add_issues_comments_to_code(submission: pd.Series, issues_column: str,
 
     code_lines = split_code_to_lines(submission[SubmissionColumns.CODE.value])
 
-    report = AnalysisReport.from_json(submission[issues_column])
+    report = parse_report(submission, issues_column)
     lang = submission[SubmissionColumns.LANG.value]
 
     for issue in report.issues:

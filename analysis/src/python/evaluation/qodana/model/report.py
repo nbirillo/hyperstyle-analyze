@@ -1,14 +1,15 @@
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Union
+from typing import Callable, List, Union
 
-from dataclasses_json import dataclass_json, LetterCase
+from dataclasses_json import LetterCase, dataclass_json
 
+from analysis.src.python.evaluation.model.report import BaseIssue, BaseReport
 from analysis.src.python.utils.json_utils import parse_json
 
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
-@dataclass(frozen=True)
+@dataclass(frozen=True, eq=True)
 class Code:
     start_line: int
     length: int
@@ -17,7 +18,7 @@ class Code:
 
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
-@dataclass(frozen=True)
+@dataclass(frozen=True, eq=True)
 class Source:
     type: str
     path: str
@@ -29,14 +30,14 @@ class Source:
 
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
-@dataclass(frozen=True)
+@dataclass(frozen=True, eq=True)
 class Attributes:
     inspection_name: str
 
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
-@dataclass(frozen=True)
-class Problem:
+@dataclass(frozen=True, eq=True)
+class Problem(BaseIssue):
     tool: str
     category: str
     type: str
@@ -46,12 +47,38 @@ class Problem:
     sources: List[Source]
     attributes: Attributes
 
+    def get_name(self) -> str:
+        pass
+
+    def get_text(self) -> str:
+        pass
+
+    def get_line_number(self) -> int:
+        pass
+
+    def get_column_number(self) -> int:
+        pass
+
+    def get_category(self) -> str:
+        pass
+
+    def get_difficulty(self) -> str:
+        pass
+
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
-@dataclass(frozen=True)
-class QodanaReport:
+@dataclass(frozen=True, eq=True)
+class QodanaReport(BaseReport):
     version: str
     list_problem: List[Problem]
+
+    def get_issues(self) -> List[BaseIssue]:
+        return self.list_problem
+
+    def filter_issues(self, predicate: Callable[[BaseIssue], bool]) -> 'QodanaReport':
+        # TODO: recalculate quality after filtering
+        return QodanaReport(list_problem=[issue for issue in self.list_problem if predicate(issue)],
+                            version=self.version)
 
     @staticmethod
     def from_file(json_path: Union[Path, str]) -> 'QodanaReport':
