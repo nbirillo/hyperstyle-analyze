@@ -69,3 +69,9 @@ class AnalysisReport:
     def convert_to_analysis_json_report(str_report: str, column: str):
         report = AnalysisReport.from_json_report(str_report, column)
         return report.to_json()
+
+    def contains_issue_with_name(self, issue_name: str) -> bool:
+        for issue in self.issues:
+            if issue.name == issue_name:
+                return True
+        return False

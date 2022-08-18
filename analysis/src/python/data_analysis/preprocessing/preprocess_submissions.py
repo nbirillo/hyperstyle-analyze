@@ -92,7 +92,7 @@ def filter_submissions_without_code(df_submissions: pd.DataFrame) -> pd.DataFram
 
 
 def filter_submissions_with_many_attempts(df_submissions: pd.DataFrame, max_attempts: int) -> pd.DataFrame:
-    """ Filter submissions with more then max attempts. """
+    """ Filter submissions with more than max attempts. """
 
     logging.info(f'Filter submissions with > {max_attempts} attempts. Submissions shape: {df_submissions.shape}')
     df_submissions = df_submissions[df_submissions[SubmissionColumns.TOTAL_ATTEMPTS.value] <= max_attempts]
@@ -141,6 +141,7 @@ def get_submissions_group(df_submissions: pd.DataFrame) -> pd.DataFrame:
     df_submissions[SubmissionColumns.GROUP.value] = df_submissions \
         .groupby([SubmissionColumns.USER_ID.value, SubmissionColumns.STEP_ID.value]).ngroup()
 
+    logging.info(f"Grouped submissions into {df_submissions[SubmissionColumns.GROUP.value].max()} series")
     return df_submissions
 
 
@@ -153,6 +154,7 @@ def get_submissions_attempt(df_submissions: pd.DataFrame, diff_ration: float) ->
 
     df_submissions_last_attempt = df_submissions[
         df_submissions[SubmissionColumns.ATTEMPT.value] == df_submissions[SubmissionColumns.TOTAL_ATTEMPTS.value]]
+
     logging.info(f"Set submissions attempts:\n"
                  f"{df_submissions_last_attempt[SubmissionColumns.TOTAL_ATTEMPTS.value].value_counts()}")
 
@@ -170,8 +172,8 @@ def preprocess_submissions(submissions_path: str,
     df_submissions = read_df(submissions_path)
     logging.info(f'Submissions initial shape: {df_submissions.shape}')
 
-    if SubmissionColumns.STEP in df_submissions.columns:
-        df_submissions.rename({SubmissionColumns.STEP: SubmissionColumns.STEP_ID}, inplace=True)
+    if SubmissionColumns.STEP.value in df_submissions.columns:
+        df_submissions.rename({SubmissionColumns.STEP.value: SubmissionColumns.STEP_ID.value}, inplace=True)
 
     # Change client to web/idea
     df_submissions = get_submissions_client(df_submissions)
@@ -187,7 +189,8 @@ def preprocess_submissions(submissions_path: str,
     # Add submission attempt
     df_submissions = get_submissions_attempt(df_submissions, diff_ration)
     # Filter submissions with many attempts (consider as noise)
-    df_submissions = filter_submissions_with_many_attempts(df_submissions, max_attempts)
+    if max_attempts is not None:
+        df_submissions = filter_submissions_with_many_attempts(df_submissions, max_attempts)
 
     logging.info(f'Submissions final shape: {df_submissions.shape}')
     logging.info(f'Saving submissions to {preprocessed_submissions_path}')
@@ -205,7 +208,7 @@ if __name__ == '__main__':
                              '(if data is not presented in submissions dataset or was anonymize).')
     parser.add_argument('--diff-ratio', type=float, default=10.0,
                         help='Ration to remove submissions which has lines change more then in `diff_ratio` times.')
-    parser.add_argument('--max-attempts', type=int, default=5,
+    parser.add_argument('--max-attempts', type=int, default=None,
                         help='Remove submissions series with more then `max-attempts` attempts.')
     parser.add_argument('--log-path', type=str, default=None, help='Path to directory for log.')
 
