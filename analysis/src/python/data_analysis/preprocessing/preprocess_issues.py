@@ -5,7 +5,7 @@ import sys
 import pandas as pd
 
 from analysis.src.python.data_analysis.model.column_name import IssuesColumns, SubmissionColumns
-from analysis.src.python.data_analysis.utils.analysis_issue import parse_str_report
+from analysis.src.python.data_analysis.utils.issue_utils import parse_str_report
 from analysis.src.python.utils.df_utils import dict_to_df, merge_dfs, read_df, write_df
 from analysis.src.python.utils.logging_utils import configure_logger
 

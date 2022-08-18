@@ -4,7 +4,7 @@ import pandas as pd
 from hyperstyle.src.python.review.application_config import LanguageVersion
 
 from analysis.src.python.data_analysis.model.column_name import SubmissionColumns
-from analysis.src.python.data_analysis.utils.analysis_issue import parse_report
+from analysis.src.python.data_analysis.utils.issue_utils import parse_report
 from analysis.src.python.data_analysis.utils.code_utils import merge_lines_to_code, split_code_to_lines
 from analysis.src.python.evaluation.utils.pandas_utils import get_language_version
 

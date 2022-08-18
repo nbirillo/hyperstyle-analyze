@@ -6,7 +6,7 @@ import pandas as pd
 
 from analysis.src.python.data_analysis.model.column_name import IssuesColumns, SubmissionColumns
 from analysis.src.python.data_analysis.search.utils.comment_utils import add_issues_comments_to_code
-from analysis.src.python.data_analysis.utils.analysis_issue import parse_str_report
+from analysis.src.python.data_analysis.utils.issue_utils import parse_str_report
 from analysis.src.python.evaluation.utils.solutions_saving_utils import save_solution_to_file
 from analysis.src.python.utils.df_utils import filter_df_by_predicate, filter_df_by_single_value, read_df, write_df
 from analysis.src.python.utils.file_utils import AnalysisExtension, create_directory

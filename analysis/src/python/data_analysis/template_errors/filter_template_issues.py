@@ -9,7 +9,7 @@ from analysis.src.python.data_analysis.model.column_name import IssuesColumns, S
 from analysis.src.python.data_analysis.template_errors.template_matching import equal_char_by_char, match
 from analysis.src.python.data_analysis.template_errors.template_utils import parse_template_issue_positions, \
     parse_templates_code
-from analysis.src.python.data_analysis.utils.analysis_issue import parse_report
+from analysis.src.python.data_analysis.utils.issue_utils import parse_report
 from analysis.src.python.data_analysis.utils.code_utils import split_code_to_lines
 from analysis.src.python.utils.df_utils import filter_df_by_single_value, merge_dfs, read_df, write_df
 from analysis.src.python.utils.logging_utils import configure_logger

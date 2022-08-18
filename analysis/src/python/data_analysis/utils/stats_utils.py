@@ -1,4 +1,4 @@
-from analysis.src.python.data_analysis.utils.analysis_issue import parse_str_report
+from analysis.src.python.data_analysis.utils.issue_utils import parse_str_report
 from analysis.src.python.data_analysis.utils.code_utils import split_code_to_lines
 
 

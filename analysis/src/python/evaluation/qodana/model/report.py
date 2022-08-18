@@ -48,22 +48,22 @@ class Problem(BaseIssue):
     attributes: Attributes
 
     def get_name(self) -> str:
-        pass
+        return self.attributes.inspection_name
 
     def get_text(self) -> str:
-        pass
+        return self.comment
 
     def get_line_number(self) -> int:
-        pass
+        return self.sources[0].line
 
     def get_column_number(self) -> int:
-        pass
+        return self.sources[0].offset
 
     def get_category(self) -> str:
-        pass
+        return self.category
 
     def get_difficulty(self) -> str:
-        pass
+        return self.severity
 
 
 @dataclass_json(letter_case=LetterCase.CAMEL)
