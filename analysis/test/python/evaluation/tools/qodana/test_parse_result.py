@@ -6,8 +6,9 @@ import pytest
 from analysis.src.python.data_analysis.model.column_name import SubmissionColumns
 from analysis.src.python.evaluation.tools.qodana.evaluate import parse_qodana_result
 from analysis.src.python.evaluation.tools.qodana.model.report import QodanaReport
-from analysis.test.python.evaluation import QODANA_DIR_PATH
-from analysis.test.python.evaluation.utils.evaluation_test_utils import run_evaluation_parsing_test
+from analysis.test.python.evaluation.tools import QODANA_DIR_PATH
+from analysis.test.python.evaluation.tools.test_evaluation_utils.evaluation_test_utils import \
+    run_evaluation_parsing_test
 
 RESOURCES_PATH = QODANA_DIR_PATH / 'parse_result'
 

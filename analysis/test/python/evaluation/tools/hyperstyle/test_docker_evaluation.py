@@ -2,11 +2,11 @@ from pathlib import Path
 
 import pytest
 
-from analysis.src.python.evaluation.tools.hyperstyle import evaluate_hyperstyle
+from analysis.src.python.evaluation.tools.hyperstyle.evaluate import evaluate_hyperstyle
 from analysis.src.python.evaluation.utils.args_utils import get_in_and_out_list
-from analysis.test.python.evaluation import HYPERSTYLE_DIR_PATH
-from analysis.test.python.evaluation.utils.evaluation_configs import get_default_hyperstyle_config
-from analysis.test.python.evaluation.utils.evaluation_test_utils import run_evaluation_test
+from analysis.test.python.evaluation.tools import HYPERSTYLE_DIR_PATH
+from analysis.test.python.evaluation.tools.test_evaluation_utils.evaluation_configs import get_default_hyperstyle_config
+from analysis.test.python.evaluation.tools.test_evaluation_utils.evaluation_test_utils import run_evaluation_test
 
 RESOURCES_PATH = HYPERSTYLE_DIR_PATH / 'docker_evaluation'
 

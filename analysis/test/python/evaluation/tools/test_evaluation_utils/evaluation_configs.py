@@ -1,10 +1,10 @@
 from pathlib import Path
 from typing import Optional
 
-from analysis.src.python.evaluation.tools.hyperstyle import HYPERSTYLE_DOCKER_PATH, HYPERSTYLE_TOOL_PATH, \
-    HyperstyleEvaluationConfig
+from analysis.src.python.evaluation.tools.hyperstyle.evaluation_config import HYPERSTYLE_DOCKER_PATH, \
+    HYPERSTYLE_TOOL_PATH, HyperstyleEvaluationConfig
 from analysis.src.python.evaluation.tools.qodana.evaluation_config import QodanaEvaluationConfig
-from analysis.test.python.evaluation import TMP_DIR_PATH
+from analysis.test.python.evaluation.tools import TMP_DIR_PATH
 
 
 def get_default_hyperstyle_config(docker_path: Optional[str] = HYPERSTYLE_DOCKER_PATH,

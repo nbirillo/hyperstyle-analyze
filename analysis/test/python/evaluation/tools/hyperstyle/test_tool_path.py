@@ -2,10 +2,10 @@ import pytest
 from hyperstyle.src.python import MAIN_FOLDER
 
 from analysis import HYPERSTYLE_RUNNER_PATH
-from analysis.src.python.evaluation.tools.hyperstyle import evaluate_hyperstyle
+from analysis.src.python.evaluation.tools.hyperstyle.evaluate import evaluate_hyperstyle
 from analysis.src.python.utils.df_utils import read_df
 from analysis.test.python.evaluation import XLSX_DATA_FOLDER
-from analysis.test.python.evaluation.utils.evaluation_configs import get_default_hyperstyle_config
+from analysis.test.python.evaluation.tools.test_evaluation_utils.evaluation_configs import get_default_hyperstyle_config
 
 
 def test_correct_tool_path():

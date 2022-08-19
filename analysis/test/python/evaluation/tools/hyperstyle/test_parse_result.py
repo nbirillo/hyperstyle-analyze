@@ -5,11 +5,12 @@ import pandas as pd
 import pytest
 
 from analysis.src.python.data_analysis.model.column_name import SubmissionColumns
-from analysis.src.python.evaluation.tools.hyperstyle import parse_hyperstyle_new_format_result, \
+from analysis.src.python.evaluation.tools.hyperstyle.evaluate import parse_hyperstyle_new_format_result, \
     parse_hyperstyle_result
 from analysis.src.python.evaluation.tools.hyperstyle.model.report import HyperstyleReport
-from analysis.test.python.evaluation import HYPERSTYLE_DIR_PATH
-from analysis.test.python.evaluation.utils.evaluation_test_utils import run_evaluation_parsing_test
+from analysis.test.python.evaluation.tools import HYPERSTYLE_DIR_PATH
+from analysis.test.python.evaluation.tools.test_evaluation_utils.evaluation_test_utils import \
+    run_evaluation_parsing_test
 
 RESOURCES_PATH = HYPERSTYLE_DIR_PATH / 'parse_result'
 NEW_FORMAT_RESOURCES_PATH = RESOURCES_PATH / 'new_format'
