@@ -23,7 +23,7 @@ OUTPUT_DATA = [
 
 
 @pytest.mark.parametrize(('result_file', 'issues_column', 'solutions_count', 'issues_count'), OUTPUT_DATA)
-def test_parse_qodana_result(result_file: Path, issues_column: str, solutions_count: int, issues_count: List[int]):
+def test_parse_report(result_file: Path, issues_column: str, solutions_count: int, issues_count: List[int]):
     run_evaluation_parsing_test(
         result_path=result_file,
         parse_result=lambda path: read_df(path),
