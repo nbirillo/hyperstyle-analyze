@@ -1,7 +1,8 @@
 import argparse
 from pathlib import Path
 
-from analysis.src.python.evaluation.tools.hyperstyle.evaluation_config import HYPERSTYLE_DOCKER_PATH, HYPERSTYLE_TOOL_PATH
+from analysis.src.python.evaluation.tools.hyperstyle.evaluation_config import HYPERSTYLE_DOCKER_PATH, \
+    HYPERSTYLE_TOOL_PATH
 from analysis.src.python.evaluation.utils.args_utils import EvaluationRunToolArgument
 from analysis.src.python.utils.file_utils import get_tmp_directory
 

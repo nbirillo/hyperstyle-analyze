@@ -8,8 +8,8 @@ from hyperstyle.src.python.review.common.subprocess_runner import run_in_subproc
 
 from analysis.src.python.data_analysis.model.column_name import SubmissionColumns
 from analysis.src.python.evaluation.tools.model.evaluation_config import EvaluationConfig
-from analysis.src.python.evaluation.utils.pandas_utils import get_language_version
 from analysis.src.python.evaluation.tools.utils.saving_utils import save_solutions_to_files
+from analysis.src.python.evaluation.utils.pandas_utils import get_language_version
 from analysis.src.python.utils.df_utils import merge_dfs
 from analysis.src.python.utils.file_utils import create_directory, remove_directory
 
