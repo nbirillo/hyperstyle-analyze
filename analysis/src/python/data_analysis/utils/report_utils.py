@@ -18,6 +18,6 @@ def parse_str_report(str_report: str, column: str) -> BaseReport:
 
 
 def parse_report(row: pd.Series, column: str) -> BaseReport:
-    """ Parse code quality report from `row` stored in `column` as json string. """
+    """ Parse code quality report from `row` stored in `column` as a json string. """
 
     return parse_str_report(row[column], column)

@@ -4,7 +4,7 @@ from typing import List
 import pytest
 
 from analysis.src.python.data_analysis.model.column_name import SubmissionColumns
-from analysis.src.python.evaluation.tools.utils.parsing_utils import parse_report
+from analysis.src.python.data_analysis.utils.report_utils import parse_report
 from analysis.src.python.utils.df_utils import read_df
 from analysis.test.python.evaluation.tools import HYPERSTYLE_DIR_PATH, QODANA_DIR_PATH
 from analysis.test.python.evaluation.tools.test_evaluation_utils.evaluation_test_utils import \

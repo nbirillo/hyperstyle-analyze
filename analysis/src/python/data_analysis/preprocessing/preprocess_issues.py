@@ -6,7 +6,7 @@ from typing import List, Optional
 import pandas as pd
 
 from analysis.src.python.data_analysis.model.column_name import IssuesColumns, SubmissionColumns
-from analysis.src.python.evaluation.tools.utils.parsing_utils import parse_str_report
+from analysis.src.python.data_analysis.utils.report_utils import parse_str_report
 from analysis.src.python.utils.df_utils import dict_to_df, merge_dfs, read_df, write_df
 from analysis.src.python.utils.logging_utils import configure_logger
 

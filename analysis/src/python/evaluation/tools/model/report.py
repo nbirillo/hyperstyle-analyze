@@ -12,32 +12,32 @@ class BaseIssue:
 
     @abstractmethod
     def get_name(self) -> str:
-        """ Rerun issue name (e.x. MissingBreakInSwitch). """
+        """ Reruns issue name (e.x. MissingBreakInSwitch). """
         pass
 
     @abstractmethod
     def get_text(self) -> str:
-        """ Rerun issue text description (e.x. Break in switch is missed). """
+        """ Reruns issue text description (e.x. Break in switch is missed). """
         pass
 
     @abstractmethod
     def get_line_number(self) -> int:
-        """ Rerun line number where issue appeared (starting from 1). """
+        """ Reruns line number where issue appeared (starting from 1). """
         pass
 
     @abstractmethod
     def get_column_number(self) -> int:
-        """ Rerun column number where issue appeared (starting from 1). """
+        """ Reruns column number where issue appeared (starting from 1). """
         pass
 
     @abstractmethod
     def get_category(self) -> str:
-        """ Rerun issue category (e.x. ERROR_PRONE). """
+        """ Reruns issue category (e.x. ERROR_PRONE). """
         pass
 
     @abstractmethod
     def get_difficulty(self) -> str:
-        """ Rerun issue difficulty (e.x. HARD). """
+        """ Reruns issue difficulty (e.x. HARD). """
         pass
 
     def __eq__(self, other):
@@ -62,6 +62,7 @@ class BaseReport:
 
     @abstractmethod
     def get_issues(self) -> List[BaseIssue]:
+        """ Returns a list of issues which report contains. """
         pass
 
     @abstractmethod

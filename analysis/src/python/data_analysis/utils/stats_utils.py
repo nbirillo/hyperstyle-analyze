@@ -1,5 +1,5 @@
 from analysis.src.python.data_analysis.utils.code_utils import split_code_to_lines
-from analysis.src.python.evaluation.tools.utils.parsing_utils import parse_str_report
+from analysis.src.python.data_analysis.utils.report_utils import parse_str_report
 
 
 def calculate_issues_count(str_report: str, issues_column: str) -> int:
