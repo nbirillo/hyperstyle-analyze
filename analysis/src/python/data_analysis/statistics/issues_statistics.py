@@ -5,8 +5,8 @@ import sys
 import pandas as pd
 
 from analysis.src.python.data_analysis.model.column_name import IssuesColumns, SubmissionColumns
-from analysis.src.python.data_analysis.utils.analysis_issue import AnalysisReport
 from analysis.src.python.data_analysis.utils.chunk_stats_utils import save_chunk
+from analysis.src.python.evaluation.tools.utils.parsing_utils import parse_report
 from analysis.src.python.utils.df_utils import read_df
 from analysis.src.python.utils.logging_utils import configure_logger
 
@@ -25,9 +25,9 @@ def calculate_chunk_issues_statistics(df_submissions: pd.DataFrame,
 
     submission_index = 0
     for _, submission_with_issues in df_submissions.iterrows():
-        report = AnalysisReport.from_json(submission_with_issues[issues_column])
-        for issue in report.issues:
-            issues_statistics[issue.name][submission_index] += 1
+        report = parse_report(submission_with_issues, issues_column)
+        for issue in report.get_issues():
+            issues_statistics[issue.get_name()][submission_index] += 1
         submission_index += 1
 
     return pd.DataFrame.from_dict(issues_statistics)

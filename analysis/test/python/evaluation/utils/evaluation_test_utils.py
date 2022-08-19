@@ -3,7 +3,7 @@ from typing import Any, Callable, List, TypeVar
 
 import pandas as pd
 
-from analysis.src.python.evaluation.utils.evaluation_utils import EvaluationConfig
+from analysis.src.python.evaluation.tools.utils.evaluation_utils import EvaluationConfig
 from analysis.src.python.utils.df_utils import equal_df, read_df
 
 C = TypeVar('C', bound=EvaluationConfig)

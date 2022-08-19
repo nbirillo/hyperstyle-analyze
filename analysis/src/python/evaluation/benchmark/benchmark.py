@@ -10,12 +10,12 @@ import pandas as pd
 from hyperstyle.src.python.review.common.subprocess_runner import run_in_subprocess
 
 from analysis.src.python.data_analysis.model.column_name import SubmissionColumns
-from analysis.src.python.evaluation.hyperstyle.evaluate import parse_hyperstyle_result
-from analysis.src.python.evaluation.hyperstyle.evaluation_config import HYPERSTYLE_TOOL_PATH, HyperstyleEvaluationConfig
-from analysis.src.python.evaluation.qodana.evaluate import parse_qodana_result
-from analysis.src.python.evaluation.qodana.evaluation_config import QodanaEvaluationConfig
+from analysis.src.python.evaluation.tools.hyperstyle import parse_hyperstyle_result
+from analysis.src.python.evaluation.tools.hyperstyle import HYPERSTYLE_TOOL_PATH, HyperstyleEvaluationConfig
+from analysis.src.python.evaluation.tools.qodana.evaluate import parse_qodana_result
+from analysis.src.python.evaluation.tools.qodana.evaluation_config import QodanaEvaluationConfig
 from analysis.src.python.evaluation.utils.pandas_utils import get_language_version
-from analysis.src.python.evaluation.utils.solutions_saving_utils import save_solutions_to_files
+from analysis.src.python.evaluation.tools.utils.saving_utils import save_solutions_to_files
 from analysis.src.python.utils.df_utils import read_df, write_df
 from analysis.src.python.utils.file_utils import create_directory, get_tmp_directory
 from utils.numpy_utils import AggregateFunction

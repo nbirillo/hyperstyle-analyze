@@ -1,9 +1,9 @@
 from pathlib import Path
 from typing import Optional
 
-from analysis.src.python.evaluation.hyperstyle.evaluation_config import HYPERSTYLE_DOCKER_PATH, HYPERSTYLE_TOOL_PATH, \
+from analysis.src.python.evaluation.tools.hyperstyle import HYPERSTYLE_DOCKER_PATH, HYPERSTYLE_TOOL_PATH, \
     HyperstyleEvaluationConfig
-from analysis.src.python.evaluation.qodana.evaluation_config import QodanaEvaluationConfig
+from analysis.src.python.evaluation.tools.qodana.evaluation_config import QodanaEvaluationConfig
 from analysis.test.python.evaluation import TMP_DIR_PATH
 
 

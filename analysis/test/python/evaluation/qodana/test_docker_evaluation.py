@@ -2,7 +2,7 @@ from pathlib import Path
 
 import pytest
 
-from analysis.src.python.evaluation.qodana.evaluate import evaluate_qodana
+from analysis.src.python.evaluation.tools.qodana.evaluate import evaluate_qodana
 from analysis.src.python.evaluation.utils.args_utils import get_in_and_out_list
 from analysis.test.python.evaluation import QODANA_DIR_PATH
 from analysis.test.python.evaluation.utils.evaluation_configs import get_default_qodana_config

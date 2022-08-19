@@ -6,7 +6,7 @@ from typing import List, Optional
 import pandas as pd
 
 from analysis.src.python.data_analysis.model.column_name import IssuesColumns, SubmissionColumns
-from analysis.src.python.data_analysis.utils.analysis_issue import AnalysisReport
+from analysis.src.python.evaluation.tools.utils.parsing_utils import parse_str_report
 from analysis.src.python.utils.df_utils import dict_to_df, merge_dfs, read_df, write_df
 from analysis.src.python.utils.logging_utils import configure_logger
 
@@ -17,9 +17,9 @@ def get_issues_info(df_submissions: pd.DataFrame, issues_column: str) -> pd.Data
     issues_info = {}
 
     def get_info(str_report: str):
-        report = AnalysisReport.from_json(str_report)
-        for issue in report.issues:
-            issues_info[issue.name] = issue.category
+        report = parse_str_report(str_report, issues_column)
+        for issue in report.get_issues():
+            issues_info[issue.get_name()] = issue.get_category()
 
     logging.info('Getting issues names and categories from submissions')
     df_submissions[issues_column].apply(get_info)
@@ -31,20 +31,12 @@ def filter_issues(df_submissions: pd.DataFrame, issues_column: str, ignore_issue
     """ Filter issues to selected as ignored. """
 
     def filter_issues_by_name(str_report: str) -> str:
-        report = AnalysisReport.from_json(str_report)
-        report.issues = [issue for issue in report.issues if issue.name not in ignore_issue_names]
+        report = parse_str_report(str_report, issues_column)
+        report.filter_issues(lambda issue: issue.get_name() not in ignore_issue_names)
         return report.to_json()
 
     df_submissions[issues_column] = df_submissions[issues_column].apply(filter_issues_by_name)
 
-    return df_submissions
-
-
-def convert_to_analysis_report(df_submissions: pd.DataFrame, issues_column: str) -> pd.DataFrame:
-    """ Map all report to analysis report format. """
-
-    df_submissions[issues_column] = df_submissions[issues_column].apply(AnalysisReport.convert_to_analysis_json_report,
-                                                                        column=issues_column)
     return df_submissions
 
 
@@ -75,7 +67,6 @@ def preprocess_issues(submissions_path: str,
     logging.info(f'Issues initial shape: {df_issues.shape}')
 
     df_submissions = merge_submissions_with_issues(df_submissions, df_issues, issues_column)
-    df_submissions = convert_to_analysis_report(df_submissions, issues_column)
 
     if ignore_issue_names is not None:
         df_submissions = filter_issues(df_submissions, issues_column, ignore_issue_names)
