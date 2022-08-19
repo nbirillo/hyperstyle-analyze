@@ -10,7 +10,8 @@ from torch.utils.data import DataLoader
 from transformers import RobertaForSequenceClassification
 from analysis.src.python.evaluation.tools.qodana.imitation_model.common.evaluation_config import configure_arguments
 from analysis.src.python.evaluation.tools.qodana.imitation_model.common.metric import Measurer
-from analysis.src.python.evaluation.tools.qodana.imitation_model.common.util import DatasetColumnArgument, MeasurerArgument
+from analysis.src.python.evaluation.tools.qodana.imitation_model.common.util import DatasetColumnArgument, \
+    MeasurerArgument
 from analysis.src.python.evaluation.tools.qodana.imitation_model.dataset.dataset import QodanaDataset
 from analysis.src.python.utils.df_utils import write_df
 from analysis.src.python.utils.extension_utils import AnalysisExtension
