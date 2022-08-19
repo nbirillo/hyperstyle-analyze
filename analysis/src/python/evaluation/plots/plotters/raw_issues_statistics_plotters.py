@@ -165,8 +165,8 @@ def plot_histogram(
         stats = prepare_stats(stats, config.column, config.range_of_values, x_axis_name, y_axis_name)
         plots[lang] = create_histogram(
             stats,
-            x_axis_name,
-            y_axis_name,
+            x_axis=x_axis_name,
+            y_axis=y_axis_name,
             margin=config.margin,
             color=config.color,
             n_bins=config.n_bins,
@@ -216,10 +216,7 @@ def plot_box_plot(
     plot = go.Figure()
     for lang, stats in stats_by_lang.items():
         values_df = _get_values_df(stats, config, x_axis_name, y_axis_name)
-
-        trace = create_box_trace(values_df, y_column=y_axis_name)
-        trace.name = lang
-
+        trace = create_box_trace(values_df, y_column=y_axis_name, name=lang)
         plot.add_trace(trace)
 
     update_figure(
