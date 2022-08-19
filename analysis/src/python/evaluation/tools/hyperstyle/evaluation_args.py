@@ -28,6 +28,11 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                         type=str,
                         help='Path to script inside docker (or locally) to run on files.')
 
+    parser.add_argument('-td', '--tmp-directory',
+                        default=get_tmp_directory(),
+                        type=lambda value: Path(value).absolute(),
+                        help='Path to tmp directory to save temporary files')
+
     parser.add_argument('--allow-duplicates',
                         help='Allow duplicate issues found by different linters. By default, duplicates are skipped.',
                         action='store_true')
@@ -36,8 +41,3 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                         help='Without this flag, all issues will be categorized into 5 main categories: '
                              'CODE_STYLE, BEST_PRACTICES, ERROR_PRONE, COMPLEXITY, INFO.',
                         action='store_true')
-
-    parser.add_argument('-td', '--tmp-directory',
-                        default=get_tmp_directory(),
-                        type=lambda value: Path(value).absolute(),
-                        help='Path to tmp directory to save temporary files')

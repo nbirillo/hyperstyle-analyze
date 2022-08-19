@@ -46,7 +46,7 @@ Output file is a new `csv` file with the all columns from the input files.
 
 #### Usage
 
-Run the [filter_inspections.py](filter_inspections.py) with the arguments from command line.
+Run the [filter_inspections.py](utils/filter_inspections.py) with the arguments from command line.
 
 Required arguments:
 
@@ -75,7 +75,7 @@ Output file is a new `csv` file with four columns: `id`, `inspection_id`, `count
 
 #### Usage
 
-Run the [get_unique_inspectors.py](get_unique_inspectors.py) with the arguments from command line.
+Run the [get_unique_inspectors.py](utils/get_unique_inspectors.py) with the arguments from command line.
 
 Required arguments:
 
@@ -122,12 +122,12 @@ If the list of inspections for the fragment is empty, then write 0.
 
 #### Usage
 
-Run the [fragment_to_inspections_list.py](fragment_to_inspections_list.py) with the arguments from command line.
+Run the [fragment_to_inspections_list.py](utils/fragment_to_inspections_list.py) with the arguments from command line.
 
 Required arguments:
 
 - `solutions_file_path` — path to csv-file with code samples graded by [dataset_labeling.py](dataset_labeling.py) script,
-- `inspections_path` — path to csv-file with inspections list from the input file. You can get this file by [get_unique_inspectors.py](get_unique_inspectors.py) script.
+- `inspections_path` — path to csv-file with inspections list from the input file. You can get this file by [get_unique_inspectors.py](utils/get_unique_inspectors.py) script.
 
 Optional arguments:
 
@@ -185,12 +185,12 @@ All indents as well as blank lines are keeped.
 
 #### Usage
 
-Run the [fragment_to_inspections_list_line_by_line.py](fragment_to_inspections_list_line_by_line.py) with the arguments from command line.
+Run the [fragment_to_inspections_list_line_by_line.py](utils/fragment_to_inspections_list_line_by_line.py) with the arguments from command line.
 
 Required arguments:
 
 - `solutions_file_path` — path to csv-file with code samples graded by [dataset_labeling.py](dataset_labeling.py) script,
-- `inspections_path` — path to csv-file with inspections list from the input file. You can get this file by [get_unique_inspectors.py](get_unique_inspectors.py) script.
+- `inspections_path` — path to csv-file with inspections list from the input file. You can get this file by [get_unique_inspectors.py](utils/get_unique_inspectors.py) script.
 
 Optional arguments:
 
@@ -260,7 +260,7 @@ Output files is two new `csv` files.
 
 #### Usage
 
-Run the [convert_to_hyperstyle_inspections.py](convert_to_hyperstyle_inspections.py) with the arguments from command line.
+Run the [convert_to_hyperstyle_inspections.py](utils/convert_to_hyperstyle_inspections.py) with the arguments from command line.
 
 Required arguments:
 
