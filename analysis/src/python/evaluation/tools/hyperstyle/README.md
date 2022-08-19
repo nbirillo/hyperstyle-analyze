@@ -1,6 +1,6 @@
 # Hyperstyle evaluation
 
-This module allows running the [hyperstyle](https://github.com/hyperskill/hyperstyle/blob/main/README.md) tool on a `xlsx` or `csv` table to get code quality for all code fragments. 
+This module allows running the [Hyperstyle](https://github.com/hyperskill/hyperstyle/blob/main/README.md) tool on a `xlsx` or `csv` table to get code quality for all code fragments. 
 The dataset must contain at least three columns: 
 - `id` - is a unique solution number
 - `code` - solution code
