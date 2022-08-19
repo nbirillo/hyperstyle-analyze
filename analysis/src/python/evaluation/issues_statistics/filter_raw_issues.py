@@ -49,9 +49,9 @@ def _get_issues_diff(df_solution: pd.DataFrame) -> str:
 
 def filter_raw_issues(df_solutions: pd.DataFrame):
     df_solutions = rename_columns(df_solutions,
-                                  {SubmissionColumns.RAW_ISSUES.value: SubmissionColumns.RAW_ISSUES.value + '_all'})
+                                  {SubmissionColumns.RAW_ISSUES.value: SubmissionColumns.RAW_ISSUES_ALL.value})
     df_solutions[SubmissionColumns.RAW_ISSUES.value] = df_solutions.apply(_filter_issues_in_solution, axis=1)
-    df_solutions[SubmissionColumns.RAW_ISSUES.value + '_diff'] = df_solutions.apply(_get_issues_diff, axis=1)
+    df_solutions[SubmissionColumns.RAW_ISSUES_DIFF.value] = df_solutions.apply(_get_issues_diff, axis=1)
     return df_solutions
 
 

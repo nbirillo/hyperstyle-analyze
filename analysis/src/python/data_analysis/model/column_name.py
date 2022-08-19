@@ -123,6 +123,8 @@ class SubmissionColumns(Enum):
 
     # issues
     RAW_ISSUES = 'raw_issues'
+    RAW_ISSUES_ALL = 'raw_issues_all'
+    RAW_ISSUES_DIFF = 'raw_issues_diff'
     HYPERSTYLE_ISSUES = 'hyperstyle_issues'
     QODANA_ISSUES = 'qodana_issues'
 
@@ -181,3 +183,11 @@ class Level(Enum):
     LOW = 'low'
     AVERAGE = 'average'
     HIGH = 'high'
+
+
+@unique
+class ColumnSuffix(Enum):
+    ALL = '_all'
+    DIFF = '_diff'
+    FIRST = '_first'
+    LAST = '_last'
