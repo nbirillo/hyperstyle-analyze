@@ -21,7 +21,7 @@ Each code quality report and issue should implement `BaseReport` and `BaseIssue`
 `BaseIssue` is an interface that every custom issue should implement.
 Further you can see main facts that you should know to implement your own `BaseIssue` inheritor or use existing:
 
-* `BaseIssue` class has @dataclass(frozen=True) and @dataclass_json annotation. 
+* `BaseIssue` class has `@dataclass(frozen=True)` and `@dataclass_json` annotation. 
 So the inheritor `MyIssue` should put this annotations too to be serializable.
 
 ```python
@@ -62,7 +62,7 @@ def get_line_number(self) -> int: # Interface method implication in MyIssue clas
 `BaseReport` is an abstract class that every custom report should implement.
 Further you can see main facts that you should know to implement your own `BaseReport` inheritor or use existing:
 
-* `BaseReport` class has @dataclass(frozen=True) and @dataclass_json annotation. 
+* `BaseReport` class has `@dataclass(frozen=True)` and `@dataclass_json` annotation. 
 So the inheritor `MyReport` should put this annotations too.
 
 ```python
