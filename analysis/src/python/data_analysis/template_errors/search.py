@@ -1,5 +1,4 @@
 import argparse
-import ast
 import json
 import os
 import sys
@@ -7,11 +6,13 @@ from typing import Callable, List, Tuple
 
 import pandas as pd
 
-from analysis.src.python.data_analysis.model.column_name import StepColumns, SubmissionColumns
+from analysis.src.python.data_analysis.model.column_name import StepColumns, SubmissionColumns, TemplateColumns
 from analysis.src.python.data_analysis.template_errors.template_matching import EQUAL, match
-from analysis.src.python.utils.df_utils import drop_columns, read_df, write_df
+from analysis.src.python.data_analysis.utils.code_utils import split_code_to_lines
+from analysis.src.python.data_analysis.utils.issue_utils import parse_report
+from analysis.src.python.data_analysis.utils.template_utils import parse_template_code
 from analysis.src.python.evaluation.issues_statistics.common.raw_issue_encoder_decoder import RawIssueDecoder
-from analysis.src.python.data_analysis.template_errors.models.postprocessing_models import TemplateGatheringType
+from analysis.src.python.utils.df_utils import drop_columns, read_df, write_df
 
 
 def submission_to_issue_code_pos(submission: pd.DataFrame) -> List[Tuple[str, str, int]]:
@@ -21,7 +22,7 @@ def submission_to_issue_code_pos(submission: pd.DataFrame) -> List[Tuple[str, st
     issues = submission[SubmissionColumns.RAW_ISSUES.value]
     return [(issue.origin_class,
              submission[SubmissionColumns.CODE.value][issue.line_no - 1],
-             submission['pos_in_template'][issue.line_no - 1])
+             submission[TemplateColumns.POS_IN_TEMPLATE.value][issue.line_no - 1])
             for issue in issues]
 
 
@@ -75,21 +76,22 @@ def merge_template_errors(df_ranking: pd.DataFrame) -> pd.DataFrame:
     def get_unique_pairs(df: pd.DataFrame, first_col: str, second_col: str):
         return df.loc[:, [first_col, second_col]].drop_duplicates().values
 
-    df_template_errors = df_ranking[df_ranking['pos_in_template'] != -1]
-    df_other_errors = df_ranking[df_ranking['pos_in_template'] == -1]
+    df_template_errors = df_ranking[df_ranking[TemplateColumns.POS_IN_TEMPLATE.value] != -1]
+    df_other_errors = df_ranking[df_ranking[TemplateColumns.POS_IN_TEMPLATE.value] == -1]
     step_id = df_ranking.iloc[0][SubmissionColumns.STEP_ID.value]
 
     df_merged = pd.DataFrame()
-    for issue, pos in get_unique_pairs(df_template_errors, SubmissionColumns.RAW_ISSUE_CLASS.value, 'pos_in_template'):
+    for issue, pos in get_unique_pairs(df_template_errors, SubmissionColumns.RAW_ISSUE_CLASS.value,
+                                       TemplateColumns.POS_IN_TEMPLATE.value):
         df_cur_error = df_template_errors[(df_template_errors[SubmissionColumns.RAW_ISSUE_CLASS.value] == issue)
-                                          & (df_template_errors['pos_in_template'] == pos)]
+                                          & (df_template_errors[TemplateColumns.POS_IN_TEMPLATE.value] == pos)]
         if df_cur_error.shape[0] == 1:
             df_merged = pd.concat([df_merged, df_cur_error], axis=0, ignore_index=True)
         else:
             df_merged = pd.concat([df_merged, pd.DataFrame({SubmissionColumns.STEP_ID.value: [step_id],
                                                             SubmissionColumns.RAW_ISSUE_CLASS.value: [issue],
                                                             'line': ['<multiple lines>'],
-                                                            'pos_in_template': [pos],
+                                                            TemplateColumns.POS_IN_TEMPLATE.value: [pos],
                                                             'frequency': [df_cur_error['frequency'].sum()]})],
                                   axis=0, ignore_index=True)
 
@@ -120,44 +122,24 @@ def match_with_template(df_submissions: pd.DataFrame, df_steps: pd.DataFrame, eq
 
     def match_single_submission(submission: pd.DataFrame, df_steps: pd.DataFrame) -> List[int]:
         step_id = submission[SubmissionColumns.STEP_ID.value]
-        template = df_steps[df_steps[StepColumns.ID.value] == step_id].iloc[0][StepColumns.CODE_TEMPLATE.value]
+        template_code = df_steps[df_steps[StepColumns.ID.value] == step_id].iloc[0][StepColumns.CODE_TEMPLATE.value]
+        submission_code = split_code_to_lines(submission[SubmissionColumns.CODE.value])
+
+        if isinstance(template, dict):
+            lang = submission[SubmissionColumns.LANG.value]
+            template = template[lang]
+
         positions = match(submission[SubmissionColumns.CODE.value], template, equal)
         return positions
 
-    df_submissions['pos_in_template'] = df_submissions.apply(lambda x: match_single_submission(x, df_steps), axis=1)
+    df_submissions[TemplateColumns.POS_IN_TEMPLATE.value] = df_submissions.apply(
+        lambda x: match_single_submission(x, df_steps), axis=1)
 
     return df_submissions
 
 
-def parsing_template_code_lambda(df_steps: pd.DataFrame, template_gathering_type: TemplateGatheringType) -> Callable:
-    columns = df_steps.columns
-    # The dataframe was gathered from the database
-    if template_gathering_type == TemplateGatheringType.DATABASE:
-        return lambda x: x.split(os.linesep)
-
-    # The dataframe was gathered via public API
-    if template_gathering_type == TemplateGatheringType.API:
-        if SubmissionColumns.LANG.value not in columns:
-            raise ValueError(f'The steps dataframe has {template_gathering_type.get_template_column()} column, '
-                             f'but does not have {SubmissionColumns.LANG.value} column')
-        return lambda x: ast.literal_eval(x)[SubmissionColumns.LANG.value].split(os.linesep)
-
-    raise NotImplementedError('Can not find a function to parse templates!')
-
-
-def parse_template_code(df_steps: pd.DataFrame) -> pd.DataFrame:
-    template_gathering_type = TemplateGatheringType.define_template_gathering_type(df_steps)
-    template_column = template_gathering_type.get_template_column()
-
-    # Rewrite template column
-    df_steps[StepColumns.CODE_TEMPLATE.value] = \
-        df_steps[template_column].map(parsing_template_code_lambda(df_steps, template_gathering_type))
-
-    return df_steps
-
-
 def search(submissions_path: str, steps_path: str, result_path: str, steps_with_groups_count: str, n: int,
-           equal_type: str):
+           equal_type: str, issues_column: str):
     """
     Get n most frequently uncorrected issues for every step_id in submissions_path and write them to result_path.
     """
@@ -166,7 +148,7 @@ def search(submissions_path: str, steps_path: str, result_path: str, steps_with_
     df_submissions = read_df(submissions_path)
 
     df_steps = read_df(steps_path)
-    df_steps = parse_template_code(df_steps)
+    df_steps[StepColumns.CODE_TEMPLATE.value] = parse_template_code(df_steps)
 
     df_submissions = df_submissions[[SubmissionColumns.ID.value,
                                      SubmissionColumns.STEP_ID.value,
@@ -174,13 +156,6 @@ def search(submissions_path: str, steps_path: str, result_path: str, steps_with_
                                      SubmissionColumns.GROUP.value,
                                      SubmissionColumns.ATTEMPT.value,
                                      SubmissionColumns.RAW_ISSUES.value]]
-
-    # Parsing raw issues
-    df_submissions[SubmissionColumns.RAW_ISSUES.value] = \
-        df_submissions[SubmissionColumns.RAW_ISSUES.value].map(lambda x: json.loads(x, cls=RawIssueDecoder))
-    # Splitting code to lines
-    df_submissions[SubmissionColumns.CODE.value] = \
-        df_submissions[SubmissionColumns.CODE.value].map(lambda x: [line.rstrip('\r') for line in x.split(os.linesep)])
 
     df_steps = count_groups(df_submissions, df_steps)
     write_df(df_steps, steps_with_groups_count)
@@ -191,18 +166,23 @@ def search(submissions_path: str, steps_path: str, result_path: str, steps_with_
 
     for step_id in df_submissions[SubmissionColumns.STEP_ID.value].unique():
         m = df_submissions[SubmissionColumns.STEP_ID.value] == step_id
-        df_candidate_issues = get_candidate_issues(df_submissions[m], equal).head(n).reset_index(name='frequency')
+        df_candidate_issues = get_candidate_issues(df_submissions[m], equal).head(n) \
+            .reset_index(name=TemplateColumns.FREQUENCY.value)
+
         if df_candidate_issues.shape[0] == 0:
             continue
-        df_candidate_issues = pd.DataFrame({SubmissionColumns.STEP_ID.value: [step_id] * df_candidate_issues.shape[0],
-                                            SubmissionColumns.RAW_ISSUE_CLASS.value: df_candidate_issues[0],
-                                            'line': df_candidate_issues[1],
-                                            'pos_in_template': df_candidate_issues[2],
-                                            'frequency': df_candidate_issues['frequency']})
+
+        df_candidate_issues = \
+            pd.DataFrame({SubmissionColumns.STEP_ID.value: [step_id] * df_candidate_issues.shape[0],
+                          SubmissionColumns.RAW_ISSUE_CLASS.value: df_candidate_issues[0],
+                          TemplateColumns.LINE.value: df_candidate_issues[1],
+                          TemplateColumns.POS_IN_TEMPLATE.value: df_candidate_issues[2],
+                          TemplateColumns.FREQUENCY.value: df_candidate_issues[TemplateColumns.FREQUENCY.value]})
+
         df_candidate_issues = merge_template_errors(df_candidate_issues)
         df_issues_ranking = pd.concat([df_issues_ranking, df_candidate_issues], axis=0, ignore_index=True)
 
-    df_issues_ranking = drop_columns(df_issues_ranking, ['line']).replace({-1: None})
+    df_issues_ranking = drop_columns(df_issues_ranking, [TemplateColumns.LINE.value]).replace({-1: None})
     write_df(df_issues_ranking, result_path)
 
 

@@ -193,3 +193,4 @@ class TemplateColumns(Enum):
     STATUS = 'status'
     FREQUENCY = 'frequency'
     POS_IN_TEMPLATE = 'pos_in_template'
+    LINE = 'line'

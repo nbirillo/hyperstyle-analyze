@@ -8,8 +8,8 @@ import pandas as pd
 from analysis.src.python.data_analysis.model.column_name import IssuesColumns, StepColumns, SubmissionColumns, \
     TemplateColumns
 from analysis.src.python.data_analysis.search.utils.comment_utils import get_issue_comment
-from analysis.src.python.data_analysis.template_errors.template_utils import get_template_language_version, \
-    parse_template_issue_positions, parse_templates_code
+from analysis.src.python.data_analysis.template_errors.search import parse_template_code
+from analysis.src.python.data_analysis.utils.template_utils import parse_template_issue_positions, parse_templates_code
 from analysis.src.python.data_analysis.utils.code_utils import merge_lines_to_code
 from analysis.src.python.evaluation.utils.pandas_utils import get_language_version
 from analysis.src.python.utils.df_utils import filter_df_by_single_value, read_df
@@ -30,7 +30,7 @@ def save_template(step: pd.Series, output_path: Path):
 
     output_path = create_directory(output_path / f'step_{step[StepColumns.ID.value]}')
     for lang, template_code_lines in step[StepColumns.CODE_TEMPLATES.value].items():
-        extension = get_template_language_version(lang).extension_by_language()
+        extension = get_language_version(lang).extension_by_language()
         code = merge_lines_to_code(template_code_lines)
         next(create_file(output_path / f'template_{lang}{extension.value}', content=code))
 
@@ -66,7 +66,7 @@ def search_templates(df_steps: pd.DataFrame,
     """ Search and save to `output_dir` all templates with issues comments. """
 
     df_templates_issues = df_templates_issues.dropna(subset=[TemplateColumns.POS_IN_TEMPLATE.value])
-    df_steps[StepColumns.CODE_TEMPLATES.value] = df_steps[StepColumns.CODE_TEMPLATES.value].apply(parse_templates_code)
+    df_steps[StepColumns.CODE_TEMPLATES.value] = parse_template_code(df_steps)
     df_steps.apply(add_issue_comment_to_template, df_templates_issues=df_templates_issues, axis=1)
     df_steps.apply(save_template, output_path=output_path, axis=1)
 
