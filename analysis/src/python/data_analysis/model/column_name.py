@@ -183,11 +183,3 @@ class Level(Enum):
     LOW = 'low'
     AVERAGE = 'average'
     HIGH = 'high'
-
-
-@unique
-class ColumnSuffix(Enum):
-    ALL = '_all'
-    DIFF = '_diff'
-    FIRST = '_first'
-    LAST = '_last'
