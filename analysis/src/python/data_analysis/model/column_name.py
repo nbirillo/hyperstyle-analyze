@@ -128,10 +128,6 @@ class SubmissionColumns(Enum):
     HYPERSTYLE_ISSUES = 'hyperstyle_issues'
     QODANA_ISSUES = 'qodana_issues'
 
-    STATUS = 'status'
-    FREQUENCY = 'frequency'
-    POS_IN_TEMPLATE = 'pos_in_template'
-
 
 @unique
 class SubmissionStatsColumns(Enum):
@@ -187,3 +183,12 @@ class Level(Enum):
     LOW = 'low'
     AVERAGE = 'average'
     HIGH = 'high'
+
+
+class TemplateColumns(Enum):
+    STATUS = 'status'
+    FREQUENCY = 'frequency'
+    COUNT = 'count'
+    TOTAL_COUNT = 'total_count'
+    POS_IN_TEMPLATE = 'pos_in_template'
+    LINE = 'line'
