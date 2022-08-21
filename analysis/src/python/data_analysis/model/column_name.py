@@ -156,6 +156,10 @@ class StepsStatsColumns(Enum):
 class IssuesColumns(Enum):
     NAME = 'name'
     CATEGORY = 'category'
+    COUNT = 'count'
+    TEXT = 'text'
+    CODE_SAMPLE = 'code_sample'
+    DIFFICULTY = 'difficulty'
 
 
 @unique
