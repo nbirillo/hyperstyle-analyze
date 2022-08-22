@@ -67,7 +67,7 @@ def equal_substring(code_line: str, template_line: str) -> bool:
     code_line = remove_comment(code_line)
     template_line = remove_comment(template_line)
 
-    return template_line in code_line
+    return len(template_line) > 0 and template_line in code_line
 
 
 EQUAL = {

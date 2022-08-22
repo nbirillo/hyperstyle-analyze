@@ -3,7 +3,7 @@ from typing import Callable, List, Tuple
 import pytest
 
 from analysis.src.python.data_analysis.model.column_name import SubmissionColumns
-from analysis.src.python.data_analysis.templates.search import get_repetitive_issues
+from analysis.src.python.data_analysis.templates.search_repetitive_issues import get_repetitive_issues
 from analysis.src.python.data_analysis.templates.template_matching import equal_char_by_char
 from analysis.src.python.utils.df_utils import read_df
 from analysis.test.python.data_analysis import TEMPLATES_ISSUES_FOLDER
@@ -14,12 +14,18 @@ LINES_TEST_DATA = [
      ['e = 2.718281828459045',
       '# put your python code here'],
      SubmissionColumns.HYPERSTYLE_ISSUES.value,
-     equal_char_by_char, [('WPS446', 0)]),
+     equal_char_by_char, [('WPS446', 'e = 2.718281828459045', 0)]),
     ('in_2_submission_series_python3_hyperstyle.csv',
      ['e = 2.718281828459045',
       '# put your python code here'],
      SubmissionColumns.HYPERSTYLE_ISSUES.value,
-     equal_char_by_char, [('WPS446', 0), ('WPS237', None)]),
+     equal_char_by_char, [('WPS446', 'e = 2.718281828459045', 0),
+                          ('WPS237', 'print(f"{e:.5f}")', None)]),
+    ('in_3_submission_series_python3_hyperstyle.csv',
+     ['e = 2.718281828459045',
+      '# put your python code here'],
+     SubmissionColumns.HYPERSTYLE_ISSUES.value,
+     equal_char_by_char, [('WPS446', 'e = 2.718281828459045', 0)]),
 ]
 
 

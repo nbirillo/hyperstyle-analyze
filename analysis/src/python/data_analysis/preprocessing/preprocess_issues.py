@@ -28,7 +28,8 @@ def get_issues_info(df_submissions: pd.DataFrame, issues_column: str) -> pd.Data
                     IssuesColumns.CATEGORY.value: issue.get_category(),
                     IssuesColumns.TEXT.value: issue.get_text(),
                     IssuesColumns.DIFFICULTY.value: issue.get_difficulty(),
-                    IssuesColumns.CODE_SAMPLE: get_code_with_issue_comment(submission, issues_column, issue_name),
+                    IssuesColumns.CODE_SAMPLE: get_code_with_issue_comment(submission, issues_column,
+                                                                           issue_name=issue_name),
                 }
             issues_info[issue_name][IssuesColumns.COUNT.value] += 1
 
