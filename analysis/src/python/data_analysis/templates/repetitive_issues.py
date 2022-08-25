@@ -2,13 +2,14 @@ import argparse
 import sys
 from collections import defaultdict
 from dataclasses import dataclass, field
-from typing import Callable, Dict, List, Optional
+from typing import Dict, List, Optional
 
 import pandas as pd
 
 from analysis.src.python.data_analysis.model.column_name import IssuesColumns, StepColumns, SubmissionColumns, \
     TemplateColumns
-from analysis.src.python.data_analysis.templates.template_matching import EQUAL, match_code_with_template
+from analysis.src.python.data_analysis.templates.template_matching import match_code_with_template
+from analysis.src.python.data_analysis.templates.utils.code_compare_utils import CodeComparator
 from analysis.src.python.data_analysis.templates.utils.template_utlis import parse_template_code_from_step
 from analysis.src.python.data_analysis.utils.code_utils import split_code_to_lines
 from analysis.src.python.data_analysis.utils.report_utils import parse_report
@@ -31,7 +32,7 @@ class RepetitiveIssue:
 def get_repetitive_issues(submission_series: pd.DataFrame,
                           template_lines: List[str],
                           issues_column: str,
-                          equal: Callable[[str], bool]) -> List[RepetitiveIssue]:
+                          code_comparator: CodeComparator) -> List[RepetitiveIssue]:
     """ Get issue name and position in template for issues that appear in every attempt in submission series. """
 
     repetitive_issues_dict = defaultdict(list)
@@ -39,23 +40,26 @@ def get_repetitive_issues(submission_series: pd.DataFrame,
 
     for _, submission in submission_series.iterrows():
         code_lines = split_code_to_lines(submission[SubmissionColumns.CODE.value])
-        code_to_template, _ = match_code_with_template(code_lines, template_lines, equal)
+        code_to_template, _ = match_code_with_template(code_lines, template_lines,
+                                                       code_comparator.is_equal,
+                                                       code_comparator.is_empty)
 
         report = parse_report(submission, issues_column)
         for issue in report.get_issues():
             issue_name = issue.get_name()
             # In issues line count starts with 1
             code_line_number = issue.get_line_number() - 1
-            if code_line_number < 0:
-                # Some issues have zero line number meaning they do not have exact position and line
-                repetitive_issue = RepetitiveIssue(issue_name, None, None, issue, submission)
-            else:
-                template_line_number = code_to_template[code_line_number]
-                if template_line_number is None:
-                    line_with_issue = code_lines[code_line_number]
-                else:
-                    line_with_issue = template_lines[template_line_number]
-                repetitive_issue = RepetitiveIssue(issue_name, line_with_issue, template_line_number, issue, submission)
+            code_column_number = issue.get_column_number() - 1
+            line_with_issue = None
+            pos_in_template = None
+
+            # Some issues have zero line number meaning they do not have exact position and line
+            if code_line_number >= 0:
+                # To save issue caused code in line set min length of preprocessing to issue position
+                line_with_issue = code_comparator.preprocess(code_lines[code_line_number], code_column_number + 1)
+                pos_in_template = code_to_template[code_line_number]
+
+            repetitive_issue = RepetitiveIssue(issue_name, line_with_issue, pos_in_template, issue, submission)
             repetitive_issues_dict[repetitive_issue].append(repetitive_issue)
 
     total_attempts_count = submission_series.shape[0]
@@ -99,7 +103,7 @@ def repetitive_issues_to_df(step_id: int,
 def search_repetitive_issues_by_step(df_submissions: pd.DataFrame,
                                      step: pd.Series,
                                      issues_column: str,
-                                     equal: Callable[[str], bool]) -> pd.DataFrame:
+                                     code_comparator: CodeComparator) -> pd.DataFrame:
     """ Search template issues in submissions with given step. """
 
     step_ids = df_submissions[SubmissionColumns.STEP_ID.value].unique()
@@ -113,7 +117,8 @@ def search_repetitive_issues_by_step(df_submissions: pd.DataFrame,
 
     df_submission_series = df_submissions.groupby(SubmissionColumns.GROUP.value)
     for _, submission_series in df_submission_series:
-        submission_series_repetitive_issues = get_repetitive_issues(submission_series, template, issues_column, equal)
+        submission_series_repetitive_issues = get_repetitive_issues(submission_series, template, issues_column,
+                                                                    code_comparator)
         for issue in submission_series_repetitive_issues:
             repetitive_issues[issue].append(issue)
 
@@ -126,10 +131,10 @@ def search_repetitive_issues_by_step(df_submissions: pd.DataFrame,
 def search_repetitive_issues(df_submissions: pd.DataFrame,
                              df_steps: pd.DataFrame,
                              issues_column: str,
-                             equal: Callable[[str], bool]) -> pd.DataFrame:
+                             code_comparator: CodeComparator) -> pd.DataFrame:
     """ Get `issues_count` most frequent uncorrected issues for every step in submissions. """
 
-    df_steps = filter_df_by_single_value(df_steps, StepColumns.ID.value, 6268)
+    df_steps = filter_df_by_single_value(df_steps, StepColumns.ID.value, 6791)
     df_submissions = filter_df_by_iterable_value(df_submissions, SubmissionColumns.STEP_ID.value,
                                                  df_steps[StepColumns.ID.value].unique())
 
@@ -141,17 +146,18 @@ def search_repetitive_issues(df_submissions: pd.DataFrame,
                                                                             # name is group key (step id)
                                                                             step=df_steps.loc[df_step_submissions.name],
                                                                             issues_column=issues_column,
-                                                                            equal=equal))
+                                                                            code_comparator=code_comparator))
 
 
-def main(submissions_path: str, steps_path: str, repetitive_issues_path: str, issues_column: str, equal_type: str):
+def main(submissions_path: str, steps_path: str, repetitive_issues_path: str, issues_column: str,
+         equal_type: str, ignore_trailing_comments: bool, ignore_trailing_whitespaces: bool):
     """ Get uncorrected issues for every step in submissions and save them to template_issues_path. """
 
     df_submissions = read_df(submissions_path)
     df_steps = read_df(steps_path)
-    equal = EQUAL[equal_type]
 
-    df_repetitive_issues = search_repetitive_issues(df_submissions, df_steps, issues_column, equal)
+    code_comparator = CodeComparator(equal_type, ignore_trailing_comments, ignore_trailing_whitespaces)
+    df_repetitive_issues = search_repetitive_issues(df_submissions, df_steps, issues_column, code_comparator)
     write_df(df_repetitive_issues, repetitive_issues_path)
 
 
@@ -165,12 +171,17 @@ if __name__ == '__main__':
     parser.add_argument('issues_column', type=str,
                         help='Column where issues stored.',
                         choices=[SubmissionColumns.HYPERSTYLE_ISSUES.value, SubmissionColumns.QODANA_ISSUES.value])
+    parser.add_argument('-ic', '--ignore-trailing-comments', action='store_false',
+                        help='Ignore trailing comments in code compare. True by default.')
+    parser.add_argument('-iw', '--ignore-trailing-whitespaces', action='store_false',
+                        help='Ignore trailing whitespaces in code compare. True by default.')
     parser.add_argument('--equal', type=str, default='char_by_char',
                         help='Function for lines comparing.',
-                        choices=['char_by_char', 'edit_distance', 'edit_ratio', 'substring'])
+                        choices=['edit_distance', 'edit_ratio', 'substring'])
     parser.add_argument('--log-path', type=str, default=None, help='Path to directory for log.')
 
     args = parser.parse_args(sys.argv[1:])
-    configure_logger(args.repetitive_issues_path, 'repetitive_issues', args.log_path)
+    configure_logger(args.repetitive_issues_path, f'repetitive_issues_{args.equal}', args.log_path)
 
-    main(args.submissions_path, args.steps_path, args.repetitive_issues_path, args.issues_column, args.equal)
+    main(args.submissions_path, args.steps_path, args.repetitive_issues_path, args.issues_column,
+         args.equal, args.ignore_trailing_comments, args.ignore_trailing_whitespaces)

@@ -2,8 +2,8 @@ from typing import Callable
 
 import pytest
 
-from analysis.src.python.data_analysis.templates.template_matching import equal_char_by_char, equal_edit_distance, \
-    equal_edit_ratio, equal_substring
+from analysis.src.python.data_analysis.templates.utils.code_compare_utils import equal_char_by_char, \
+    equal_edit_distance, equal_edit_ratio, equal_substring
 
 LINES_TEST_DATA = [
     ('abc = 1', 'abc = 1', equal_char_by_char, True),

@@ -3,8 +3,8 @@ from typing import Callable, List, Tuple
 import pytest
 
 from analysis.src.python.data_analysis.model.column_name import SubmissionColumns
-from analysis.src.python.data_analysis.templates.search_repetitive_issues import get_repetitive_issues
-from analysis.src.python.data_analysis.templates.template_matching import equal_char_by_char
+from analysis.src.python.data_analysis.templates.repetitive_issues import get_repetitive_issues
+from analysis.src.python.data_analysis.templates.utils.code_compare_utils import equal_char_by_char
 from analysis.src.python.utils.df_utils import read_df
 from analysis.test.python.data_analysis import TEMPLATES_ISSUES_FOLDER
 

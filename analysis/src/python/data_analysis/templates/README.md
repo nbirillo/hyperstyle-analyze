@@ -12,7 +12,7 @@ The output file contains the following columns:
 
 ### Usage
 
-Run the [search.py](search_repetitive_issues.py) script with the arguments from command line.
+Run the [search.py](repetitive_issues.py) script with the arguments from command line.
 
 Required arguments:
 
@@ -51,7 +51,7 @@ a given issue in a given task can be selected and saved.
 
 ### Usage
 
-Run the [postprocessing.py](get_template_issues.py) script with the arguments from command line.
+Run the [postprocessing.py](template_issues.py) script with the arguments from command line.
 
 Required arguments:
 

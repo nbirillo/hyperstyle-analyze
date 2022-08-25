@@ -2,7 +2,8 @@ from typing import Callable, List, Optional
 
 import pytest
 
-from analysis.src.python.data_analysis.templates.template_matching import equal_char_by_char, match_code_with_template
+from analysis.src.python.data_analysis.templates.template_matching import match_code_with_template
+from analysis.src.python.data_analysis.templates.utils.code_compare_utils import equal_char_by_char
 
 
 def array_equal(actual_array: List[Optional[int]], expected_array: List[Optional[int]]):
