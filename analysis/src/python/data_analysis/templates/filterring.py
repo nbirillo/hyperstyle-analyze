@@ -46,14 +46,15 @@ def filter_template_issues_from_submission(submission: pd.Series,
     for _, templates_issue in df_templates_issues.iterrows():
         template_issue_name = templates_issue[IssuesColumns.NAME.value]
         template_issue_positions = templates_issue[TemplateColumns.POS_IN_TEMPLATE.value]
-        template_line_with_issue = templates_issue[IssuesColumns.NAME.value]
+        template_line_with_issue = templates_issue[TemplateColumns.LINE.value]
 
         for issue in report.get_issues():
             code_issue_position = issue.get_line_number() - 1
+            code_line_with_issue = code_lines[code_issue_position]
 
             if issue.get_name() == template_issue_name and \
-                    issue.get_line_number() - 1 == template_issue_positions and \
-                    :
+                    code_issue_position == template_issue_positions and \
+                    code_comparator.is_equal(template_line_with_issue, code_line_with_issue):
                 template_issues.append(issue)
                 break
 
