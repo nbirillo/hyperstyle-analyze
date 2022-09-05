@@ -1,6 +1,6 @@
 import re
 from math import floor
-from typing import Callable, Optional
+from typing import Callable, Optional, Union
 
 
 def edit_distance(first_string: str, second_string: str) -> int:
@@ -39,7 +39,7 @@ def equal_substring(code_line: str, template_line: str) -> bool:
     return template_line in code_line
 
 
-SINGLE_TRAILING_PYTHON_COMMENT = re.compile(r'^(.+)(#.)$')
+SINGLE_TRAILING_PYTHON_COMMENT = re.compile(r'^(.+)(#.*)$')
 DOUBLE_TRAILING_PYTHON_COMMENT = re.compile(r'^(.+)(\"\"\".*\"\"\")$')
 SINGLE_TRAILING_JAVA_COMMENT = re.compile(r'^(.+)(//.*)$')
 DOUBLE_TRAILING_JAVA_COMMENT = re.compile(r'^(.+)(/\*.*\*/)$')
@@ -84,18 +84,21 @@ class CodeComparator:
     is_equal: Callable[[str, str], bool]
     is_empty: Callable[[str], bool]
 
-    def __init__(self, equal_type: str, ignore_trailing_comments: bool, ignore_trailing_whitespaces: bool):
+    def __init__(self, equal_type: str,
+                 ignore_trailing_comments: bool,
+                 ignore_trailing_whitespaces: bool,
+                 equal_upper_bound: Optional[Union[int, float]] = None):
         self.preprocess = self._configure_preprocess_code_line(ignore_trailing_comments, ignore_trailing_whitespaces)
-        self.is_equal = self._configure_is_equal(equal_type, self.preprocess)
+        self.is_equal = self._configure_is_equal(equal_type, self.preprocess, equal_upper_bound)
         self.is_empty = self._configure_is_empty(self.preprocess)
 
     @staticmethod
     def _configure_preprocess_code_line(ignore_trailing_comments: bool = True,
                                         ignore_trailing_whitespaces: bool = True) -> Callable[[str], str]:
         def preprocess(code_line: str, min_length: Optional[int] = None) -> str:
-            if not ignore_trailing_comments:
+            if ignore_trailing_comments:
                 code_line = remove_trailing_comment(code_line)
-            if not ignore_trailing_whitespaces:
+            if ignore_trailing_whitespaces:
                 code_line = remove_trailing_whitespaces(code_line)
 
             return code_line if min_length is not None and len(code_line) > min_length else code_line
@@ -103,7 +106,7 @@ class CodeComparator:
         return preprocess
 
     @staticmethod
-    def _configure_is_empty(preprocess: Callable[[str], str] = None) -> Callable[[str], bool]:
+    def _configure_is_empty(preprocess: Callable[[str], str]) -> Callable[[str], bool]:
         def is_empty(code_line: str) -> bool:
             if preprocess is not None:
                 code_line = preprocess(code_line)
@@ -113,11 +116,15 @@ class CodeComparator:
         return is_empty
 
     @staticmethod
-    def _configure_is_equal(equal_type: str, preprocess: Callable[[str], str] = None) -> Callable[[str, str], bool]:
+    def _configure_is_equal(equal_type: str, preprocess: Callable[[str], str],
+                            equal_upper_bound: Optional[Union[int, float]]) -> Callable[[str, str], bool]:
         def is_equal(code_line: str, template_line: str) -> bool:
             if preprocess is not None:
                 code_line, template_line = preprocess(code_line), preprocess(template_line)
 
-            return EQUAL[equal_type](code_line, template_line)
+            equal = EQUAL[equal_type]
+            if equal_upper_bound is not None:
+                return equal(code_line, template_line, upper_bound=equal_upper_bound)
+            return equal(code_line, template_line)
 
         return is_equal

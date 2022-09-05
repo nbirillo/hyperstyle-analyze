@@ -25,8 +25,8 @@ class RepetitiveIssue:
     line_with_issue: Optional[str]
 
     # Other field are do not included to __eq__ method
-    base_issue: BaseIssue = field(compare=False, hash=False)
-    submission: pd.Series = field(compare=False, hash=False)
+    base_issue: Optional[BaseIssue] = field(compare=False, hash=False)
+    submission: Optional[pd.Series] = field(compare=False, hash=False)
 
 
 def get_repetitive_issues(submission_series: pd.DataFrame,
@@ -62,7 +62,7 @@ def get_repetitive_issues(submission_series: pd.DataFrame,
                 line_with_issue = code_comparator.preprocess(code_lines[code_line_number], code_column_number + 1)
                 pos_in_template = code_to_template[code_line_number]
 
-            repetitive_issue = RepetitiveIssue(issue_name, line_with_issue, pos_in_template, issue, submission)
+            repetitive_issue = RepetitiveIssue(issue_name, pos_in_template, line_with_issue, issue, submission)
             repetitive_issues_dict[repetitive_issue].append(repetitive_issue)
 
     total_attempts_count = submission_series.shape[0]
