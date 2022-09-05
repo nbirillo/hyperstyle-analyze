@@ -3,7 +3,7 @@ from typing import Optional, Union
 import pytest
 
 from analysis.src.python.data_analysis.model.column_name import SubmissionColumns
-from analysis.src.python.data_analysis.templates.filterring import filter_template_issues
+from analysis.src.python.data_analysis.templates.filtering import filter_template_issues
 from analysis.src.python.data_analysis.templates.utils.code_compare_utils import CodeComparator
 from analysis.src.python.utils.df_utils import equal_df, read_df, write_df
 from analysis.test.python.data_analysis import TEMPLATES_ISSUES_FOLDER
@@ -13,7 +13,7 @@ TEMPLATE_ISSUES_FOLDER = TEMPLATES_ISSUES_FOLDER / 'template_issues'
 TEMPLATE_ISSUES_TEST_DATA = [
     ('template_issues_python3_hyperstyle.csv', 'submissions_python3_hyperstyle.csv', 'steps.csv',
      SubmissionColumns.HYPERSTYLE_ISSUES.value,
-     'edit_distance', False, False, 0, 'filtered_submissions_python3_hyperstyle.csv')
+     'edit_distance', False, False, 0, 'filtered_submissions_python3_hyperstyle.csv'),
 ]
 
 

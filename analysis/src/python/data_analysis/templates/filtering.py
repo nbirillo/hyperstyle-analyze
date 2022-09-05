@@ -35,8 +35,8 @@ def filter_template_issues_from_submission(submission: pd.Series,
     step = df_steps.loc[step_id]
     template_lines = parse_template_code_from_step(step, lang)
     code_to_template, template_to_code = match_code_with_template(code_lines, template_lines,
-                                                   code_comparator.is_equal,
-                                                   code_comparator.is_empty)
+                                                                  code_comparator.is_equal,
+                                                                  code_comparator.is_empty)
 
     df_templates_issues = filter_df_by_single_value(df_templates_issues, SubmissionColumns.STEP_ID.value, step_id)
     template_issues = []
