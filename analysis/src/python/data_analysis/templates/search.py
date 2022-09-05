@@ -14,7 +14,7 @@ from analysis.src.python.data_analysis.templates.utils.template_utils import par
 from analysis.src.python.data_analysis.utils.code_utils import split_code_to_lines
 from analysis.src.python.data_analysis.utils.report_utils import parse_report
 from analysis.src.python.evaluation.tools.model.report import BaseIssue
-from analysis.src.python.utils.df_utils import filter_df_by_iterable_value, filter_df_by_single_value, read_df, write_df
+from analysis.src.python.utils.df_utils import filter_df_by_iterable_value, read_df, write_df
 from analysis.src.python.utils.logging_utils import configure_logger
 
 
@@ -138,7 +138,6 @@ def search_repetitive_issues(df_submissions: pd.DataFrame,
                              code_comparator: CodeComparator) -> pd.DataFrame:
     """ Search for all repetitive issues - issue which remains in all submission of concrete user for concrete step. """
 
-    df_steps = filter_df_by_single_value(df_steps, StepColumns.ID.value, 6791)
     df_submissions = filter_df_by_iterable_value(df_submissions, SubmissionColumns.STEP_ID.value,
                                                  df_steps[StepColumns.ID.value].unique())
 
@@ -165,9 +164,7 @@ def main(submissions_path: str, steps_path: str, repetitive_issues_path: str, is
     write_df(df_repetitive_issues, repetitive_issues_path)
 
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-
+def configure_parser(parser: argparse.ArgumentParser) -> None:
     parser.add_argument('submissions_path', type=str, help='Path to .csv file with submissions.')
     parser.add_argument('steps_path', type=str, help='Path to .csv file with steps.')
     parser.add_argument('repetitive_issues_path', type=str,
@@ -175,14 +172,19 @@ if __name__ == '__main__':
     parser.add_argument('issues_column', type=str,
                         help='Column where issues stored.',
                         choices=[SubmissionColumns.HYPERSTYLE_ISSUES.value, SubmissionColumns.QODANA_ISSUES.value])
-    parser.add_argument('-ic', '--ignore-trailing-comments', action='store_false',
+    parser.add_argument('-ic', '--ignore-trailing-comments', action='store_true',
                         help='Ignore trailing comments in code compare. True by default.')
-    parser.add_argument('-iw', '--ignore-trailing-whitespaces', action='store_false',
+    parser.add_argument('-iw', '--ignore-trailing-whitespaces', action='store_true',
                         help='Ignore trailing whitespaces in code compare. True by default.')
-    parser.add_argument('--equal', type=str, default='char_by_char',
+    parser.add_argument('--equal', type=str, default='edit_distance',
                         help='Function for lines comparing.',
                         choices=['edit_distance', 'edit_ratio', 'substring'])
     parser.add_argument('--log-path', type=str, default=None, help='Path to directory for log.')
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    configure_parser(parser)
 
     args = parser.parse_args(sys.argv[1:])
     configure_logger(args.repetitive_issues_path, f'repetitive_issues_{args.equal}', args.log_path)

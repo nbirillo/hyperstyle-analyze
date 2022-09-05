@@ -15,6 +15,7 @@ from analysis.src.python.evaluation.tools.utils.saving_utils import save_solutio
 from analysis.src.python.utils.df_utils import read_df, write_df
 from analysis.src.python.utils.extension_utils import AnalysisExtension
 from analysis.src.python.utils.file_utils import create_directory
+from analysis.src.python.utils.logging_utils import configure_logger
 
 
 @dataclass(frozen=True)
@@ -27,6 +28,7 @@ class ProcessingConfig(Object):
     freq_to_separate_template_issues: float
     freq_to_separate_rare_and_common_issues: float
     solutions_number: int
+    with_additional_info: bool
     base_task_url: str
 
 
@@ -40,6 +42,7 @@ def parse_config(args) -> ProcessingConfig:
         freq_to_separate_template_issues=args.freq_to_separate_template_issues / 100,
         freq_to_separate_rare_and_common_issues=args.freq_to_separate_rare_and_common_issues / 100,
         solutions_number=args.solutions_number,
+        with_additional_info=args.with_additional_info,
         base_task_url=args.base_task_url.rstrip('/'),
     )
 
@@ -107,6 +110,8 @@ def add_additional_info(
         config: ProcessingConfig,
         df_submissions: Optional[pd.DataFrame] = None,
 ) -> pd.DataFrame:
+    """ Add urls to steps in repetitive issues dataframe and save samples of repetitive issues occurrence. """
+
     df_repetitive_issues[StepColumns.URL.value] = df_repetitive_issues[SubmissionColumns.STEP_ID.value] \
         .apply(lambda step_id: f'{config.base_task_url}/{step_id}')
     if df_submissions is not None:
@@ -118,9 +123,10 @@ def add_additional_info(
 def process_repetitive_issues(df_repetitive_issues: pd.DataFrame,
                               df_submissions: pd.DataFrame,
                               config: ProcessingConfig) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
-    """ Postprocess given dataframe with """
+    """ Postprocess given dataframe with repetitive issues for detecting template and typical issues. """
     df_repetitive_issues = filter_by_freq(df_repetitive_issues, config.freq_to_remove)
-    df_repetitive_issues = add_additional_info(df_repetitive_issues, df_submissions=df_submissions, config=config)
+    if config.with_additional_info:
+        df_repetitive_issues = add_additional_info(df_repetitive_issues, df_submissions=df_submissions, config=config)
     df_repetitive_issues_split = split_by_freq(df_repetitive_issues,
                                                config.freq_to_separate_template_issues,
                                                config.freq_to_separate_rare_and_common_issues)
@@ -141,9 +147,7 @@ def main(config: ProcessingConfig):
     write_df(df_common_typical_issues, base_path / f'common_typical_issues{AnalysisExtension.CSV.value}')
 
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-
+def configure_parser(parser: argparse.ArgumentParser) -> None:
     parser.add_argument('repetitive_issues_path', type=str,
                         help='Path to .csv file with repetitive issues from submissions.')
     parser.add_argument('result_path', type=str, help='Path to resulting folder with processed issues.')
@@ -158,10 +162,20 @@ if __name__ == '__main__':
                         help='The threshold of frequency to separate typical issues into rare and common.')
     parser.add_argument('-ft', '--freq-to-separate-template-issues', type=int, default=51,
                         help='The threshold of frequency to keep issues in the final table.')
+    parser.add_argument('--with-additional-info', action='store_true',
+                        help='Generate samples with repetitive issues and add urls to steps.')
     parser.add_argument('-n', '--solutions-number', type=int, default=5,
                         help='Tne number of random students solutions that should be gathered for each task.')
     parser.add_argument('-url', '--base-task-url', type=str, default='https://hyperskill.org/learn/step',
                         help='Base url to the tasks on an education platform.')
+    parser.add_argument('--log-path', type=str, default=None, help='Path to directory for log.')
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    configure_parser(parser)
 
     args = parser.parse_args(sys.argv[1:])
+    configure_logger(args.repetitive_issues_path, f'repetitive_issues_postprocess', args.log_path)
+
     main(parse_config(args))
