@@ -82,7 +82,7 @@ EQUAL = {
 class CodeComparator:
     """ Special comparator to preprocess code lines and compare them. """
 
-    preprocess: Callable[[str, Optional[int]], str]
+    preprocess: Callable[[str], str]
     is_equal: Callable[[str, str], bool]
     is_empty: Callable[[str], bool]
 
@@ -97,13 +97,13 @@ class CodeComparator:
     @staticmethod
     def _configure_preprocess_code_line(ignore_trailing_comments: bool = True,
                                         ignore_trailing_whitespaces: bool = True) -> Callable[[str], str]:
-        def preprocess(code_line: str, min_length: Optional[int] = None) -> str:
+        def preprocess(code_line: str) -> str:
             if ignore_trailing_comments:
                 code_line = remove_trailing_comment(code_line)
             if ignore_trailing_whitespaces:
                 code_line = remove_trailing_whitespaces(code_line)
 
-            return code_line if min_length is not None and len(code_line) > min_length else code_line
+            return code_line
 
         return preprocess
 

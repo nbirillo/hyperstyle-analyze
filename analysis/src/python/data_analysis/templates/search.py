@@ -14,7 +14,7 @@ from analysis.src.python.data_analysis.templates.utils.template_utils import par
 from analysis.src.python.data_analysis.utils.code_utils import split_code_to_lines
 from analysis.src.python.data_analysis.utils.report_utils import parse_report
 from analysis.src.python.evaluation.tools.model.report import BaseIssue
-from analysis.src.python.utils.df_utils import filter_df_by_iterable_value, read_df, write_df
+from analysis.src.python.utils.df_utils import filter_df_by_iterable_value, filter_df_by_single_value, read_df, write_df
 from analysis.src.python.utils.logging_utils import configure_logger
 
 
@@ -52,16 +52,17 @@ def get_repetitive_issues(submission_series: pd.DataFrame,
             issue_name = issue.get_name()
             # In issues line count starts with 1
             code_line_number = issue.get_line_number() - 1
-            code_column_number = issue.get_column_number() - 1
             line_with_issue = None
             pos_in_template = None
 
             # Some issues have zero line number meaning they do not have exact position and line
             if code_line_number >= 0:
-                # To save issue caused code in line set min length of preprocessing to issue position
-                line_with_issue = code_comparator.preprocess(code_lines[code_line_number], code_column_number + 1)
                 pos_in_template = code_to_template[code_line_number]
-
+                if pos_in_template is not None:
+                    line_with_issue = template_lines[pos_in_template]
+                else:
+                    line_with_issue = code_lines[code_line_number]
+                line_with_issue = code_comparator.preprocess(line_with_issue)
             repetitive_issue = RepetitiveIssue(issue_name, pos_in_template, line_with_issue, issue, submission)
             repetitive_issues_dict[repetitive_issue].append(repetitive_issue)
 
@@ -137,6 +138,8 @@ def search_repetitive_issues(df_submissions: pd.DataFrame,
                              issues_column: str,
                              code_comparator: CodeComparator) -> pd.DataFrame:
     """ Search for all repetitive issues - issue which remains in all submission of concrete user for concrete step. """
+
+    df_steps = filter_df_by_single_value(df_steps, StepColumns.ID.value, 2324)
 
     df_submissions = filter_df_by_iterable_value(df_submissions, SubmissionColumns.STEP_ID.value,
                                                  df_steps[StepColumns.ID.value].unique())
