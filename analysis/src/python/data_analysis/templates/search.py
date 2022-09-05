@@ -10,7 +10,7 @@ from analysis.src.python.data_analysis.model.column_name import IssuesColumns, S
     TemplateColumns
 from analysis.src.python.data_analysis.templates.template_matching import match_code_with_template
 from analysis.src.python.data_analysis.templates.utils.code_compare_utils import CodeComparator
-from analysis.src.python.data_analysis.templates.utils.template_utlis import parse_template_code_from_step
+from analysis.src.python.data_analysis.templates.utils.template_utils import parse_template_code_from_step
 from analysis.src.python.data_analysis.utils.code_utils import split_code_to_lines
 from analysis.src.python.data_analysis.utils.report_utils import parse_report
 from analysis.src.python.evaluation.tools.model.report import BaseIssue

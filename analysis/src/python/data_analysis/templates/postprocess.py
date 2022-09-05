@@ -1,6 +1,5 @@
 import argparse
 import ast
-import math
 import sys
 from dataclasses import dataclass
 from pathlib import Path
@@ -84,7 +83,7 @@ def save_submission_samples(df_repetitive_issues: pd.DataFrame,
     for _, repetitive_issue in df_repetitive_issues.iterrows():
         issue_name = repetitive_issue[IssuesColumns.NAME.value]
         issue_position = repetitive_issue[TemplateColumns.POS_IN_TEMPLATE.value]
-        issue_line_number = None if math.isnan(issue_position) else issue_position + 1
+        issue_line_number = None if pd.isna(issue_position) else issue_position + 1
 
         submission_group_ids = ast.literal_eval(repetitive_issue[TemplateColumns.GROUPS.value])
 

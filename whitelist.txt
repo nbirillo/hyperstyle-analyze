@@ -65,6 +65,8 @@ chunksize
 classinfo
 cloneable
 cmap
+Comparator
+comparator
 concat
 conf
 conf
@@ -157,6 +159,7 @@ interop
 isfile
 isin
 isna
+isnan
 isnull
 isoparse
 issuetype
@@ -170,6 +173,7 @@ jsons
 jsonschema
 kde
 kts
+langs
 lcom
 linecache
 linecolor
@@ -319,6 +323,7 @@ wps
 writeheader
 writelines
 writerow
+whitespaces
 xanchor
 xaxes
 xaxis
