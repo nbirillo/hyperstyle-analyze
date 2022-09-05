@@ -34,7 +34,7 @@ def filter_template_issues_from_submission(submission: pd.Series,
 
     step = df_steps.loc[step_id]
     template_lines = parse_template_code_from_step(step, lang)
-    code_to_template, _ = match_code_with_template(code_lines, template_lines,
+    code_to_template, template_to_code = match_code_with_template(code_lines, template_lines,
                                                    code_comparator.is_equal,
                                                    code_comparator.is_empty)
 
@@ -45,7 +45,7 @@ def filter_template_issues_from_submission(submission: pd.Series,
 
     for _, templates_issue in df_templates_issues.iterrows():
         template_issue_name = templates_issue[IssuesColumns.NAME.value]
-        template_issue_positions = templates_issue[TemplateColumns.POS_IN_TEMPLATE.value]
+        template_issue_position = templates_issue[TemplateColumns.POS_IN_TEMPLATE.value]
         template_line_with_issue = templates_issue[TemplateColumns.LINE.value]
 
         for issue in report.get_issues():
@@ -53,12 +53,12 @@ def filter_template_issues_from_submission(submission: pd.Series,
             code_line_with_issue = code_lines[code_issue_position]
 
             if issue.get_name() == template_issue_name and \
-                    code_issue_position == template_issue_positions and \
+                    code_issue_position == template_to_code[template_issue_position] and \
                     code_comparator.is_equal(template_line_with_issue, code_line_with_issue):
                 template_issues.append(issue)
-                break
+                continue
 
-        logging.info(f'Issue {template_issue_name} in line {template_issue_positions} is unmatched.')
+        logging.info(f'Issue {template_issue_name} in line {template_issue_position} is unmatched.')
 
     logging.info(f'{len(template_issues)}/{df_templates_issues.shape[0]} template issues was matched.')
 
