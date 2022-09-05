@@ -288,6 +288,7 @@ stmts
 subdir
 subdirs
 sublist
+substring
 suptitle
 svg
 sym

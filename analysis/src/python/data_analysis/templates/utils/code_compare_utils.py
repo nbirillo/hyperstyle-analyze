@@ -80,6 +80,8 @@ EQUAL = {
 
 
 class CodeComparator:
+    """ Special comparator to preprocess code lines and compare them. """
+
     preprocess: Callable[[str, Optional[int]], str]
     is_equal: Callable[[str, str], bool]
     is_empty: Callable[[str], bool]
