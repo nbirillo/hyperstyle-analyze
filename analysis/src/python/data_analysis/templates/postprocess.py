@@ -176,6 +176,6 @@ if __name__ == '__main__':
     configure_parser(parser)
 
     args = parser.parse_args(sys.argv[1:])
-    configure_logger(args.repetitive_issues_path, f'repetitive_issues_postprocess', args.log_path)
+    configure_logger(args.repetitive_issues_path, 'repetitive_issues_postprocess', args.log_path)
 
     main(parse_config(args))
