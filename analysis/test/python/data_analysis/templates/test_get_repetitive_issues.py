@@ -3,13 +3,14 @@ from typing import List, Optional, Tuple, Union
 import pytest
 
 from analysis.src.python.data_analysis.model.column_name import SubmissionColumns
-from analysis.src.python.data_analysis.templates.search import get_repetitive_issues, RepetitiveIssue
+from analysis.src.python.data_analysis.templates.filterring import filter_template_issues
+from analysis.src.python.data_analysis.templates.search import RepetitiveIssue, get_repetitive_issues
 from analysis.src.python.data_analysis.templates.utils.code_compare_utils import CodeComparator
 from analysis.src.python.utils.df_utils import read_df
 from analysis.test.python.data_analysis import TEMPLATES_ISSUES_FOLDER
 
 REPETITIVE_ISSUES_FOLDER = TEMPLATES_ISSUES_FOLDER / 'repetitive_issues'
-LINES_TEST_DATA = [
+SOLUTIONS_TEST_DATA = [
     ('in_1_submission_series_python3_hyperstyle.csv',
      ['e = 2.718281828459045',
       '# put your python code here'],
@@ -32,16 +33,27 @@ LINES_TEST_DATA = [
 @pytest.mark.parametrize(
     ('submission_series_path', 'template_lines', 'issues_column', 'equal_type',
      'ignore_trailing_comments', 'ignore_trailing_whitespaces', 'equal_upper_bound', 'repetitive_issues'),
-    LINES_TEST_DATA,
+    SOLUTIONS_TEST_DATA,
 )
-def test_get_repetitive_issues(submission_series_path: str,
-                               template_lines: List[str],
-                               issues_column: str,
-                               equal_type: str,
-                               ignore_trailing_comments: bool,
-                               ignore_trailing_whitespaces: bool,
-                               equal_upper_bound: Optional[Union[int, float]],
-                               repetitive_issues: List[Tuple[str, int]]):
+def test_filter_template_issues(templates_issues_path: str,
+                                submissions_path: str,
+                                steps_path: str,
+                                issues_column: str,
+                                equal_type: str,
+                                ignore_trailing_comments: bool,
+                                ignore_trailing_whitespaces: bool,
+                                equal_upper_bound: Optional[Union[int, float]],
+                                repetitive_issues: List[Tuple[str, int]]):
+
+    df_templates_issues = read_df(REPETITIVE_ISSUES_FOLDER / templates_issues_path)
+    df_steps = read_df(REPETITIVE_ISSUES_FOLDER / steps_path)
+    df_submissions = read_df(REPETITIVE_ISSUES_FOLDER / submissions_path)
+    code_comparator = CodeComparator(equal_type, ignore_trailing_comments,
+                                     ignore_trailing_whitespaces, equal_upper_bound)
+
+    filter_template_issues(df_templates_issues, df_submissions, df_steps, issues_column,
+                           code_comparator)
+
     df_submission_series = read_df(REPETITIVE_ISSUES_FOLDER / submission_series_path)
 
     code_comparator = CodeComparator(equal_type, ignore_trailing_comments,

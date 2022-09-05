@@ -15,24 +15,6 @@ from analysis.src.python.utils.df_utils import filter_df_by_single_value, read_d
 from analysis.src.python.utils.logging_utils import configure_logger
 
 
-def configure_arguments(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument('templates_issues_path', type=str, help='Path to .csv file with issues in templates.')
-    parser.add_argument('submissions_path', type=str, help='Path to file with submissions.')
-    parser.add_argument('steps_path', type=str, help='Path to file with submissions.')
-    parser.add_argument('filtered_submissions_path', type=str, help='Path to file with submissions.')
-    parser.add_argument('issues_column', type=str, help='Path to file with submissions.')
-
-    parser.add_argument('--equal', type=str, default='edit_distance',
-                        help='Function for lines comparing.',
-                        choices=['edit_distance', 'edit_ratio', 'substring'])
-    parser.add_argument('-ic', '--ignore-trailing-comments', action='store_false',
-                        help='Ignore trailing comments in code compare. True by default.')
-    parser.add_argument('-iw', '--ignore-trailing-whitespaces', action='store_false',
-                        help='Ignore trailing whitespaces in code compare. True by default.')
-
-    parser.add_argument('--log-path', type=str, default=None, help='Path to directory for log.')
-
-
 def filter_template_issues_from_submission(submission: pd.Series,
                                            df_steps: pd.DataFrame,
                                            df_templates_issues: pd.DataFrame,
@@ -60,12 +42,18 @@ def filter_template_issues_from_submission(submission: pd.Series,
     template_issues = []
 
     report = parse_report(submission, issues_column)
+
     for _, templates_issue in df_templates_issues.iterrows():
         template_issue_name = templates_issue[IssuesColumns.NAME.value]
         template_issue_positions = templates_issue[TemplateColumns.POS_IN_TEMPLATE.value]
+        template_line_with_issue = templates_issue[IssuesColumns.NAME.value]
 
         for issue in report.get_issues():
-            if issue.get_name() == template_issue_name and issue.get_line_number() - 1 == template_issue_positions:
+            code_issue_position = issue.get_line_number() - 1
+
+            if issue.get_name() == template_issue_name and \
+                    issue.get_line_number() - 1 == template_issue_positions and \
+                    :
                 template_issues.append(issue)
                 break
 
@@ -118,12 +106,30 @@ def main(templates_issues_path: str,
     write_df(df_submissions, filtered_submissions_path)
 
 
+def configure_arguments(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument('templates_issues_path', type=str, help='Path to .csv file with issues in templates.')
+    parser.add_argument('submissions_path', type=str, help='Path to file with submissions.')
+    parser.add_argument('steps_path', type=str, help='Path to file with submissions.')
+    parser.add_argument('filtered_submissions_path', type=str, help='Path to file with submissions.')
+    parser.add_argument('issues_column', type=str, help='Path to file with submissions.')
+
+    parser.add_argument('--equal', type=str, default='edit_distance',
+                        help='Function for lines comparing.',
+                        choices=['edit_distance', 'edit_ratio', 'substring'])
+    parser.add_argument('-ic', '--ignore-trailing-comments', action='store_false',
+                        help='Ignore trailing comments in code compare. True by default.')
+    parser.add_argument('-iw', '--ignore-trailing-whitespaces', action='store_false',
+                        help='Ignore trailing whitespaces in code compare. True by default.')
+
+    parser.add_argument('--log-path', type=str, default=None, help='Path to directory for log.')
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     configure_arguments(parser)
 
     args = parser.parse_args(sys.argv[1:])
-    configure_logger(args.filtered_submissions_path, 'template', args.log_path)
+    configure_logger(args.filtered_submissions_path, 'template_issues_filtering', args.log_path)
 
     main(args.templates_issues_path,
          args.submissions_path,
