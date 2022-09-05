@@ -21,8 +21,8 @@ from analysis.src.python.utils.logging_utils import configure_logger
 @dataclass(frozen=True)
 class RepetitiveIssue:
     name: str
-    line_with_issue: Optional[str]
     template_line_number: Optional[int]
+    line_with_issue: Optional[str]
 
     # Other field are do not included to __eq__ method
     base_issue: BaseIssue = field(compare=False, hash=False)
@@ -33,7 +33,10 @@ def get_repetitive_issues(submission_series: pd.DataFrame,
                           template_lines: List[str],
                           issues_column: str,
                           code_comparator: CodeComparator) -> List[RepetitiveIssue]:
-    """ Get issue name and position in template for issues that appear in every attempt in submission series. """
+    """
+    Get information about issue (name, position in template, etc.) for issues
+    that appear in every attempt in submission series.
+    """
 
     repetitive_issues_dict = defaultdict(list)
     submission_series = submission_series.sort_values(SubmissionColumns.ATTEMPT.value)
@@ -74,6 +77,7 @@ def get_repetitive_issues(submission_series: pd.DataFrame,
 def repetitive_issues_to_df(step_id: int,
                             step_submissions_count: int,
                             repetitive_issues: Dict[RepetitiveIssue, List[RepetitiveIssue]]) -> pd.DataFrame:
+    """ Convert all collected repetitive issues information from dict to dataframe. """
     repetitive_issues_series = []
 
     for key_issue, repetitive_issues in repetitive_issues.items():
@@ -132,7 +136,7 @@ def search_repetitive_issues(df_submissions: pd.DataFrame,
                              df_steps: pd.DataFrame,
                              issues_column: str,
                              code_comparator: CodeComparator) -> pd.DataFrame:
-    """ Get `issues_count` most frequent uncorrected issues for every step in submissions. """
+    """ Search for all repetitive issues - issue which remains in all submission of concrete user for concrete step. """
 
     df_steps = filter_df_by_single_value(df_steps, StepColumns.ID.value, 6791)
     df_submissions = filter_df_by_iterable_value(df_submissions, SubmissionColumns.STEP_ID.value,
@@ -151,7 +155,7 @@ def search_repetitive_issues(df_submissions: pd.DataFrame,
 
 def main(submissions_path: str, steps_path: str, repetitive_issues_path: str, issues_column: str,
          equal_type: str, ignore_trailing_comments: bool, ignore_trailing_whitespaces: bool):
-    """ Get uncorrected issues for every step in submissions and save them to template_issues_path. """
+    """ Search for all repetitive issues and save result to `repetitive_issues_path` """
 
     df_submissions = read_df(submissions_path)
     df_steps = read_df(steps_path)

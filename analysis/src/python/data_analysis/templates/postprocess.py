@@ -20,10 +20,10 @@ from analysis.src.python.utils.file_utils import create_directory
 
 @dataclass(frozen=True)
 class ProcessingConfig(Object):
-    repetitive_issues_path: Path
-    result_path: Path
-    submissions_path: Optional[Path]
-    issues_column: str
+    repetitive_issues_path: str
+    result_path: str
+    submissions_path: Optional[str]
+    issues_column: Optional[str]
     freq_to_remove: float
     freq_to_separate_template_issues: float
     freq_to_separate_rare_and_common_issues: float
@@ -100,7 +100,7 @@ def save_submission_samples(df_repetitive_issues: pd.DataFrame,
                 step_id = submission[SubmissionColumns.STEP_ID.value]
                 attempt = submission[SubmissionColumns.ATTEMPT.value]
                 submission_path = sample_path / str(step_id) / issue_name / str(group_id)
-                save_solution_to_file(submission_with_issue, submission_path, f'solution_{attempt}')
+                save_solution_to_file(submission_with_issue, submission_path, f'attempt_{attempt}')
 
 
 def add_additional_info(
