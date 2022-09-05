@@ -3,7 +3,7 @@ from typing import List, Optional, Tuple, Union
 import pytest
 
 from analysis.src.python.data_analysis.model.column_name import SubmissionColumns
-from analysis.src.python.data_analysis.templates.search import RepetitiveIssue, get_repetitive_issues
+from analysis.src.python.data_analysis.templates.search import get_repetitive_issues, RepetitiveIssue
 from analysis.src.python.data_analysis.templates.utils.code_compare_utils import CodeComparator
 from analysis.src.python.utils.df_utils import read_df
 from analysis.test.python.data_analysis import TEMPLATES_ISSUES_FOLDER
