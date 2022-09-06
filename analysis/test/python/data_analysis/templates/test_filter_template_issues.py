@@ -3,7 +3,7 @@ from typing import Optional, Union
 import pytest
 
 from analysis.src.python.data_analysis.model.column_name import SubmissionColumns
-from analysis.src.python.data_analysis.templates.filtering import filter_template_issues
+from analysis.src.python.data_analysis.templates.filter import filter_template_issues
 from analysis.src.python.data_analysis.templates.utils.code_compare_utils import CodeComparator
 from analysis.src.python.utils.df_utils import equal_df, read_df, write_df
 from analysis.test.python.data_analysis import TEMPLATES_ISSUES_FOLDER
