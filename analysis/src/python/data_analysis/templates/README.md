@@ -32,6 +32,25 @@ Optional arguments:
 | **&#8209;iw**, **&#8209;&#8209;ignore-trailing-whitespaces** | Ignore trailing whitespaces while comparing two code lines.                                                                         |
 | **&#8209;equal**                                             | Function for lines comparing. Possible functions: `edit_distance`, `edit_ratio`, `substring`. The default value is `edit_distance`. |
 
+
+Example for output csv with repetitive issues:
+  - `step_id` - id of step where repetitive issue found
+  - `name` - issue name
+  - `description` - the message about this issue which student see
+  - `pos_in_template` - position of issue in template code (can be null if not detected)
+  - `line` - example of line of code where repetitive issue is detected
+  - `frequency` - % of submission series with such repetitive issue
+  - `count` - number of submission series with such repetitive issue
+  - `total_count` - number of all submission series for such step
+  - `groups` - ids of submission series (groups) with such repetitive issue
+
+
+| step_id | name                 | description                             | pos_in_template | line                                  | frequency  | count  | total_count             | groups            | 
+|---------|----------------------|-----------------------------------------|-----------------|---------------------------------------|------------|--------|-------------------------|-------------------|
+| 2262    | WhitespaceAfterCheck | "if' is not followed by whitespace ..." | <null>          | "\tif(x < y) {"                       | 0.09967585 | 123    | 1234                    | "[30, 33, 36]"    |
+| 5203    | IndentationCheck     | "for' has incorrect indentation ..."    | 10              | "\t\t\t\tfor(int k = i; k > 0; k--){" | 0.80433251 | 4567   | 5678                    | "[130, 133, 136]" |
+
+
 ## Postprocessing
 
 This script allows processing the results of the repetitive issues search algorithm to convert into more user-friendly format:
@@ -78,17 +97,10 @@ Optional arguments:
 
 ### Output format
 Output directory will contain following directories:
-- `issues` with three csv files:
-  - `template_issues.csv` with template issues (most important file)
-  - `common_typical_issues.csv` with common typical issues
-  - `rare_typical_issues.csv` with rare typical issues
+1. `issues` with three csv files:
+   - `template_issues.csv` with part of repetitive issues which a considered to be template issues (most important file)
+   - `common_typical_issues.csv` with part of repetitive issues which a considered to be common typical students issues
+   - `rare_typical_issues.csv` with part of repetitive issues which a considered to be rare typical students issues
 
-Example for each csv:
-
-| step_id  | origin_class       | frequency          | pos_in_template | task_link | description                                                                          |
-|----------|--------------------|--------------------|-----------------|-----------|--------------------------------------------------------------------------------------|
-| 2262     | UselessParentheses | 0.8195615514333895 | <null>          | LINK      | Useless parentheses.                                                                 |
-| 5203     | IndentationCheck   | 0.6465067778936392 | 30, 33, 36      | LINK      | 'method def modifier' has incorrect indentation level 5, expected level should be 4. |
-
-- `samples` with examples of submissions series with template issues occurrence in format
+2. `samples` with examples of submissions series with template issues occurrence in format
 `<step_id>/<issue_class_name>/<group_id>/solution_<submission_id>/attempt_<attempt number>.<extension>`
