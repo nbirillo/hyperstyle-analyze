@@ -39,7 +39,6 @@ def test_filter_template_issues(templates_issues_path: str,
 
     df_filtered_issues = filter_template_issues(df_templates_issues, df_submissions, df_steps, issues_column,
                                                 code_comparator)
-    write_df(df_filtered_issues, TEMPLATE_ISSUES_FOLDER / result_path)
 
     df_result = read_df(TEMPLATE_ISSUES_FOLDER / result_path)
     assert equal_df(df_filtered_issues, df_result)

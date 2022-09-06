@@ -11,26 +11,26 @@ def parse_template_code(df_steps: pd.DataFrame, lang: Optional[str]) -> pd.DataF
     return df_steps.apply(parse_template_code_from_step, lang=lang)
 
 
-def parse_template_code_from_step(step: pd.Series, lang: Optional[str]) -> List[str]:
+def parse_template_code_from_step(step: pd.Series, lang: Optional[str] = None, keep_ends: bool = False) -> List[str]:
     # Steps gathered from Database in format of str
     if StepColumns.CODE_TEMPLATE.value in step:
-        return parse_template_code_from_str(step[StepColumns.CODE_TEMPLATE.value])
+        return parse_template_code_from_str(step[StepColumns.CODE_TEMPLATE.value], keep_ends=keep_ends)
 
     # Steps gathered from API in format of dict
     if StepColumns.CODE_TEMPLATES.value in step and lang is not None:
-        return parse_template_code_from_dict(step[StepColumns.CODE_TEMPLATES.value], lang=lang)
+        return parse_template_from_dict(step[StepColumns.CODE_TEMPLATES.value], lang=lang, keep_ends=keep_ends)
 
     raise Exception('Can not parse template code! '
                     'Check the language is specified and dataset has corresponding columns!')
 
 
-def parse_template_code_from_dict(template_dict: str, lang: Optional[str]) -> List[str]:
+def parse_template_from_dict(template_dict: str, lang: Optional[str] = None, keep_ends: bool = False) -> List[str]:
     templates_code = ast.literal_eval(template_dict)
-    return split_code_to_lines(templates_code[lang])
+    return split_code_to_lines(templates_code[lang], keep_ends=keep_ends)
 
 
-def parse_template_code_from_str(template_str: str) -> List[str]:
-    return split_code_to_lines(template_str)
+def parse_template_code_from_str(template_str: str, keep_ends: bool = False) -> List[str]:
+    return split_code_to_lines(template_str, keep_ends=keep_ends)
 
 
 def parse_template_issue_positions(positions: str) -> List[int]:
