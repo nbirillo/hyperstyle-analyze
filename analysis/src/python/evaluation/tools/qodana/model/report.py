@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable, List, Union
 
-from dataclasses_json import dataclass_json, LetterCase
+from dataclasses_json import LetterCase, dataclass_json
 
 from analysis.src.python.evaluation.tools.model.report import BaseIssue, BaseReport
 from analysis.src.python.utils.json_utils import parse_json
@@ -71,6 +71,10 @@ class Problem(BaseIssue):
 class QodanaReport(BaseReport):
     version: str
     list_problem: List[Problem]
+
+    @staticmethod
+    def get_default() -> 'QodanaReport':
+        return QodanaReport("", [])
 
     def get_issues(self) -> List[Problem]:
         return self.list_problem

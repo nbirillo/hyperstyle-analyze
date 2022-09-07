@@ -9,8 +9,9 @@ The dataset must contain at least three columns:
 - For this evaluation you need to download docker images `jetbrains/qodana` and `jetbrains/qodana-python:2022.1-eap` (with qodana tool):
 ```shell
 docker pull jetbrains/qodana
-docker pull jetbrains/qodana-python:2022.1-eap
+docker pull jetbrains/qodana-python:2022.2-eap
 ```
+As qodana for python is eap, please check [here](https://www.jetbrains.com/help/qodana/qodana-python.html) dockers current version.
 
 Output file is a new `xlsx` or `csv` file with the all columns from the input file and one additional:
 - `qodana_issues` - json string with full traceback of [Qodana](https://github.com/JetBrains/Qodana) code quality analysis tool.
