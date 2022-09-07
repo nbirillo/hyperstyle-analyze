@@ -97,3 +97,47 @@ print('%.5f' % e)
     }
   ]
 }"
+5,3,2021-02-25 09:00:00.000000,python3,"x = 1
+# x = 2
+# x = 3
+print(x)
+",3,2,1,1,"{
+  ""quality"": {
+    ""code"": ""EXCELLENT"",
+    ""text"": ""Code quality (beta): EXCELLENT""
+  },
+  ""issues"": [
+    {
+      ""code"": ""WPS432"",
+      ""text"": ""Found magic number: 1"",
+      ""line"": ""x = 1"",
+      ""line_number"": 1,
+      ""column_number"": 5,
+      ""category"": ""BEST_PRACTICES"",
+      ""difficulty"": ""MEDIUM"",
+      ""influence_on_penalty"": 0
+    }
+  ]
+}"
+6,3,2021-02-25 09:00:00.000000,python3,"# x = 1
+x = 2
+# x = 3
+print(x)
+",4,3,1,1,"{
+  ""quality"": {
+    ""code"": ""EXCELLENT"",
+    ""text"": ""Code quality (beta): EXCELLENT""
+  },
+  ""issues"": [
+    {
+      ""code"": ""WPS432"",
+      ""text"": ""Found magic number: 2"",
+      ""line"": ""x = 2"",
+      ""line_number"": 2,
+      ""column_number"": 5,
+      ""category"": ""BEST_PRACTICES"",
+      ""difficulty"": ""MEDIUM"",
+      ""influence_on_penalty"": 0
+    }
+  ]
+}"

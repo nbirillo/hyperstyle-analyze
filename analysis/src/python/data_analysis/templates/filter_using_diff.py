@@ -31,16 +31,16 @@ def get_issues_with_offset(report: BaseReport, code_lines: List[str]) -> List[Tu
     return issues_with_offset
 
 
-def get_code_template_diffs(code_lines: List[str], template_lines: List[str]) -> List[Tuple[int, int, int]]:
+def get_template_to_code_diffs(template_lines: List[str], code_lines: List[str]) -> List[Tuple[int, int, int]]:
     """
-    Get template to students code diff in format list of tuples (tag, start, end) where:
+    Get template to students code diff in format of list of tuples (tag, start, end) where:
     tag - type of change where 0 (code not changed), 1 (code added). Tag -1 (code deleted) is ignored.
     start - position of change start (included)
     end - position of change end (excluded)
     """
 
-    dmp = diff_match_patch()
-    patches = dmp.diff_main(''.join(template_lines), ''.join(code_lines))
+    matcher = diff_match_patch()
+    patches = matcher.diff_main(''.join(template_lines), ''.join(code_lines))
 
     diffs = []
     start = 0
@@ -81,7 +81,7 @@ def filter_in_single_submission(submission: pd.Series, step: pd.Series, issues_c
     report = parse_report(submission, issues_column)
 
     issues_with_offset = get_issues_with_offset(report, code_lines)
-    diff = get_code_template_diffs(code_lines, template_lines)
+    diff = get_template_to_code_diffs(template_lines, code_lines)
 
     template_issues = get_template_issues(issues_with_offset, diff)
 

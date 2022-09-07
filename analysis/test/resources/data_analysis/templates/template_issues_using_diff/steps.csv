@@ -3,3 +3,7 @@ id,code_template
 # put your python code here"
 2,"eul = 2.718281828459045
 # put your python code here"
+3,"# x = 1
+# x = 2
+# x = 3
+print(x)"

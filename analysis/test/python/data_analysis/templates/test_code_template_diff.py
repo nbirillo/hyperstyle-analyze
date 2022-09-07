@@ -1,31 +1,30 @@
+from typing import List, Tuple
+
 import pytest
 
-from analysis.src.python.data_analysis.model.column_name import SubmissionColumns
-from analysis.src.python.data_analysis.templates.filter_using_diff import filter_template_issues_using_diff
-from analysis.src.python.utils.df_utils import equal_df, read_df, write_df
-from analysis.test.python.data_analysis import TEMPLATES_ISSUES_FOLDER
+from analysis.src.python.data_analysis.templates.filter_using_diff import get_template_to_code_diffs
 
-TEMPLATE_ISSUES_FOLDER = TEMPLATES_ISSUES_FOLDER / 'template_issues_using_diff'
-
-TEMPLATE_ISSUES_TEST_DATA = [
-    ('submissions_python3_hyperstyle.csv', 'steps.csv',
-     SubmissionColumns.HYPERSTYLE_ISSUES.value,
-     'filtered_submissions_python3_hyperstyle.csv'),
+DIFF_TEST_DATA = [
+    (["a = 1\n", "b = 2\n", "c = # put your code here\n", "print(a, b, c)"],
+     ["a = 1\n", "b = 2\n", "c = 3\n", "print(a, b, c)"],
+     [(0, 0, 16), (1, 16, 17), (0, 17, 32)]),
+    (["a = 1\n", "b = 2\n", "c = # put your code here\n", "print(a, b, c)"],
+     ["A = 1\n", "b = 2\n", "c = 3\n", "print(a, b, c)"],
+     [(1, 0, 1), (0, 1, 16), (1, 16, 17), (0, 17, 32)]),
+    (["# a = 1"],
+     ["a = 1"],
+     [(0, 0, 5)]),
+    # Lines swap does not work properly
+    (["a = 1\n", "b = 2\n", "c = # put your code here\n", "print(a, b, c)"],
+     ["b = 2\n", "a = 1\n", "c = 3\n", "print(a, b, c)"],
+     [(1, 0, 1), (0, 1, 4), (1, 4, 5), (0, 5, 6), (1, 6, 7),
+      (0, 7, 10), (1, 10, 11), (0, 11, 16), (1, 16, 17), (0, 17, 32)])
 ]
 
 
-@pytest.mark.parametrize(
-    ('submissions_path', 'steps_path', 'issues_column', 'result_path'),
-    TEMPLATE_ISSUES_TEST_DATA,
-)
-def test_filter_template_issues_using_diff(submissions_path: str,
-                                           steps_path: str,
-                                           issues_column: str,
-                                           result_path: str):
-    df_submissions = read_df(TEMPLATE_ISSUES_FOLDER / submissions_path)
-    df_steps = read_df(TEMPLATE_ISSUES_FOLDER / steps_path)
-
-    df_filtered_issues = filter_template_issues_using_diff(df_submissions, df_steps, issues_column)
-
-    df_result = read_df(TEMPLATE_ISSUES_FOLDER / result_path)
-    assert equal_df(df_filtered_issues, df_result)
+@pytest.mark.parametrize(('template', 'code', 'expected_diffs'), DIFF_TEST_DATA)
+def test_filter_template_issues_using_diff(template: List[str],
+                                           code: List[str],
+                                           expected_diffs: List[Tuple[int, int, int]]):
+    diffs = get_template_to_code_diffs(template, code)
+    assert diffs == expected_diffs
