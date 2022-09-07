@@ -67,7 +67,7 @@ def get_template_issues(issues_with_offset: List[Tuple[int, BaseIssue]], diff: L
         while i < len(diff) and diff[i][2] < offset:
             i += 1
         # If tag is 0 the part of code was not changed from template
-        if diff[i][0] == 0:
+        if i >= len(diff) or diff[i][0] == 0:
             template_issues.append(issue)
 
     return template_issues
@@ -129,6 +129,6 @@ if __name__ == '__main__':
     configure_parser(parser)
 
     args = parser.parse_args(sys.argv[1:])
-    configure_logger(args.repetitive_issues_path, f'template_issues_filtering_{args.equal}', args.log_path)
+    configure_logger(args.filtered_submissions_path, f'template_issues_filtering_using_diff', args.log_path)
 
     main(args.submissions_path, args.steps_path, args.filtered_submissions_path, args.issues_column)
