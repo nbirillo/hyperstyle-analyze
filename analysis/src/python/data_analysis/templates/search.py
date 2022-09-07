@@ -14,7 +14,7 @@ from analysis.src.python.data_analysis.templates.utils.template_utils import par
 from analysis.src.python.data_analysis.utils.code_utils import split_code_to_lines
 from analysis.src.python.data_analysis.utils.report_utils import parse_report
 from analysis.src.python.evaluation.tools.model.report import BaseIssue
-from analysis.src.python.utils.df_utils import filter_df_by_iterable_value, filter_df_by_single_value, read_df, write_df
+from analysis.src.python.utils.df_utils import filter_df_by_iterable_value, read_df, write_df
 from analysis.src.python.utils.logging_utils import configure_logger
 
 
@@ -138,8 +138,6 @@ def search_repetitive_issues(df_submissions: pd.DataFrame,
                              issues_column: str,
                              code_comparator: CodeComparator) -> pd.DataFrame:
     """ Search for all repetitive issues - issue which remains in all submission of concrete user for concrete step. """
-
-    df_steps = filter_df_by_single_value(df_steps, StepColumns.ID.value, 2324)
 
     df_submissions = filter_df_by_iterable_value(df_submissions, SubmissionColumns.STEP_ID.value,
                                                  df_steps[StepColumns.ID.value].unique())
