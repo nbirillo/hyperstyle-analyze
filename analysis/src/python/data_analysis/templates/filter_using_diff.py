@@ -129,6 +129,6 @@ if __name__ == '__main__':
     configure_parser(parser)
 
     args = parser.parse_args(sys.argv[1:])
-    configure_logger(args.filtered_submissions_path, f'template_issues_filtering_using_diff', args.log_path)
+    configure_logger(args.filtered_submissions_path, 'template_issues_filtering_using_diff', args.log_path)
 
     main(args.submissions_path, args.steps_path, args.filtered_submissions_path, args.issues_column)
