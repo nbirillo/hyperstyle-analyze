@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Callable, List, Union
 
-from dataclasses_json import LetterCase, dataclass_json
+from dataclasses_json import dataclass_json, LetterCase
 
 from analysis.src.python.evaluation.tools.model.report import BaseIssue, BaseReport
 from analysis.src.python.utils.json_utils import parse_json
