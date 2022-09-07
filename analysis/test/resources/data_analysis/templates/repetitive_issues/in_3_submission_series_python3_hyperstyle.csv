@@ -1,9 +1,9 @@
 id,step_id,time,lang,code,user_id,group,attempt,total_attempts,hyperstyle_issues
-4,1,2021-02-25 09:00:00.000000,python3,"e = 2.718281828459045
+7,1,2021-02-25 09:00:00.000000,python3,"e = 2.718281828459045
 # put your python code here
 print(f""{e:.5f}"")
 
-",2,1,1,4,"{
+",3,2,1,4,"{
   ""quality"": {
     ""code"": ""EXCELLENT"",
     ""text"": ""Code quality (beta): EXCELLENT""
@@ -31,11 +31,11 @@ print(f""{e:.5f}"")
     }
   ]
 }"
-5,1,2021-02-25 09:10:00.000000,python3,"
+8,1,2021-02-25 09:10:00.000000,python3,"
 e = 2.718281828459045
 # put your python code here
 print(f""{e:.5f}"")
-",2,1,2,4,"{
+",3,2,2,4,"{
   ""quality"": {
     ""code"": ""EXCELLENT"",
     ""text"": ""Code quality (beta): EXCELLENT""
@@ -63,11 +63,11 @@ print(f""{e:.5f}"")
     }
   ]
 }"
-6,1,2021-02-25 09:20:00.000000,python3,"
+9,1,2021-02-25 09:20:00.000000,python3,"
 # put your python code here
 e = 2.718281828459045
 print(f""{e:.5f}"")
-",2,1,3,4,"{
+",3,2,3,4,"{
   ""quality"": {
     ""code"": ""EXCELLENT"",
     ""text"": ""Code quality (beta): EXCELLENT""
@@ -95,10 +95,10 @@ print(f""{e:.5f}"")
     }
   ]
 }"
-7,1,2021-02-25 09:30:00.000000,python3,"import math
+10,1,2021-02-25 09:30:00.000000,python3,"import math
 # put your python code here
 print(math.e)
-",2,1,4,4,"{
+",3,2,4,4,"{
   ""quality"": {
     ""code"": ""EXCELLENT"",
     ""text"": ""Code quality (beta): EXCELLENT""

@@ -173,13 +173,15 @@ def configure_parser(parser: argparse.ArgumentParser) -> None:
     parser.add_argument('issues_column', type=str,
                         help='Column where issues stored.',
                         choices=[SubmissionColumns.HYPERSTYLE_ISSUES.value, SubmissionColumns.QODANA_ISSUES.value])
+
+    parser.add_argument('--equal', type=str, default='edit_distance',
+                        help='Function for lines comparing.',
+                        choices=['edit_distance', 'edit_ratio', 'substring'])
     parser.add_argument('-ic', '--ignore-trailing-comments', action='store_true',
                         help='Ignore trailing comments in code compare. True by default.')
     parser.add_argument('-iw', '--ignore-trailing-whitespaces', action='store_true',
                         help='Ignore trailing whitespaces in code compare. True by default.')
-    parser.add_argument('--equal', type=str, default='edit_distance',
-                        help='Function for lines comparing.',
-                        choices=['edit_distance', 'edit_ratio', 'substring'])
+
     parser.add_argument('--log-path', type=str, default=None, help='Path to directory for log.')
 
 

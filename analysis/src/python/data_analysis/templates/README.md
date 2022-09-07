@@ -104,3 +104,35 @@ Output directory will contain following directories:
 
 2. `samples` with examples of submissions series with template issues occurrence in format
 `<step_id>/<issue_class_name>/<group_id>/solution_<submission_id>/attempt_<attempt number>.<extension>`
+
+## Filtering
+
+After we have list of issue in template we can filter them from dataset to analyze only students code quality issues.
+So the idea is to build matching for student code lines and template code lines and remove all issues 
+from student code lines if corresponding template line contains template issue.
+
+### Usage
+
+Run the [filter.py](filter.py) script with the arguments from command line.
+
+Required arguments:
+
+- `templates_issues_path` — Path to .csv file with template issues (from [postprocess.py](postprocess.py) output).
+- `submissions_path` — Path to .csv file with submissions. The file must contain the following columns: `id`, `lang`, `step_id`, `code`, `group`, `attempt`, `hyperskill_issues`/`qodana_issues` (please, use [preprocess_submissions.py](../preprocessing/preprocess_submissions.py) script to get  `group` and `attempt` columns).
+- `steps_path` — Path to .csv file with steps. The file must contain the following columns: `id`, and `code_template` OR `code_templates`.
+- `filtered_submissions_path` — Path to resulting .csv file with submissions with filtered issues.
+- `issues_column` — Column name in .csv file with submissions where issues are stored (can be `hyperstyle_issues` ot `qodana_issues`).
+
+Optional arguments:
+
+| Argument                                                     | Description                                                                                                                         |
+|--------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------|
+| **&#8209;ic**, **&#8209;&#8209;ignore-trailing-comments**    | Ignore trailing (in the end of line) comments while comparing two code lines.                                                       |
+| **&#8209;iw**, **&#8209;&#8209;ignore-trailing-whitespaces** | Ignore trailing whitespaces while comparing two code lines.                                                                         |
+| **&#8209;equal**                                             | Function for lines comparing. Possible functions: `edit_distance`, `edit_ratio`, `substring`. The default value is `edit_distance`. |
+
+### Output format
+Output csv file will be saved to `filtered_submissions_path` and will contain all data from csv in `submissions_path` but issues from `issues_column` will be modified in following way:
+- `issues_column` will contain only students issues with filtered template issues
+- `issues_column` + `_diff` will contain filtered template issues
+- `issues_column` + `_all` will contain both students and template issues
