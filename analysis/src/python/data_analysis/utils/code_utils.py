@@ -10,18 +10,19 @@ from analysis.src.python.evaluation.tools.model.report import BaseIssue
 from analysis.src.python.evaluation.utils.pandas_utils import get_language_version
 
 
-def get_comment_symbol(language_version: LanguageVersion):
+def get_single_line_comment_symbol(language_version: LanguageVersion):
     if language_version.is_java():
         return '//'
     if language_version == LanguageVersion.PYTHON_3:
         return '#'
 
-    raise NotImplementedError(f'Comment symbol for language version {language_version.value} is not defined.')
+    raise NotImplementedError(f'Single line comment symbol for language version {language_version.value}'
+                              f' is not defined.')
 
 
 def get_comment_to_code_line(issue: BaseIssue, language_version: LanguageVersion) -> str:
     """ Get comment with information about given issue. """
-    comment_symbol = get_comment_symbol(language_version)
+    comment_symbol = get_single_line_comment_symbol(language_version)
     return f' {comment_symbol} {issue.get_name()} line={issue.get_line_number()} offset={issue.get_column_number()}'
 
 

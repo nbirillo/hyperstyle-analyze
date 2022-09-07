@@ -31,23 +31,28 @@ class ProcessingConfig(Object):
     with_additional_info: bool
     base_task_url: str
 
+    @staticmethod
+    def parse_from_args(args) -> 'ProcessingConfig':
+        return ProcessingConfig(
+            repetitive_issues_path=args.repetitive_issues_path,
+            submissions_path=args.submissions_path,
+            result_path=args.result_path,
+            issues_column=args.issues_column,
+            freq_to_remove=args.freq_to_remove / 100,
+            freq_to_separate_template_issues=args.freq_to_separate_template_issues / 100,
+            freq_to_separate_rare_and_common_issues=args.freq_to_separate_rare_and_common_issues / 100,
+            solutions_number=args.solutions_number,
+            with_additional_info=args.with_additional_info,
+            base_task_url=args.base_task_url.rstrip('/'),
+        )
 
-def parse_config(args) -> ProcessingConfig:
-    return ProcessingConfig(
-        repetitive_issues_path=args.repetitive_issues_path,
-        submissions_path=args.submissions_path,
-        result_path=args.result_path,
-        issues_column=args.issues_column,
-        freq_to_remove=args.freq_to_remove / 100,
-        freq_to_separate_template_issues=args.freq_to_separate_template_issues / 100,
-        freq_to_separate_rare_and_common_issues=args.freq_to_separate_rare_and_common_issues / 100,
-        solutions_number=args.solutions_number,
-        with_additional_info=args.with_additional_info,
-        base_task_url=args.base_task_url.rstrip('/'),
-    )
 
+def get_partition_by_pos_in_template(df_repetitive_issues: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame]:
+    """
+    Split issues into to two group according to `pos_in_template` value:
+    first group is with None position in template (not specified) and second with detected position.
+    """
 
-def get_with_and_without_pos_in_template(df_repetitive_issues: pd.DataFrame) -> Tuple[pd.DataFrame, pd.DataFrame]:
     df_with_pos_in_template = df_repetitive_issues[
         df_repetitive_issues[SubmissionColumns.POS_IN_TEMPLATE.value].notnull()]
 
@@ -70,6 +75,7 @@ def split_by_freq(df_repetitive_issues: pd.DataFrame,
         df_typical_issues[TemplateColumns.FREQUENCY.value] <= freq_to_separate_rare_and_common_issues]
     df_common_typical_issues = df_typical_issues.loc[
         (df_typical_issues[TemplateColumns.FREQUENCY.value] > freq_to_separate_rare_and_common_issues)]
+
     return df_template_issues, df_rare_typical_issues, df_common_typical_issues
 
 
@@ -178,4 +184,4 @@ if __name__ == '__main__':
     args = parser.parse_args(sys.argv[1:])
     configure_logger(args.repetitive_issues_path, 'repetitive_issues_postprocess', args.log_path)
 
-    main(parse_config(args))
+    main(ProcessingConfig.parse_from_args(args))
