@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 PROFILE_FOLDER = Path(__file__).parents[3] / 'resources' / 'evaluation' / 'qodana' / 'inspection_profiles'
 
 QODANA_JAVA_DOCKER_PATH = 'jetbrains/qodana'
-QODANA_PYTHON_DOCKER_PATH = 'jetbrains/qodana-python:2022.1-eap'
+QODANA_PYTHON_DOCKER_PATH = 'jetbrains/qodana-python:2022.2-eap'
 
 OUTPUT_FILE_PATH = Path('report', 'results', 'result-allProblems.json')
 
