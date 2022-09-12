@@ -72,6 +72,10 @@ class QodanaReport(BaseReport):
     version: str
     list_problem: List[Problem]
 
+    @staticmethod
+    def get_default() -> 'QodanaReport':
+        return QodanaReport("", [])
+
     def get_issues(self) -> List[Problem]:
         return self.list_problem
 
