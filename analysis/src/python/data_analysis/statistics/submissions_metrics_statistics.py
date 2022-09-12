@@ -1,8 +1,6 @@
 import argparse
-from enum import Enum
 from functools import partial
 from pathlib import Path
-from typing import Optional, Set
 
 import pandas as pd
 
@@ -15,60 +13,49 @@ from analysis.src.python.data_analysis.utils.stats_utils import (
 from analysis.src.python.utils.df_utils import read_df, write_df
 
 
-class CodeLinesCountOption(Enum):
-    ALL = 'all'
-    IGNORE_EMPTY_LINES = 'ignore_empty_lines'
-
-    @classmethod
-    def values(cls) -> Set[str]:
-        return {cls.ALL.value, cls.IGNORE_EMPTY_LINES.value}
-
-
 def get_submission_statistics(
-    submissions: pd.DataFrame,
-    code_lines_count: Optional[CodeLinesCountOption] = None,
-    code_symbols_count: bool = False,
-    hyperstyle_issue_count: bool = False,
-    hyperstyle_issue_by_code_lines: bool = False,
-    qodana_issue_count: bool = False,
-    qodana_issue_by_code_lines: bool = False,
+        submissions: pd.DataFrame,
+        code_lines_count: bool = False,
+        code_symbols_count: bool = False,
+        hyperstyle_issue_count: bool = False,
+        hyperstyle_issue_by_code_lines: bool = False,
+        qodana_issue_count: bool = False,
+        qodana_issue_by_code_lines: bool = False,
+        ignore_empty_lines: bool = False,
 ) -> pd.DataFrame:
     """Calculate submissions metrics such number of code lines, symbols, issues."""
 
     stats = submissions[[SubmissionColumns.ID.value]].copy()
 
-    if code_lines_count is not None:
+    if code_lines_count or hyperstyle_issue_by_code_lines or qodana_issue_by_code_lines:
         stats[SubmissionStatsColumns.CODE_LINES_COUNT.value] = submissions[SubmissionColumns.CODE.value].apply(
-            partial(calculate_code_lines_count, ignore_empty_lines=True)
-            if code_lines_count == CodeLinesCountOption.IGNORE_EMPTY_LINES
-            else calculate_code_lines_count,
-        )
+            partial(calculate_code_lines_count, ignore_empty_lines=ignore_empty_lines))
 
     if code_symbols_count:
         stats[SubmissionStatsColumns.CODE_SYMBOLS_COUNT.value] = submissions[SubmissionColumns.CODE.value].apply(
             calculate_code_symbols_count,
         )
 
-    if hyperstyle_issue_count:
+    if hyperstyle_issue_count or hyperstyle_issue_by_code_lines:
         stats[SubmissionStatsColumns.HYPERSTYLE_ISSUES_COUNT.value] = submissions[
             SubmissionColumns.HYPERSTYLE_ISSUES.value
         ].apply(calculate_issues_count, issues_column=SubmissionColumns.HYPERSTYLE_ISSUES.value)
 
     if hyperstyle_issue_by_code_lines:
         stats[SubmissionStatsColumns.HYPERSTYLE_ISSUES_BY_CODE_LINES.value] = (
-            stats[SubmissionStatsColumns.HYPERSTYLE_ISSUES_COUNT.value]
-            / stats[SubmissionStatsColumns.CODE_LINES_COUNT.value]
+                stats[SubmissionStatsColumns.HYPERSTYLE_ISSUES_COUNT.value]
+                / stats[SubmissionStatsColumns.CODE_LINES_COUNT.value]
         )
 
-    if qodana_issue_count:
+    if qodana_issue_count or qodana_issue_by_code_lines:
         stats[SubmissionStatsColumns.QODANA_ISSUE_COUNT.value] = submissions[
             SubmissionColumns.QODANA_ISSUES.value
         ].apply(calculate_issues_count, issues_column=SubmissionColumns.QODANA_ISSUES.value)
 
     if qodana_issue_by_code_lines:
         stats[SubmissionStatsColumns.QODANA_ISSUE_BY_CODE_LINES.value] = (
-            stats[SubmissionStatsColumns.QODANA_ISSUE_COUNT.value]
-            / stats[SubmissionStatsColumns.CODE_LINES_COUNT.value]
+                stats[SubmissionStatsColumns.QODANA_ISSUE_COUNT.value]
+                / stats[SubmissionStatsColumns.CODE_LINES_COUNT.value]
         )
 
     return stats
@@ -89,41 +76,44 @@ def configure_parser(parser: argparse.ArgumentParser) -> None:
 
     parser.add_argument(
         '--code-lines-count',
-        type=str,
-        nargs='?',
-        const=CodeLinesCountOption.ALL.value,
-        choices=CodeLinesCountOption.values(),
-        help="Count the number of lines of code. Select 'ignore_empty_lines' to ignore empty lines.",
+        action='store_true',
+        help="Count the number of lines of code.",
     )
 
     parser.add_argument(
         '--code-symbols-count',
-        type=bool,
+        action='store_true',
         help='Count the number of symbols in the code.',
     )
 
     parser.add_argument(
         '--hyperstyle-issue-count',
-        type=bool,
+        action='store_true',
         help='Count the number of hyperstyle issues.',
     )
 
     parser.add_argument(
         '--hyperstyle-issue-by-code-lines',
-        type=str,
+        action='store_true',
         help='Calculate the frequency of hyperstyle issues.',
     )
 
     parser.add_argument(
         '--qodana-issue-count',
-        type=bool,
+        action='store_true',
         help='Count the number of Qodana issues.',
     )
 
     parser.add_argument(
         '--qodana-issue-by-code-lines',
-        type=bool,
+        action='store_true',
         help='Calculate the frequency of Qodana issues.',
+    )
+
+    parser.add_argument(
+        '--ignore-empty-lines',
+        action='store_true',
+        help='Ignore empty lines during metrics count.',
     )
 
 
@@ -132,9 +122,6 @@ def main() -> None:
     configure_parser(parser)
 
     args = parser.parse_args()
-    if args.code_lines_count is not None:
-        args.code_lines_count = CodeLinesCountOption(args.code_lines_count)
-
     submissions = read_df(args.submissions_path)
 
     submissions_with_stats = get_submission_statistics(
@@ -145,6 +132,7 @@ def main() -> None:
         args.hyperstyle_issue_by_code_lines,
         args.qodana_issue_count,
         args.qodana_issue_by_code_lines,
+        args.ignore_empty_lines,
     )
 
     write_df(submissions_with_stats, args.submissions_statistics_path)
