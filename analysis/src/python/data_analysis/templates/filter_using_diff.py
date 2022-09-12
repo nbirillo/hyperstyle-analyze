@@ -1,5 +1,6 @@
 import argparse
 import sys
+from enum import Enum, unique
 from typing import List, Tuple
 
 import pandas as pd
@@ -12,6 +13,13 @@ from analysis.src.python.data_analysis.utils.report_utils import parse_report
 from analysis.src.python.evaluation.tools.model.report import BaseIssue, BaseReport
 from analysis.src.python.utils.df_utils import filter_df_by_iterable_value, read_df, write_df
 from analysis.src.python.utils.logging_utils import configure_logger
+
+
+@unique
+class DiffTag(Enum):
+    ADDITION = 1
+    EQUAL = 0
+    DELETION = -1
 
 
 def get_issues_with_offset(report: BaseReport, code_lines: List[str]) -> List[Tuple[int, BaseIssue]]:
@@ -46,7 +54,7 @@ def get_template_to_code_diffs(template_lines: List[str], code_lines: List[str])
     start = 0
 
     for tag, patch in patches:
-        if tag != -1:
+        if tag != DiffTag.DELETION.value:
             end = start + len(patch)
             diffs.append((tag, start, end))
             start = end
@@ -66,8 +74,8 @@ def get_template_issues(issues_with_offset: List[Tuple[int, BaseIssue]], diff: L
     for offset, issue in issues_with_offset:
         while i < len(diff) and diff[i][2] < offset:
             i += 1
-        # If tag is 0 the part of code was not changed from template
-        if i >= len(diff) or diff[i][0] == 0:
+        # If tag is 0 (equal) the part of code was not changed from template
+        if i >= len(diff) or diff[i][0] == DiffTag.EQUAL.value:
             template_issues.append(issue)
 
     return template_issues
