@@ -52,7 +52,7 @@ def get_submission_statistics(
     if hyperstyle_issue_count:
         stats[SubmissionStatsColumns.HYPERSTYLE_ISSUES_COUNT.value] = submissions[
             SubmissionColumns.HYPERSTYLE_ISSUES.value
-        ].apply(calculate_issues_count)
+        ].apply(calculate_issues_count, issues_column=SubmissionColumns.HYPERSTYLE_ISSUES.value)
 
     if hyperstyle_issue_by_code_lines:
         stats[SubmissionStatsColumns.HYPERSTYLE_ISSUES_BY_CODE_LINES.value] = (
@@ -63,7 +63,7 @@ def get_submission_statistics(
     if qodana_issue_count:
         stats[SubmissionStatsColumns.QODANA_ISSUE_COUNT.value] = submissions[
             SubmissionColumns.QODANA_ISSUES.value
-        ].apply(calculate_issues_count)
+        ].apply(calculate_issues_count, issues_column=SubmissionColumns.QODANA_ISSUES.value)
 
     if qodana_issue_by_code_lines:
         stats[SubmissionStatsColumns.QODANA_ISSUE_BY_CODE_LINES.value] = (

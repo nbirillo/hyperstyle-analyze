@@ -120,15 +120,13 @@ class SubmissionColumns(Enum):
     TIME = 'time'
     HIDDEN_CODE_TEMPLATE = 'hidden_code_template'
     CODE_STYLE = 'code_style'
+
     # issues
     RAW_ISSUES = 'raw_issues'
     RAW_ISSUES_ALL = 'raw_issues_all'
     RAW_ISSUES_DIFF = 'raw_issues_diff'
     HYPERSTYLE_ISSUES = 'hyperstyle_issues'
-    RAW_ISSUE_CLASS = 'origin_class'
-    ISSUE_TYPE = 'type'
     QODANA_ISSUES = 'qodana_issues'
-    QODANA_ISSUE_CLASS = 'problem_id'
 
     STATUS = 'status'
     FREQUENCY = 'frequency'
@@ -138,15 +136,12 @@ class SubmissionColumns(Enum):
 @unique
 class SubmissionStatsColumns(Enum):
     ATTEMPTS = 'attempts'
-    HYPERSTYLE_ISSUES_COUNT = 'hyperstyle_issues_count'
-    QODANA_ISSUES_COUNT = 'qodana_issues_count'
     CODE_LINES_COUNT = 'code_lines_count'
     CODE_SYMBOLS_COUNT = 'code_symbols_count'
+    HYPERSTYLE_ISSUES_COUNT = 'hyperstyle_issues_count'
+    QODANA_ISSUES_COUNT = 'qodana_issues_count'
     HYPERSTYLE_ISSUES_BY_CODE_LINES = 'hyperstyle_issues_by_code_lines'
     QODANA_ISSUES_BY_CODE_LINES = 'qodana_issues_by_code_lines'
-
-    FIRST_SUFFIX = '_first'
-    LAST_SUFFIX = '_last'
 
 
 @unique

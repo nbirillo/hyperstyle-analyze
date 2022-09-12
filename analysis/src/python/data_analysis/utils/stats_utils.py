@@ -1,11 +1,11 @@
-from analysis.src.python.data_analysis.utils.analysis_issue import AnalysisReport
 from analysis.src.python.data_analysis.utils.code_utils import split_code_to_lines
+from analysis.src.python.data_analysis.utils.report_utils import parse_str_report
 
 
-def calculate_issues_count(str_report: str) -> int:
+def calculate_issues_count(str_report: str, issues_column: str) -> int:
     """ Parse issues list and calculate number of issues. """
 
-    return len(AnalysisReport.from_json(str_report).issues)
+    return len(parse_str_report(str_report, issues_column).get_issues())
 
 
 def calculate_code_lines_count(code: str, ignore_empty_lines: bool = False) -> int:
