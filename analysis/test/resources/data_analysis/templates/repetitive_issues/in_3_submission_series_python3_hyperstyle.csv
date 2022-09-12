@@ -1,0 +1,108 @@
+id,step_id,time,lang,code,user_id,group,attempt,total_attempts,hyperstyle_issues
+7,1,2021-02-25 09:00:00.000000,python3,"e = 2.718281828459045
+# put your python code here
+print(f""{e:.5f}"")
+
+",3,2,1,4,"{
+  ""quality"": {
+    ""code"": ""EXCELLENT"",
+    ""text"": ""Code quality (beta): EXCELLENT""
+  },
+  ""issues"": [
+    {
+      ""code"": ""WPS446"",
+      ""text"": ""Found approximate constant: 2.718281828459045"",
+      ""line"": ""e = 2.718281828459045"",
+      ""line_number"": 1,
+      ""column_number"": 6,
+      ""category"": ""BEST_PRACTICES"",
+      ""difficulty"": ""MEDIUM"",
+      ""influence_on_penalty"": 0
+    },
+    {
+      ""code"": ""WPS237"",
+      ""text"": ""Found a too complex `f` string"",
+      ""line"": ""print(f\""{e:.5f}\"")"",
+      ""line_number"": 3,
+      ""column_number"": 7,
+      ""category"": ""COMPLEXITY"",
+      ""difficulty"": ""HARD"",
+      ""influence_on_penalty"": 0
+    }
+  ]
+}"
+8,1,2021-02-25 09:10:00.000000,python3,"
+e = 2.718281828459045
+# put your python code here
+print(f""{e:.5f}"")
+",3,2,2,4,"{
+  ""quality"": {
+    ""code"": ""EXCELLENT"",
+    ""text"": ""Code quality (beta): EXCELLENT""
+  },
+  ""issues"": [
+    {
+      ""code"": ""WPS446"",
+      ""text"": ""Found approximate constant: 2.718281828459045"",
+      ""line"": ""e = 2.718281828459045"",
+      ""line_number"": 2,
+      ""column_number"": 6,
+      ""category"": ""BEST_PRACTICES"",
+      ""difficulty"": ""MEDIUM"",
+      ""influence_on_penalty"": 0
+    },
+    {
+      ""code"": ""WPS237"",
+      ""text"": ""Found a too complex `f` string"",
+      ""line"": ""print(f\""{e:.5f}\"")"",
+      ""line_number"": 4,
+      ""column_number"": 7,
+      ""category"": ""COMPLEXITY"",
+      ""difficulty"": ""HARD"",
+      ""influence_on_penalty"": 0
+    }
+  ]
+}"
+9,1,2021-02-25 09:20:00.000000,python3,"
+# put your python code here
+e = 2.718281828459045
+print(f""{e:.5f}"")
+",3,2,3,4,"{
+  ""quality"": {
+    ""code"": ""EXCELLENT"",
+    ""text"": ""Code quality (beta): EXCELLENT""
+  },
+  ""issues"": [
+    {
+      ""code"": ""WPS446"",
+      ""text"": ""Found approximate constant: 2.718281828459045"",
+      ""line"": ""e = 2.718281828459045"",
+      ""line_number"": 3,
+      ""column_number"": 6,
+      ""category"": ""BEST_PRACTICES"",
+      ""difficulty"": ""MEDIUM"",
+      ""influence_on_penalty"": 0
+    },
+    {
+      ""code"": ""WPS237"",
+      ""text"": ""Found a too complex `f` string"",
+      ""line"": ""print(f\""{e:.5f}\"")"",
+      ""line_number"": 4,
+      ""column_number"": 7,
+      ""category"": ""COMPLEXITY"",
+      ""difficulty"": ""HARD"",
+      ""influence_on_penalty"": 0
+    }
+  ]
+}"
+10,1,2021-02-25 09:30:00.000000,python3,"import math
+# put your python code here
+print(math.e)
+",3,2,4,4,"{
+  ""quality"": {
+    ""code"": ""EXCELLENT"",
+    ""text"": ""Code quality (beta): EXCELLENT""
+  },
+  ""issues"": [
+  ]
+}"

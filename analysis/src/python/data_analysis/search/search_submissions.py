@@ -6,8 +6,7 @@ import sys
 import pandas as pd
 
 from analysis.src.python.data_analysis.model.column_name import StepsStatsColumns, SubmissionColumns
-from analysis.src.python.data_analysis.utils.code_utils import merge_lines_to_code, split_code_to_lines
-from analysis.src.python.evaluation.tools.model.report import BaseIssue
+from analysis.src.python.data_analysis.utils.code_utils import get_code_with_issue_comment
 from analysis.src.python.data_analysis.utils.report_utils import parse_report
 from analysis.src.python.evaluation.tools.utils.saving_utils import save_solution_to_file
 from analysis.src.python.utils.df_utils import read_df, write_df
@@ -25,27 +24,6 @@ def write_submissions_to_files(df_submissions: pd.DataFrame, output_dir: str):
     df_submissions.apply(save_solution_to_file, input_path=output_dir, axis=1)
 
 
-def get_comment_to_code_line(issue: BaseIssue) -> str:
-    """ Add comment to given code line. """
-
-    return f' // {issue.get_name()} line={issue.get_line_number()} offset={issue.get_column_number()}'
-
-
-def add_issue_info_comment_to_code(submission: pd.Series, issues_column: str, issue_name: str) -> pd.Series:
-    """ Add comment to row where specific issue appears in solution. """
-
-    code_lines = split_code_to_lines(submission[SubmissionColumns.CODE.value])
-
-    report = parse_report(submission, issues_column)
-    for issue in report.get_issues():
-        if issue.get_name() == issue_name:
-            code_lines[issue.get_line_number() - 1] += get_comment_to_code_line(issue)
-
-    submission[SubmissionColumns.CODE.value] = merge_lines_to_code(code_lines)
-
-    return submission
-
-
 def search_submissions_by_step_issue(df_submissions: pd.DataFrame, issues_column: str, step: int, issue_name: str,
                                      count: int, output_dir: str):
     """
@@ -60,10 +38,11 @@ def search_submissions_by_step_issue(df_submissions: pd.DataFrame, issues_column
         return report.has_issue(issue_name)
 
     df_submissions_with_issue = df_submissions[df_submissions.apply(check_contains_issue, axis=1)].head(count)
-    df_submissions_with_issue = df_submissions_with_issue.apply(add_issue_info_comment_to_code,
-                                                                issues_column=issues_column,
-                                                                issue_name=issue_name,
-                                                                axis=1)
+    df_submissions_with_issue[SubmissionColumns.CODE.value] = \
+        df_submissions_with_issue.apply(get_code_with_issue_comment,
+                                        issues_column=issues_column,
+                                        issue_name=issue_name,
+                                        axis=1)
 
     df_submissions_without_issue = df_submissions[~df_submissions.apply(check_contains_issue, axis=1)].head(count)
 

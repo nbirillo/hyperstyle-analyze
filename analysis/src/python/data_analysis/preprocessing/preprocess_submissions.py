@@ -187,7 +187,8 @@ def preprocess_submissions(submissions_path: str,
     # Add submission attempt
     df_submissions = get_submissions_attempt(df_submissions, diff_ration)
     # Filter submissions with many attempts (consider as noise)
-    df_submissions = filter_submissions_with_many_attempts(df_submissions, max_attempts)
+    if max_attempts is not None:
+        df_submissions = filter_submissions_with_many_attempts(df_submissions, max_attempts)
 
     logging.info(f'Submissions final shape: {df_submissions.shape}')
     logging.info(f'Saving submissions to {preprocessed_submissions_path}')
@@ -205,7 +206,7 @@ if __name__ == '__main__':
                              '(if data is not presented in submissions dataset or was anonymize).')
     parser.add_argument('--diff-ratio', type=float, default=10.0,
                         help='Ration to remove submissions which has lines change more then in `diff_ratio` times.')
-    parser.add_argument('--max-attempts', type=int, default=5,
+    parser.add_argument('--max-attempts', type=int, default=None,
                         help='Remove submissions series with more then `max-attempts` attempts.')
     parser.add_argument('--log-path', type=str, default=None, help='Path to directory for log.')
 

@@ -136,7 +136,7 @@ def get_block_info(step_block: str) -> pd.Series:
         StepColumns.CODE_TEMPLATES.value: get_code_templates(block[StepColumns.OPTIONS.value]),
     }
 
-    return pd.Series(blocks_info, dtype='bool')
+    return pd.Series(blocks_info)
 
 
 def preprocess_steps(steps_path: str, topics_path: str, preprocessed_steps_path: str,
@@ -173,6 +173,7 @@ def preprocess_steps(steps_path: str, topics_path: str, preprocessed_steps_path:
     # Select steps with not null topic
     df_steps = df_steps[df_steps[StepColumns.TOPIC.value].notnull()] \
         .rename(columns={StepColumns.TOPIC.value: StepColumns.TOPIC_ID.value})
+    df_steps[StepColumns.TOPIC_ID.value] = df_steps[StepColumns.TOPIC_ID.value].astype('int32')
     logging.info(f"Filter steps without topics. Steps shape: {df_steps.shape}")
 
     # Add steps depth as related topic depth

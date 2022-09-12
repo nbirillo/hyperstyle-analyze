@@ -21,7 +21,7 @@ def configure_parser() -> argparse.ArgumentParser:
     parser.add_argument('platform', type=str, help='platform to collect data from', choices=Platform.values())
 
     parser.add_argument('object', type=str,
-                        help='objects to request from platform (can be defaults like `step`or custom like `java`')
+                        help='objects to request from platform (can be defaults like `step` or custom like `java`')
     parser.add_argument('--ids', '-i', nargs='*', type=int, default=None, help='ids of requested objects')
     parser.add_argument('--ids_from_file', '-f', type=str, default=None, help='csv file to get ids from')
     parser.add_argument('--ids_from_column', '-c', type=str, default=None, help='column in csv file to get ids from')
