@@ -92,6 +92,35 @@ def save_solution_to_file(solution: pd.Series,
     return save_code_to_file(solution_file_path, solution_code)
 
 
+def save_submission_series_to_files(submission_series: pd.DataFrame,
+                                    input_path: Path,
+                                    filename: str = 'code') -> Path:
+    """ Save submission series to path: step_{step_id}/user_{user_id}/solution_{attempt}_{solution_id}. """
+
+    user_ids = submission_series[SubmissionColumns.USER_ID.value].unique()
+    assert len(user_ids) == 1, "Submission series should contain information only about one user"
+
+    step_ids = submission_series[SubmissionColumns.STEP_ID.value].unique()
+    assert len(step_ids) == 1, "Submission series should contain information only about one step"
+
+    input_path = input_path / f'step_{step_ids[0]}' / f'user_{user_ids[0]}'
+
+    for solution in submission_series:
+        attempt = solution[SubmissionColumns.ATTEMPT.value]
+        solution_id = solution[SubmissionColumns.ID.value]
+
+        solution_code = solution[SubmissionColumns.CODE.value]
+        lang = solution[SubmissionColumns.LANG.value]
+        language_version = get_language_version(lang)
+        extension = language_version.extension_by_language()
+
+        solution_file_path = input_path / f'solution_{attempt}_{solution_id}' / f'{filename}{extension.value}'
+
+        save_code_to_file(solution_file_path, solution_code)
+
+    return input_path
+
+
 def save_code_to_file(file_path: Union[Path, str], code: str) -> Path:
     """ Save solution code to given file_path. """
 

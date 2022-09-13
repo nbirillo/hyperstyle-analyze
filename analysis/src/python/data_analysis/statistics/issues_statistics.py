@@ -56,13 +56,13 @@ def get_issues_statistics(
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('issues_column', type=str, help='Type of issue to analyse',
-                        choices=[SubmissionColumns.HYPERSTYLE_ISSUES.value, SubmissionColumns.QODANA_ISSUES.value])
     parser.add_argument('submissions_path', type=str,
                         help='Path to .csv file with preprocessed submissions with series')
     parser.add_argument('issues_info_path', type=str, help='Path to .csv file with issues list (classes and types)')
     parser.add_argument('issues_statistics_path', type=str,
                         help='Path to .csv file with submissions issues statistics')
+    parser.add_argument('issues_column', type=str, help='Type of issue to analyse',
+                        choices=[SubmissionColumns.HYPERSTYLE_ISSUES.value, SubmissionColumns.QODANA_ISSUES.value])
     parser.add_argument('--chunk-size', '-c', default=50000, type=int,
                         help='Number of groups which will be processed simultaneously')
     parser.add_argument('--log-path', type=str, default=None, help='Path to directory for log.')
