@@ -93,8 +93,7 @@ def save_solution_to_file(solution: pd.Series,
 
 
 def save_submission_series_to_files(submission_series: pd.DataFrame,
-                                    input_path: Path,
-                                    filename: str = 'code') -> Path:
+                                    input_path: Path) -> Path:
     """ Save submission series to path: step_{step_id}/user_{user_id}/solution_{attempt}_{solution_id}. """
 
     user_ids = submission_series[SubmissionColumns.USER_ID.value].unique()
@@ -105,7 +104,7 @@ def save_submission_series_to_files(submission_series: pd.DataFrame,
 
     input_path = input_path / f'step_{step_ids[0]}' / f'user_{user_ids[0]}'
 
-    for solution in submission_series:
+    for _, solution in submission_series.iterrows():
         attempt = solution[SubmissionColumns.ATTEMPT.value]
         solution_id = solution[SubmissionColumns.ID.value]
 
@@ -114,7 +113,7 @@ def save_submission_series_to_files(submission_series: pd.DataFrame,
         language_version = get_language_version(lang)
         extension = language_version.extension_by_language()
 
-        solution_file_path = input_path / f'solution_{attempt}_{solution_id}' / f'{filename}{extension.value}'
+        solution_file_path = input_path / f'solution_{attempt}_{solution_id}{extension.value}'
 
         save_code_to_file(solution_file_path, solution_code)
 

@@ -26,7 +26,7 @@ def search_submission_series(df_submission: pd.DataFrame, total_attempts: int, c
     submission_series_list = list(df_submission_series)
     logging.info(f'Found {len(submission_series_list)} series with total attempts {total_attempts}')
 
-    return random.sample(submission_series_list, count)
+    return random.sample(submission_series_list, min(len(submission_series_list), count))
 
 
 def main(submission_path: str, issues_column: str, total_attempts: int, count: int, result_path: str):
@@ -37,7 +37,7 @@ def main(submission_path: str, issues_column: str, total_attempts: int, count: i
 
     for _, submission_series in submission_series_list:
         submission_series[SubmissionColumns.CODE.value] = \
-            submission_series.apply(get_code_with_issue_comment, issues_column, axis=1)
+            submission_series.apply(get_code_with_issue_comment, issues_column=issues_column, axis=1)
         save_submission_series_to_files(submission_series, result_path)
 
 
@@ -56,7 +56,7 @@ if __name__ == '__main__':
     configure_parser(parser)
 
     args = parser.parse_args()
-    configure_logger(args.output_path, 'search', args.log_path)
+    configure_logger(args.results_path, 'search', args.log_path)
 
     main(args.submission_path,
          args.issues_column,
