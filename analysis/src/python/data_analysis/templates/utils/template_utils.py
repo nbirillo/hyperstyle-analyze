@@ -8,7 +8,8 @@ from analysis.src.python.data_analysis.utils.code_utils import split_code_to_lin
 
 
 def parse_template_code(df_steps: pd.DataFrame, lang: Optional[str]) -> pd.DataFrame:
-    return df_steps.apply(parse_template_code_from_step, lang=lang)
+    df_steps[StepColumns.CODE_TEMPLATE.value] = df_steps.apply(parse_template_code_from_step, lang=lang)
+    return df_steps
 
 
 def parse_template_code_from_step(step: pd.Series, lang: Optional[str] = None, keep_ends: bool = False) -> List[str]:
