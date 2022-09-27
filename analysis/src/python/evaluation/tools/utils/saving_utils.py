@@ -10,7 +10,7 @@ from analysis.src.python.data_analysis.model.column_name import SubmissionColumn
 from analysis.src.python.evaluation.utils.pandas_utils import get_language_version
 from analysis.src.python.utils.file_utils import copy_directory, create_file, get_parent_folder
 
-TEMPLATE_DIRECTORY = Path(__file__).parents[3] / 'resources' / 'evaluation' / 'project_templates'
+TEMPLATE_DIRECTORY = Path(__file__).parents[4] / 'resources' / 'evaluation' / 'project_templates'
 
 
 @dataclass(frozen=True)
@@ -47,8 +47,7 @@ def save_solutions_to_files(df_solutions: pd.DataFrame,
 
     if with_template:
         # If template is required copy project template to input directory
-        template_config = get_template_config(language_version)
-        copy_directory(template_config.template_path, input_path)
+        template_config = save_template_to_files(language_version, input_path)
 
         # Template set language specific requirements for solutions directory and filenames
         df_solutions.apply(save_solution_to_file,
@@ -60,6 +59,12 @@ def save_solutions_to_files(df_solutions: pd.DataFrame,
         df_solutions.apply(save_solution_to_file,
                            input_path=input_path,
                            axis=1)
+
+
+def save_template_to_files(language_version: LanguageVersion, input_path: Path) -> TemplateConfig:
+    template_config = get_template_config(language_version)
+    copy_directory(template_config.template_path, input_path)
+    return template_config
 
 
 def save_solution_to_file(solution: pd.Series,

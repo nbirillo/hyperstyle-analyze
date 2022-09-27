@@ -16,7 +16,7 @@ OUTPUT_FILE_PATH = Path('result.json')
 
 class HyperstyleEvaluationConfig(EvaluationConfig):
     def __init__(self, docker_path: Optional[str],
-                 tool_path: str,
+                 tool_path: Optional[str],
                  allow_duplicates: bool,
                  with_all_categories: bool,
                  new_format: bool,

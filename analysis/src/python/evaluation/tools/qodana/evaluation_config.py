@@ -1,18 +1,19 @@
 import logging.config
 import os
 from pathlib import Path
-from typing import List, Union
+from typing import List, Optional, Union
 
 from hyperstyle.src.python.review.application_config import LanguageVersion
 
 from analysis.src.python.evaluation.tools.model.evaluation_config import EvaluationConfig
+from analysis.src.python.utils.file_utils import create_directory
 
 logger = logging.getLogger(__name__)
 
 PROFILE_FOLDER = Path(__file__).parents[3] / 'resources' / 'evaluation' / 'qodana' / 'inspection_profiles'
 
-QODANA_JAVA_DOCKER_PATH = 'jetbrains/qodana'
-QODANA_PYTHON_DOCKER_PATH = 'jetbrains/qodana-python:2022.2-eap'
+QODANA_JAVA_DOCKER_PATH = 'jetbrains/qodana-jvm'
+QODANA_PYTHON_DOCKER_PATH = 'jetbrains/qodana-python'
 
 OUTPUT_FILE_PATH = Path('report', 'results', 'result-allProblems.json')
 
@@ -21,7 +22,7 @@ class QodanaEvaluationConfig(EvaluationConfig):
 
     def __init__(self,
                  tmp_path: Path,
-                 with_custom_profile: bool = False):
+                 with_custom_profile: Optional[Path]):
         """
         `tmp_path` - directory where to place evaluation temporary files
         `with_custom_profile` - run qodana with custom inspection profile (settings)
@@ -30,8 +31,10 @@ class QodanaEvaluationConfig(EvaluationConfig):
         super().__init__(tmp_path=tmp_path / 'qodana',
                          result_path=OUTPUT_FILE_PATH,
                          with_template=True)
+        self.cash_path = tmp_path / 'qodana_cash'
+        create_directory(self.cash_path, clear=False)
 
-        self.with_custom_profile: bool = with_custom_profile
+        self.with_custom_profile: Path = with_custom_profile
 
     def build_command(self,
                       input_path: Union[Path, str],
@@ -53,6 +56,7 @@ class QodanaEvaluationConfig(EvaluationConfig):
             '--rm',
             '-v', f'{input_path}/:/data/project/',
             '-v', f'{output_path}/:/data/results/',
+            '-v', f'{self.cash_path}/:/data/cache/',
         ]
 
         if self.with_custom_profile:
