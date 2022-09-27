@@ -9,42 +9,11 @@ import pandas as pd
 from sklearn.preprocessing import MultiLabelBinarizer
 
 from analysis.src.python.evaluation.model.column_name import ColumnName
-from analysis.src.python.evaluation.tools.qodana.imitation_model.common.util import CustomTokens, DatasetColumnArgument
+from analysis.src.python.evaluation.tools.qodana.imitation_model.roberta.util import CustomTokens, DatasetColumnArgument
 from analysis.src.python.utils.df_utils import read_df, write_df
 from analysis.src.python.utils.extension_utils import AnalysisExtension
 
 logger = logging.getLogger(__name__)
-
-
-def configure_arguments(parser: argparse.ArgumentParser) -> None:
-    parser.add_argument('dataset_path',
-                        type=lambda value: Path(value).absolute(),
-                        help='Path to the dataset with the values to be encoded. ')
-
-    parser.add_argument('-o', '--output_file_path',
-                        help='Output file path. If not set, file will be saved to '
-                             'the input file parent directory.',
-                        type=str,
-                        default='input_file_directory')
-
-    parser.add_argument('-c', '--add_context',
-                        help='Use for the datasets with code lines only, if set to True, '
-                             'n lines before and n lines after target line will be added to each sample.'
-                             ' Default is False.',
-                        action='store_true')
-
-    parser.add_argument('-n', '--n_lines_to_add',
-                        help='Use only if add_context is enabled. Allows to add n-lines from the same piece of code, '
-                             'before and after each line in the dataset. If there are no lines before or after a line'
-                             'from the same code-sample, special token will be added. Default is 2.',
-                        default=2,
-                        type=int)
-
-    parser.add_argument('-ohe', '--one_hot_encoding',
-                        help='If True, target column will be represented as one-hot-encoded vector. '
-                             'The length of each vector is equal to the unique number of classes. '
-                             'Default is True.',
-                        action='store_false')
 
 
 def __one_hot_encoding(df: pd.DataFrame) -> pd.DataFrame:
@@ -129,6 +98,37 @@ class Context:
             if n_line_index != self.n_lines - 1:
                 context = [context[0] + '\n']
         return context
+
+
+def configure_arguments(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument('dataset_path',
+                        type=lambda value: Path(value).absolute(),
+                        help='Path to the dataset with the values to be encoded. ')
+
+    parser.add_argument('-o', '--output_file_path',
+                        help='Output file path. If not set, file will be saved to '
+                             'the input file parent directory.',
+                        type=str,
+                        default='input_file_directory')
+
+    parser.add_argument('-c', '--add_context',
+                        help='Use for the datasets with code lines only, if set to True, '
+                             'n lines before and n lines after target line will be added to each sample.'
+                             ' Default is False.',
+                        action='store_true')
+
+    parser.add_argument('-n', '--n_lines_to_add',
+                        help='Use only if add_context is enabled. Allows to add n-lines from the same piece of code, '
+                             'before and after each line in the dataset. If there are no lines before or after a line'
+                             'from the same code-sample, special token will be added. Default is 2.',
+                        default=2,
+                        type=int)
+
+    parser.add_argument('-ohe', '--one_hot_encoding',
+                        help='If True, target column will be represented as one-hot-encoded vector. '
+                             'The length of each vector is equal to the unique number of classes. '
+                             'Default is True.',
+                        action='store_false')
 
 
 def main() -> None:

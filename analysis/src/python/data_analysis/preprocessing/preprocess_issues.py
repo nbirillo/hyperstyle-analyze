@@ -18,20 +18,23 @@ def get_issues_info(df_submissions: pd.DataFrame, issues_column: str) -> pd.Data
     issues_info = {}
 
     def get_info(submission: pd.Series):
-        report = parse_report(submission, issues_column)
-        for issue in report.get_issues():
-            issue_name = issue.get_name()
-            if issue_name not in issues_info:
-                issues_info[issue_name] = {
-                    IssuesColumns.NAME.value: issue_name,
-                    IssuesColumns.COUNT.value: 0,
-                    IssuesColumns.CATEGORY.value: issue.get_category(),
-                    IssuesColumns.TEXT.value: issue.get_text(),
-                    IssuesColumns.DIFFICULTY.value: issue.get_difficulty(),
-                    IssuesColumns.CODE_SAMPLE.value: get_code_with_issue_comment(submission, issues_column,
-                                                                                 issue_name=issue_name),
-                }
-            issues_info[issue_name][IssuesColumns.COUNT.value] += 1
+        try:
+            report = parse_report(submission, issues_column)
+            for issue in report.get_issues():
+                issue_name = issue.get_name()
+                if issue_name not in issues_info:
+                    issues_info[issue_name] = {
+                        IssuesColumns.NAME.value: issue_name,
+                        IssuesColumns.COUNT.value: 0,
+                        IssuesColumns.CATEGORY.value: issue.get_category(),
+                        IssuesColumns.TEXT.value: issue.get_text(),
+                        IssuesColumns.DIFFICULTY.value: issue.get_difficulty(),
+                        IssuesColumns.CODE_SAMPLE.value: get_code_with_issue_comment(submission, issues_column,
+                                                                                     issue_name=issue_name),
+                    }
+                issues_info[issue_name][IssuesColumns.COUNT.value] += 1
+        except Exception as e:
+            print(e, submission[issues_column])
 
     logging.info('Getting issues info from submissions')
     df_submissions.apply(get_info, axis=1)

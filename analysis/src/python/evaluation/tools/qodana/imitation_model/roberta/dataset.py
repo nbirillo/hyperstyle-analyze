@@ -3,7 +3,7 @@ import logging
 import pandas as pd
 import torch
 from analysis.src.python.evaluation.model.column_name import ColumnName
-from analysis.src.python.evaluation.tools.qodana.imitation_model.common.util import DatasetColumnArgument
+from analysis.src.python.evaluation.tools.qodana.imitation_model.roberta.util import DatasetColumnArgument
 from torch.utils.data import Dataset
 from transformers import RobertaTokenizer
 

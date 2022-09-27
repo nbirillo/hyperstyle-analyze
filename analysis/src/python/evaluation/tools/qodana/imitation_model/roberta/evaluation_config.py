@@ -1,7 +1,7 @@
 import argparse
 
 from hyperstyle.src.python.review.common.file_system import Extension
-from analysis.src.python.evaluation.tools.qodana.imitation_model.common.util import ModelCommonArgument
+from analysis.src.python.evaluation.tools.qodana.imitation_model.roberta.util import ModelCommonArgument
 from analysis.src.python.utils.extension_utils import AnalysisExtension
 
 
