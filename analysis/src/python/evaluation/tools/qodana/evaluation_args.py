@@ -20,6 +20,9 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                         type=lambda value: Path(value).absolute(),
                         help='Path to tmp directory to save temporary files')
 
-    parser.add_argument('--with-custom-profile',
-                        help='Run qodana only in inspections listed in language specific profile.xml',
-                        action='store_true')
+    parser.add_argument('--profile-path',
+                        type=lambda value: None if value is None else Path(value).absolute(), default=None,
+                        help='Path to inspection profile configuration path')
+
+    parser.add_argument('--profile-name', type=str, default=None,
+                        help='Name of default profile to run')
