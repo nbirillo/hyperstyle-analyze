@@ -98,33 +98,38 @@ def time_benchmark_row(
 
     language_version = get_language_version(row[SubmissionColumns.LANG.value])
     aggregate_function = aggregate.to_function()
-    repeat_times = []
+    attempt_times = []
 
     for i in range(repeat):
+        logger.info(f'Time measuring attempt={i + 1}')
         input_path = create_directory(config.tmp_path / f'input_{submission_id}_{i}', clear=True)
         output_path = create_directory(config.tmp_path / f'output_{submission_id}_{i}', clear=True)
 
         if empty_project and config.with_template:
-            logger.info(f'Save only project template to files ...')
+            logger.info('Save only project template to files ...')
             save_template_to_files(language_version, input_path)
         else:
-            logger.info(f'Save solution with project template to files ...')
+            logger.info('Save solution with project template to files ...')
             save_solutions_to_files(row.to_frame().T, language_version, input_path, config.with_template)
 
         command = config.build_command(input_path, output_path, language_version)
+        logger.info('Command: ' + (' '.join(command)))
+
         start_time = time.time()
         run_in_subprocess(command)
         end_time = time.time()
 
-        repeat_times.append(end_time - start_time)
+        attempt_time = end_time - start_time
+        logger.info(f'Time: {attempt_time}')
+        attempt_times.append(attempt_time)
 
         if output_path is not None and parser is not None:
             logger.info(parser(output_path / config.result_path))
 
-    benchmark_time = aggregate_function(repeat_times)
+    result_time = aggregate_function(attempt_times)
+    logger.info(f'Result time: {result_time}')
 
-    logger.info(f'Benchmark time: {benchmark_time}')
-    return benchmark_time
+    return result_time
 
 
 def configure_parser(parser: argparse.ArgumentParser) -> None:

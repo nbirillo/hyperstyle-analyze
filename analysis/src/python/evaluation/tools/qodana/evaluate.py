@@ -63,8 +63,10 @@ def main():
     args = parser.parse_args()
 
     df_solutions = read_df(args.solutions_file_path)
-    config = QodanaEvaluationConfig(with_custom_profile=args.with_custom_profile,
-                                    tmp_path=args.tmp_directory)
+    config = QodanaEvaluationConfig(tmp_path=args.tmp_path,
+                                    cache_path=args.cache_path,
+                                    profile_path=args.profile_path,
+                                    profile_name=args.profile_name)
 
     logger.info('Start processing:')
     results = evaluate_qodana(df_solutions, config)

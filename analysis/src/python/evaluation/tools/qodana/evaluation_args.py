@@ -15,14 +15,18 @@ def configure_arguments(parser: argparse.ArgumentParser) -> None:
                         type=lambda value: Path(value).absolute(),
                         help='Path to the directory where to save evaluation results')
 
-    parser.add_argument('-td', '--tmp-directory',
+    parser.add_argument('-tp', '--tmp-path',
                         default=get_tmp_directory(),
                         type=lambda value: Path(value).absolute(),
                         help='Path to tmp directory to save temporary files')
 
-    parser.add_argument('--profile-path',
+    parser.add_argument('-pp', '--profile-path',
                         type=lambda value: None if value is None else Path(value).absolute(), default=None,
-                        help='Path to inspection profile configuration path')
+                        help='Path to inspection profile configuration')
 
-    parser.add_argument('--profile-name', type=str, default=None,
+    parser.add_argument('-cp', '--cache-path',
+                        type=lambda value: None if value is None else Path(value).absolute(), default=None,
+                        help='Path to directory to save caches')
+
+    parser.add_argument('-pn', '--profile-name', type=str, default=None,
                         help='Name of default profile to run')

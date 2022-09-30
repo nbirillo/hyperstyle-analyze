@@ -8,8 +8,8 @@ The dataset must contain at least three columns:
 
 - For this evaluation you need to download docker images `jetbrains/qodana` and `jetbrains/qodana-python:2022.1-eap` (with qodana tool):
 ```shell
-docker pull jetbrains/qodana
-docker pull jetbrains/qodana-python:2022.2-eap
+docker pull jetbrains/qodana-jvm
+docker pull jetbrains/qodana-python
 ```
 As qodana for python is eap, please check [here](https://www.jetbrains.com/help/qodana/qodana-python.html) dockers current version.
 
@@ -63,8 +63,10 @@ Run the [evaluate.py](evaluate.py) with the arguments from command line.
 
 Optional arguments:
 
-| Argument                                             | Description                                                                                                             |
-|------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------|
-| **&#8209;o**, **&#8209;&#8209;output**               | Path to the directory where to save evaluation results. Use parent directory of `solutions_file_path` if not specified. |
-| **&#8209;td**, **&#8209;&#8209;tmp&#8209;directory** | Path to the directory where to save temporary created files results. Use default if not specified.                      |
-| **&#8209;&#8209;with&#8209;custom&#8209;profile**    | Run qodana only in inspections listed in language specific profile.xml.                                                 |
+| Argument                                            | Description                                                                                                             |
+|-----------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------|
+| **&#8209;o**, **&#8209;&#8209;output**              | Path to the directory where to save evaluation results. Use parent directory of `solutions_file_path` if not specified. |
+| **&#8209;tp**, **&#8209;&#8209;tmp&#8209;path**     | Path to the directory where to save temporary created files results. Use default if not specified.                      |
+| **&#8209;pp**, **&#8209;&#8209;profile&#8209;path** | Path to inspection profile configuration                                                                                |
+| **&#8209;cp**, **&#8209;&#8209;cache&#8209;path**   | Path to directory to save caches                                                                                        |
+| **&#8209;pn**, **&#8209;&#8209;profile&#8209;name** | Name of default profile to run                                                                                          |

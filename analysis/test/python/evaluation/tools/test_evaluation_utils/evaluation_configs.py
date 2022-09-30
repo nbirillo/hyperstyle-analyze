@@ -21,7 +21,8 @@ def get_default_hyperstyle_config(docker_path: Optional[str] = HYPERSTYLE_DOCKER
                                       tmp_path=tmp_path)
 
 
-def get_default_qodana_config(tmp_path: Path = TMP_DIR_PATH,
-                              with_custom_profile: bool = False) -> QodanaEvaluationConfig:
+def get_default_qodana_config(tmp_path: Path = TMP_DIR_PATH) -> QodanaEvaluationConfig:
     return QodanaEvaluationConfig(tmp_path=tmp_path,
-                                  with_custom_profile=with_custom_profile)
+                                  profile_path=None,
+                                  cache_path=None,
+                                  profile_name='qodana.recommended')
