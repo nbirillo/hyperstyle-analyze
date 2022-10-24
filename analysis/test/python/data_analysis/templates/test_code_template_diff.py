@@ -1,9 +1,9 @@
-from typing import List, Tuple
+from typing import List
 
 import pytest
 
-from analysis.src.python.data_analysis.templates.filter_using_diff import get_template_to_code_diffs, DiffResult, \
-    DiffTag
+from analysis.src.python.data_analysis.templates.filter_using_diff import DiffResult, DiffTag, \
+    get_template_to_code_diffs
 
 DIFF_TEST_DATA = [
     (["a = 1\n", "b = 2\n", "c = # put your code here\n", "print(a, b, c)"],
