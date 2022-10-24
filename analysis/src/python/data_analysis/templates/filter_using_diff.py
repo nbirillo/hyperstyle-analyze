@@ -16,8 +16,8 @@ from analysis.src.python.data_analysis.utils.report_utils import parse_report
 from analysis.src.python.evaluation.tools.model.report import BaseIssue, BaseReport
 from analysis.src.python.utils.df_utils import filter_df_by_iterable_value, read_df, write_df
 from analysis.src.python.utils.logging_utils import configure_logger
-from evaluation.tools.hyperstyle.model.report import HyperstyleIssue
-from evaluation.tools.qodana.model.report import Problem
+from analysis.src.python.evaluation.tools.hyperstyle.model.report import HyperstyleIssue
+from analysis.src.python.evaluation.tools.qodana.model.report import Problem
 
 
 @unique
