@@ -156,6 +156,7 @@ class IssuesColumns(Enum):
     TEXT = 'text'
     CODE_SAMPLE = 'code_sample'
     DIFFICULTY = 'difficulty'
+    POSITION = 'position'
 
 
 @unique
