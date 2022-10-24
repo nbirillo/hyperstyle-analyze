@@ -91,7 +91,7 @@ def clean_file(path: str):
             f.truncate(0)
 
 
-def get_output_filename(input_path: Union[str, Path], output_suffix: str) -> str:
+def get_output_filename(input_path: Union[str, Path], output_suffix: str = '') -> str:
     extension = AnalysisExtension.get_extension_from_file(input_path)
     input_filename = get_name_from_path(input_path, with_extension=False)
 

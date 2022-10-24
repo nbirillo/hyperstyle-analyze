@@ -51,6 +51,7 @@ def evaluate_qodana(df_solutions: pd.DataFrame, config: QodanaEvaluationConfig) 
     """ Run qodana on set of solutions. """
 
     df_solutions = evaluate_by_language(df_solutions, config, parse_qodana_result)
+    df_solutions[SubmissionColumns.QODANA_ISSUES.value].fillna(QodanaReport.get_default().to_json(), inplace=True)
     return df_solutions
 
 

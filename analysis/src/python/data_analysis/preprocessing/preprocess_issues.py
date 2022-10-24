@@ -28,8 +28,8 @@ def get_issues_info(df_submissions: pd.DataFrame, issues_column: str) -> pd.Data
                     IssuesColumns.CATEGORY.value: issue.get_category(),
                     IssuesColumns.TEXT.value: issue.get_text(),
                     IssuesColumns.DIFFICULTY.value: issue.get_difficulty(),
-                    IssuesColumns.CODE_SAMPLE: get_code_with_issue_comment(submission, issues_column,
-                                                                           issue_name=issue_name),
+                    IssuesColumns.CODE_SAMPLE.value: get_code_with_issue_comment(submission, issues_column,
+                                                                                 issue_name=issue_name),
                 }
             issues_info[issue_name][IssuesColumns.COUNT.value] += 1
 
@@ -39,7 +39,7 @@ def get_issues_info(df_submissions: pd.DataFrame, issues_column: str) -> pd.Data
     df_issue_infos = pd.DataFrame(list(map(lambda d: pd.Series(d), issues_info.values())),
                                   columns=[IssuesColumns.NAME.value, IssuesColumns.COUNT.value,
                                            IssuesColumns.CATEGORY.value, IssuesColumns.TEXT.value,
-                                           IssuesColumns.DIFFICULTY.value, IssuesColumns.CODE_SAMPLE])
+                                           IssuesColumns.DIFFICULTY.value, IssuesColumns.CODE_SAMPLE.value])
 
     return df_issue_infos.sort_values(by=IssuesColumns.COUNT.value, ascending=False)
 

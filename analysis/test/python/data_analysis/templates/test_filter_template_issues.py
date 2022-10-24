@@ -5,7 +5,7 @@ import pytest
 from analysis.src.python.data_analysis.model.column_name import SubmissionColumns
 from analysis.src.python.data_analysis.templates.filter import filter_template_issues
 from analysis.src.python.data_analysis.templates.utils.code_compare_utils import CodeComparator
-from analysis.src.python.utils.df_utils import equal_df, read_df, write_df
+from analysis.src.python.utils.df_utils import equal_df, read_df
 from analysis.test.python.data_analysis import TEMPLATES_ISSUES_FOLDER
 
 TEMPLATE_ISSUES_FOLDER = TEMPLATES_ISSUES_FOLDER / 'template_issues'
@@ -39,7 +39,6 @@ def test_filter_template_issues(templates_issues_path: str,
 
     df_filtered_issues = filter_template_issues(df_templates_issues, df_submissions, df_steps, issues_column,
                                                 code_comparator)
-    write_df(df_filtered_issues, TEMPLATE_ISSUES_FOLDER / result_path)
 
     df_result = read_df(TEMPLATE_ISSUES_FOLDER / result_path)
     assert equal_df(df_filtered_issues, df_result)

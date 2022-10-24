@@ -32,3 +32,4 @@ matplotlib==3.5.1
 networkx==2.6.3
 
 python-dateutil==2.8.2
+diff-match-patch==20181111
