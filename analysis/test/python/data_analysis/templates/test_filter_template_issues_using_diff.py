@@ -2,9 +2,9 @@ import pytest
 
 import pandas as pd
 
-from analysis.src.python.data_analysis.model.column_name import SubmissionColumns, IssuesColumns
-from analysis.src.python.data_analysis.templates.filter_using_diff import filter_template_issues_using_diff, \
-    extract_template_issues
+from analysis.src.python.data_analysis.model.column_name import IssuesColumns, SubmissionColumns
+from analysis.src.python.data_analysis.templates.filter_using_diff import extract_template_issues, \
+    filter_template_issues_using_diff
 from analysis.src.python.utils.df_utils import equal_df, read_df
 from analysis.test.python.data_analysis import TEMPLATES_ISSUES_FOLDER
 

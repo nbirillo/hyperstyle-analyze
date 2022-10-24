@@ -9,7 +9,7 @@ import pandas as pd
 from dataclasses_json import dataclass_json
 from diff_match_patch import diff_match_patch
 
-from analysis.src.python.data_analysis.model.column_name import StepColumns, SubmissionColumns, IssuesColumns
+from analysis.src.python.data_analysis.model.column_name import IssuesColumns, StepColumns, SubmissionColumns
 from analysis.src.python.data_analysis.templates.utils.template_utils import parse_template_code_from_step
 from analysis.src.python.data_analysis.utils.code_utils import split_code_to_lines
 from analysis.src.python.data_analysis.utils.report_utils import parse_report
@@ -110,7 +110,7 @@ def get_template_issues(
         issues_with_offset: List[Tuple[int, BaseIssue]],
         diff: List[DiffResult],
         template_lines: List[str],
-        code_lines: List[str]
+        code_lines: List[str],
 ) -> List[TemplateIssueResult]:
     """
     Get template issues from list of issues.
@@ -178,7 +178,7 @@ def filter_template_issues_using_diff(
     return df_submissions.apply(lambda submission: apply_algo(submission), axis=1)
 
 
-def parse_template_issue_tesult_list(dumped: str, issues_column: str) -> TemplateIssueResultList:
+def parse_template_issue_result_list(dumped: str, issues_column: str) -> TemplateIssueResultList:
     issues_with_positions = json.loads(dumped)
     issues = []
     for res in issues_with_positions['results']:
@@ -204,15 +204,15 @@ def extract_template_issues(df_filtered_submissions: pd.DataFrame, issues_column
     template_issues_df = build_empty_template_issues_df()
 
     def handle_one_submission(submission: pd.Series, template_issues_df: pd.DataFrame) -> pd.DataFrame:
-        issues_with_positions = parse_template_issue_tesult_list(submission[column], issues_column)
+        issues_with_positions = parse_template_issue_result_list(submission[column], issues_column)
         for res in issues_with_positions.results:
             template_issues_df = template_issues_df.append(
                 res.build_row(submission[SubmissionColumns.STEP_ID.value]),
-                ignore_index=True
+                ignore_index=True,
             )
         return template_issues_df
 
-    for index, submission in df_filtered_submissions.iterrows():
+    for _, submission in df_filtered_submissions.iterrows():
         template_issues_df = handle_one_submission(submission, template_issues_df)
 
     return template_issues_df.sort_values(SubmissionColumns.STEP_ID.value) \
@@ -229,7 +229,7 @@ def main(
         steps_path: str,
         filtered_submissions_path: str,
         template_issues_path: str,
-        issues_column: str
+        issues_column: str,
 ):
     df_submissions = read_df(submissions_path)
     df_steps = read_df(steps_path)
@@ -269,5 +269,5 @@ if __name__ == '__main__':
         args.steps_path,
         args.filtered_submissions_path,
         args.template_issues_path,
-        args.issues_column
+        args.issues_column,
     )
