@@ -1,5 +1,4 @@
 Arithm
-algo
 Comparator
 D3
 DARK2
@@ -44,6 +43,7 @@ WPS462
 abstractmethod
 agg
 aggfunc
+algo
 annot
 anova
 applymap
