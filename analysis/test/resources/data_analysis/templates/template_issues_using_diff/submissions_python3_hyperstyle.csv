@@ -80,7 +80,7 @@ print('%.5f' % e)
       ""text"": ""Found approximate constant: 2.718281828459045"",
       ""line"": ""eul = 2.718281828459045"",
       ""line_number"": 1,
-      ""column_number"": 6,
+      ""column_number"": 8,
       ""category"": ""BEST_PRACTICES"",
       ""difficulty"": ""MEDIUM"",
       ""influence_on_penalty"": 0
@@ -137,6 +137,60 @@ print(x)
       ""column_number"": 5,
       ""category"": ""BEST_PRACTICES"",
       ""difficulty"": ""MEDIUM"",
+      ""influence_on_penalty"": 0
+    }
+  ]
+}"
+7,4,2021-02-25 09:00:00.000000,python3,"p = input()
+y1 = int(p[0]) + int(p[1])
+y2 = int(p[2]) + int(p[3])
+if y1 == y2:
+    print(""1"")
+else:
+    print(""2"")",5,4,4,4,"{
+  ""quality"": {
+    ""code"": ""GOOD"",
+    ""text"": ""Code quality (beta): EXCELLENT""
+  },
+  ""issues"": [
+    {
+      ""code"": ""SC200"",
+      ""text"": ""Possibly misspelt word: ‘y1’"",
+      ""line"": ""y1 = int(p[0]) + int(p[1])"",
+      ""line_number"": 2,
+      ""column_number"": 1,
+      ""category"": ""INFO"",
+      ""difficulty"": ""EASY"",
+      ""influence_on_penalty"": 0
+    },
+    {
+      ""code"": ""SC200"",
+      ""text"": ""Possibly misspelt word: ‘y2’"",
+      ""line"": ""y2 = int(p[2]) + int(p[3])"",
+      ""line_number"": 3,
+      ""column_number"": 1,
+      ""category"": ""INFO"",
+      ""difficulty"": ""EASY"",
+      ""influence_on_penalty"": 0
+    },
+    {
+      ""code"": ""SC200"",
+      ""text"": ""Possibly misspelt word: ‘y1’"",
+      ""line"": ""if y1 == y2:"",
+      ""line_number"": 4,
+      ""column_number"": 4,
+      ""category"": ""INFO"",
+      ""difficulty"": ""EASY"",
+      ""influence_on_penalty"": 0
+    },
+    {
+      ""code"": ""SC200"",
+      ""text"": ""Possibly misspelt word: ‘y2’"",
+      ""line"": ""if y1 == y2:"",
+      ""line_number"": 4,
+      ""column_number"": 10,
+      ""category"": ""INFO"",
+      ""difficulty"": ""EASY"",
       ""influence_on_penalty"": 0
     }
   ]

@@ -171,7 +171,7 @@ code = "x = int(input())\nif x == 5:\n\tprint('hello')" # MagicNumber offset=27
 
 ### Usage
 
-Run the [filter_using_diff.py](filter_using_diff.py) script with the arguments from command line.
+Run the [filter_using_diff.py](filter_by_diff.py) script with the arguments from command line.
 
 Required arguments:
 
