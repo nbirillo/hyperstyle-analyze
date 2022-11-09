@@ -12,8 +12,7 @@ DIFF_TEST_DATA = [
          DiffResult(DiffTag.EQUAL.value, "a = 1\nb = 2\nc = ", DiffInterval(0, 16), DiffInterval(0, 16)),
          DiffResult(DiffTag.DELETION.value, "# put your code here", DiffInterval(16, 36), DiffInterval(16, 16)),
          DiffResult(DiffTag.ADDITION.value, "3", DiffInterval(36, 36), DiffInterval(16, 17)),
-         DiffResult(DiffTag.EQUAL.value, "\nprint(a, b, c)", DiffInterval(36, 51), DiffInterval(17, 32)),
-     ]),
+         DiffResult(DiffTag.EQUAL.value, "\nprint(a, b, c)", DiffInterval(36, 51), DiffInterval(17, 32))]),
     (["a = 1\n", "b = 2\n", "c = # put your code here\n", "print(a, b, c)"],
      ["A = 1\n", "b = 2\n", "c = 3\n", "print(a, b, c)"],
      [
@@ -22,14 +21,12 @@ DIFF_TEST_DATA = [
          DiffResult(DiffTag.EQUAL.value, " = 1\nb = 2\nc = ", DiffInterval(1, 16), DiffInterval(1, 16)),
          DiffResult(DiffTag.DELETION.value, "# put your code here", DiffInterval(16, 36), DiffInterval(16, 16)),
          DiffResult(DiffTag.ADDITION.value, "3", DiffInterval(36, 36), DiffInterval(16, 17)),
-         DiffResult(DiffTag.EQUAL.value, "\nprint(a, b, c)", DiffInterval(36, 51), DiffInterval(17, 32)),
-     ]),
+         DiffResult(DiffTag.EQUAL.value, "\nprint(a, b, c)", DiffInterval(36, 51), DiffInterval(17, 32))]),
     (["# a = 1"],
      ["a = 1"],
      [
          DiffResult(DiffTag.DELETION.value, "# ", DiffInterval(0, 2), DiffInterval(0, 0)),
-         DiffResult(DiffTag.EQUAL.value, "a = 1", DiffInterval(2, 7), DiffInterval(0, 5)),
-     ]),
+         DiffResult(DiffTag.EQUAL.value, "a = 1", DiffInterval(2, 7), DiffInterval(0, 5))]),
     # Lines swap does not work properly
     (["a = 1\n", "b = 2\n", "c = 3\n"],
      ["b = 2\n", "a = 1\n", "c = 3\n"],
@@ -48,8 +45,7 @@ DIFF_TEST_DATA = [
 
          DiffResult(DiffTag.DELETION.value, "2", DiffInterval(10, 11), DiffInterval(10, 10)),
          DiffResult(DiffTag.ADDITION.value, "1", DiffInterval(11, 11), DiffInterval(10, 11)),
-         DiffResult(DiffTag.EQUAL.value, "\nc = 3\n", DiffInterval(11, 18), DiffInterval(11, 18)),
-     ]),
+         DiffResult(DiffTag.EQUAL.value, "\nc = 3\n", DiffInterval(11, 18), DiffInterval(11, 18))]),
 ]
 
 
