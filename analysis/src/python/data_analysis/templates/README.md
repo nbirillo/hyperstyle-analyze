@@ -171,13 +171,14 @@ code = "x = int(input())\nif x == 5:\n\tprint('hello')" # MagicNumber offset=27
 
 ### Usage
 
-Run the [filter_using_diff.py](filter_using_diff.py) script with the arguments from command line.
+Run the [filter_using_diff.py](filter_by_diff.py) script with the arguments from command line.
 
 Required arguments:
 
 - `submissions_path` — Path to .csv file with submissions. The file must contain the following columns: `id`, `lang`, `step_id`, `code`, `group`, `attempt`, `hyperskill_issues`/`qodana_issues` (please, use [preprocess_submissions.py](../preprocessing/preprocess_submissions.py) script to get  `group` and `attempt` columns).
 - `steps_path` — Path to .csv file with steps. The file must contain the following columns: `id`, and `code_template` OR `code_templates`.
 - `filtered_submissions_path` — Path to resulting .csv file with submissions with filtered issues.
+- `template_issues_path` - Path .csv file with template issues with their positions.
 - `issues_column` — Column name in .csv file with submissions where issues are stored (can be `hyperstyle_issues` ot `qodana_issues`).
 
 ### Output format

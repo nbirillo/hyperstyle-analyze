@@ -1,0 +1,6 @@
+step_id,name,category,position,text
+1,WPS446,BEST_PRACTICES,0,Found approximate constant: 2.718281828459045
+2,SC200,BEST_PRACTICES,0,Possibly misspelt word: `eul`
+2,WPS446,BEST_PRACTICES,0,Found approximate constant: 2.718281828459045
+3,WPS432,BEST_PRACTICES,0,Found magic number: 1
+3,WPS432,BEST_PRACTICES,1,Found magic number: 2

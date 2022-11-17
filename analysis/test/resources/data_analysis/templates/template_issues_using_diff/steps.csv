@@ -7,3 +7,15 @@ id,code_template
 # x = 2
 # x = 3
 print(x)"
+4,"# Some comment variable
+p = ...
+
+# Some comment variables
+y1 = ...
+y2 = ...
+
+# Some comment, print
+if y1 == y2:
+    print(""1"")
+else:
+    print(""2"")"
