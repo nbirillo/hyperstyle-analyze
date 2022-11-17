@@ -180,7 +180,7 @@ def filter_template_issues_using_diff(df_submissions: pd.DataFrame, df_steps: pd
 
 
 def main(submissions_path: str, steps_path: str, filtered_submissions_path: str, issues_column: str):
-    df_submissions = read_df(submissions_path).sample(100)
+    df_submissions = read_df(submissions_path)
     df_steps = read_df(steps_path)
     df_filtered_issues = filter_template_issues_using_diff(
         df_submissions,
