@@ -1,5 +1,0 @@
-from analysis.test.python.data_analysis import CURRENT_TEST_DATA_FOLDER
-
-PREPROCESSING_TEST_DATA_FOLDER = CURRENT_TEST_DATA_FOLDER / 'preprocessing'
-
-HIDDEN_TEMPLATES_TEST_DATA_FOLDER = PREPROCESSING_TEST_DATA_FOLDER / 'hidden_templates'
