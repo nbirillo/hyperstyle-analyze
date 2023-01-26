@@ -12,10 +12,10 @@ Simply clone the repository and run the following commands:
 
 1. `pip install -r requirements.txt`
 
-**Note**: you should set up the set of environment variables to `Hyperstyle` work correctly.
+**Note**: you should set up several environment variables for `Hyperstyle` to work correctly.
 Please, follow the [Dockerfile](https://github.com/hyperskill/hyperstyle/blob/bf3c6e2dc42290ad27f2d30ce42d84a53241544b/Dockerfile#L14-L40) 
 from the `Hyperstyle` repository.
-To check the environment is set up correctly you can output the variables in the terminal, e.g.
+To check that the environment is set up correctly, you can output the variables in the terminal, e.g.
 ```bash
 echo $DETEKT_DIRECTORY && echo $DETEKT_VERSION
 ```
